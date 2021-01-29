@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="scan_dl_form" model="ir.ui.view">
+        <field name="name">scan.dl.wizard</field>
+        <field name="model">scan.dl</field>
+        <field name="arch" type="xml">
+            <form string="Scan Drivers License">
+                <group>
+                    <field name="image" widget="image"/>
+                    <field name="raw_text"/>
+                </group>
+                <footer>
+                    <button name="confirm_action" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="scan_dl_wizard" model="ir.actions.act_window">
+        <field name="name">Scan Drivers License</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">scan.dl</field>
+        <field name="view_id" ref="idk"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
