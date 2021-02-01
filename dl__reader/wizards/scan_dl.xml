@@ -2,7 +2,7 @@
 <odoo>
 <data>
     <record id="scan_dl_form" model="ir.ui.view">
-        <field name="name">scan_dl_wizard</field>
+        <field name="name">scan_dl.wizard</field>
         <field name="model">scan_dl</field>
         <field name="arch" type="xml">
             <form string="Scan Drivers License">
