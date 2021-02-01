@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
     <record id="scan_dl_form" model="ir.ui.view">
-        <field name="name">scan_dl.wizard</field>
+        <field name="name">scan_dl_wizard</field>
         <field name="model">scan_dl</field>
         <field name="arch" type="xml">
             <form string="Scan Drivers License">
@@ -25,6 +26,7 @@
         <field name="view_id" ref="scan_dl_form"/>
         <field name="target">new</field>
     </record>
+<data>
 </odoo>
 
 <!-- https://www.youtube.com/watch?v=K60oF3-vaxA -->
