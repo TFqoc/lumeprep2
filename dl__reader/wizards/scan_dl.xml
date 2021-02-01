@@ -26,7 +26,7 @@
         <field name="view_id" ref="scan_dl_form"/>
         <field name="target">new</field>
     </record>
-<data>
+</data>
 </odoo>
 
 <!-- https://www.youtube.com/watch?v=K60oF3-vaxA -->
