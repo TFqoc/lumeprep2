@@ -1,7 +1,7 @@
 from odoo import models, fields
 
 class ScanDL(models.TransientModel):
-    _name = "scan.dl"
+    _name = "scan_dl"
 
     image = fields.Binary("Image", help="Select image here")
     #<field name="image" widget='image' />
