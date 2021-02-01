@@ -6,10 +6,11 @@
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
         <field name="vat" position="after">
-          <button name="action_scan_license" string="Scan DL" type="object" class="btn-primary"/>
+          <button name="%(scan_dl.scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
         </field>
       </field>
     </record>
   </data>
 </odoo>
 <!-- %(scan_dl.scan_dl_wizard)d -->
+<!-- action_scan_license -->
