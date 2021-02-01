@@ -22,7 +22,7 @@
         <field name="name">Scan Drivers License</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">scan.dl</field>
-        <field name="view_id" ref="idk"/>
+        <field name="view_id" ref="scan_dl_form"/>
         <field name="target">new</field>
     </record>
 </odoo>
