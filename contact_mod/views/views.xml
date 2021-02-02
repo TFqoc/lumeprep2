@@ -12,6 +12,7 @@
           <field name="is_over_21" string="21+"/>
           <button name="warn" string="Issue Warning" />
           <field name="is_banned" invisible="1"/>
+          <div></div>
         </field>
         <field name="image_1920" position="before">
           <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
