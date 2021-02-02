@@ -14,7 +14,7 @@
           <field name="is_banned" invisible="1"/>
           <field name="warnings" invisible="1"/>
           <div>
-            <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: yellow;" attrs="{'invisible': [('warnings', '&lt;', '1')]}" aria-label="Warning 1" title="Warning 1"/>
+            <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: gold;" attrs="{'invisible': [('warnings', '&lt;', '1')]}" aria-label="Warning 1" title="Warning 1"/>
             <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: orange;" attrs="{'invisible': [('warnings', '&lt;', '2')]}" aria-label="Warning 2" title="Warning 2"/>
             <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: red;" attrs="{'invisible': [('warnings', '&lt;', '3')]}" aria-label="Warning 3" title="Warning 3"/>
           </div>
