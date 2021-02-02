@@ -4,11 +4,11 @@
       <field name="name">res.partner.inherit</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-        <field name="vat" position="after">
+      <xpath expr="/form/*" position="before">
+        <header>
           <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
-        </field>
-      </field>
+        </header>
+      </xpath>
     </record>
   </data>
 </odoo>
