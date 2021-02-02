@@ -14,7 +14,20 @@ class Partner(models.Model):
     drivers_licence_number = fields.Char()
     drivers_licence_expiration = fields.Date()
 
-    @api.depends('is_over_21')
+    last_visit = fields.Datetime()
+
+    warnings = fields.Integer()
+    is_banned = fields.Boolean(compute='_compute_banned', default=False)
+
+    @api.depends('date_of_birth')#will be accurate when dob is entered, but not if they later become 21
     def _compute_21(self):
         for record in self:
             record.is_over_21 = datetime.date.today().year - self.date_of_birth.year >= 21
+
+    @api.depends('warnings')
+    def _compute_banned(self):
+        for record in self:
+            record.is_banned = self.warnings >= 3
+    
+    def warn(self):
+        self.warnings += 1
