@@ -22,7 +22,7 @@ class Partner(models.Model):
     @api.depends('date_of_birth')#will be accurate when dob is entered, but not if they later become 21
     def _compute_21(self):
         for record in self:
-            record.is_over_21 = ((datetime.date.today().year - self.date_of_birth.to_date().year) >= 21)
+            record.is_over_21 = ((datetime.date.today().year - record.date_of_birth.to_date().year) >= 21)
 
     @api.depends('warnings')
     def _compute_banned(self):
