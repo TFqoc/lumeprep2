@@ -22,8 +22,11 @@ class Partner(models.Model):
     @api.depends('date_of_birth')#will be accurate when dob is entered, but not if they later become 21
     def _compute_21(self):
         for record in self:
-            difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
-            record['is_over_21'] = difference_in_years >= 21
+            if record.date_of_birth is False:# In case dob is not set yet
+                record.is_over_21 = False
+            else:
+                difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
+                record['is_over_21'] = difference_in_years >= 21
 
 
     @api.depends('warnings')
