@@ -7,7 +7,7 @@
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <!-- <a href="www.google.com">TEST</a> -->
-          <a href="web?debug=1#id=8&model=res.partner">
+          <a href="web?debug=1#id=8&amp;model=res.partner">
             <field name="project_id" widget="badge"/>
           </a>
         </xpath>
