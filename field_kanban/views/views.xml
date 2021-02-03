@@ -6,10 +6,9 @@
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
-          <!-- <a href="www.google.com">TEST</a> -->
-          <a href="web?debug=1#id=8&amp;model=res.partner">
-            <field name="project_id" widget="badge"/>
-          </a>
+          <!-- <a href="web?debug=1#id=8&amp;model=res.partner"> -->
+          <field name="project_id" widget="res_partner_many2one"/>
+          <!-- </a> -->
         </xpath>
       </field>
     </record>
