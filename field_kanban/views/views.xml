@@ -5,10 +5,7 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
-        <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="replace">
-          <!-- <field name="priority" position="before">
-              <div>TEXT HERE</div>
-          </field> -->
+        <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <div>TEST</div>
         </xpath>
       </field>
