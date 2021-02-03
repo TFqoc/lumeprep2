@@ -1,5 +1,15 @@
 <odoo>
   <data>
+    <record id="view_project_kanban_inherit" model="ir.ui.view">
+      <field name="name">project.task.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
+          <field name="priority" position="before">
+              <div>TEXT HERE</div>
+          </field>
+      </field>
+    </record>
     <!-- explicit list view definition -->
 <!--
     <record model="ir.ui.view" id="field_kanban.list">
