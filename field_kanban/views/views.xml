@@ -6,7 +6,7 @@
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
-          <div>TEST</div>
+          <a href="www.google.com">TEST</a>
         </xpath>
       </field>
     </record>
