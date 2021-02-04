@@ -41,10 +41,13 @@
           <field name="partner_id" widget="res_partner_many2one"/>
           <!-- </a> -->
         </xpath>
-        <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project" js_class="project_kanban" sample="1" position="before">
-          <!-- <button name="test" string="Scan" type="object" class="btn btn-primary" /> -->
+         <!-- <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project" js_class="project_kanban" sample="1" position="before">
+           <button name="test" string="Scan" type="object" class="btn btn-primary" />
             <div>TEST</div>
-        </kanban>
+        </kanban> -->
+        <field name="partner_id" position="replace"/>
+          <field name="partner_id" widget="res_partner_many2one"/>
+        </field>
       </field>
     </record>
 
