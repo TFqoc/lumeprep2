@@ -42,9 +42,7 @@
           <!-- </a> -->
         </xpath>
         <xpath expr="//kanban" position="before">
-          <header>
-            <button name="test" string="Scan" type="object" class="btn btn-primary" />
-          </header>
+          <button name="test" string="Scan" type="object" class="btn btn-primary" />
         </xpath>
       </field>
     </record>
