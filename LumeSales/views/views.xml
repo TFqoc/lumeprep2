@@ -38,7 +38,7 @@
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <!-- <a href="web?debug=1#id=8&amp;model=res.partner"> -->
-          <field name="project_id" widget="res_partner_many2one"/>
+          <field name="partner_id" widget="res_partner_many2one"/>
           <!-- </a> -->
         </xpath>
       </field>
