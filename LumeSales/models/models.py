@@ -41,3 +41,6 @@ class field_kanban(models.Model):
     #_name = 'field_kanban.field_kanban'
     _inherit = 'project.task'
     #_description = 'field_kanban.field_kanban'
+
+    def test(self):
+        pass
