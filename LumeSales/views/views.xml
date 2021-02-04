@@ -45,7 +45,7 @@
           <header>
             <button name="test" string="Scan" type="object" class="btn btn-primary" />
           </header>
-        <xpath>
+        </xpath>
       </field>
     </record>
 
