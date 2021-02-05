@@ -41,7 +41,7 @@
           <field name="time_counter"/>
           <script async="async">
           async function run_timer(){
-           timer =  "null";
+           timer =  false;
            seconds = 0;
            while (true){
              await new Promise(r => setTimeout(r, 2000));
