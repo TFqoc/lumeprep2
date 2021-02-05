@@ -48,8 +48,10 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
-        <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="before">
-          <div>TEST</div>
+        <xpath expr="/kanban" position="before">
+          <header>
+            <button name="test" string="Scan DL" type="object" class="btn-primary"/>
+          </header>
         </xpath>
       </field>
     </record>
