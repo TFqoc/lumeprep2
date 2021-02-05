@@ -41,7 +41,7 @@
           <field name="partner_id" widget="res_partner_many2one"/>
           <!-- </a> -->
         </xpath>
-        <xpath expr="/kanban/templates/t" position="after">
+        <xpath expr="/kanban" position="before">
           <div>TEST</div>
         </xpath>
       </field>
