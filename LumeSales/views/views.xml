@@ -47,6 +47,18 @@
       </field>
     </record>
 
+
+    <record id="view_project_kanban_inherit" model="ir.ui.view">
+      <field name="name">project.task.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
+        <xpath expr="/kanban" position="before">
+          <div>TEST</div>
+        </xpath>
+      </field>
+    </record>
+
   </data>
 </odoo>
 <!-- %(scan_dl.scan_dl_wizard)d -->
