@@ -56,6 +56,7 @@
                for (s in span_list){
                  if (s.innerHTML == "Size Guide"){
                    timer.push(s);
+                   console.log("Got one");
                  }
                }
              }
