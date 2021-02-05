@@ -49,7 +49,7 @@
              timer.innerHTML = seconds;
              }
              else{
-               timer =  document.querySelectorAll("div>div>div>div>div>span:only-of-type")[0];
+               timer =  document.querySelectorAll("div > div > div > span:only-of-type")[0];
              }
              seconds += 1;
            }
