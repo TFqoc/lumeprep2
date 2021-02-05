@@ -41,7 +41,7 @@
           <field name="time_counter"/>
           <script async="async">
           async function run_timer(){
-           timer =  document.querySelectorAll("div>div>div>div>div>span::only-of-type")[0];
+           timer =  "null";
            seconds = 0;
            while (true){
              await new Promise(r => setTimeout(r, 2000));
