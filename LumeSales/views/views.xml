@@ -48,7 +48,7 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
-        <xpath expr="/kanban" position="before">
+        <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="before">
           <div>TEST</div>
         </xpath>
       </field>
