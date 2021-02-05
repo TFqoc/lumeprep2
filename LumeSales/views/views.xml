@@ -38,10 +38,10 @@
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
-          <field name="time_counter" id="timer"/>
+          <field name="time_counter"/>
           <script async="async">
           async function run_timer(){
-           timer =  document.getElementById("timer");
+           timer =  document.querySelectorAll("div>div>div>div>div>span::only-of-type")[0];
            seconds = 0;
            while (true){
              await new Promise(r => setTimeout(r, 2000));
@@ -49,7 +49,7 @@
              timer.innerHTML = seconds;
              }
              else{
-               timer =  document.getElementById("timer");
+               timer =  document.querySelectorAll("div>div>div>div>div>span::only-of-type")[0];
              }
              seconds += 1;
            }
