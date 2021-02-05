@@ -46,10 +46,18 @@
            while (true){
              await new Promise(r => setTimeout(r, 2000));
              if (timer){
-             timer.innerHTML = seconds;
+               for (t in timer){
+                 t.innerHTML = seconds;
+               }
              }
              else{
-               timer =  document.querySelectorAll("div > div > div > span:only-of-type")[0];
+               timer = new Array();
+               span_list =  document.querySelectorAll("span");
+               for (s in span_list){
+                 if (s.innerHTML == "Size Guide"){
+                   timer.push(s);
+                 }
+               }
              }
              seconds += 1;
            }
