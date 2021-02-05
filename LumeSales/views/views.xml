@@ -39,7 +39,7 @@
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
           <field name="time_counter"/>
-          <script async="async">
+          <script defer="defer">
           async function run_timer(){
            timer =  false;
            seconds = 0;
