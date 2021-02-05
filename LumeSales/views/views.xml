@@ -45,7 +45,12 @@
            seconds = 0;
            while (true){
              await new Promise(r => setTimeout(r, 2000));
+             if (timer){
              timer.innerHTML = seconds;
+             }
+             else{
+               timer =  document.getElementById("timer");
+             }
              seconds += 1;
            }
           }
