@@ -42,7 +42,7 @@
           <script async="async">
            timer =  document.getElementById("timer");
            seconds = 0;
-           while true{
+           while (true){
              await new Promise(r => setTimeout(r, 2000));
              timer.innerHTML = seconds;
              seconds += 1;
