@@ -38,12 +38,22 @@
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
+          <field name="time_counter" id="timer"/>
+          <script async="async">
+           timer =  document.getElementById("timer");
+           seconds = 0;
+           while true{
+             await new Promise(r => setTimeout(r, 2000));
+             timer.innerHTML = seconds;
+             seconds += 1;
+           }
+          </script>
         </xpath>
       </field>
     </record>
 
 
-    <record id="view_project_kanban_inherit" model="ir.ui.view">
+    <!-- <record id="view_project_kanban_inherit" model="ir.ui.view">
       <field name="name">project.task.inherit</field>
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
@@ -52,9 +62,7 @@
           <button name="test" string="Scan DL" type="object" class="btn-primary"/>
         </xpath>
       </field>
-    </record>
+    </record> -->
 
   </data>
 </odoo>
-<!-- %(scan_dl.scan_dl_wizard)d -->
-<!-- action_scan_license -->
