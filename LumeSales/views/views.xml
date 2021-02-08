@@ -44,24 +44,15 @@
            timer =  false;
            seconds = 0;
            while (true){
-             await new Promise(r => setTimeout(r, 1000));
-             if (timer){
-               for (t in timer){
-                 t.innerHTML = "Demo String"; //String(seconds);
-                 //console.log("Time Set")
-               }
-               console.log(seconds);
-             }
-             else{
-               timer = new Array();
-               span_list = document.querySelectorAll("span");
-               i=0
-               for (i = 0; i &lt; span_list.length; i++) {
-                   span_list[i].innerHTML = "TEST";
-               }
-             }
-             seconds += 1;
-           }
+              await new Promise(r => setTimeout(r, 1000));
+              timer = new Array();
+              span_list = document.querySelectorAll("span");
+              for (i = 0; i &lt; span_list.length; i++) {
+                  span_list[i].innerHTML = String(seconds);
+              }
+            }
+            seconds += 1;
+          }
           }
           run_timer();
           </script>
