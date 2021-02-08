@@ -43,7 +43,7 @@ class ScanDL(models.TransientModel):
         }
         """
         contact_ids = self.env.context.get('active_ids', [])
-        contact = self.env['res.partner'].browse(contact_ids)
+        contact = self.env['res.partner'].browse(contact_ids)[0]
 
         dlstring = self.raw_text
         dlstring = dlstring.split('\\n') #the characters \ and n are literally in the string in my test.
