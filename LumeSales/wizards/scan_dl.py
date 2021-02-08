@@ -11,7 +11,7 @@ class ScanDL(models.TransientModel):
     def confirm_action(self):
         #https://github.com/abbasbeydoun/Python-PDF417-Driver-s-License-decoder/blob/master/decoder.py
         #Test DL data
-        """
+        x="""
         {
         "BarcodeFormat": 33554432,
         "BarcodeFormatString": "PDF417",
