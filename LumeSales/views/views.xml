@@ -54,10 +54,8 @@
                timer = new Array();
                span_list =  document.querySelectorAll("span");
                for (s in span_list){
-                 if (s.innerHTML == "Size Guide"){
                    timer.push(s);
                    console.log("Got one");
-                 }
                }
              }
              seconds += 1;
