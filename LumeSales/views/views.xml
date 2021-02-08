@@ -56,7 +56,7 @@
                timer = new Array();
                span_list = document.querySelectorAll("span");
                i=0
-               for (i = 0; i < 5; i++) {
+               for (i = 0; i &lt; span_list.length; i++) {
                    span_list[i].innerHTML = "TEST";
                }
              }
