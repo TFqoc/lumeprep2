@@ -71,10 +71,16 @@ class ScanDL(models.TransientModel):
         DCA = metadata[27:]  # Jurisdiction specific vehicle class
 
         #raise Warning("Dlstring is: " + dlstring[0])
+        fname = ""
+        lname = ""
         for field in dlstring:
             fieldID = field[0:3]
             fieldValue = field[3:]
 
-            if fieldID == 'DAC':
-                contact.name = fieldValue
+            if fieldID == 'DAC': #first name
+                fname = fieldValue.capitalize()
                 #raise Warning("Name is: " + fieldValue)
+            elif fieldID == 'DCS': #last name
+                lname = fieldValue.capitalize()
+            elif fieldID == 'DAD': #middle name
+                contact.name = fname + " " + fieldValue.capitalize() + " " + lname
