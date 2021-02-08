@@ -97,8 +97,9 @@ class ScanDL(models.TransientModel):
                 for w in words:
                     city = " ".join([city,w.capitalize()])
                 contact.city = city
-            # elif fieldID == 'DAJ': # Need to figure out state ID
-            #     contact.state_id = fieldValue
+            elif fieldID == 'DAJ': # Need to figure out state ID
+                contact.state_id = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+                pass
             elif fieldID == 'DAK': #ZIP code
                 contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
             elif fieldID == 'DBB': #date of birth in numbers
@@ -111,7 +112,5 @@ class ScanDL(models.TransientModel):
                 day = int(fieldValue[2:4])
                 year = int(fieldValue[4:])
                 contact.drivers_licence_expiration = datetime.date(year, month, day)
-                pass
             elif fieldID == 'DAQ': # DL number
-                #contact.drivers_number = fieldValue
-                pass
+                contact.drivers_licence_number = fieldValue
