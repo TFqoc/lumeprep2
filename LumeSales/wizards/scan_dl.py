@@ -1,4 +1,5 @@
 from odoo import models, fields
+import datetime
 
 class ScanDL(models.TransientModel):
     _name = "scan_dl"
@@ -90,13 +91,18 @@ class ScanDL(models.TransientModel):
                 for w in words:
                     street += w.capitalize()
                 contact.street = street
-            elif fieldID == 'DAI':
+            elif fieldID == 'DAI': # City name
                 words = fieldValue.split(' ')
                 city = ""
                 for w in words:
-                    city += w.capitalize()
+                    city = " ".join([city,w.capitalize()])
                 contact.city = city
             # elif fieldID == 'DAJ': # Need to figure out state ID
             #     contact.state_id = fieldValue
-            elif fieldID == 'DAK':
-                contact.zip = fieldValue
+            elif fieldID == 'DAK': #ZIP code
+                contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
+            elif fieldID == 'DBB': #date of birth in numbers
+                month = int(fieldValue[:2])
+                day = int(fieldValue[2:4])
+                year = int(fieldValue[4:])
+                contact.date_of_birth = datetime.date(year, month, day)
