@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dl__reader_dl__reader,dl__reader.dl__reader,model_dl__reader_dl__reader,base.group_user,1,1,1,1
+access_lume_sales_lume_sales,lume_sales.lume_sales,model_lume_sales_lume_sales,base.group_user,1,1,1,1
