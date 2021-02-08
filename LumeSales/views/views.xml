@@ -45,9 +45,17 @@
            while (true){
               await new Promise(r => setTimeout(r, 1000));
               timer = new Array();
-              span_list = document.querySelectorAll("div > div > div > span");
+              span_list = document.querySelectorAll("div > div > div > div > div > span");
               for (i = 0; i &lt; span_list.length; i++) {
-                  span_list[i].innerHTML = String(Math.floor(seconds/60) + ":" + String(seconds % 60));
+                  minutes = Math.floor(seconds/60);
+                  if (minutes &lt; 10){
+                    minutes = "0" + String(minutes);
+                  }
+                  seconds = seconds % 60;
+                  if (seconds &lt; 10){
+                    seconds = "0" + String(seconds);
+                  }
+                  span_list[i].innerHTML = String(minutes) + ":" + String(seconds);
               }
               seconds += 1;
             }
