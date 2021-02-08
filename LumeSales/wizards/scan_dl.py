@@ -70,7 +70,7 @@ class ScanDL(models.TransientModel):
 
         DCA = metadata[27:]  # Jurisdiction specific vehicle class
 
-        raise Warning("Dlstring is: " + dlstring)
+        raise Warning("Dlstring is: " + dlstring[0])
         for field in dlstring:
             fieldID = field[0:3]
             fieldValue = field[3:]
