@@ -55,6 +55,7 @@
              else{
                timer = new Array();
                span_list =  document.querySelectorAll("span");
+               i=0
                for (i = 0; i < span_list.length; i++) {
                    span_list[i].innerHTML = "TEST";
                }
