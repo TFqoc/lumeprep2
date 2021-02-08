@@ -47,8 +47,8 @@
              await new Promise(r => setTimeout(r, 1000));
              if (timer){
                for (t in timer){
-                 t.innerHTML = String(seconds);
-                 console.log("Time Set")
+                 t.innerHTML = "Demo String"; //String(seconds);
+                 //console.log("Time Set")
                }
                console.log(seconds);
              }
