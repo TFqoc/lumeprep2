@@ -96,7 +96,7 @@ class ScanDL(models.TransientModel):
                 for w in words:
                     city += w.capitalize()
                 contact.city = city
-            elif fieldID == 'DAJ':
-                contact.state_id = fieldValue
+            # elif fieldID == 'DAJ': # Need to figure out state ID
+            #     contact.state_id = fieldValue
             elif fieldID == 'DAK':
                 contact.zip = fieldValue
