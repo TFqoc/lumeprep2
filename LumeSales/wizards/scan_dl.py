@@ -77,4 +77,4 @@ class ScanDL(models.TransientModel):
 
             if fieldID == 'DAC':
                 contact.name = fieldValue
-                raise Warning("Name is: " + fieldValue)
+                #raise Warning("Name is: " + fieldValue)
