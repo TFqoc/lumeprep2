@@ -46,3 +46,8 @@ class field_kanban(models.Model):
 
     def test(self):
         pass
+
+class product_addons(models.Model):
+    _inherit='product.template'
+
+    is_medical = fields.Boolean()
