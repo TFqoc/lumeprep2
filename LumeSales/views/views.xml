@@ -41,18 +41,16 @@
           <field name="time_counter"/>
           <script defer="defer">
           async function run_timer(){
-           timer =  false;
            seconds = 0;
            while (true){
               await new Promise(r => setTimeout(r, 1000));
               timer = new Array();
-              span_list = document.querySelectorAll("span");
+              span_list = document.querySelectorAll("div > div > div > span");
               for (i = 0; i &lt; span_list.length; i++) {
-                  span_list[i].innerHTML = String(seconds);
+                  span_list[i].innerHTML = String(Math.floor(seconds/60) + ":" + String(seconds % 60));
               }
+              seconds += 1;
             }
-            seconds += 1;
-          }
           }
           run_timer();
           </script>
