@@ -84,3 +84,19 @@ class ScanDL(models.TransientModel):
                 lname = fieldValue.capitalize()
             elif fieldID == 'DAD': #middle name
                 contact.name = fname + " " + fieldValue.capitalize() + " " + lname
+            elif fieldID == 'DAG': #Address line 1
+                words = fieldValue.split(' ')
+                street = ""
+                for w in words:
+                    street += w.capitalize()
+                contact.street = street
+            elif fieldID == 'DAI':
+                words = fieldValue.split(' ')
+                city = ""
+                for w in words:
+                    city += w.capitalize()
+                contact.city = city
+            elif fieldID == 'DAJ':
+                contact.state_id = fieldValue
+            elif fieldID == 'DAK':
+                contact.zip = fieldValue
