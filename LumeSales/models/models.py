@@ -37,6 +37,9 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    def verify_address(self):
+        pass
+
 class field_kanban(models.Model):
     #_name = 'field_kanban.field_kanban'
     _inherit = 'project.task'
