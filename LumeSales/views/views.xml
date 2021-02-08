@@ -53,7 +53,7 @@
              else{
                timer = new Array();
                span_list =  document.querySelectorAll("span");
-               for (s in span_list){
+               for (s in span_list){ 
                    timer.push(s);
                    console.log("Got one");
                }
