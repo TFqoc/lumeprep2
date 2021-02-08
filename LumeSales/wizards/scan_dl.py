@@ -113,4 +113,4 @@ class ScanDL(models.TransientModel):
             #     decodedfile.write('Country Identification: ')
             # elif fieldID == 'DCK':
             #     decodedfile.write('Inventory control number: ')
-            #
+            
