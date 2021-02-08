@@ -48,8 +48,9 @@
              if (timer){
                for (t in timer){
                  t.innerHTML = String(seconds);
+                 console.log("Time Set")
                }
-               console.log("Tick");
+               console.log(seconds);
              }
              else{
                timer = new Array();
