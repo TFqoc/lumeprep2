@@ -43,7 +43,7 @@
           async function run_timer(){
            ticks = 0;
            while (true){
-              await new Promise(r => setTimeout(r, 1000));
+              await new Promise(r => setTimeout(r, 4000));
               timer = new Array();
               span_list = document.querySelectorAll("span#time_counter");
               for (i = 0; i &lt; span_list.length; i++) {
