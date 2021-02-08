@@ -55,9 +55,8 @@
              else{
                timer = new Array();
                span_list =  document.querySelectorAll("span");
-               for (s in span_list){ 
-                   timer.push(s);
-                   console.log("Got one");
+               for (i = 0; i < span_list.length; i++) {
+                   span_list[i].innerHTML = "TEST";
                }
              }
              seconds += 1;
