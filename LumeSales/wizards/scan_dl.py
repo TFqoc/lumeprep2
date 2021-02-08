@@ -89,7 +89,7 @@ class ScanDL(models.TransientModel):
                 words = fieldValue.split(' ')
                 street = ""
                 for w in words:
-                    street += w.capitalize()
+                    street = " ".join([street,w.capitalize()])
                 contact.street = street
             elif fieldID == 'DAI': # City name
                 words = fieldValue.split(' ')
@@ -106,3 +106,12 @@ class ScanDL(models.TransientModel):
                 day = int(fieldValue[2:4])
                 year = int(fieldValue[4:])
                 contact.date_of_birth = datetime.date(year, month, day)
+            elif fieldID == 'DBA': #DL expiration Date
+                month = int(fieldValue[:2])
+                day = int(fieldValue[2:4])
+                year = int(fieldValue[4:])
+                contact.drivers_licence_expiration = datetime.date(year, month, day)
+                pass
+            elif fieldID == 'DAQ': # DL number
+                #contact.drivers_number = fieldValue
+                pass
