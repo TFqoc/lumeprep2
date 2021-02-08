@@ -44,11 +44,12 @@
            timer =  false;
            seconds = 0;
            while (true){
-             await new Promise(r => setTimeout(r, 2000));
+             await new Promise(r => setTimeout(r, 1000));
              if (timer){
                for (t in timer){
-                 t.innerHTML = seconds;
+                 t.innerHTML = String(seconds);
                }
+               console.log("Tick");
              }
              else{
                timer = new Array();
