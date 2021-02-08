@@ -39,8 +39,8 @@
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
           <span id="time_counter"></span>
-        </xpath>
-        <script defer="defer">
+          <script defer="defer">
+          defined = false;
           async function run_timer(){
            ticks = 0;
            while (true){
@@ -61,8 +61,12 @@
               ticks += 1;
             }
           }
-          run_timer();
+          if (!defined){
+            run_timer();
+            defined = true;
+          }
           </script>
+        </xpath>
       </field>
     </record>
 
