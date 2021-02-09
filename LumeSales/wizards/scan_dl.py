@@ -120,11 +120,12 @@ class ScanDL(models.TransientModel):
                 #contact.drivers_license_number = fieldValue
                 data['drivers_license_number'] = fieldValue
         
-        record_exists = self.env['res.partner'].search_count([['drivers_license_number','=',data['drivers_license_number']]]) > 0
+        record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
         if record_exists is True:
-            message_id = self.env['message.wizard'].create({'message': ("That customer already exists!")})
+            # TODO Select whatever record for the kanban view
+            message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name)})
             return {
-                'name': ('Warning'),
+                'name': ('Customer'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'message.wizard',
