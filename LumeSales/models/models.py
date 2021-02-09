@@ -51,7 +51,9 @@ class tasks(models.Model):
     def test(self):
         pass
 
-    def create(self, values):
+    def create(self, values=None):
+        if values == None:
+            return
         """Override default Odoo create function and extend."""
         # Do your custom logic here
         raise Warning(values)
