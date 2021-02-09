@@ -26,6 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizards/scan_dl.xml',
+        'wizrds/message_wizard.xml'
         'views/views.xml',
         'views/templates.xml',
     ],

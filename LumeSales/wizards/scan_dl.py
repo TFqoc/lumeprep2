@@ -59,19 +59,17 @@ class ScanDL(models.TransientModel):
 
         dlstring.remove(metadata)
 
-        IIN = metadata[0:6]  # Issuer Identification Number
-        AAMVAV = metadata[6:8]  # AAMVA Version number
-        JV = metadata[8:10]  # Jurisdiction Version number
-        entries = metadata[10:12]  # Number of entries
+        meta = {}
+        meta['IIN'] = metadata[0:6] # Issuer Identification Number
+        meta['AAMVAV'] = metadata[6:8] # AAMVA Version Number
+        meta['JV'] = metadata[8:10] # Jurisdiction Version Number
+        meta['entries'] = metadata[10:12] # Number of Entries
+        meta['DL'] = metadata[12:14]
+        meta['offset'] = metadata[14:18] # offset for this subfile
+        meta['subfile_length'] = metadata[18:22]
+        meta['DCA'] = metadata[27:] # Jurisdiction specific vehicle class
 
-        DL = metadata[12:14]
-
-        offset = metadata[14:18]  # offset for this subfile
-        subfile_length = metadata[18:22]
-
-        DCA = metadata[27:]  # Jurisdiction specific vehicle class
-
-        #raise Warning("Dlstring is: " + dlstring[0])
+        data = {}
         fname = ""
         lname = ""
         for field in dlstring:
@@ -84,33 +82,62 @@ class ScanDL(models.TransientModel):
             elif fieldID == 'DCS': #last name
                 lname = fieldValue.capitalize()
             elif fieldID == 'DAD': #middle name
-                contact.name = fname + " " + fieldValue.capitalize() + " " + lname
+                #contact.name = fname + " " + fieldValue.capitalize() + " " + lname
+                data['name'] = fname + " " + fieldValue.capitalize() + " " + lname
             elif fieldID == 'DAG': #Address line 1
                 words = fieldValue.split(' ')
                 street = ""
                 for w in words:
                     street = " ".join([street,w.capitalize()])
-                contact.street = street
+                #contact.street = street
+                data['street'] = street
             elif fieldID == 'DAI': # City name
                 words = fieldValue.split(' ')
                 city = ""
                 for w in words:
                     city = " ".join([city,w.capitalize()])
-                contact.city = city
+                #contact.city = city
+                data['city'] = city
             elif fieldID == 'DAJ': # Need to figure out state ID
-                contact.state_id = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
-                pass
+                #contact.state_id = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+                data['state_id'] = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
             elif fieldID == 'DAK': #ZIP code
-                contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
+                #contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
+                data['zip'] = fieldValue[:5] + '-' + fieldValue[5:]
             elif fieldID == 'DBB': #date of birth in numbers
                 month = int(fieldValue[:2])
                 day = int(fieldValue[2:4])
                 year = int(fieldValue[4:])
-                contact.date_of_birth = datetime.date(year, month, day)
+                #contact.date_of_birth = datetime.date(year, month, day)
+                data['date_of_birth'] = datetime.date(year, month, day)
             elif fieldID == 'DBA': #DL expiration Date
                 month = int(fieldValue[:2])
                 day = int(fieldValue[2:4])
                 year = int(fieldValue[4:])
-                contact.drivers_licence_expiration = datetime.date(year, month, day)
+                #contact.drivers_license_expiration = datetime.date(year, month, day)
+                data['drivers_license_expiration'] = datetime.date(year,month,day)
             elif fieldID == 'DAQ': # DL number
-                contact.drivers_licence_number = fieldValue
+                #contact.drivers_license_number = fieldValue
+                data['drivers_license_number'] = fieldValue
+        
+        record_exists = self.env['res.partner'].search_count([['drivers_license_number','=',data['drivers_license_number']]]) > 0
+        if record_exists is True:
+            message_id = self.env['message.wizard'].create({'message': _("Invitation is successfully sent")})
+            return {
+                'name': ('Successfull'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'message.wizard',
+                # pass the id
+                'res_id': message_id.id,
+                'target': 'new'
+            }
+        else:
+            contact.name = data['name']
+            contact.street = data['street']
+            contact.city = data['city']
+            contact.state_id = data['state_id']
+            contact.zip = data['zip']
+            contact.date_of_birth = data['date_of_birth']
+            contact.drivers_license_expiration = data['drivers_license_expiration']
+            contact.drivers_license_number = data['drivers_license_number']
