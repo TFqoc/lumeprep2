@@ -84,6 +84,7 @@
       <field name="arch" type="xml">
         <field name="name" position="after">
           <field name="partner_id"/>
+          <button string="Issue Warning" class="btn btn-primary" />
         </field>
       </field>
     </record>
