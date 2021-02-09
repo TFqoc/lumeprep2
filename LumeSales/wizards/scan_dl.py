@@ -141,4 +141,4 @@ class ScanDL(models.TransientModel):
             contact.date_of_birth = data['date_of_birth']
             contact.drivers_license_expiration = data['drivers_license_expiration']
             contact.drivers_license_number = data['drivers_license_number']
-            
+            #
