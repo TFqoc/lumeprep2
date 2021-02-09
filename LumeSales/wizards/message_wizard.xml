@@ -5,14 +5,14 @@
         <field name="name">message.wizard.form</field>
         <field name="model">message.wizard</field>
         <field name="arch" type="xml">
-            <form >
+            <form>
                 <p class="text-center">
                     <field name="message"/>
                 </p>
             <footer>
                 <button name="action_ok" string="Ok" type="object" default_focus="1" class="oe_highlight"/> 
             </footer>
-            <form>
+            </form>
         </field>
     </record>
 </data>
