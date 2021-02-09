@@ -53,10 +53,11 @@ class tasks(models.Model):
     def test(self):
         pass
 
-    def create(self, values):
+    def create(self):
         """Override default Odoo create function and extend."""
-        _logger.debug(values)
-        return super(tasks, self).create(values)
+        _logger.debug("Loading task")
+        self.name = "Special Task"
+        return super(tasks, self).create()
 
 class project_inherit(models.Model):
     _inherit = 'project.project'
