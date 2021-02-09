@@ -70,7 +70,7 @@ class ScanDL(models.TransientModel):
                 'name': data['name'],
                 'street': data['street'],
                 'city': data['city'],
-                'state_id': data['state_id'],
+                'state_id': data['state_id'].id,
                 'zip': data['zip'],
                 'date_of_birth': data['date_of_birth'],
                 'drivers_license_expiration': data['drivers_license_expiration'],
