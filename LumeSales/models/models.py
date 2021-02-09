@@ -53,6 +53,7 @@ class tasks(models.Model):
     def test(self):
         pass
 
+    @api.model
     def create(self, vals_list):
         """Override default Odoo create function and extend."""
         _logger.debug("Loading task")
