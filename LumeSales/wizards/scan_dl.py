@@ -55,16 +55,16 @@ class ScanDL(models.TransientModel):
             # TODO Select whatever record for the kanban view
             customer_id = record_exists[0].id
 
-            message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name + str(customer_id))})
-            return {
-                'name': ('Customer'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'message.wizard',
-                # pass the id
-                'res_id': message_id.id,
-                'target': 'new'
-            }
+            # message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name + str(customer_id))})
+            # return {
+            #     'name': ('Customer'),
+            #     'type': 'ir.actions.act_window',
+            #     'view_mode': 'form',
+            #     'res_model': 'message.wizard',
+            #     # pass the id
+            #     'res_id': message_id.id,
+            #     'target': 'new'
+            # }
         else: #create new customer, then create task
             new_customer = self.env['res.partner'].create({
                 'name': data['name'],
