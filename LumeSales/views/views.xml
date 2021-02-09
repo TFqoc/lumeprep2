@@ -75,12 +75,14 @@
       </field>
     </record>
 
+    <!-- Quick Create task menu -->
     <record id="view_project_kanban_quick_create_inherit" model="ir.ui.view">
       <field name="name">project.task.quick_create.inherit</field>
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.quick_create_task_form"/>
+      <field name="type">form</field>
       <field name="arch" type="xml">
-        <field name="name" string="Task Title" position="after">
+        <field name="name" position="after">
           <field name="partner_id"/>
         </field>
       </field>
