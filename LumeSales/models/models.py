@@ -40,12 +40,13 @@ class Partner(models.Model):
     def verify_address(self):
         pass
 
-class field_kanban(models.Model):
+class tasks(models.Model):
     #_name = 'field_kanban.field_kanban'
     _inherit = 'project.task'
     #_description = 'field_kanban.field_kanban'
 
     time_counter = fields.Char(default='Size Guide')
+    name = fields.Char(required=False)
 
     def test(self):
         pass
@@ -54,3 +55,4 @@ class product_addons(models.Model):
     _inherit='product.template'
 
     is_medical = fields.Boolean()
+

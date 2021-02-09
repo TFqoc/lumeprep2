@@ -7,7 +7,7 @@
       <field name="arch" type="xml">
         <xpath expr="//form//sheet" position="before">
             <header>
-                <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
+                <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
             </header>
         </xpath>
         <field name="vat" position="after">
@@ -82,9 +82,11 @@
       <field name="inherit_id" ref="project.quick_create_task_form"/>
       <field name="type">form</field>
       <field name="arch" type="xml">
+        <field name="name" position="before">
+          <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
+        </field>
         <field name="name" position="after">
           <field name="partner_id"/>
-          <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
         </field>
       </field>
     </record>

@@ -44,10 +44,57 @@ class ScanDL(models.TransientModel):
         }
         """
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
-        contact_ids = self.env.context.get('active_ids', [])
-        contact = self.env['res.partner'].browse(contact_ids)[0]
+        ids = self.env.context.get('active_ids', [])
+        target_record = self.env['res.partner'].browse(ids)[0]
 
-        dlstring = self.raw_text
+        meta, data = self.parse_barcode(self.raw_text)
+        
+        customer_id = ""
+        record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
+        if len(record_exists) > 0:
+            # TODO Select whatever record for the kanban view
+            customer_id = record_exists[0].id
+
+            message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name)})
+            return {
+                'name': ('Customer'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'message.wizard',
+                # pass the id
+                'res_id': message_id.id,
+                'target': 'new'
+            }
+        else: #create new customer, then create task
+            new_customer = self.env['res.partner'].create({
+                'name': data['name'],
+                'street': data['street'],
+                'city': data['city'],
+                'state_id': data['state_id'],
+                'zip': data['zip'],
+                'date_of_birth': data['date_of_birth'],
+                'drivers_license_expiration': data['drivers_license_expiration'],
+                'drivers_license_number': data['drivers_license_number']
+            })
+            customer_id = new_customer.id
+
+        self.env['project.task'].create({
+            'name': 'none',
+            'partner_id': customer_id,
+            'project_id':1,
+            'kanban_state':''
+            })
+            # target_record.name = data['name']
+            # target_record.street = data['street']
+            # target_record.city = data['city']
+            # target_record.state_id = data['state_id']
+            # target_record.zip = data['zip']
+            # target_record.date_of_birth = data['date_of_birth']
+            # target_record.drivers_license_expiration = data['drivers_license_expiration']
+            # target_record.drivers_license_number = data['drivers_license_number']
+
+    def parse_barcode(self, code):
+        dlstring = code
         dlstring = dlstring.split('\\n') #the characters \ and n are literally in the string in my test.
         dlstring = dlstring[2:]
         dlstring = [line.strip() for line in dlstring]
@@ -119,27 +166,4 @@ class ScanDL(models.TransientModel):
             elif fieldID == 'DAQ': # DL number
                 #contact.drivers_license_number = fieldValue
                 data['drivers_license_number'] = fieldValue
-        
-        record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
-        if record_exists is True:
-            # TODO Select whatever record for the kanban view
-            message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name)})
-            return {
-                'name': ('Customer'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'message.wizard',
-                # pass the id
-                'res_id': message_id.id,
-                'target': 'new'
-            }
-        else:
-            contact.name = data['name']
-            contact.street = data['street']
-            contact.city = data['city']
-            contact.state_id = data['state_id']
-            contact.zip = data['zip']
-            contact.date_of_birth = data['date_of_birth']
-            contact.drivers_license_expiration = data['drivers_license_expiration']
-            contact.drivers_license_number = data['drivers_license_number']
-            #
+        return meta, data
