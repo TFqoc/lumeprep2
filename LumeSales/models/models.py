@@ -56,8 +56,8 @@ class tasks(models.Model):
     @api.model
     def create(self, vals_list):
         """Override default Odoo create function and extend."""
-        _logger.debug("Loading task")
-        #self.name = "Special Task"
+        #_logger.debug("Loading task")
+        self.name = "Special Task"
         return super(tasks, self).create(vals_list)
 
 class project_inherit(models.Model):
