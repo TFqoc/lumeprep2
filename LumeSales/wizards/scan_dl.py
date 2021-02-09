@@ -78,37 +78,18 @@ class ScanDL(models.TransientModel):
             })
             customer_id = new_customer.id
 
-        target_record.name = "Test Name"
+        target_record.name = "Customer Order #"
         target_record.partner_id = customer_id
 
+        # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'res.partner',
                 'target': 'new', #for popup style window
-                #'context': self.env.context,
                 'res_id': customer_id,
-                #'domain': [('partner_id','=',customer_id)],
             } 
-
-        # target_record.project_id = 1
-
-        # self.env['project.task'].create({
-        #     'name': 'none',
-        #     'partner_id': customer_id,
-        #     'project_id':1,
-        #     'kanban_state': 0
-        #     })
-
-            # target_record.name = data['name']
-            # target_record.street = data['street']
-            # target_record.city = data['city']
-            # target_record.state_id = data['state_id']
-            # target_record.zip = data['zip']
-            # target_record.date_of_birth = data['date_of_birth']
-            # target_record.drivers_license_expiration = data['drivers_license_expiration']
-            # target_record.drivers_license_number = data['drivers_license_number']
 
     def parse_barcode(self, code):
         dlstring = code

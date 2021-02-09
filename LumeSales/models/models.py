@@ -51,6 +51,17 @@ class tasks(models.Model):
     def test(self):
         pass
 
+    def create(self, values):
+        """Override default Odoo create function and extend."""
+        # Do your custom logic here
+        raise Warning(values)
+        return super(tasks, self).create(values)
+
+class project_inherit(models.Model):
+    _inherit = 'project.project'
+
+    task_number = fields.Integer(default=0)
+
 class product_addons(models.Model):
     _inherit='product.template'
 
