@@ -41,37 +41,47 @@
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
           <span id="time_counter"></span>
-          <script defer="defer">
-          defined = false;
-          async function run_timer(){
-           ticks = 0;
-           span_list = false;
-           while (true){
-              await new Promise(r => setTimeout(r, 1000));
-              timer = new Array();
-              if (!span_list){
-                span_list = document.querySelectorAll("span#time_counter");
-              }
-              for (i = 0; i &lt; span_list.length; i++) {
-                  minutes = Math.floor(ticks/60);
-                  if (minutes &lt; 10){
-                    minutes = "0" + String(minutes);
-                  }
-                  seconds = ticks % 60;
-                  if (seconds &lt; 10){
-                    seconds = "0" + String(seconds);
-                  }
-                  span_list[i].innerHTML = String(minutes) + ":" + String(seconds);
-              }
-              ticks += 1;
-            }
-          }
-          if (!defined){
-            run_timer();
-            defined = true;
-          }
-          </script>
         </xpath>
+      </field>
+    </record>
+
+    <record id="view_project_kanban_search_inherit" model="ir.ui.view">
+      <field name="name">	project.task.search.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="	project.view_task_search_form"/>
+      <field name="arch" type="xml">
+        <field name="name" position="before">
+          <script defer="defer">
+            defined = false;
+            async function run_timer(){
+            ticks = 0;
+            span_list = false;
+            while (true){
+                await new Promise(r => setTimeout(r, 1000));
+                timer = new Array();
+                if (!span_list){
+                  span_list = document.querySelectorAll("span#time_counter");
+                }
+                for (i = 0; i &lt; span_list.length; i++) {
+                    minutes = Math.floor(ticks/60);
+                    if (minutes &lt; 10){
+                      minutes = "0" + String(minutes);
+                    }
+                    seconds = ticks % 60;
+                    if (seconds &lt; 10){
+                      seconds = "0" + String(seconds);
+                    }
+                    span_list[i].innerHTML = String(minutes) + ":" + String(seconds);
+                }
+                ticks += 1;
+              }
+            }
+            if (!defined){
+              run_timer();
+              defined = true;
+            }
+          </script>
+        </field>
       </field>
     </record>
 
