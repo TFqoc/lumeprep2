@@ -85,11 +85,11 @@ class ScanDL(models.TransientModel):
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
-                #'res_model': self.env.context['active_model'],
-                'target': 'current',
+                'res_model': self.env.context['active_model'],
+                'target': 'new', #for popup style window
                 'type': 'ir.actions.act_window',
                 'context': self.env.context,
-                #'res_id': self.env.context['active_id'],
+                'res_id': self.env.context['active_id'],
                 'domain': [('partner_id','=',customer_id)],
             } 
 
