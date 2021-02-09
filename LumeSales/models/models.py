@@ -51,13 +51,13 @@ class tasks(models.Model):
     def test(self):
         pass
 
-    def create(self, values=None):
-        if values == None:
-            return
-        """Override default Odoo create function and extend."""
-        # Do your custom logic here
-        raise Warning(values)
-        return super(tasks, self).create(values)
+    # def create(self, values=None):
+    #     if values == None:
+    #         return
+    #     """Override default Odoo create function and extend."""
+    #     # Do your custom logic here
+    #     raise Warning(values)
+    #     return super(tasks, self).create(values)
 
 class project_inherit(models.Model):
     _inherit = 'project.project'
