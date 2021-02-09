@@ -3,7 +3,7 @@ from odoo import models, fields
 class MessageWizard(models.TransientModel):
     _name = 'message.wizard'
 
-    message = fields.Text('Message', required=True)
+    message = fields.Text('Message', required=True, readonly=True)
 
     #@api.multi
     def action_ok(self):

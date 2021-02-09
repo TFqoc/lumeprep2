@@ -122,9 +122,9 @@ class ScanDL(models.TransientModel):
         
         record_exists = self.env['res.partner'].search_count([['drivers_license_number','=',data['drivers_license_number']]]) > 0
         if record_exists is True:
-            message_id = self.env['message.wizard'].create({'message': ("Invitation is successfully sent")})
+            message_id = self.env['message.wizard'].create({'message': ("That customer already exists!")})
             return {
-                'name': ('Successfull'),
+                'name': ('Warning'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'message.wizard',
