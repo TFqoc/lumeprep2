@@ -75,6 +75,17 @@
       </field>
     </record>
 
+    <record id="view_project_kanban_quick_create_inherit" model="ir.ui.view">
+      <field name="name">project.task.quick_create.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.quick_create_task_form"/>
+      <field name="arch" type="xml">
+        <field name="name" string="Task Title" position="after">
+          <field name="partner_id"/>
+        </field>
+      </field>
+    </record>
+
     <!-- Product Additions -->
     <record id="product_template_inherit" model="ir.ui.view">
       <field name="name">product.template.product.form</field>
