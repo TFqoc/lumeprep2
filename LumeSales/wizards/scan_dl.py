@@ -81,16 +81,16 @@ class ScanDL(models.TransientModel):
         target_record.name = "Test Name"
         target_record.partner_id = customer_id
 
-        # return {
-        #         'type': 'ir.actions.act_window',
-        #         'view_type': 'form',
-        #         'view_mode': 'form',
-        #         'res_model': context['active_model'],
-        #         'target': 'current',
-        #         'context': context,
-        #         'res_id': context['active_id'],
-        #         'domain': [('pr_id','=',pl_new.pr_id['id'])],
-        #     } 
+        return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': self.env.context['active_model'],
+                'target': 'current',
+                'context': self.env.context,
+                'res_id': self.env.context['active_id'],
+                'domain': [('partner_id','=',customer_id)],
+            } 
 
         # target_record.project_id = 1
 
