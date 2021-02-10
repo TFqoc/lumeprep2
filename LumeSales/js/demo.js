@@ -10,6 +10,7 @@ odoo.define('LumeSales.Demo', ['web.kanban_record_quick_create'], function(requi
             return this._rpc({
                 model: 'project.task',
                 method: 'delete_recent',
+                args: [[],[]]
             });
         },
     });
