@@ -57,7 +57,7 @@ class tasks(models.Model):
     def create(self, vals_list):
         """Override default Odoo create function and extend."""
         #Vals_list dictionary contains all the fields of the record to be created
-        vals_list['name'] = "Non-Default Name"
+        #vals_list['name'] = "Non-Default Name"
         return super(tasks, self).create(vals_list)
 
 class project_inherit(models.Model):

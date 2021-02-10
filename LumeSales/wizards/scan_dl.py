@@ -79,6 +79,7 @@ class ScanDL(models.TransientModel):
             customer_id = new_customer.id
 
         target_record.name = "Customer Order #" + str(target_record.project_id.task_number)
+        target_record.project_id.task_number += 1
         target_record.partner_id = customer_id
 
         # Open the customer profile in windowed popup
