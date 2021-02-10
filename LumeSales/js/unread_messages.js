@@ -12,7 +12,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
     rpc.query({
         model: model,
         method: 'search_count',
-        args: [domain, fields],
+        args: [domain],
     }).then(function (data) {
         console.log(data);
     });
