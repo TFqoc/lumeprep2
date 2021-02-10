@@ -61,8 +61,8 @@ class tasks(models.Model):
         return super(tasks, self).create(vals_list)
 
     def delete_recent(self, args):
-        ids = self.env.context.get('active_ids', [])
-        target_record = self.env['project.task'].browse(ids)[0]
+        target_record = self.env['project.task'].search([], order='id desc')[0]
+        # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
 
 class project_inherit(models.Model):
