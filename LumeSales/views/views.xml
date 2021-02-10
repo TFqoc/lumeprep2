@@ -40,6 +40,8 @@
       <field name="arch" type="xml">
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
+          <br/>
+          <span class="glyphicon glyphicon-envelope"></span>
           <span id="time_counter"></span>
           <!-- <script defer="defer">
           defined = false;
