@@ -57,7 +57,19 @@ class tasks(models.Model):
     def create(self, vals_list):
         """Override default Odoo create function and extend."""
         #Vals_list dictionary contains all the fields of the record to be created
-        #vals_list['name'] = "Non-Default Name"
+        # Returns without creating if user is banned
+        if vals_list['partner_id'].is_banned is True:
+            message_id = self.env['message.wizard'].create(
+                {'message': ("Customer " + vals_list['partner_id'].name + " has been banned and cannot be checked in.")})
+            return {
+                'name': ('Customer is Banned'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'message.wizard',
+                # pass the id
+                'res_id': message_id.id,
+                'target': 'new'
+            }
         return super(tasks, self).create(vals_list)
 
     def delete_recent(self, args):

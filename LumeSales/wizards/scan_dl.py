@@ -52,7 +52,6 @@ class ScanDL(models.TransientModel):
         customer_id = ""
         record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
         if len(record_exists) > 0:
-            # TODO Select whatever record for the kanban view
             customer_id = record_exists[0].id
 
             # message_id = self.env['message.wizard'].create({'message': ("Selecting Customer " + record_exists[0].name + str(customer_id))})
