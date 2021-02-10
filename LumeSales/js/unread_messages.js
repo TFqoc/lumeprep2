@@ -1,0 +1,20 @@
+//alert("Unread Messages has been loaded");
+console.log("Unread Messages has been loaded");
+odoo.define('LumeSales.Unread_Messages', ['web.kanban_record_quick_create'], function(require){
+    "use strict";
+
+    var model = 'project.task';
+    // Use an empty array to search for all the records
+    var domain = [['message_unread', '=', true]];
+    // Use an empty array to read all the fields of the records
+    var fields = [];
+    rpc.query({
+        model: model,
+        method: 'search_count',
+        args: [domain, fields],
+    }).then(function (data) {
+        console.log(data);
+    });
+
+    return model;
+});
