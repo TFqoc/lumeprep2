@@ -60,7 +60,7 @@ class tasks(models.Model):
         #vals_list['name'] = "Non-Default Name"
         return super(tasks, self).create(vals_list)
 
-    def delete_recent(self):
+    def delete_recent(self, args):
         ids = self.env.context.get('active_ids', [])
         target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
