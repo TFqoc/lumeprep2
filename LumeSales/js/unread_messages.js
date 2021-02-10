@@ -21,7 +21,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
     async function loop(){
         while (true){
             update_icon();
-            await new Promise(r => setTimeout(r, 10000));
+            await new Promise(r => setTimeout(r, 100000));
         }
     }
 
