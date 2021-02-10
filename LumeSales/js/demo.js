@@ -6,6 +6,8 @@ odoo.define('LumeSales.Demo', ['web.kanban_record_quick_create'], function(requi
     var Quick = require('web.kanban_record_quick_create');
     Quick.include({
         _add: function (options) {
+            console.log("Arguments ", arguments)
+            console.log("Options", options)
             this._super.apply(this, arguments);
             return this._rpc({
                 model: 'project.task',
