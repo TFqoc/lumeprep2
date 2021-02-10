@@ -58,7 +58,7 @@ class tasks(models.Model):
         """Override default Odoo create function and extend."""
         #Vals_list dictionary contains all the fields of the record to be created
         # Returns without creating if user is banned
-        if vals_list['partner_id'].is_banned is True:
+        if vals_list.partner_id.is_banned is True:
             message_id = self.env['message.wizard'].create(
                 {'message': ("Customer " + vals_list['partner_id'].name + " has been banned and cannot be checked in.")})
             return {
