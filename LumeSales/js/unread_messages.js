@@ -18,7 +18,14 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
             console.log(data);
         });
     }
-    update_icon();
+    async function loop(){
+        while (true){
+            update_icon();
+            await new Promise(r => setTimeout(r, 1000));
+        }
+    }
+
+    loop();
 
     return model;
 });
