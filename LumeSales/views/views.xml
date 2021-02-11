@@ -43,6 +43,7 @@
           <br/>
           <span class="glyphicon glyphicon-envelope"></span>
           <span id="time_counter"></span>
+          <field name="timer_start" widget="timer_timer"/>
           <!-- <script defer="defer">
           defined = false;
           async function run_timer(){

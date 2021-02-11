@@ -12,7 +12,7 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
         if (task_data){
             var d;
             for (d in task_data){
-                console.log(d);
+                console.log(task_data[d]);
             }
         }
         // update associated cards
