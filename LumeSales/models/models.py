@@ -43,15 +43,11 @@ class Partner(models.Model):
         pass
 
 class tasks(models.Model):
-    #_name = 'field_kanban.field_kanban'
     _inherit = 'project.task'
-    #_description = 'field_kanban.field_kanban'
+    _description = 'project.task'
 
-    #time_counter = fields.Char(default='Size Guide')
     name = fields.Char(required=False)
-
-    def test(self):
-        pass
+    sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
 
     # @api.model
     # def create(self, vals_list):
