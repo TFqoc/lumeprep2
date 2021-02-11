@@ -6,6 +6,9 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
     var rpc = require('web.rpc');
     function update_timer(data){
         //Loop through records
+        for (d in data){
+            
+        }
         // update associated cards
     }
     function get_tasks(){
@@ -20,8 +23,6 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
             args: [domain, fields],
         }).then(function (data) {
             console.log(data);
-            // Loop through records
-            // Update associated card
             return data;
         });
     }
