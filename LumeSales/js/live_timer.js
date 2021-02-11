@@ -12,13 +12,13 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
         if (task_data){
             var d;
             for (d in task_data){
-
+                console.log(d);
             }
         }
         // update associated cards
     }
     function get_tasks(){
-        
+        console.log("Getting task data");
         // Use an empty array to search for all the records
         var domain = [['id', '>', 1]];
         // Use an empty array to read all the fields of the records
