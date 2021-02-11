@@ -47,6 +47,17 @@
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
           </script> -->
         </xpath>
+        <!-- <field name="timer_start" widget="timer_timer" position="attributes">
+          <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
+        </field> -->
+      </field>
+    </record>
+
+    <record id="view_project_kanban_inherit2" model="ir.ui.view">
+      <field name="name">project.task.inherit2</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
         <field name="timer_start" widget="timer_timer" position="attributes">
           <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
         </field>
