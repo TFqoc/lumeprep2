@@ -47,9 +47,9 @@
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
           </script> -->
         </xpath>
-        <!-- <field name="timer_start" widget="timer_timer" position="attributes">
+        <xpath expr="//field[@name='name']" position="attributes">
           <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
-        </field> -->
+        </xpath>
       </field>
     </record>
 
