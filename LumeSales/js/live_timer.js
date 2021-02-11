@@ -33,7 +33,6 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
             await new Promise(r => setTimeout(r, 1000));
         }
     }
-    //
 
     loop();
 
