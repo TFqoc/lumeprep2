@@ -58,7 +58,7 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
-        <field name="timer_start" widget="timer_timer" position="attributes">
+        <field name="name" position="attributes">
           <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
         </field>
       </field>
