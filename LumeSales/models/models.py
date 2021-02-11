@@ -47,7 +47,7 @@ class tasks(models.Model):
     _inherit = 'project.task'
     #_description = 'field_kanban.field_kanban'
 
-    time_counter = fields.Char(default='Size Guide')
+    #time_counter = fields.Char(default='Size Guide')
     name = fields.Char(required=False)
 
     def test(self):

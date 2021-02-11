@@ -4,10 +4,15 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
     "use strict";
 
     var rpc = require('web.rpc');
-    function update_timer(data){
+
+    var task_data = false;
+
+    function update_timer(){
         //Loop through records
-        for (d in data){
-            
+        if (task_data){
+            for (d in task_data){
+
+            }
         }
         // update associated cards
     }
@@ -16,25 +21,25 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
         // Use an empty array to search for all the records
         var domain = [['is_timer_running', '=', true]];
         // Use an empty array to read all the fields of the records
-        var fields = ['timer_counter'];
+        var fields = [];
         task_data = rpc.query({
             model: 'project.task',
             method: 'search_read',
             args: [domain, fields],
         }).then(function (data) {
             console.log(data);
-            return data;
+            task_data = data;
         });
     }
     async function loop(){
-        data = get_tasks();
+        task_data = get_tasks();
         while (true){
-            update_timer(data);
+            update_timer();
             await new Promise(r => setTimeout(r, 1000));
         }
     }
 
     loop();
 
-    return model;
+    return 'live_timer';
 });
