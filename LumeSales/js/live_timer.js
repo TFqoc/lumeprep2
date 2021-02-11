@@ -4,7 +4,6 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
     "use strict";
 
     var rpc = require('web.rpc');
-    var model = 'project.task';
     function update_timer(data){
         //Loop through records
         // update associated cards
@@ -16,7 +15,7 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
         // Use an empty array to read all the fields of the records
         var fields = ['timer_counter'];
         task_data = rpc.query({
-            model: this.model,
+            model: 'project.task',
             method: 'search_read',
             args: [domain, fields],
         }).then(function (data) {
