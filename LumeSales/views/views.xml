@@ -43,8 +43,8 @@
           <br/>
           <span class="glyphicon glyphicon-envelope"></span>
           <span id="time_counter"></span>
-          <field name="timer_start" widget="timer_timer">
-            <attribute class="o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold"/>
+          <field name="timer_start" widget="timer_timer" position="attributes">
+            <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold<attribute/>
           </field>
           <!-- <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
