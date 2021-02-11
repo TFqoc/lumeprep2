@@ -5,6 +5,7 @@
             <!-- <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/> -->
             <script type="text/javascript" src="/LumeSales/js/demo.js"></script>
             <script type="text/javascript" src="/LumeSales/js/unread_messages.js"></script>
+            <script type="text/javascript" src="/LumeSales/js/live_timer.js"></script>
         </xpath>
     </template>
     </odoo>
