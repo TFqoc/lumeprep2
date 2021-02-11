@@ -10,6 +10,7 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
     function update_timer(){
         //Loop through records
         if (task_data){
+            var d;
             for (d in task_data){
 
             }
