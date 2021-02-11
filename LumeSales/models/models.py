@@ -88,3 +88,32 @@ class product_addons(models.Model):
 
     is_medical = fields.Boolean()
 
+class TimeMix(models.AbstractModel):
+    _inherit='timer.mixin'
+
+    def action_timer_start(self):
+        """ Start the timer of the current record
+        First, if a timer is running, stop or pause it
+        If there isn't a timer for the current record, create one then start it
+        Otherwise, resume or start it
+        """
+        #self.ensure_one()
+        #self._stop_timer_in_progress()
+        timer = self.user_timer_id
+        if not timer:
+            timer = self.env['timer.timer'].create({
+                'timer_start': False,
+                'timer_pause': False,
+                'is_timer_running': False,
+                'res_model': self._name,
+                'res_id': self.id,
+                'user_id': self.env.user.id,
+            })
+            timer.action_timer_start()
+        else:
+            # Check if it is in pause then resume it or start it
+            if timer.timer_pause:
+                timer.action_timer_resume()
+            else:
+                timer.action_timer_start()
+
