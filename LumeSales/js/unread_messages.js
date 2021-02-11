@@ -29,5 +29,5 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
 
     loop();
 
-    return model;
+    return 'Unread Messages';
 });

@@ -2,6 +2,7 @@ from odoo import models, fields
 
 class MessageWizard(models.TransientModel):
     _name = 'message.wizard'
+    _description = 'A wizard for displaying text messages'
 
     message = fields.Text('Message', required=True, readonly=True)
 
