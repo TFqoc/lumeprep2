@@ -3,7 +3,7 @@ console.log("Unread Messages has been loaded");
 odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
     "use strict";
 
-    var rpc = require('web.rpc')
+    var rpc = require('web.rpc');
     var model = 'project.task';
     function update_icon(){
         
