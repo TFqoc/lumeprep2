@@ -88,6 +88,9 @@ class product_addons(models.Model):
 
     is_medical = fields.Boolean()
 
+####
+# Allow multiple task timers going at once.
+####
 class TimeMix(models.AbstractModel):
     _inherit='timer.mixin'
 
