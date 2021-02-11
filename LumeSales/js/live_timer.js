@@ -19,7 +19,7 @@ odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
     function get_tasks(){
         
         // Use an empty array to search for all the records
-        var domain = [['is_timer_running', '=', true]];
+        var domain = [['id', '>', 1]];
         // Use an empty array to read all the fields of the records
         var fields = [];
         task_data = rpc.query({
