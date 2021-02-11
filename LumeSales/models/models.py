@@ -88,7 +88,7 @@ class product_addons(models.Model):
 
     is_medical = fields.Boolean()
 
-class TimeMix(models.AbstractModel):
+class TimeMix(models.Model):
     _inherit='timer.mixin'
 
     def action_timer_start(self):
