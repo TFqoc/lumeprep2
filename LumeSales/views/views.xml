@@ -43,27 +43,12 @@
           <br/>
           <span class="glyphicon glyphicon-envelope"></span>
           <field name="timer_start" widget="timer_timer"/>
-          <!-- <script defer="defer">
+          <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
-          </script> -->
-        </xpath>
-        <xpath expr="//field[@name='name']" position="attributes">
-          <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
+          </script>
         </xpath>
       </field>
     </record>
-
-    <record id="view_project_kanban_inherit2" model="ir.ui.view">
-      <field name="name">project.task.inherit2</field>
-      <field name="model">project.task</field>
-      <field name="inherit_id" ref="project.view_task_kanban"/>
-      <field name="arch" type="xml">
-        <field name="name" position="attributes">
-          <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
-        </field>
-      </field>
-    </record>
-
     <!-- Quick Create task menu -->
     <record id="view_project_kanban_quick_create_inherit" model="ir.ui.view">
       <field name="name">project.task.quick_create.inherit</field>
