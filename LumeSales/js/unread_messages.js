@@ -4,7 +4,6 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
     "use strict";
 
     var rpc = require('web.rpc');
-    var model = 'project.task';
     function update_icon(){
         
         // Use an empty array to search for all the records
@@ -12,7 +11,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
         // Use an empty array to read all the fields of the records
         var fields = [];
         rpc.query({
-            model: this.model,
+            model: 'project.task',
             method: 'search_read',
             args: [domain, fields],
         }).then(function (data) {
