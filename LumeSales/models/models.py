@@ -117,3 +117,9 @@ class TimeMix(models.AbstractModel):
             else:
                 timer.action_timer_start()
 
+    def action_timer_resume(self):
+        #self.ensure_one()
+        #self._stop_timer_in_progress()
+        timer = self.user_timer_id
+        timer.action_timer_resume()
+
