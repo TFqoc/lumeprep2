@@ -43,44 +43,11 @@
           <br/>
           <span class="glyphicon glyphicon-envelope"></span>
           <span id="time_counter"></span>
-          <field name="timer_start" widget="timer_timer" position="attributes">
-            <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
-          </field>
-          <!-- <script defer="defer">
-            $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
-          </script> -->
-          
-          <!-- <script defer="defer">
-          defined = false;
-          async function run_timer(){
-           ticks = 0;
-           span_list = false;
-           while (true){
-              await new Promise(r => setTimeout(r, 1000));
-              timer = new Array();
-              if (!span_list){
-                span_list = document.querySelectorAll("span#time_counter");
-              }
-              for (i = 0; i &lt; span_list.length; i++) {
-                  minutes = Math.floor(ticks/60);
-                  if (minutes &lt; 10){
-                    minutes = "0" + String(minutes);
-                  }
-                  seconds = ticks % 60;
-                  if (seconds &lt; 10){
-                    seconds = "0" + String(seconds);
-                  }
-                  span_list[i].innerHTML = String(minutes) + ":" + String(seconds);
-              }
-              ticks += 1;
-            }
-          }
-          if (!defined){
-            run_timer();
-            defined = true;
-          }
-          </script> -->
+          <field name="timer_start" widget="timer_timer"/>
         </xpath>
+        <field name="timer_start" position="attributes">
+          <attribute name="class">o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold</attribute>
+        </field>
       </field>
     </record>
 
