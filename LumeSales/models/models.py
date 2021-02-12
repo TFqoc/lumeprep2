@@ -49,6 +49,13 @@ class tasks(models.Model):
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
 
+    @api.onchange('name')
+    def _onchange_partner(self):
+        #self.message = "Dear %s" % (self.partner_id.name or "")
+        return {
+            'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
+            }
+
     # @api.model
     # def create(self, vals_list):
     #     """Override default Odoo create function and extend."""
