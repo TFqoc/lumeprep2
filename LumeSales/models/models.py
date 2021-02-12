@@ -49,13 +49,6 @@ class tasks(models.Model):
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
 
-    @api.onchange('name')
-    def _onchange_partner(self):
-        #self.message = "Dear %s" % (self.partner_id.name or "")
-        return {
-            'warning': {'title': "Warning", 'message': "What is this?"},
-            }
-
     # @api.model
     # def create(self, vals_list):
     #     """Override default Odoo create function and extend."""
@@ -94,7 +87,7 @@ class product_addons(models.Model):
 class sale_inherit(models.Model):
     _inherit = 'sale.order'
 
-    task = fields.Many2one(comodel_name="project.tack", readonly=True)
+    task = fields.Many2one(comodel_name="project.task", readonly=True)
 
 ####
 # Allow multiple task timers going at once.
