@@ -53,7 +53,7 @@ class tasks(models.Model):
     def _onchange_partner(self):
         #self.message = "Dear %s" % (self.partner_id.name or "")
         return {
-            'warning': {'title': "Warning", 'message': "What is this?", 'type': 'warning'},
+            'warning': {'title': "Warning", 'message': "What is this?"},
             }
 
     # @api.model
