@@ -73,7 +73,7 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
-          <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '!=', False)]}"/>
+          <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
         </field>
       </field>
     </record>
@@ -87,7 +87,7 @@
       <field name="arch" type="xml">
         <!-- Custom fields here -->
         <field name="payment_term_id" position="after">
-          <field name="task" string="Task" attrs="{'invisible':[('task', '!=', False)]}"/>
+          <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}"/>
         </field>
       </field>
     </record>
