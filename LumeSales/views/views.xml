@@ -42,7 +42,8 @@
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
           <br/>
-          <span class="glyphicon glyphicon-envelope"></span>
+          <span class="glyphicon glyphicon-envelope">5</span>
+          <span class="o_MessagingMenu_counter badge badge-pill">5</span>
           <field name="timer_start" widget="timer_timer"/>
           <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
