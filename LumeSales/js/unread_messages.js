@@ -60,7 +60,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
         }
     });
 
-    fieldRegistry.add('count_counter', TimerFieldWidget);
+    fieldRegistry.add('count_counter', CounterWidget);
 
     return CounterWidget;
 
