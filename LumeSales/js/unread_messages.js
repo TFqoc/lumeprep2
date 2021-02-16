@@ -28,6 +28,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
             this.checker = setInterval(async ()=> {
                 //console.log(this.res_id);
                 this.message_number = await this._getCounterValue();
+                console.log(this.message_number);
                 this.$el.text(this.message_number.toString());
             }, 10000);
         },
