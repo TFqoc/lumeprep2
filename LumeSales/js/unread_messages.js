@@ -22,11 +22,10 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
 
         init: function (parent, data, options) {
             this._super.apply(this, arguments);
-            //this.text = options.attrs.title || options.attrs.text;
-            //this.tooltip = options.attrs.tooltip;
+            this.text = this.record.data.message_unread_counter;//this.message_number.toString();
             this.className = 'o_MessagingMenu_counter badge badge-pill';
             this.checker = setInterval(()=> {
-                this.message_number = this._getCounterValue();
+                this.message_number = this.res_id ? this._getCounterValue() : 0;
                 this.$el.text(this.message_number.toString());
             }, 10000);
         },
@@ -56,7 +55,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
             return this._rpc({
                 model: 'project.task',
                 method: 'get_message_count',
-                args: [this.record.data.id]
+                args: [this.res_id]
             });
         },
         
