@@ -25,7 +25,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
 
         init: function (parent, data, options) {
             this._super.apply(this, arguments);
-            this.text = options.attrs.title || options.attrs.text;
+            //this.text = options.attrs.title || options.attrs.text;
             this.tooltip = options.attrs.tooltip;
             this.className = 'o_MessagingMenu_counter badge badge-pill';
         },
