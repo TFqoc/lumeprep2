@@ -44,7 +44,7 @@
           <br/>
           <span class="o_MessagingMenu_icon fa fa-comments"></span>
           <!-- <span class="o_MessagingMenu_counter badge badge-pill">0</span> -->
-          <field name="message_unread_counter"/>
+          <field name="message_unread_counter" widget="count_counter"/>
           <field name="timer_start" widget="timer_timer"/>
           <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
