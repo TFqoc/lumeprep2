@@ -31,7 +31,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
             }, 10000);
         },
         start: function(){
-            this.$el.text(this.record.data.message_unread_counter.toString());
+            return new Promise(() => this.$el.text(this.record.data.message_unread_counter.toString()));
         },
         _getCounterValue: function(){
             return this._rpc({
