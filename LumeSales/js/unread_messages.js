@@ -1,6 +1,6 @@
 //alert("Unread Messages has been loaded");
 console.log("Unread Messages has been loaded");
-odoo.define('LumeSales.Unread_Messages', ['web.rpc'], function(require){
+odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registry'], function(require){
     "use strict";
 
     //var rpc = require('web.rpc');
