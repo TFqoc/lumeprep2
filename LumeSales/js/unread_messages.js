@@ -22,35 +22,15 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
 
         init: function (parent, data, options) {
             this._super.apply(this, arguments);
+            console.log(this.record.data.message_unread_counter);
             this.text = this.record.data.message_unread_counter;//this.message_number.toString();
             this.className = 'o_MessagingMenu_counter badge badge-pill';
             this.checker = setInterval(()=> {
+                console.log(this.res_id);
                 this.message_number = this.res_id ? this._getCounterValue() : 0;
                 this.$el.text(this.message_number.toString());
             }, 10000);
         },
-        /*_render: function () {
-            this._super.apply(this, arguments);
-            this._startCounter();
-        },
-        _startCounter: async function () {
-            if (this.record.data.timer_start) {
-                const serverTime = this.record.data.timer_pause || await this._getServerTime();
-                this.time = Timer.createTimer(0, this.record.data.timer_start, serverTime);
-                this.$el.text(this.time.toString());
-                this.timer = setInterval(() => {
-                    if (this.record.data.timer_pause) {
-                        clearInterval(this.timer);
-                    } else {
-                        this.time.addSecond();
-                        this.$el.text(this.time.toString());
-                    }
-                }, 1000);
-            } else if (!this.record.data.timer_pause){
-                clearInterval(this.timer);
-            }
-        },*/
-
         _getCounterValue: function(){
             return this._rpc({
                 model: 'project.task',
