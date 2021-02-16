@@ -97,7 +97,7 @@ class sale_inherit(models.Model):
                 continue
             else:
                 #TODO delete the line item that was just added.
-                self.update({'order_lines': (3,order.id,0)})
+                self.update({'order_line': (3,order.id,0)})
                 return {
                 'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
                 }
