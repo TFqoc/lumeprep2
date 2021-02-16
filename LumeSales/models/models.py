@@ -54,7 +54,6 @@ class Tasks(models.Model):
     def get_message_count(self, id):
         return self.browse(id).message_unread_counter
 
-    @api.multi
     def _compute_dummy_field(self):
         self.message_unread_counter = 0
         self.message_unread = False
