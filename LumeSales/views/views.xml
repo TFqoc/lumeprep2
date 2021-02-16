@@ -78,6 +78,8 @@
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
           <field name="dummy_field"/>
+          <field name="message_unread_counter" />
+          <field name="message_unread"/>
         </field>
       </field>
     </record>
