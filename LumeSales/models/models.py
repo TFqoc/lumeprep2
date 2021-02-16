@@ -43,15 +43,25 @@ class Partner(models.Model):
     def verify_address(self):
         pass
 
-class tasks(models.Model):
+class Tasks(models.Model):
     _inherit = 'project.task'
     _description = 'project.task'
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
 
-    def get_message_count(self, id=24):
+    def get_message_count(self, id):
         return self.browse(id).message_unread_counter
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        # add here your condition
+        if view_type == 'form':
+            self.message_unread_counter = 0
+            self.message_unread = False
+        return res
+
     # @api.model
     # def create(self, vals_list):
     #     """Override default Odoo create function and extend."""
@@ -70,7 +80,7 @@ class tasks(models.Model):
     #             'res_id': message_id.id,
     #             'target': 'new'
     #         }
-    #     return super(tasks, self).create(vals_list)
+    #     return super(Tasks, self).create(vals_list)
 
     def delete_recent(self, args):
         target_record = self.env['project.task'].search([], order='id desc')[0]
@@ -103,6 +113,13 @@ class sale_inherit(models.Model):
                 return {
                 'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
                 }
+                #https://github.com/odoo/odoo/issues/32182
+                #Can't edit order_line from here because self is a copy.
+                #Need a work around.
+
+    def delete_order_line(self, line_id):
+
+        pass
 
 ####
 # Allow multiple task timers going at once.
