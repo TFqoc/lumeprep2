@@ -36,7 +36,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
             return this._rpc({
                 model: 'project.task',
                 method: 'get_message_count',
-                args: [this.res_id]
+                args: [null, this.res_id]
             });
         },
         
