@@ -20,14 +20,14 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
         checker: null,
         message_number: 0,
 
-        init: function (parent, data, options) {
+        init: async function (parent, data, options) {
             this._super.apply(this, arguments);
-            console.log(this.record.data.message_unread_counter);
-            this.text = this.record.data.message_unread_counter;//this.message_number.toString();
+            console.log(this.record.data.message_unread_counter);// This is correct
+            this.text = this.record.data.message_unread_counter.toString();
             this.className = 'o_MessagingMenu_counter badge badge-pill';
             this.checker = setInterval(()=> {
-                console.log(this.res_id);
-                this.message_number = this.res_id ? this._getCounterValue() : 0;
+                //console.log(this.res_id);
+                this.message_number = await this._getCounterValue();
                 this.$el.text(this.message_number.toString());
             }, 10000);
         },
