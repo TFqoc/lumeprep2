@@ -57,6 +57,7 @@ class Tasks(models.Model):
     def _compute_dummy_field(self):
         self.message_unread_counter = 0
         self.message_unread = False
+        self.dummy_field='dummy'
 
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
