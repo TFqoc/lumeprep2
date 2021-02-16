@@ -55,7 +55,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
         _getCounterValue: function(){
             return this._rpc({
                 model: 'project.task',
-                method: 'get_server_time',
+                method: 'get_message_count',
                 args: [this.record.data.id]
             });
         },

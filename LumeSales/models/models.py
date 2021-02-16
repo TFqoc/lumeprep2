@@ -50,6 +50,8 @@ class tasks(models.Model):
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
 
+    def get_message_count(self, id):
+        return self.browse(id).message_unread_counter
     # @api.model
     # def create(self, vals_list):
     #     """Override default Odoo create function and extend."""
