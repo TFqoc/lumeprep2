@@ -43,7 +43,6 @@
           <field name="partner_id" widget="res_partner_many2one"/>
           <br/>
           <span class="o_MessagingMenu_icon fa fa-comments"></span>
-          <!-- <span class="o_MessagingMenu_counter badge badge-pill">0</span> -->
           <field name="message_unread_counter" widget="count_counter"/>
           <field name="timer_start" widget="timer_timer"/>
           <script defer="defer">
@@ -78,6 +77,7 @@
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
+          <field name="dummy_field"/>
         </field>
       </field>
     </record>

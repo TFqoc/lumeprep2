@@ -49,18 +49,24 @@ class Tasks(models.Model):
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
+    dummy_field = fields.Char(compute='_compute_dummy_field',store=False,invisible=True)
 
     def get_message_count(self, id):
         return self.browse(id).message_unread_counter
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        # add here your condition
-        if view_type == 'form':
-            self.message_unread_counter = 0
-            self.message_unread = False
-        return res
+    @api.multi
+    def _compute_dummy_field(self):
+        self.message_unread_counter = 0
+        self.message_unread = False
+
+    # @api.model
+    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    #     res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    #     # add here your condition
+    #     if view_type == 'form':
+    #         self.message_unread_counter = 0
+    #         self.message_unread = False
+    #     return res
 
     # @api.model
     # def create(self, vals_list):
