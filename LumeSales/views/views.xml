@@ -11,6 +11,7 @@
             </header>
         </xpath>
         <field name="vat" position="after">
+          <field name="is_medical" string="Is Medical"/>
           <field name="medical_id" string="MMM ID"/>
           <field name="medical_expiration" string="MM Exp"/>
           <field name="date_of_birth" string="DOB"/>

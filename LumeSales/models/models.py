@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = 'res.partner'
 
+    is_medical = fields.Boolean()
     medical_id = fields.Char()
     medical_expiration = fields.Date()
     date_of_birth = fields.Date()
@@ -88,6 +89,16 @@ class sale_inherit(models.Model):
     _inherit = 'sale.order'
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
+
+    @api.onchange('order_line')
+    def check_order_lines(self):
+        for order in self.order_line:
+            if order.product_id.is_medical is self.partner_id.is_medical:
+                continue
+            else:
+                return {
+                'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
+                }
 
 ####
 # Allow multiple task timers going at once.
