@@ -23,7 +23,7 @@ odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registr
         init: function (parent, data, options) {
             this._super.apply(this, arguments);
             console.log(this.record.data.message_unread_counter);// This is correct
-            this.$el.text(this.record.data.message_unread_counter.toString());
+            this.text = this.record.data.message_unread_counter.toString();
             this.className = 'o_MessagingMenu_counter badge badge-pill';
             this.checker = setInterval(async ()=> {
                 //console.log(this.res_id);
