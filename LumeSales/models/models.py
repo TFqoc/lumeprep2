@@ -97,7 +97,7 @@ class sale_inherit(models.Model):
                 continue
             else:
                 return {
-                'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " +("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",
+                'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
                 }
 
 ####
