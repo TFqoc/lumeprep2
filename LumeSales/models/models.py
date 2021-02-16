@@ -55,18 +55,18 @@ class Tasks(models.Model):
         return self.browse(id).message_unread_counter
 
     def _compute_dummy_field(self):
-        # self.message_unread_counter = 0
+        # self.message_unread_counter = 0 #this just gets reset back to the previous value from Odoo
         # self.message_unread = False
         self.dummy_field='dummy'
 
-    # @api.model
-    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-    #     res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-    #     # add here your condition
-    #     if view_type == 'form':
-    #         self.message_unread_counter = 0
-    #         self.message_unread = False
-    #     return res
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        # add here your condition
+        if view_type == 'form':
+            self.message_unread_counter = 0
+            self.message_unread = False
+        return res
 
     # @api.model
     # def create(self, vals_list):
