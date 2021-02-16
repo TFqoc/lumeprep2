@@ -48,6 +48,7 @@
           <field name="timer_start" widget="timer_timer"/>
           <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
+            $("[name='message_unread_counter']").addClass("o_MessagingMenu_counter badge badge-pill");
           </script>
         </xpath>
       </field>
