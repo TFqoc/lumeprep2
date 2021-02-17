@@ -52,7 +52,12 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
 
     def get_message_count(self, id):
-        self.env['mail.channel'].channel_seen(None)
+        # active_id = self.env.context.get('active_ids', []) #gets id of task
+        # self.env['mail.channel'].search([''])   #channel_seen(None)
+
+        for channel in self.message_channel_ids:
+            channel.channel_seen(None)
+
         return self.browse(id).message_unread_counter
     
     def _compute_dummy_field(self):
