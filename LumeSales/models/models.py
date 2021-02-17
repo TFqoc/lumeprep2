@@ -59,15 +59,6 @@ class Tasks(models.Model):
         # self.message_unread = False
         self.dummy_field='dummy'
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(Tasks, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        # add here your condition
-        if view_type == 'form':
-            self.message_unread_counter = 0
-            self.message_unread = False
-        return res
-
     # @api.model
     # def create(self, vals_list):
     #     """Override default Odoo create function and extend."""
@@ -165,3 +156,43 @@ class TimeMix(models.AbstractModel):
         timer = self.user_timer_id
         timer.action_timer_resume()
 
+#####
+# Allow any message to count as read if someone has looked at it.
+#####
+class MailOverride(models.Model):
+    _inherit='mail.thread'
+
+    #Override
+    def _get_message_unread(self):
+        partner_id = self.env.user.partner_id.id
+        res = dict.fromkeys(self.ids, 0)
+        if self.ids:
+            # search for unread messages, directly in SQL to improve performances
+            self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
+                        RIGHT JOIN mail_message_mail_channel_rel rel
+                        ON rel.mail_message_id = msg.id
+                        RIGHT JOIN mail_channel_partner cp
+                        ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                        cp.seen_message_id IS NULL)
+                        WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
+                            msg.message_type != 'user_notification' AND
+                            (msg.author_id IS NULL OR msg.author_id != %s) AND
+                            (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel')""",
+                    (partner_id, self._name, list(self.ids), partner_id,))
+            # self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
+            #                      RIGHT JOIN mail_message_mail_channel_rel rel
+            #                      ON rel.mail_message_id = msg.id
+            #                      RIGHT JOIN mail_channel_partner cp
+            #                      ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+            #                         (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+            #                      WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
+            #                             msg.message_type != 'user_notification' AND
+            #                            (msg.author_id IS NULL OR msg.author_id != %s) AND
+            #                            (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel')""",
+            #                  (partner_id, self._name, list(self.ids), partner_id,))
+            for result in self._cr.fetchall():
+                res[result[0]] += 1
+
+        for record in self:
+            record.message_unread_counter = res.get(record._origin.id, 0)
+            record.message_unread = bool(record.message_unread_counter)
