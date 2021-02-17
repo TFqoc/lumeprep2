@@ -51,16 +51,16 @@ class Tasks(models.Model):
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
 
-    def get_message_count(self, id):
+    def get_message_count(self, id): #called from js widget for display purposes
         return self.browse(id).message_unread_counter
     
     def _compute_dummy_field(self):
         # Mail module > models > mail_channel.py Line 743
                 # active_id = self.env.context.get('active_ids', []) #gets id of task
         # self.env['mail.channel'].search([''])   #channel_seen(None)
-
+        message_id = self.message_ids[-1].id
         for channel in self.message_channel_ids:
-            channel.channel_seen(self.id)
+            channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
 
         self.dummy_field = 'dummy'
 
