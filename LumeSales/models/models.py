@@ -154,7 +154,7 @@ class TimeMix(models.AbstractModel):
 #####
 # Allow any message to count as read if someone has looked at it.
 #####
-class MailOverride(models.Model):
+class MailOverride(models.AbstractModel):
     _inherit='mail.thread'
 
     #Override
