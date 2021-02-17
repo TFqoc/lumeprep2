@@ -49,15 +49,10 @@ class Tasks(models.Model):
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
-    dummy_field = fields.Char(compute='_compute_dummy_field',store=False,invisible=True)
 
     def get_message_count(self, id):
         return self.browse(id).message_unread_counter
 
-    def _compute_dummy_field(self):
-        # self.message_unread_counter = 0 #this just gets reset back to the previous value from Odoo
-        # self.message_unread = False
-        self.dummy_field='dummy'
 
     # @api.model
     # def create(self, vals_list):
