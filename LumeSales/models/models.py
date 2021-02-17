@@ -58,7 +58,7 @@ class Tasks(models.Model):
         # Mail module > models > mail_channel.py Line 743
                 # active_id = self.env.context.get('active_ids', []) #gets id of task
         # self.env['mail.channel'].search([''])   #channel_seen(None)
-        message_id = self.message_ids[-1].id
+        message_id = self.message_ids[0].id
         for channel in self.message_channel_ids:
             channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
 
