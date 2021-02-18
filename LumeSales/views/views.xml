@@ -118,7 +118,11 @@
       <field name="type">form</field>
       <!-- <field name="view_mode">tree,form</field> -->
       <field name="arch" type="xml">
-        <field name="name"/>
+        <form string="Store">
+          <header>
+          </header>
+          <field name="name"/>
+        </form>
         <!-- <field name="user_ids" readonly="1"/> -->
       </field>
     </record>
