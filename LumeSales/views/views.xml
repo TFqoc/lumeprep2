@@ -131,7 +131,7 @@
       </field>
     </record>
 
-    <!-- <menuitem id="store_root" name="Store" sequence="10" action="view_store"/> -->
+    <menuitem id="store_root" name="Store" sequence="10"/>
 
 
     <!-- User Form View -->
