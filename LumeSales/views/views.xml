@@ -122,7 +122,9 @@
           <header>
           </header>
           <group>
-            <field name="name" string="Store Name" class="o_project_name oe_inline"/>
+            <h1>
+              <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
+            </h1>
           </group>
         </form>
         <!-- <field name="user_ids" readonly="1"/> -->
