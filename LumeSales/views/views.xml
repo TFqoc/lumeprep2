@@ -104,7 +104,7 @@
       <field name="inherit_id" ref="project.view_project_project_filter"/>
       <field name="type">search</field>
       <field name="arch" type="xml">
-        <xpath expr="//filter[@string='My Favorites']" position="before">
+        <xpath expr="//filter" position="before">
           <filter name="my_store_projects" string="My Store" domain="[('store','=',uid.store)]"/>
         </xpath>
       </field>
