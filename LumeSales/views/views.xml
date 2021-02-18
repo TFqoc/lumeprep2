@@ -116,7 +116,7 @@
       <field name="name">store.store</field>
       <field name="model">lume.store</field>
       <field name="type">ir.actions.act_window</field>
-      <field name="view_mode">tree,form</field>
+      <!-- <field name="view_mode">tree,form</field> -->
       <field name="arch" type="xml">
         <field name="name"/>
         <!-- <field name="user_ids" readonly="1"/> -->
