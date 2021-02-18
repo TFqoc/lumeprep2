@@ -151,7 +151,7 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="store_root" name="Store" sequence="10"/>
+    <menuitem id="store_root" name="Store" sequence="10" action="store_window_action"/>
 
 
     <!-- User Form View -->
