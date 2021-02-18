@@ -105,7 +105,8 @@
       <field name="type">search</field>
       <field name="arch" type="xml">
         <xpath expr="//filter" position="before">
-          <filter name="my_store_projects" string="My Store" domain="[('store','=',uid.store)]"/>
+          <field name="context" eval="{'search_default_my_store_projects' : 1}"/>
+          <filter name="my_store_projects" string="My Store" domain="[('store','=',uid)]"/>
         </xpath>
       </field>
     </record>
