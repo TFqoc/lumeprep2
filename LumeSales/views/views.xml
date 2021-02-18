@@ -119,7 +119,7 @@
       <field name="view_mode">tree,form</field>
       <field name="arch" type="xml">
         <field name="name"/>
-        <field name="user_ids" readonly="1"/>
+        <!-- <field name="user_ids" readonly="1"/> -->
       </field>
     </record>
 
