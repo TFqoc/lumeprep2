@@ -111,6 +111,17 @@
       </field>
     </record>
 
+    <!-- Store View -->
+    <record id="view_store" model="ir.ui.view">
+      <field name="name">store.store</field>
+      <field name="model">lume.store</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="name"/>
+        <field name="user_ids" readonly="1"/>
+      </field>
+    </record>
+
     <!-- User Form View -->
     <record id="view_res_users_form_inherit" model="ir.ui.view">
       <field name="name">res.users.inherit</field>
