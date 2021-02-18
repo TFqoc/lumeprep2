@@ -102,7 +102,7 @@ class project_inherit(models.Model):
 class Store(models.Model):
     _name = 'lume.store'
 
-    store_number = fields.Char(required=True)
+    name = fields.Char(required=True)
 
 class product_addons(models.Model):
     _inherit='product.template'
