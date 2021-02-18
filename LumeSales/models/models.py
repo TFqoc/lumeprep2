@@ -113,7 +113,7 @@ class User(models.Model):
     @api.onchange('store')
     def get_users(self):
         ids = self.search(['store','=',self.store.name])
-        self.store.user_ids = ids
+        self.store.user_ids = ids or False
 
 class product_addons(models.Model):
     _inherit='product.template'
