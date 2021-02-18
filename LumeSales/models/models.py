@@ -104,6 +104,11 @@ class Store(models.Model):
 
     name = fields.Char(required=True)
 
+class User(models.Model):
+    _inherit='res.users'
+
+    store = fields.Many2one(comodel_name='lume.store')
+
 class product_addons(models.Model):
     _inherit='product.template'
 
