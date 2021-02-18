@@ -115,7 +115,7 @@
     <record id="view_store" model="ir.ui.view">
       <field name="name">store.store</field>
       <field name="model">lume.store</field>
-      <field name="type">ir.actions.act_window</field>
+      <field name="type">form</field>
       <!-- <field name="view_mode">tree,form</field> -->
       <field name="arch" type="xml">
         <field name="name"/>
