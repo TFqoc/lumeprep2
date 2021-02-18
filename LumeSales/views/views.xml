@@ -105,7 +105,7 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <field name="work_location" position="after">
-          <field name="store"/>
+          <!-- <field name="store"/> -->
         </field>
       </field>
     </record>
