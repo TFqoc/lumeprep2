@@ -103,11 +103,17 @@ class Store(models.Model):
     _name = 'lume.store'
 
     name = fields.Char(required=True)
+    user_ids = fields.One2many(comodel_name='res.users')
 
 class User(models.Model):
     _inherit='res.users'
 
     store = fields.Many2one(comodel_name='lume.store')
+
+    @api.onchange('store')
+    def get_users(self):
+        ids = self.search(['store','=',self.store.name])
+        self.store.user_ids = ids
 
 class product_addons(models.Model):
     _inherit='product.template'
