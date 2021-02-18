@@ -103,7 +103,7 @@ class Store(models.Model):
     _name = 'lume.store'
 
     name = fields.Char(required=True)
-    user_ids = fields.One2many(comodel_name='res.users')
+    # user_ids = fields.One2many(comodel_name='res.users')
 
 class User(models.Model):
     _inherit='res.users'
