@@ -112,8 +112,8 @@
     </record>
 
     <!-- Store View -->
-    <record id="view_store" model="ir.ui.view">
-      <field name="name">store.store</field>
+    <record id="view_store_form" model="ir.ui.view">
+      <field name="name">store.form</field>
       <field name="model">lume.store</field>
       <field name="type">form</field>
       <!-- <field name="view_mode">tree,form</field> -->
@@ -126,10 +126,20 @@
               <h1>
                 <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
               </h1>
-              <field name="user_ids" readonly="1"/>
+              <!-- <field name="user_ids" readonly="1"/> -->
             </group>
           </sheet>
         </form>
+      </field>
+    </record>
+
+    <record id="view_store_tree" model="ir.ui.view">
+      <field name="name">store.tree</field>
+      <field name="model">lume.store</field>
+      <field name="arch" type="xml">
+          <tree string="Store">
+              <field name="name"/>
+          </tree>
       </field>
     </record>
 
