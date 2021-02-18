@@ -101,7 +101,7 @@
     <record id="view_project_search_inherit" model="ir.ui.view">
       <field name="name">project.search.inherit</field>
       <field name="model">project.project</field>
-      <field name="inherit_id" ref="project.view_project_project_filter "/>
+      <field name="inherit_id" ref="project.view_project_project_filter"/>
       <field name="type">search</field>
       <field name="mode">primary</field>
       <field name="arch" type="xml">
