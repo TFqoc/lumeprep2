@@ -84,6 +84,19 @@
       </field>
     </record>
 
+    <!-- Task Form View -->
+    <record id="view_project_form_inherit" model="ir.ui.view">
+      <field name="name">project.form.inherit</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.edit_project"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="partner_id" position="after">
+          <field name="store"/>
+        </field>
+      </field>
+    </record>
+
     <!-- Sale Order Form View -->
     <record id="view_sale_order_form_inherit" model="ir.ui.view">
       <field name="name">sale.order.inherit</field>

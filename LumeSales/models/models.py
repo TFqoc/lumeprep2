@@ -96,7 +96,13 @@ class Tasks(models.Model):
 class project_inherit(models.Model):
     _inherit = 'project.project'
 
-    task_number = fields.Integer(default=0)
+    task_number = fields.Integer(default=0)# Used to generate a task name
+    store = fields.Many2one(comodel_name='lume.store')
+    
+class Store(models.Model):
+    _name = 'lume.store'
+
+    store_number = fields.Char(required=True)
 
 class product_addons(models.Model):
     _inherit='product.template'
