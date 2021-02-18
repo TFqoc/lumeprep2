@@ -121,7 +121,7 @@
         <form string="Store">
           <header>
           </header>
-          <field name="name"/>
+          <field name="name" string="Store Name" class="o_project_name oe_inline"/>
         </form>
         <!-- <field name="user_ids" readonly="1"/> -->
       </field>
