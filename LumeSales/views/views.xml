@@ -123,6 +123,9 @@
       </field>
     </record>
 
+    <menuitem id="store_root" name="Store" sequence="10" action="view_store"/>
+
+
     <!-- User Form View -->
     <record id="view_res_users_form_inherit" model="ir.ui.view">
       <field name="name">res.users.inherit</field>
