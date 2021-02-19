@@ -6,11 +6,11 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                <xpath expr="//kanban/field" position="after">
+                <!-- <xpath expr="//kanban/field" position="after">
                     <field name="store"/>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
-                    <t t-if="'store' in locals() and store.user_ids.id == uid">
+                    <t t-if="store.user_ids.id == uid">
                     <!-- <t t-if="name != False"> -->
                         <div class="o_kanban_card_content">
                             <div class="o_kanban_primary_left">

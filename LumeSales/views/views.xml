@@ -196,6 +196,15 @@
     </record>
 
 
-    
+    <record id="view_project_kanban_lume_inherit_store" model="ir.ui.view">
+            <field name="name">project.project.lume.kanban.inherit.store</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban/field" position="after">
+                    <field name="store"/>
+                </xpath>
+            </field>
+        </record>
   </data>
 </odoo>
