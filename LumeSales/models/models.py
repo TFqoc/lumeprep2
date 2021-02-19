@@ -110,11 +110,6 @@ class User(models.Model):
 
     store = fields.Many2one(comodel_name='lume.store')
 
-    # @api.onchange('store')
-    # def get_users(self):
-    #     ids = self.search(['store','=',self.store.name])
-    #     self.store.user_ids = ids or False
-
 class product_addons(models.Model):
     _inherit='product.template'
 
