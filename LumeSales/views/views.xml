@@ -123,8 +123,13 @@
           </header>
           <sheet>
             <group>
-              <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
+              <h1>
+                <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
+              </h1>
               <!-- <field name="user_ids" readonly="1"/> -->
+            </group>
+            <group>
+
             </group>
           </sheet>
         </form>
