@@ -29,7 +29,6 @@
         'wizards/message_wizard.xml',
         'views/assets.xml',
         'views/views.xml',
-        'views/project_view_restrictions.xml',
         'views/templates.xml',
     ],
     # only loaded in demonstration mode
