@@ -197,7 +197,8 @@
 
       <!-- Adds filter domain for Project window -->
       <record id="project.open_view_project_all" model="ir.actions.act_window">
-            <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field>
+        <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field>
+        <field name="context">{"search_default_my_store_projects":1}</field>
       </record>
 
       <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
