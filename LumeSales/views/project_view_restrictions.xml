@@ -16,8 +16,8 @@
                     <t t-set="u_store" t-value="store"/>
                     <!-- <t t-if="record.store != False"> -->
                     <t t-if="True == True">
-                        <span t-esc="p_store"></span>
-                        <span t-esc="u_store"></span>
+                        <!-- <span t-esc="p_store"></span>
+                        <span t-esc="u_store"></span> -->
                         <div class="o_kanban_card_content">
                             <div class="o_kanban_primary_left">
                                 <div class="o_primary">
