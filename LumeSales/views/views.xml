@@ -207,11 +207,10 @@
           </field>
       </record>
 
-      <record id="open_view_project_all" model="ir.actions.act_window">
+      <record id="project.open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="inherit_id" ref="project.open_view_project_all"/>
-            <field name="domain">[]</field>
+            <field name="domain">['store.user_ids.id','=',uid]</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="project.view_project_kanban"/>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
