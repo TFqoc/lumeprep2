@@ -11,7 +11,7 @@
                 </xpath> -->
                 <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
                     <!-- <t t-if="store.user_ids.id == uid"> -->
-                    <t t-if="partner_id.name != False">
+                    <t t-if="store != False">
                         <div class="o_kanban_card_content">
                             <div class="o_kanban_primary_left">
                                 <div class="o_primary">
