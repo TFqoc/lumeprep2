@@ -34,7 +34,7 @@
     </record>
 
 <!-- Kanban View for tasks -->
-    <record id="view_project_kanban_inherit" model="ir.ui.view">
+    <record id="view_project_task_kanban_inherit" model="ir.ui.view">
       <field name="name">project.task.inherit</field>
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
