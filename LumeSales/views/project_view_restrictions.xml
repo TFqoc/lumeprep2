@@ -12,7 +12,10 @@
                 <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
                     <!-- <t t-if="record.store.user_ids == uid"> -->
                     <!-- <t t-if="store != False"> -->
-                    <t t-if="record.store != False">
+                    <t t-set="p_store" t-value="record.store"/>
+                    <t t-set="u_store" t-value="record.env['res.users'].browse([uid])[0]"/>
+                    <!-- <t t-if="record.store != False"> -->
+                    <t t-if="p_store == u_store">
                         <div class="o_kanban_card_content">
                             <div class="o_kanban_primary_left">
                                 <div class="o_primary">
