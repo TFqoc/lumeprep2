@@ -123,9 +123,7 @@
           </header>
           <sheet>
             <group>
-              <h1>
-                <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
-              </h1>
+              <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
               <!-- <field name="user_ids" readonly="1"/> -->
             </group>
           </sheet>
@@ -151,6 +149,7 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- App icon on front page -->
     <menuitem id="store_root" name="Store" sequence="10" action="store_window_action"/>
 
 
