@@ -103,7 +103,11 @@ class Store(models.Model):
     _name = 'lume.store'
 
     name = fields.Char(required=True)
-    user_ids = fields.One2many(comodel_name='res.users',inverse_name='store') #no inverse field None for res.users
+    # user_ids = fields.One2many(comodel_name='res.users',inverse_name='store')
+    user_ids = fields.Many2many(comodel_name='res.users', compute='_get_users', store=True)
+
+    def _get_users(self):
+        user_ids = self.env['res.users'].search(['store','ilike',self.name])
 
 class User(models.Model):
     _inherit='res.users'
