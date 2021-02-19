@@ -194,5 +194,58 @@
         </field>
       </field>
     </record>
+
+
+    <record id="view_project_kanban_lume_inherit" model="ir.ui.view">
+            <field name="name">project.project.lume.kanban.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="after">
+                    <field name="store"/>
+                </xpath>
+                <!-- <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
+                    <t t-if="store.user_ids.id == uid">
+                        <div class="o_kanban_card_content">
+                            <div class="o_kanban_primary_left">
+                                <div class="o_primary">
+                                    <span><t t-esc="record.name.value"/></span>
+                                    <span t-if="record.partner_id.value">
+                                        <strong><t t-esc="record.partner_id.value"/></strong>
+                                    </span>
+                                </div>
+                                <div t-if="record.alias_name.value and record.alias_domain.value">
+                                    <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <a t-att-href="'mailto:' + record.alias_id.value" title="Send an email"><t t-esc="record.alias_id.value"/></a></span>
+                                </div>
+                                <div t-if="record.rating_active.raw_value" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
+                                    <b>
+                                        <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                            <t t-if="record.rating_percentage_satisfaction.value != -1">
+                                                <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
+                                            </t>
+                                        </a>
+                                    </b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager" role="menu">
+                            <div class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                <div role="menuitem">
+                                    <a name="%(portal.portal_share_action)d" type="action">Share</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a type="edit">Edit</a>
+                                </div>
+                            </div>
+                            <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                            </div>
+                        </div>
+                        <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                        <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
+                    </t>
+                </xpath> -->
+            </field>
+        </record>
   </data>
 </odoo>
