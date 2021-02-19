@@ -164,7 +164,7 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <field name="work_location" position="after">
-          <field name="store"/>
+          <field name="store" widget="many2many_tags"/>
         </field>
       </field>
     </record>
