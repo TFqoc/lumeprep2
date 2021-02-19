@@ -213,7 +213,7 @@
             <field name="inherit_id" ref="project.open_view_project_all"/>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="view_project_kanban"/>
+            <field name="view_id" ref="project.view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
             <field name="help" type="html">
