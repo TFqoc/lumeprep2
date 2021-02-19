@@ -12,7 +12,7 @@
                 <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
                     <!-- <t t-if="record.store.user_ids == uid"> -->
                     <!-- <t t-if="store != False"> -->
-                    <t t-set="p_store" t-value="record"/>
+                    <!-- <t t-set="p_store" t-value="record"/> -->
                     <!-- <t t-set="u_store" t-value="store"/> -->
                     <!-- <t t-if="record.store != False"> -->
                     <t t-if="True == True">
