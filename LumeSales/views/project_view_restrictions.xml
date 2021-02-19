@@ -10,7 +10,7 @@
                     <field name="store"/>
                 </xpath> -->
                 <xpath expr="//kanban/templates//div[@class='o_project_kanban_main']" position="inside">
-                    <t t-if="record.store.user_ids.id == uid">
+                    <t t-if="record.store.user_ids == uid">
                     <!-- <t t-if="store != False"> -->
                     <!-- <t t-if="record.store.name == store"> -->
                         <div class="o_kanban_card_content">
