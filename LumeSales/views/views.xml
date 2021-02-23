@@ -121,6 +121,23 @@
       </field>
     </record>
 
+    <!-- Task Search View -->
+    <record id="view_project_task_search_inherit" model="ir.ui.view">
+      <field name="name">project.task.search.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_search_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//search/filter" position="before">
+          <filter string="Medical Customers" name="medical" domain="[('partner_id.is_medical','=',True)]"/>
+          <filter string="Recreational Customers" name="recreational" domain="[('partner_id.is_medical','=',False)]"/>
+          <filter string="Curbside" name="curb" domain="[('order_type','=','delivery')]"/>
+          <filter string="In Store" name="in_store" domain="[('order_type','=','store')]"/>
+          <filter string="Online Order" name="online" domain="[('order_type','=','online')]"/>
+          <separator/>
+        </xpath>
+      </field>
+    </record>
+
     <!-- Store View -->
     <record id="view_store_form" model="ir.ui.view">
       <field name="name">store.form</field>
