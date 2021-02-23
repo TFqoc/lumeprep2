@@ -54,7 +54,7 @@
           </script>
         </xpath>
         <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)[2]" position="replace">
-          <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="24" height="24" style="border-radius: 50%;" class="o_m2o_avatar"/>
+          <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="24" height="24" style="border-radius: 50%; margin-left: 6px;" class="o_m2o_avatar"/>
         </xpath>
       </field>
     </record>
