@@ -42,17 +42,16 @@ odoo.define('lume.Many2OneAvatarPartner', function (require) {
         }
     });
 
-    /*const KanbanMany2OneAvatarUser = Many2OneAvatarPartner.extend({
+    const KanbanMany2OneAvatarPartner = Many2OneAvatarPartner.extend({
         _template: 'mail.KanbanMany2OneAvatarUser',
     });
 
-    fieldRegistry.add('many2one_avatar_user', Many2OneAvatarPartner);
-    fieldRegistry.add('kanban.many2one_avatar_user', KanbanMany2OneAvatarUser);*/
-
     fieldRegistry.add('many2one_avatar_partner', Many2OneAvatarPartner);
+    fieldRegistry.add('kanban.many2one_avatar_partner', KanbanMany2OneAvatarPartner);
 
     return {
-        Many2OneAvatarPartner: Many2OneAvatarPartner,
+        Many2OneAvatarPartner,
+        KanbanMany2OneAvatarPartner,
     };
 
 });
