@@ -32,7 +32,7 @@ odoo.define('timer.live_timer', function (require) {
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
             this.className = 'o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold';
-            this.$el.css("margin-left","6px");
+            this.style = "margin-left: 6px;";
         },
         /**
          * @override
