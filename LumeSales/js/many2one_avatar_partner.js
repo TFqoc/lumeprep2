@@ -14,7 +14,7 @@ odoo.define('lume.Many2OneAvatarPartner', ['mail.Many2OneAvatarUser','web.field_
     //     _template: 'mail.KanbanMany2OneAvatarUser',
     // });
 
-    fieldRegistry.add('many2one_avatar_partner', Many2OneAvatarPartner);
+    // fieldRegistry.add('many2one_avatar_partner', Many2OneAvatarPartner);
     // fieldRegistry.add('kanban.many2one_avatar_partner', KanbanMany2OneAvatarPartner);
 
     // return {
