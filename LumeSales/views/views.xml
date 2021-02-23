@@ -46,9 +46,9 @@
           <field name="message_unread_counter" widget="count_counter"/>
           <field name="timer_start" widget="timer_timer"/>
           <p>
-            <span role="img" class="fa fa-bus" aria-hidden="true">bus</i>
-            <span class="fa fa-cart-arrow-down" aria-hidden="true">cart</i>
-            <span class="fa fa-laptop" aria-hidden="true">laptop</i>
+            <span role="img" class="fa fa-bus" aria-hidden="true">bus</span>
+            <span class="fa fa-cart-arrow-down" aria-hidden="true">cart</span>
+            <span class="fa fa-laptop" aria-hidden="true">laptop</span>
             <span role="img" class="glyphicon glyphicon-road">road</span>
           </p>
           <script defer="defer">
