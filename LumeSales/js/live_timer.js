@@ -1,46 +1,22 @@
 //alert("Unread Messages has been loaded");
 console.log("Live Timer has been loaded");
-odoo.define('LumeSales.live_timer', ['web.rpc'], function(require){
+odoo.define('LumeSales.live_timer', ['timer.timer','web.field_registry'], function(require){
     "use strict";
 
-    var rpc = require('web.rpc');
+    var Timer = require('timer.timer');
+    var fieldRegistry = require('web.field_registry');
 
-    var task_data = false;
+    var LiveTimer = Timer.extend({
 
-    // function update_timer(){
-    //     //Loop through records
-    //     if (task_data){
-    //         var d;
-    //         for (d in task_data){
-    //             console.log(task_data[d]);
-    //         }
-    //     }
-    //     // update associated cards
-    // }
-    // function get_tasks(){
-    //     console.log("Getting task data");
-    //     // Use an empty array to search for all the records
-    //     var domain = [['id', '>', 1]];
-    //     // Use an empty array to read all the fields of the records
-    //     var fields = [];
-    //     task_data = rpc.query({
-    //         model: 'project.task',
-    //         method: 'search_read',
-    //         args: [domain, fields],
-    //     }).then(function (data) {
-    //         console.log(data);
-    //         task_data = data;
-    //     });
-    // }
-    // async function loop(){
-    //     task_data = get_tasks();
-    //     while (true){
-    //         update_timer();
-    //         await new Promise(r => setTimeout(r, 1000));
-    //     }
-    // }//
+        init: function (parent, name, record, options) {
+            this._super.apply(this, arguments);
+            this.className = 'o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold';
 
-    // loop();
+        },
 
-    return 'live_timer';
+    });
+
+    fieldRegistry.add('LumeSales.live_timer', LiveTimer);
+
+    return LiveTimer;
 });
