@@ -1,3 +1,4 @@
+console.log("Many2OneAvatarPartner has been loaded");
 odoo.define('lume.Many2OneAvatarPartner', function (require) {
     "use strict";
 
