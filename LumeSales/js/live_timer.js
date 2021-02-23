@@ -1,12 +1,12 @@
 //alert("Unread Messages has been loaded");
 console.log("Live Timer has been loaded");
-odoo.define('LumeSales.live_timer', ['timer.timer','web.field_registry'], function(require){
+odoo.define('LumeSales.live_timer', function(require){
     "use strict";
 
-    var Timer = require('timer.timer');
+    var Timer_timer = require('timer.timer');
     var fieldRegistry = require('web.field_registry');
 
-    var LiveTimer = Timer.extend({
+    var LiveTimer = Timer_timer.extend({
 
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
