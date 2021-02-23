@@ -46,10 +46,10 @@
           <field name="message_unread_counter" widget="count_counter"/>
           <field name="timer_start" widget="timer_timer"/>
           <p>
-            <i class="fa fa-bus" aria-hidden="true">bus</i>
-            <i class="fa fa-cart-arrow-down" aria-hidden="true">cart</i>
-            <i class="fa fa-laptop" aria-hidden="true">laptop</i>
-            <span class="glyphicon glyphicon-road">road</span>
+            <span role="img" class="fa fa-bus" aria-hidden="true">bus</i>
+            <span class="fa fa-cart-arrow-down" aria-hidden="true">cart</i>
+            <span class="fa fa-laptop" aria-hidden="true">laptop</i>
+            <span role="img" class="glyphicon glyphicon-road">road</span>
           </p>
           <script defer="defer">
             $("[name='timer_start']").addClass("o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold");
