@@ -5,7 +5,7 @@ odoo.define('lume.Many2OneAvatarPartner', function (require) {
     const fieldRegistry = require('web.field_registry');
     const { Many2OneAvatarUser } = require('mail.Many2OneAvatarUser');
 
-    const Many2OneAvatarPartner = Many2OneAvatar.extend({
+    const Many2OneAvatarPartner = Many2OneAvatarUser.extend({
         // This widget is only supported on many2ones pointing to 'res.users'
         supportedModels: ['res.user','res.partner'],
     });
