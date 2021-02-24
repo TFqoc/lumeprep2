@@ -39,6 +39,9 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
+        <xpath expr="/kanban/field" position="after">
+          <field name="order_type"/>
+        </xpath>
         <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
           <field name="partner_id" widget="res_partner_many2one"/>
           <br/>
