@@ -48,9 +48,9 @@
           <field name="timer_start" widget="live_timer"/>
           <br/>
           <span>
-            <span t-if="order_type == 'delivery'" class="fa fa-bus"></span>
-            <span t-if="order_type == 'store'" class="fa fa-cart-arrow-down"></span>
-            <span t-if="order_type == 'online'" class="fa fa-laptop"></span>
+            <span t-if="record.order_type == 'delivery'" class="fa fa-bus"></span>
+            <span t-if="record.order_type == 'store'" class="fa fa-cart-arrow-down"></span>
+            <span t-if="record.order_type == 'online'" class="fa fa-laptop"></span>
           </span>
           <span class="o_MessagingMenu_icon fa fa-comments"></span>
           <field name="message_unread_counter" widget="count_counter"/>
