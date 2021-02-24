@@ -39,6 +39,7 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_kanban"/>
       <field name="arch" type="xml">
+         <!-- Needed field tag to access the model field later in this view -->
         <xpath expr="/kanban/field" position="after">
           <field name="order_type"/>
         </xpath>
