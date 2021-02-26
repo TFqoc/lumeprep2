@@ -9,7 +9,7 @@
     'description': """
         Long description of module's purpose
     """,
-
+# 
     'author': "QOC Innovations",
     'website': "http://www.qocinnovations.com",
 
