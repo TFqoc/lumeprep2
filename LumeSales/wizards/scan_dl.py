@@ -9,11 +9,11 @@ class ScanDL(models.TransientModel):
     #<field name="image" widget='image' />
     raw_text = fields.Char("Raw Text")
 
-    # def __init__(self, arg1, arg2):
-    #     # Delete the duplicate task that was created just before this menu popped up
-    #     self.env['project.task'].delete_recent()
-    #     self.raw_text = "Created"
-    #     return super(ScanDL, self).__init__(arg1, arg2)
+    def __init__(self, arg1, arg2):
+        # Delete the duplicate task that was created just before this menu popped up
+        self.env['project.task'].delete_recent()
+        self.raw_text = "Created"
+        super(ScanDL, self).__init__(arg1, arg2)
 
     def confirm_action(self):
         #https://github.com/abbasbeydoun/Python-PDF417-Driver-s-License-decoder/blob/master/decoder.py
