@@ -60,16 +60,9 @@ class Tasks(models.Model):
         # Mail module > models > mail_channel.py Line 743
                 # active_id = self.env.context.get('active_ids', []) #gets id of task
         # self.env['mail.channel'].search([''])   #channel_seen(None)
-        # 
         message_id = self.message_ids[0].id
         for channel in self.message_channel_ids:
-            is_user = False
-            for p in channel.channel_partner_ids:
-                if p == self.env.user.partner_id:
-                    is_user = True
-                    break
-            if is_user:
-                channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
+            channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
 
         self.dummy_field = 'dummy'
 
@@ -97,8 +90,10 @@ class Tasks(models.Model):
     #         }
     #     return super(Tasks, self).create(vals_list)
 
-    def delete_recent(self, args):
-        target_record = self.env['project.task'].search([], order='id desc')[0]
+    # def delete_recent(self, args):
+    @api.model
+    def delete_recent(self):
+        target_record = self.env['project.task'].search([], order='id desc')[1]
         # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
 
