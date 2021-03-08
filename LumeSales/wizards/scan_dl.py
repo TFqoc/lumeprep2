@@ -9,12 +9,10 @@ class ScanDL(models.TransientModel):
     #<field name="image" widget='image' />
     raw_text = fields.Char("Raw Text")
 
-    @api.model
-    def create(self, vals_list):
+    def __init__(self):
         # Delete the duplicate task that was created just before this menu popped up
         self.env['project.task'].delete_recent()
         self.raw_text = "Created"
-        return super(ScanDL, self).create(vals_list)
 
     def confirm_action(self):
         #https://github.com/abbasbeydoun/Python-PDF417-Driver-s-License-decoder/blob/master/decoder.py
