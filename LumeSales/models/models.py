@@ -60,6 +60,7 @@ class Tasks(models.Model):
         # Mail module > models > mail_channel.py Line 743
                 # active_id = self.env.context.get('active_ids', []) #gets id of task
         # self.env['mail.channel'].search([''])   #channel_seen(None)
+        # 
         message_id = self.message_ids[0].id
         for channel in self.message_channel_ids:
             is_user = False
