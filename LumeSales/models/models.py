@@ -51,7 +51,7 @@ class Tasks(models.Model):
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
 
-    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')])
+    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
 
     def get_message_count(self, id): #called from js widget for display purposes
         return self.browse(id).message_unread_counter
