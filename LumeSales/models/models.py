@@ -84,6 +84,7 @@ class Tasks(models.Model):
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
         # self._origin.stage_id = self.stage_id
+        # 
         
 
         # if new_stage is 'Check In':
