@@ -128,26 +128,32 @@ class sale_inherit(models.Model):
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
 
-    @api.onchange('order_line')
-    def check_order_lines(self):
-        for order in self.order_line:
-            if order.product_id.is_medical is self.partner_id.is_medical:
-                continue
-            else:
-                #TODO delete the line item that was just added.
-                #self.update({'order_line': (3,order.id,0)}) #tries to access id.ref but fails since id is an integer
-                return {
-                'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
-                }
+    # @api.onchange('order_line')
+    # def check_order_lines(self):
+    #     for order in self.order_line:
+    #         if order.product_id.is_medical is self.partner_id.is_medical:
+    #             continue
+    #         else:
+    #             #TODO delete the line item that was just added.
+    #             #self.update({'order_line': (3,order.id,0)}) #tries to access id.ref but fails since id is an integer
+    #             return {
+    #             'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
+    #             }
                 #https://github.com/odoo/odoo/issues/32182
                 #Can't edit order_line from here because self is a copy.
                 #Need a work around.
 
-    def delete_order_line(self, line_id):
-
-        pass
-
 ## TODO Try adding the check for medcial/rec on the sale.order.line object instead
+class sale_line(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.onchange('product_id')
+    def check_order_line(self):
+        if self.product_id.is_medical is not self.sale_order.partner_id.is_medical:
+            self.product_id = False
+            return {
+                'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
+                }
 
 ####
 # Allow multiple task timers going at once.
