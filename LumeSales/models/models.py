@@ -79,13 +79,14 @@ class Tasks(models.Model):
     def change_stage(self):
         new_stage = self.stage_id.name
         old_stage = self._origin.stage_id.name
+        self._origin.stage_id = self.stage_id
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             self._origin.action_timer_auto_stop()
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
-        self._origin.stage_id = self.stage_id
+        
         return {
-    'warning': {'title': "Info", 'message': "Old: " +old_stage+"\nNew: "+new_stage, 'type': 'notification'},
+    'warning': {'title': "Info", 'message': old_stage+" > "+new_stage, 'type': 'notification'},
 }
 
         # if new_stage is 'Check In':
