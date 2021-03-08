@@ -62,7 +62,13 @@ class Tasks(models.Model):
         # self.env['mail.channel'].search([''])   #channel_seen(None)
         message_id = self.message_ids[0].id
         for channel in self.message_channel_ids:
-            channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
+            is_user = False
+            for p in channel.channel_partner_ids:
+                if p == self.env.user.partner:
+                    is_user = True
+                    break
+            if is_user:
+                channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
 
         self.dummy_field = 'dummy'
 
@@ -144,6 +150,8 @@ class sale_inherit(models.Model):
     def delete_order_line(self, line_id):
 
         pass
+
+## TODO Try adding the check for medcial/rec on the sale.order.line object instead
 
 ####
 # Allow multiple task timers going at once.
