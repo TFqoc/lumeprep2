@@ -81,7 +81,7 @@ class Tasks(models.Model):
         old_stage = self._origin.stage_id.name
         self._origin.stage_id = self.stage_id
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
-            self._origin.action_timer_auto_stop()
+            self._origin.action_timer_auto_stop(old_stage+" > "+new_stage)
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
         
@@ -106,26 +106,26 @@ class Tasks(models.Model):
         #     self.action_timer_auto_stop()
         #     pass
     
-    def save_timesheet(self, minutes):
+    def save_timesheet(self, minutes, desc=None):
         values = {
             'task_id': self.id,
             'project_id': self.project_id.id,
             'date': fields.Date.context_today(self),
-            'name': self.stage_id.name,
+            'name': desc or "",
             'user_id': self.env.uid,
             'unit_amount': minutes,
         }
         self.user_timer_id.unlink()
         return self.env['account.analytic.line'].create(values)
 
-    def action_timer_auto_stop(self):
+    def action_timer_auto_stop(self, desc=None):
         # timer was either running or paused
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             minutes_spent = self.user_timer_id._get_minutes_spent()
             minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
             rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
             minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
-            self.save_timesheet(minutes_spent * 60 / 3600)
+            self.save_timesheet(minutes_spent * 60 / 3600, desc)
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
