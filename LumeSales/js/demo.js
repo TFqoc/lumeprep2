@@ -11,7 +11,7 @@ odoo.define('LumeSales.Demo', ['web.kanban_record_quick_create'], function(requi
             this._super.apply(this, arguments);
             return this._rpc({
                 model: 'project.task',
-                method: 'action_start_timer',
+                method: 'action_timer_start',
                 args: [[],[]]
             });
         },
