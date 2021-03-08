@@ -30,6 +30,7 @@
         'views/assets.xml',
         'views/views.xml',
         'views/templates.xml',
+        'data/data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

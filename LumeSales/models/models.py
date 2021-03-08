@@ -69,33 +69,61 @@ class Tasks(models.Model):
 
     # Mail module > models > mail_channel.py Line 758
 
-
-    # @api.model
-    # def create(self, vals_list):
-    #     """Override default Odoo create function and extend."""
-    #     #Vals_list dictionary contains all the fields of the record to be created
-    #     # Returns without creating if user is banned
-    #     customer = self.env['res.partner'].browse(vals_list['partner_id'])
-    #     if customer.is_banned is True:
-    #         message_id = self.env['message.wizard'].create(
-    #             {'message': ("Customer " + customer.name + " has been banned and cannot be checked in.")})
-    #         return {
-    #             'name': ('Customer is Banned'),
-    #             'type': 'ir.actions.act_window',
-    #             'view_mode': 'form',
-    #             'res_model': 'message.wizard',
-    #             # pass the id
-    #             'res_id': message_id.id,
-    #             'target': 'new'
-    #         }
-    #     return super(Tasks, self).create(vals_list)
-
-    # def delete_recent(self, args):
     @api.model
     def delete_recent(self):
         target_record = self.env['project.task'].search([], order='id desc')[0]
         # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
+
+    @api.onchange('stage_id')
+    def change_stage(self):
+        new_stage = self.stage_id.name
+        old_stage = self._origin.stage_id.name
+        if self.user_timer_id.timer_start and self.display_timesheet_timer:
+            self.action_timer_auto_stop()
+        if new_stage is not 'Done':
+            self.action_timer_start()
+        
+
+        # if new_stage is 'Check In':
+        #     pass
+        # elif new_stage is 'Build Cart':
+        #     if old_stage is 'Check In':
+        #         self.action_timer_start()
+        #         pass
+        #     pass
+        # elif new_stage is 'Fulfilment':
+        #     if old_stage is 'Build Cart':
+        #         self.action_timer_auto_stop()
+        #     pass
+        # elif new_stage is 'Check Out':
+        #     pass
+        # elif new_stage is 'Done':
+        #     self.action_timer_auto_stop()
+        #     pass
+    
+    def save_timesheet(self, minutes):
+        values = {
+            'task_id': self.id,
+            'project_id': self.project_id.id,
+            'date': fields.Date.context_today(self),
+            'name': self.stage_id.name,
+            'user_id': self.env.uid,
+            'unit_amount': minutes,
+        }
+        self.task_id.user_timer_id.unlink()
+        return self.env['account.analytic.line'].create(values)
+
+    def action_timer_auto_stop(self):
+        # timer was either running or paused
+        if self.user_timer_id.timer_start and self.display_timesheet_timer:
+            minutes_spent = self.user_timer_id._get_minutes_spent()
+            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+            rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+            minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
+            self.save_timesheet(minutes_spent * 60 / 3600)
+            #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
+        #return False
 
 class project_inherit(models.Model):
     _inherit = 'project.project'
