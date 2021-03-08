@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- <data noupdate="1"> -->
+    <!-- <data noupdate="1">
         <record id="whatever" model="model.model">
             <field name="name" ref="sale.order">Value Here</field>
-        </record>
+        </record> -->
 
         <!-- Stages -->
-        <record id="lume_stage_0" model="project.task.type">
+        <!-- <record id="lume_stage_0" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">Check In</field>
         </record>
@@ -27,12 +27,12 @@
             <field name="name">Done</field>
             <field name="fold" eval="True"/>
             <field name="is_closed" eval="True"/>
-        </record>
+        </record> -->
 
         <!-- Project/Store -->
-        <record id="lume_store_project" model="project.project">
+        <!-- <record id="lume_store_project" model="project.project">
             <field name="name">Lume Store 1</field>
             <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')), (4, ref('lume_stage_4'))]"/>
         </record>
-    <!-- </data> -->
+    </data> -->
 </odoo>
