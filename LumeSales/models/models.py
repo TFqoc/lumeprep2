@@ -78,6 +78,7 @@ class Tasks(models.Model):
     @api.onchange('stage_id')
     def change_stage(self):
         new_stage = self.stage_id.name
+        self._origin.stage_id = self.stage_id
         # old_stage = self._origin.stage_id.name
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             self._origin.action_timer_auto_stop()
