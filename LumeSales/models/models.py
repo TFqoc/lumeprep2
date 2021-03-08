@@ -65,7 +65,7 @@ class Tasks(models.Model):
         for channel in self.message_channel_ids:
             is_user = False
             for p in channel.channel_partner_ids:
-                if p == self.env.user.partner:
+                if p == self.env.user.partner_id:
                     is_user = True
                     break
             if is_user:
