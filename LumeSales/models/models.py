@@ -78,11 +78,11 @@ class Tasks(models.Model):
     @api.onchange('stage_id')
     def change_stage(self):
         new_stage = self.stage_id.name
-        old_stage = self._origin.stage_id.name
+        # old_stage = self._origin.stage_id.name
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
-            self.action_timer_auto_stop()
+            self._origin.action_timer_auto_stop()
         if new_stage is not 'Done':
-            self.action_timer_start()
+            self._origin.action_timer_start()
         
 
         # if new_stage is 'Check In':
