@@ -12,7 +12,8 @@
                 </group>
                 <footer>
                     <button name="confirm_action" string="Confirm" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <!-- <button string="Cancel" class="btn-secondary" special="cancel"/> -->
+                    <button name="cancel" string="Cancel" class="btn-secondary" type="object"/>
                 </footer>
             </form>
         </field>

@@ -9,13 +9,6 @@ class ScanDL(models.TransientModel):
     #<field name="image" widget='image' />
     raw_text = fields.Char("Raw Text")
 
-    def __init__(self, arg1, arg2):
-        # Delete the duplicate task that was created just before this menu popped up
-        if hasattr(self,'env'):
-            self.env['project.task'].delete_recent()
-            self.raw_text = "Created"
-        super(ScanDL, self).__init__(arg1, arg2)
-
     def confirm_action(self):
         #https://github.com/abbasbeydoun/Python-PDF417-Driver-s-License-decoder/blob/master/decoder.py
         #Test DL data
@@ -50,6 +43,7 @@ class ScanDL(models.TransientModel):
         "Exception": null
         }
         """
+        self.env['project.task'].delete_recent()
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
         ids = self.env.context.get('active_ids', [])
         target_record = self.env['project.task'].browse(ids)[0]
@@ -97,7 +91,11 @@ class ScanDL(models.TransientModel):
                 'res_model': 'res.partner',
                 'target': 'new', #for popup style window
                 'res_id': customer_id,
-            } 
+            }
+
+    def cancel(self):
+        self.env['project.task'].delete_recent()
+        return {'type': 'ir.actions.act_window_close'}
 
     def parse_barcode(self, code):
         dlstring = code
