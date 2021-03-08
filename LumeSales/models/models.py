@@ -83,9 +83,9 @@ class Tasks(models.Model):
             self._origin.action_timer_auto_stop()
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
-        # self._origin.stage_id = self.stage_id
+        self._origin.stage_id = self.stage_id
         return {
-    'warning': {'title': "Info", 'message': "New: " +new_stage+" Old: "+old_stage, 'type': 'notification'},
+    'warning': {'title': "Info", 'message': "Old: " +old_stage+"\nNew: "+new_stage, 'type': 'notification'},
 }
 
         # if new_stage is 'Check In':
