@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 import datetime
 
 class ScanDL(models.TransientModel):
@@ -8,6 +8,12 @@ class ScanDL(models.TransientModel):
     #image = fields.Binary("Image", help="Select image here")
     #<field name="image" widget='image' />
     raw_text = fields.Char("Raw Text")
+
+    @api.model
+    def create(self, vals_list):
+        # Delete the duplicate task that was created just before this menu popped up
+        self.env['project.task'].delete_recent()
+        return super(ScanDL, self).create(vals_list)
 
     def confirm_action(self):
         #https://github.com/abbasbeydoun/Python-PDF417-Driver-s-License-decoder/blob/master/decoder.py

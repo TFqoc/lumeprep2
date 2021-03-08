@@ -93,7 +93,7 @@ class Tasks(models.Model):
     # def delete_recent(self, args):
     @api.model
     def delete_recent(self):
-        target_record = self.env['project.task'].search([], order='id desc')[1]
+        target_record = self.env['project.task'].search([], order='id desc')[0]
         # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
 
