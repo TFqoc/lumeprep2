@@ -11,8 +11,9 @@ class ScanDL(models.TransientModel):
 
     def __init__(self, arg1, arg2):
         # Delete the duplicate task that was created just before this menu popped up
-        self.env['project.task'].delete_recent()
-        self.raw_text = "Created"
+        if self.env:
+            self.env['project.task'].delete_recent()
+            self.raw_text = "Created"
         super(ScanDL, self).__init__(arg1, arg2)
 
     def confirm_action(self):
