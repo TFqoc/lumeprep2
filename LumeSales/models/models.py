@@ -149,7 +149,7 @@ class sale_line(models.Model):
 
     @api.onchange('product_id')
     def check_order_line(self):
-        if self.product_id.is_medical is not self.sale_order.partner_id.is_medical:
+        if self.product_id.is_medical is not self.order_id.partner_id.is_medical:
             self.product_id = False
             return {
                 'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if order.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer's order!",}
