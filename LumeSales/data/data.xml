@@ -24,7 +24,7 @@
         </record>
         <record id="lume_stage_4" model="project.task.type">
             <field name="sequence">40</field>
-            <field name="name">Order Ready</field>
+            <field name="name">Payment</field>
         </record>
         <record id="lume_stage_500" model="project.task.type">
             <field name="sequence">500</field>
