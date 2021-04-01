@@ -78,15 +78,15 @@ class Tasks(models.Model):
         self.next_stage()
 
     def next_stage(self):
-        if self.stage.name == 'Done':
+        if self.stage_id.name == 'Done':
             return
 
         get_next = False
         for stage in self.project_id.type_ids:
             if get_next:
-                self.stage = stage
+                self.stage_id = stage
                 break
-            elif stage == self.stage:
+            elif stage == self.stage_id:
                 get_next = True
 
 
