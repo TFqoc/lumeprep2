@@ -75,6 +75,19 @@ class Tasks(models.Model):
             # 'pricelist_id':'idk',
             # 'warehouse_id':'',
         })
+        self.next_stage()
+
+    def next_stage(self):
+        if self.sage.name == 'Done':
+            return
+
+        get_next = False
+        for stage in self.project_id.type_ids:
+            if get_next:
+                self.stage = stage
+                break
+            elif stage == self.stage:
+                get_next = True
 
 
     # Mail module > models > mail_channel.py Line 758
