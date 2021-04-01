@@ -78,7 +78,7 @@ class Tasks(models.Model):
         self.next_stage()
 
     def next_stage(self):
-        if self.sage.name == 'Done':
+        if self.stage.name == 'Done':
             return
 
         get_next = False
