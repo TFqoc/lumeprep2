@@ -15,6 +15,11 @@ class SaleOrder(models.Model):
                 self.partner_id = False
                 return warning
 
+    def action_confirm(self):
+        ret = super(SaleOrder, self).action_confirm()
+        if ret and self.task:
+            self.task.next_stage()
+
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
