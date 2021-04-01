@@ -91,7 +91,7 @@
       <field name="inherit_id" ref="project.view_task_form2"/>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <xpath expr="" position="inside">
+        <xpath expr="//header/button" position="after">
           <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sale_order','!=',False)]}"></button>
         </xpath>
         <field name="partner_id" position="after">
