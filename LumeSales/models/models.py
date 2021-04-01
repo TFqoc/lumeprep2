@@ -66,6 +66,17 @@ class Tasks(models.Model):
 
         self.dummy_field = 'dummy'
 
+    def build_cart(self):
+        vals = {
+            'partner_id':self.partner_id.id,
+            'task':self.id,
+            'date_order': fields.datetime.now(),
+            # 'picking_policy':'direct',
+            # 'pricelist_id':'idk',
+            # 'warehouse_id':'',
+        }
+        self.env['sale.order'].create(vals)
+
 
     # Mail module > models > mail_channel.py Line 758
 
