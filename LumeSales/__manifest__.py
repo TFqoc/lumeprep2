@@ -28,6 +28,7 @@
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
         'views/assets.xml',
+        'views/sale.xml',
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',
