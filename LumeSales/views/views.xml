@@ -76,8 +76,8 @@
       <field name="arch" type="xml">
         <field name="name" position="before">
           <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
-          <!-- <field name="scan_text" string="Scan DL"/> -->
-          <field name="_barcode_scanned" string="Scan DL" widget="barcode_handler"/>
+          <field name="scan_text" string="Scan DL"/>
+          <!-- <field name="_barcode_scanned" string="Scan DL" widget="barcode_handler"/> -->
         </field>
         <field name="name" position="after">
           <field name="partner_id"/>
