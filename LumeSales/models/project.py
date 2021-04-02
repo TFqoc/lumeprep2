@@ -43,7 +43,7 @@ class Tasks(models.Model):
             customer_id = new_customer.id
 
         # self.name = "Customer Order #" + str(self.project_id.task_number)
-        self.project_id.task_number += 1
+        # self.project_id.task_number += 1
         self.partner_id = customer_id
 
         # Open the customer profile in windowed popup
