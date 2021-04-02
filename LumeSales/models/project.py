@@ -42,7 +42,7 @@ class Tasks(models.Model):
             })
             customer_id = new_customer.id
 
-        self.name = "Customer Order #" + str(self.project_id.task_number)
+        # self.name = "Customer Order #" + str(self.project_id.task_number)
         self.project_id.task_number += 1
         self.partner_id = customer_id
 
@@ -59,6 +59,7 @@ class Tasks(models.Model):
     @api.model
     def create(self, vals):
         _logger.info("CREATE NEW TASK")
+        vals['name'] = "Customer Order #" + str(self.env['project.project'].browse(vals['project_id']).task_number)
         return super(Tasks, self).create(vals)
 
     def get_message_count(self, id): #called from js widget for display purposes
