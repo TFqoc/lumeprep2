@@ -12,6 +12,7 @@ class Tasks(models.Model):
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
+    show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
     order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
 
@@ -56,9 +57,24 @@ class Tasks(models.Model):
                 'res_id': customer_id,
             }
 
+    @api.depends('partner_id')
+    def _compute_show_customer_form(self):
+        if self.partner_id:
+            self.show_customer_form = True
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'res.partner',
+                'target': 'new', #for popup style window
+                'res_id': self.partner_id.id
+            }
+        else:
+            self.show_customer_form = False
+
     @api.model
     def create(self, vals):
-        _logger.info("CREATE NEW TASK")
+        # _logger.info("CREATE NEW TASK")
         project = self.env['project.project'].browse(vals['project_id'])
         vals['name'] = "Customer Order #" + str(project.task_number)
         project.task_number += 1
