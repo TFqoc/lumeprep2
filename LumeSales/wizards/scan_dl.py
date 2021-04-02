@@ -46,7 +46,7 @@ class ScanDL(models.TransientModel):
         self.env['project.task'].delete_recent()
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
         ids = self.env.context.get('active_ids', [])
-        target_record = self.env['project.task'].browse(ids)[1]
+        target_record = self.env['project.task'].browse(ids)[0]
 
         meta, data = self.parse_barcode(self.raw_text)
         
