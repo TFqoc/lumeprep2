@@ -5,6 +5,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class Tasks(models.Model):
+    _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
     _description = 'project.task'
 
