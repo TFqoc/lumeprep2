@@ -20,6 +20,8 @@ class Tasks(models.Model):
         text = self.scan_text
         if not text:
             return
+        else:
+            self.scan_text = False
         data = self.parse_barcode(text)[1]
 
         customer_id = ""
@@ -45,6 +47,11 @@ class Tasks(models.Model):
         self.partner_id = customer_id
 
         # Open the customer profile in windowed popup
+        self.env['project.task'].show_customer(customer_id)
+
+    @api.model
+    def show_customer(self, customer_id):
+        # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -53,8 +60,6 @@ class Tasks(models.Model):
                 'target': 'new', #for popup style window
                 'res_id': customer_id,
             }
-
-
 
     def get_message_count(self, id): #called from js widget for display purposes
         return self.browse(id).message_unread_counter
