@@ -18,6 +18,8 @@ class Tasks(models.Model):
     @api.onchange('scan_text')
     def auto_fill(self):
         text = self.scan_text
+        if not text:
+            return
         data = self.parse_barcode(text)[1]
 
         customer_id = ""

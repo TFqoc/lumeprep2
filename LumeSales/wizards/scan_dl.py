@@ -99,8 +99,6 @@ class ScanDL(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def parse_barcode(self, code):
-        if not code:
-            return [False, False]
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
         dlstring = code
         dlstring = dlstring.split('0010') #the characters \ and n are literally in the string in my test.

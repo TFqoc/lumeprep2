@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
             self.task.next_stage()
+        # TODO also create the POS link
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
