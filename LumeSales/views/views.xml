@@ -75,13 +75,14 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <field name="name" position="before">
-          <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/>
+          <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
           <field name="scan_text" string="Scan DL"/>
         </field>
         <field name="name" position="after">
           <field name="partner_id"/>
           <field name="order_type"/>
         </field>
+        <field name="name" position="replace"></field>
       </field>
     </record>
 
