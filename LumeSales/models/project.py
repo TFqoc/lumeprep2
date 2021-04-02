@@ -47,11 +47,6 @@ class Tasks(models.Model):
         self.partner_id = customer_id
 
         # Open the customer profile in windowed popup
-        self.env['project.task'].show_customer(customer_id)
-
-    @api.model
-    def show_customer(self, customer_id):
-        # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -60,6 +55,11 @@ class Tasks(models.Model):
                 'target': 'new', #for popup style window
                 'res_id': customer_id,
             }
+
+    @api.model
+    def create(self, vals):
+        _logger.info("CREATE NEW TASK")
+        return super(Tasks, self).create(vals)
 
     def get_message_count(self, id): #called from js widget for display purposes
         return self.browse(id).message_unread_counter
