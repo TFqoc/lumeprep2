@@ -90,6 +90,7 @@ class TimeMix(models.AbstractModel):
                 'user_id': self.env.user.id,
             })
             timer.action_timer_start()
+            self.user_timer_id = timer
         else:
             # Check if it is in pause then resume it or start it
             if timer.timer_pause:
