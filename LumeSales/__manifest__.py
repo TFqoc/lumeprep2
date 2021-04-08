@@ -22,6 +22,7 @@
     # any module necessary for this one to work correctly
     'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','barcodes'],
 
+
     # always loaded
     'data': [
         'security/ir.model.access.csv',
