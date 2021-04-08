@@ -146,7 +146,7 @@ class Tasks(models.Model):
         old_stage = self._origin.stage_id.name
         self._origin.stage_id = self.stage_id
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
-        if self.user_timer_id.timer_start and self.display_timesheet_timer:
+        if self.user_timer_id.timer_start or self.display_timesheet_timer:
             _logger.info("STOPPING TIMER")
             self._origin.action_timer_auto_stop(old_stage+" > "+new_stage)
         if not self.stage_id.is_closed:
