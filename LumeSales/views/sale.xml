@@ -7,10 +7,13 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <!-- Custom fields here -->
-            <field name="payment_term_id" position="after">
-                <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}"/>
-            </field>
+                <!-- Custom fields here -->
+                <field name="payment_term_id" position="after">
+                    <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}"/>
+                </field>
+                <xpath expr="//div[@class='oe_button_box']/button[@name='action_view_delivery']/field" position="attributes">
+                    <attribute name="string">Picks</attribute>
+                </xpath>
             </field>
         </record>
     </data>
