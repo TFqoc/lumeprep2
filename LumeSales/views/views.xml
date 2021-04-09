@@ -98,7 +98,7 @@
           <!-- <field name="sales_order" invisible="1"/> -->
           <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sales_order','!=',False)]}"></button>
         </xpath>
-        <xpath expr="//header/field" position="attributes">
+        <xpath expr="//header/field[@name='stage_id']" position="attributes">
           <attribute name="options">{'clickable': '0', 'fold_field': 'fold'}</attribute>
           <attribute name="readonly">1</attribute>
         </xpath>
