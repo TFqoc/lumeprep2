@@ -98,6 +98,9 @@
           <!-- <field name="sales_order" invisible="1"/> -->
           <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sales_order','!=',False)]}"></button>
         </xpath>
+        <field name="state" position="attributes">
+          <attribute name="options">{'clickable': '0', 'fold_field': 'fold'}</attribute>
+        </field>
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
           <field name="dummy_field" invisible="1"/>
