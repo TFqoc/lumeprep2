@@ -90,7 +90,7 @@ class Tasks(models.Model):
 
     @api.model
     def create(self, vals):
-        # _logger.info("CREATE NEW TASK")
+        _logger.info("CREATE NEW TASK")
         project = self.env['project.project'].browse(vals['project_id'])
         vals['name'] = "Customer Order #" + str(project.task_number)
         project.task_number += 1
