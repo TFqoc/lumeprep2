@@ -105,6 +105,7 @@
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
           <field name="dummy_field" invisible="1"/>
+          <field name="order_type"/>
           <!-- <field name="message_unread_counter" />
           <field name="message_unread"/>
           <field name="message_channel_ids"/>
