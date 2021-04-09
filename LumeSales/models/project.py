@@ -94,8 +94,9 @@ class Tasks(models.Model):
         project = self.env['project.project'].browse(vals['project_id'])
         vals['name'] = "Customer Order #" + str(project.task_number)
         project.task_number += 1
-        self.action_timer_start()
-        return super(Tasks, self).create(vals)
+        res = super(Tasks, self).create(vals)
+        res.action_timer_start()
+        return res
 
     def get_message_count(self, id): #called from js widget for display purposes
         return self.browse(id).message_unread_counter
