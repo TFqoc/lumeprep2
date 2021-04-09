@@ -101,6 +101,7 @@
         <xpath expr="//header/field[@name='stage_id']" position="attributes">
           <attribute name="options">{'clickable': '0', 'fold_field': 'fold'}</attribute>
           <attribute name="readonly">1</attribute>
+          <attribute name="can_write">false</attribute>
         </xpath>
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
