@@ -13,7 +13,7 @@ class Tasks(models.Model):
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
-    # state = fields.Selection(readonly=True)
+    stage_id = fields.Selection(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
     order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
