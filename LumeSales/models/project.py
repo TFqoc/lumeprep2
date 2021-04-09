@@ -13,6 +13,7 @@ class Tasks(models.Model):
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
+    state = fields.Selection(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
     order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
@@ -93,6 +94,7 @@ class Tasks(models.Model):
         project = self.env['project.project'].browse(vals['project_id'])
         vals['name'] = "Customer Order #" + str(project.task_number)
         project.task_number += 1
+        self.action_timer_start()
         return super(Tasks, self).create(vals)
 
     def get_message_count(self, id): #called from js widget for display purposes
@@ -118,6 +120,13 @@ class Tasks(models.Model):
             # 'warehouse_id':'',
         })
         self.next_stage()
+        # Open up the sale order we just created
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"sale.order",
+            "res_id":self.sales_order.id,
+            "views":[[False, "form"]],
+        }
 
     def next_stage(self):
         if self.stage_id.name == 'Done':
