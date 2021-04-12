@@ -50,8 +50,8 @@ class Test_Partner(TransactionCase):
 
     # The below method would be used to imput the data into the system.
 
-    @classmethod 
-    def setUpClass :
+    @classmethod
+    def setUpClass(cls, chart_template_ref=):
 
     # Below would take the data used from above, and input it through the run 
 
