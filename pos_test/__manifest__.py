@@ -33,9 +33,9 @@
             ('prepend', 'pos_test/static/js/button.js'),
         ],
     },
-    # 'qweb':[
-    #     'static/xml/button.xml',
-    # ],
+    'qweb':[
+        'static/xml/button.xml',
+    ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
