@@ -10,7 +10,7 @@ odoo.define('pos_test.CustomButton', function(require) {
     class CustomButton extends PosComponent {
         constructor() {
             super(...arguments);
-            useListener('click-order', this.onAddProduct);
+            useListener('click-product', this.onAddProduct);
             // this.state = useState({ label: 'Click Me!' });
             // this.confirmed = null;
         }
@@ -20,9 +20,9 @@ odoo.define('pos_test.CustomButton', function(require) {
         onClick() {
             console.log("You clicked me!");
         }
-        onAddProduct({ detail: clickedOrder }){
+        onAddProduct({ detail: clickedProduct }){
             console.log("You just added a product!");
-            console.log(clickedOrder);
+            console.log(clickedProduct);
         }
     }
     CustomButton.template = 'CustomButton';
