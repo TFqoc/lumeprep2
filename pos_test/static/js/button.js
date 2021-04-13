@@ -1,4 +1,4 @@
-console.log("Button dot js is loaded!");
+console.log("Button dot js is loaded! Current test: listener for click-product");
 odoo.define('pos_test.CustomButton', function(require) {
     'use strict';
 
@@ -22,7 +22,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         }
         onAddProduct({ detail: clickedProduct }){
             console.log("You just added a product!");
-            console.log(clickedProduct);
+            console.log(clickedProduct); // clickedProduct should have all fields from the db model.
         }
     }
     CustomButton.template = 'CustomButton';
