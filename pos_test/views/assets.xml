@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <template id="assets_backend" name="pos_test assets" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after"> 
+                <!-- place this content after the last script tag -->
+                <!-- <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/> -->
+                <script type="text/javascript" src="/pos_test/statis/js/button.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

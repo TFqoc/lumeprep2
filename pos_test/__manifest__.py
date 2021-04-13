@@ -28,11 +28,11 @@
         'views/views.xml',
         'views/templates.xml',
     ],
-    'assets': {
-        'web.assets_common': [
-            ('prepend', 'pos_test/static/js/button.js'),
-        ],
-    },
+    # 'assets': {
+    #     'web.assets_common': [ # This doesn't load the js file
+    #         ('prepend', 'pos_test/static/js/button.js'),
+    #     ],
+    # },
     'qweb':[
         'static/xml/button.xml',
     ],
