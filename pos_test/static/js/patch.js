@@ -15,6 +15,8 @@ odoo.define('pos_test.PatchTest', function(require) {
         return [...properties.keys()].filter(item => typeof obj[item] === 'function')
       }
 
+    const getLocalMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+
     patch(ProductScreen, "log message", {
         async _clickProduct(event) {
             this._super(...arguments);
@@ -30,7 +32,8 @@ odoo.define('pos_test.PatchTest', function(require) {
                 // Product was deleted (or is about to be deleted)
                 var order = this.currentOrder.get_selected_orderline();
                 console.log(order);
-                console.log(getMethods(order));
+                console.log(getLocalMethods(order));
+                console.log(order.constructor.name);
             }
         },
       });
