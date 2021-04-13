@@ -13,16 +13,23 @@ odoo.define('pos_test.PatchTest', function(require) {
             console.log("You clicked on " + event.detail.display_name);
             console.log(event);
         },
-      });
-
-      patch(NumberBuffer, "log delete", {
-        _updateBuffer(input) {
+        _setValue(val){
             this._super(...arguments);
             // do things
-            if (input === "Backspace"){
-                console.log("Backspace was clicked");
-            }
-        },
+            //if (val == 'remove'){
+                console.log("Set Value: " + val);
+            //}
+        }
       });
+
+    //   patch(NumberBuffer, "log delete", {
+    //     _updateBuffer(input) {
+    //         this._super(...arguments);
+    //         // do things
+    //         if (input === "Backspace"){
+    //             console.log("Backspace was clicked");
+    //         }
+    //     },
+    //   });
 
 });
