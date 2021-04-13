@@ -5,4 +5,7 @@
             <CustomButton/>
         </xpath>
     </t>
+    <t t-name="CustomButton" owl="1">
+        <button t-on-click="onClick">Click Me!</button>
+    </t>
 </templates>
