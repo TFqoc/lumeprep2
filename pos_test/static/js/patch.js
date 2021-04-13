@@ -1,5 +1,5 @@
 console.log("Patch dot js loaded");
-odoo.define('pos_test.CustomButton', function(require) {
+odoo.define('pos_test.PatchTest', function(require) {
     'use strict';
 
     const { patch } = require("web.utils");
