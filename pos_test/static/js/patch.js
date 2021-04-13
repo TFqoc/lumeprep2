@@ -16,43 +16,13 @@ odoo.define('pos_test.PatchTest', function(require) {
         _setValue(val){
             this._super(...arguments);
             // do things
+            console.log("Set Value: \"" + val + "\"");
             if (val == 'remove'){
-                // Product was deleted
-                // I don't know what product was removed, just that one was, or will be down the line
-                console.log("Set Value: " + val);
-                var order = this.env.pos.get_order().get_selected_orderline();
+                // Product was deleted (or is about to be deleted)
+                var order = this.currentOrder.get_selected_orderline();
                 console.log(order);
             }
         },
-        // async _updateSelectedOrderline(event) {
-        //     if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
-        //         let order = this.env.pos.get_order();
-        //         let selectedLine = order.get_selected_orderline();
-        //         let lastId = order.orderlines.last().cid;
-        //         let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
-
-        //         if(selectedLine.noDecrease) {
-        //             this.showPopup('ErrorPopup', {
-        //                 title: this.env._t('Invalid action'),
-        //                 body: this.env._t('You are not allowed to change this quantity'),
-        //             });
-        //             return;
-        //         }
-        //         if(lastId != selectedLine.cid)
-        //             this._showDecreaseQuantityPopup();
-        //         else if(currentQuantity < event.detail.buffer)
-        //             this._setValue(event.detail.buffer);
-        //         else if(event.detail.buffer < currentQuantity)
-        //             this._showDecreaseQuantityPopup();
-        //     } else {
-        //         let { buffer } = event.detail;
-        //         let val = buffer === null ? 'remove' : buffer;
-        //         if (val == 'remove'){
-        //             console.log(this.env.pos.get_order().get_selected_orderline());
-        //         }
-        //         this._setValue(val);
-        //     }
-        // }
       });
 
     //   patch(NumberBuffer, "log delete", {
