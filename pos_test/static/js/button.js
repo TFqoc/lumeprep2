@@ -18,7 +18,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         // get translatedLabel() {
         //     return this.env._t(this.state.label);
         // }
-        onClick() {
+        async onClick() {
             result = await this.rpc({
                 'model': 'sale.order',
                 'method': 'get_all',
