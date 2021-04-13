@@ -18,7 +18,13 @@ odoo.define('pos_test.CustomButton', function(require) {
         //     return this.env._t(this.state.label);
         // }
         onClick() {
+            result = this._rpc({
+                model: 'sale.order',
+                method: 'get_all',
+                // args: [some, args],
+            });
             console.log("You clicked me!");
+            console.log(result);
         }
         onAddProduct({ detail: clickedProduct }){
             console.log("You just added a product!");
