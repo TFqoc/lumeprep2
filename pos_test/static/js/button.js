@@ -1,3 +1,4 @@
+console.log("Button dot js is loaded!");
 odoo.define('pos_test.CustomButton', function(require) {
     'use strict';
 
