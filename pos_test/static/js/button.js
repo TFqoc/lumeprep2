@@ -19,7 +19,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         //     return this.env._t(this.state.label);
         // }
         async onClick() {
-            result = await this.rpc({
+            var result = await this.rpc({
                 'model': 'sale.order',
                 'method': 'get_all',
                 // args: [some, args],
@@ -29,7 +29,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         }
         onAddProduct({ detail: clickedProduct }){
             console.log("You just added a product!");
-            console.log(clickedProduct); // clickedProduct should have all fields from the db model.
+            console.log(clickedProduct); // clickedProduct should have all fields from the db model that were imported into pos.
         }
     }
     CustomButton.template = 'CustomButton';
