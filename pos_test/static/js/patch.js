@@ -9,7 +9,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         async _clickProduct(event) {
             this._super(...arguments);
             // do things
-            console.log("You clicked on a product");
+            console.log("You clicked on " + event.detail.display_name);
             console.log(event);
         },
       });
