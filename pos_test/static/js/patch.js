@@ -46,7 +46,7 @@ odoo.define('pos_test.PatchTest', function(require) {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
                 if (val == 'remove'){
-                    console.log(order.get_selected_orderline());
+                    console.log(this.env.pos.get_order().get_selected_orderline());
                 }
                 this._setValue(val);
             }
