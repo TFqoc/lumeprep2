@@ -1,39 +1,26 @@
-odoo.define('pos_test.button', function (require) {
-    "use strict";
-    
-    var core = require('web.core');
-    var screens = require('point_of_sale.screens');
-    var gui = require('point_of_sale.gui');
-    
-    //Custom Code
-    var CustomButton = screens.ActionButtonWidget.extend({
-    template: 'Chrome',
-    events: {
-        'click button': 'button_click',
-        },
-    button_click: function(){
-    
-    var self = this;
-    
-    self.custom_function();
-    
-    },
-    
-    custom_function: function(){
-    
-    console.log('Hi I am button click of CustomButton');
-    
-    }
-    
-    });
-    
-    screens.define_action_button({
-    
-    'name': 'custom_button',
-    
-    'widget': CustomButton,
-    
-    });
+odoo.define('pos_test.CustomButton', function(require) {
+    'use strict';
 
-    return CustomButton;    
+    const { useState } = owl;
+    const PosComponent = require('point_of_sale.PosComponent');
+    const Registries = require('point_of_sale.Registries');
+
+    class CustomButton extends PosComponent {
+        constructor() {
+            super(...arguments);
+            this.state = useState({ label: 'Click Me!' });
+            // this.confirmed = null;
+        }
+        get translatedLabel() {
+            return this.env._t(this.state.label);
+        }
+        onClick() {
+            console.log("You clicked me!");
+        }
+    }
+    CustomButton.template = 'CustomButton';
+
+    Registries.Component.add(CustomButton);
+
+    return CustomButton;
 });

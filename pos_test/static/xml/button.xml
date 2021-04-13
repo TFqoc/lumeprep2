@@ -2,7 +2,7 @@
 <templates id="templates" xml:space="preserve">
     <t t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
         <xpath expr="//HeaderButton" position="after">
-            <button type="button" class="custom_button">Click Me!</button>
+            <CustomButton/>
         </xpath>
     </t>
 </templates>
