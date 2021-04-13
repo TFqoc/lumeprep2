@@ -8,6 +8,9 @@ odoo.define('pos_test.button', function (require) {
     //Custom Code
     var CustomButton = screens.ActionButtonWidget.extend({
     template: 'Chrome',
+    events: {
+        'click button': 'button_click',
+        },
     button_click: function(){
     
     var self = this;
