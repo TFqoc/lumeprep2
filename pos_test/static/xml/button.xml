@@ -6,6 +6,6 @@
         </xpath>
     </t>
     <t t-name="CustomButton" owl="1">
-        <div t-on-click="onClick">Click Me!</div>
+        <div t-on-click="onClick" t-on-change="onChangeQty">Click Me!</div>
     </t>
 </templates>

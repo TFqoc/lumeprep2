@@ -2,7 +2,6 @@ console.log("Button dot js is loaded! Current test: rpc");
 odoo.define('pos_test.CustomButton', function(require) {
     'use strict';
 
-    const { useState } = owl;
     const { useListener } = require('web.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
@@ -22,13 +21,9 @@ odoo.define('pos_test.CustomButton', function(require) {
             super(...arguments);
             useListener('click-product', this.onAddProduct);
             useListener('change', this.onChangeQty);
-            // this.state = useState({ label: 'Click Me!' });
-            // this.confirmed = null;
         }
-        // get translatedLabel() {
-        //     return this.env._t(this.state.label);
-        // }
         async onClick() {
+            // rpc test
             var result = await this.rpc({
                 'model': 'sale.order',
                 'method': 'get_all',
