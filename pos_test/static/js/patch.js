@@ -25,7 +25,6 @@ odoo.define('pos_test.PatchTest', function(require) {
             console.log(event);
         },
         _setValue(val){
-            this._super(...arguments);
             // do things
             console.log("Set Value: \"" + val + "\"");
             if (val == 'remove'){
@@ -36,6 +35,7 @@ odoo.define('pos_test.PatchTest', function(require) {
                 console.log(getLocalMethods(order));
                 // console.log(order.constructor.name); // Turns out this name is already printed as part of the default log statement
             }
+            this._super(...arguments);
         },
       });
 

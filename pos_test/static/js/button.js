@@ -21,6 +21,7 @@ odoo.define('pos_test.CustomButton', function(require) {
         constructor() {
             super(...arguments);
             useListener('click-product', this.onAddProduct);
+            useListener('change', this.onChangeQty);
             // this.state = useState({ label: 'Click Me!' });
             // this.confirmed = null;
         }
@@ -43,9 +44,13 @@ odoo.define('pos_test.CustomButton', function(require) {
             console.log("ENV.POS-Methods:");
             console.log(getMethods(this.env.pos));
         }
-        onAddProduct({ detail: clickedProduct }){
+        onAddProduct({ detail: product }){
             console.log("You just added a product!");
-            console.log(clickedProduct); // clickedProduct should have all fields from the db model that were imported into pos.
+            console.log(product); // product should have all fields from the db model that were imported into pos.
+        }
+        onChangeQty({ detail: product }){
+            console.log("You just changed the quantity of a product!");
+            console.log(product); // product should have all fields from the db model that were imported into pos.
         }
     }
     CustomButton.template = 'CustomButton';
