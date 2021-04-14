@@ -1,10 +1,10 @@
-console.log("Patch dot js loaded");
+console.log("Patch dot js loaded. Test patching models.js");
 odoo.define('pos_test.PatchTest', function(require) {
     'use strict';
 
     const { patch } = require("web.utils");
     var ProductScreen = require("point_of_sale.ProductScreen");
-    var NumberBuffer = require("point_of_sale.NumberBuffer");
+    const { models } = require("point_of_sale.models");
 
     const getMethods = (obj) => {
         let properties = new Set()
@@ -39,14 +39,17 @@ odoo.define('pos_test.PatchTest', function(require) {
         },
       });
 
-    //   patch(NumberBuffer, "log delete", {
-    //     _updateBuffer(input) {
-    //         this._super(...arguments);
-    //         // do things
-    //         if (input === "Backspace"){
-    //             console.log("Backspace was clicked");
-    //         }
-    //     },
-    //   });
+    patch(models.PosModel, "log quantity",{
+      set_quantity: function(quantity, keep_price){
+        this.order.assert_editable();
+        if(quantity === 'remove'){
+            console.log("Product about to be deleted!");
+        }
+        else{
+          console.log("Setting quantity to: " + quantity);
+        }
+        this._super(...arguments);
+    },
+    });
 
 });
