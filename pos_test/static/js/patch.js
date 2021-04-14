@@ -30,10 +30,11 @@ odoo.define('pos_test.PatchTest', function(require) {
             console.log("Set Value: \"" + val + "\"");
             if (val == 'remove'){
                 // Product was deleted (or is about to be deleted)
+                // TODO Looks like the selected orderline is moved before this method is called.
                 var order = this.currentOrder.get_selected_orderline();
                 console.log(order);
                 console.log(getLocalMethods(order));
-                console.log(order.constructor.name);
+                // console.log(order.constructor.name); // Turns out this name is already printed as part of the default log statement
             }
         },
       });

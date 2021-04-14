@@ -8,6 +8,15 @@ odoo.define('pos_test.CustomButton', function(require) {
     const Registries = require('point_of_sale.Registries');
     // const rpc = require('web.rpc');
 
+    const getMethods = (obj) => {
+        let properties = new Set()
+        let currentObj = obj
+        do {
+          Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+        } while ((currentObj = Object.getPrototypeOf(currentObj)))
+        return [...properties.keys()].filter(item => typeof obj[item] === 'function')
+      }
+
     class CustomButton extends PosComponent {
         constructor() {
             super(...arguments);
@@ -26,6 +35,10 @@ odoo.define('pos_test.CustomButton', function(require) {
             });
             console.log("You clicked me!");
             console.log(result);
+            // print env data
+            console.log("ENV: " + this.env);
+            console.log("ENV.POS: " + this.env.pos);
+            console.log("ENV.POS-Methods: " + getMethods(this.env.pos));
         }
         onAddProduct({ detail: clickedProduct }){
             console.log("You just added a product!");
