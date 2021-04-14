@@ -40,7 +40,7 @@ odoo.define('pos_test.CustomButton', function(require) {
             console.log(this.env);
             console.log("ENV.POS: ");
             console.log(this.env.pos);
-            console.log("ENV.POS-Methods: ");
+            console.log("ENV.POS-Methods:");
             console.log(getMethods(this.env.pos));
         }
         onAddProduct({ detail: clickedProduct }){
