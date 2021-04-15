@@ -9,7 +9,12 @@ odoo.define('pos_test.UpdateOrders', function(require) {
         constructor(){
             super(...arguments);
         }
+        setup() {
+            console.log("Update is setting up");
+            getOrders();
+        }
         mounted() {
+            console.log("Update is mounting");
             getOrders();
         }
         async getOrders(){
@@ -28,7 +33,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
             }, 10000);// 10 second delay
         }
     }
-    // UpdateOrders.template = 'CustomButton';
+    UpdateOrders.template = 'UpdateOrders';
 
     Registries.Component.add(UpdateOrders);
 
