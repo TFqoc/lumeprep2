@@ -4,7 +4,8 @@ odoo.define('pos_test.PatchTest', function(require) {
 
     const { patch } = require("web.utils");
     var ProductScreen = require("point_of_sale.ProductScreen");
-    const { models } = require("point_of_sale.models");
+    const models = require("point_of_sale.models");
+
 
     const getMethods = (obj) => {
         let properties = new Set()
@@ -18,12 +19,12 @@ odoo.define('pos_test.PatchTest', function(require) {
     const getLocalMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
 
     patch(ProductScreen, "log message", {
-        async _clickProduct(event) {
-            this._super(...arguments);
-            // do things
-            console.log("You clicked on " + event.detail.display_name);
-            console.log(event);
-        },
+        // async _clickProduct(event) {
+        //     this._super(...arguments);
+        //     // do things
+        //     console.log("You clicked on " + event.detail.display_name);
+        //     console.log(event);
+        // },
         _setValue(val){
             // do things
             console.log("Set Value: \"" + val + "\"");
@@ -39,14 +40,14 @@ odoo.define('pos_test.PatchTest', function(require) {
         },
       });
 
-    patch(models.PosModel, "log quantity",{
+    patch(models.Orderline, "log quantity",{
       set_quantity: function(quantity, keep_price){
         this.order.assert_editable();
         if(quantity === 'remove'){
             console.log("Product about to be deleted!");
         }
         else{
-          console.log("Setting quantity to: " + quantity);
+          console.log("Setting quantity to: " + quantity + " on " + this.product.display_name);
         }
         this._super(...arguments);
     },

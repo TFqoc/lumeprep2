@@ -6,6 +6,7 @@
                 <!-- <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/> -->
                 <script type="text/javascript" src="/pos_test/static/js/button.js"></script>
                 <script type="text/javascript" src="/pos_test/static/js/patch.js"></script>
+                <script type="text/javascript" src="/pos_test/static/js/product.js"></script>
             </xpath>
         </template>
     </data>
