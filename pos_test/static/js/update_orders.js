@@ -9,28 +9,42 @@ odoo.define('pos_test.UpdateOrders', function(require) {
         constructor(){
             super(...arguments);
         }
-        setup() {
-            console.log("Update is setting up");
-            getOrders();
-        }
         mounted() {
             console.log("Update is mounting");
-            getOrders();
+            this.getOrders();
+            this.getter = setInterval(this.getOrders.bind(this), 10000);
         }
         async getOrders(){
-            this.getter = setInterval(() => {
+                var linked_sale_order_ids = [];
+                var i;
+                let order_list = this.env.pos.get_order_list();
+                for (i=0; i<order_list.length; i++){
+                    if (order_list[i].sale_order_id){// if exists
+                        linked_sale_order_ids.push(order_list[i].sale_order_id);
+                    }
+                }
                 this.rpc({
                     'model': 'sale.order',
-                    'method': 'get_all',
-                    // args: [some, args],
+                    'method': 'get_orders',
+                    args: [linked_sale_order_ids, this.env.pos.pos_session.id],
+                    // Pass session_id, session object has reference to config object
+                    // Pass list of so ids from current orders
+                    // Pass this.pos.pos_session.id
+                    // this.config.id (pos shop id)
+                    // this.config.current_session_id (pos.session id)
                 }).then((result) => {
                     // TODO check returned orders against what we have.
                     console.log("I got these sale orders: " + result);
+                    //this.env.pos.import_orders(result);
                 },
                 (args) => {
                     console.log("Failed to get new orders from backend.");
                 });
-            }, 10000);// 10 second delay
+        }
+        syncOrders(orders){
+            if (orders.length > 0){
+                // TODO create orders
+            }
         }
     }
     UpdateOrders.template = 'UpdateOrders';

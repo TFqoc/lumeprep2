@@ -55,6 +55,18 @@ odoo.define('pos_test.PatchTest', function(require) {
     },
     });
 
+    patch(models.Order, "ensure uid",{
+      initialize: function(attributes,options){
+        this._super(...arguments);
+        // Since I am making orders manually on the backend
+        // this ensures that all the uids are being generated
+        // from the same place.
+        if (!this.uid){
+          this.uid  = this.generate_unique_id();
+        }
+      },
+    });
+
     patch(ProductItem,"Product Click",{
       async willStart() {
         this._super(...arguments);

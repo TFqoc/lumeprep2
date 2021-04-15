@@ -34,6 +34,7 @@ odoo.define('pos_test.CustomButton', function(require) {
             console.log(this.env.pos);
             console.log("ENV.POS-Methods:");
             console.log(getMethods(this.env.pos));
+            console.log("Json data from current order: " + this.env.pos.export_unpaid_orders())
         }
     }
     CustomButton.template = 'CustomButton';
