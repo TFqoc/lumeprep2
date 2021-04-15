@@ -5,6 +5,8 @@ odoo.define('pos_test.PatchTest', function(require) {
     const { patch } = require("web.utils");
     var ProductScreen = require("point_of_sale.ProductScreen");
     const models = require("point_of_sale.models");
+    const ProductItem = require("point_of_sale.ProductItem");
+    const { useListener } = require('web.custom_hooks');
 
 
     const getMethods = (obj) => {
@@ -51,6 +53,17 @@ odoo.define('pos_test.PatchTest', function(require) {
         }
         this._super(...arguments);
     },
+    });
+
+    patch(ProductItem,"Product Click",{
+      async willStart() {
+        this._super(...arguments);
+        useListener('click-product', this.onAddProduct);
+      },
+      onAddProduct({ detail: product }){
+        console.log("You just added a product!");
+        console.log(product); // product should have all fields from the db model that were imported into pos.
+    }
     });
 
 });

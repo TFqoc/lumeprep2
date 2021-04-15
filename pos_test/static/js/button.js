@@ -2,10 +2,8 @@ console.log("Button dot js is loaded! Current test: rpc");
 odoo.define('pos_test.CustomButton', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    // const rpc = require('web.rpc');
 
     const getMethods = (obj) => {
         let properties = new Set()
@@ -19,8 +17,6 @@ odoo.define('pos_test.CustomButton', function(require) {
     class CustomButton extends PosComponent {
         constructor() {
             super(...arguments);
-            useListener('click-product', this.onAddProduct);
-            useListener('change', this.onChangeQty);
         }
         async onClick() {
             // rpc test
@@ -38,14 +34,6 @@ odoo.define('pos_test.CustomButton', function(require) {
             console.log(this.env.pos);
             console.log("ENV.POS-Methods:");
             console.log(getMethods(this.env.pos));
-        }
-        onAddProduct({ detail: product }){
-            console.log("You just added a product!");
-            console.log(product); // product should have all fields from the db model that were imported into pos.
-        }
-        onChangeQty({ detail: product }){
-            console.log("You just changed the quantity of a product!");
-            console.log(product); // product should have all fields from the db model that were imported into pos.
         }
     }
     CustomButton.template = 'CustomButton';
