@@ -36,6 +36,7 @@
     # },
     'qweb':[
         'static/xml/button.xml',
+        'static/xml/update_orders.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
