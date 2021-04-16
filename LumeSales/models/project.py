@@ -221,9 +221,9 @@ class Tasks(models.Model):
         # remove 'ANSI' from first element (It's a fixed header)
         # dlstring[0] = dlstring[0][5:]
 
-        # metadata = dlstring[0]
+        metadata = dlstring[0]
 
-        # dlstring.remove(metadata)
+        dlstring.remove(metadata)
 
         meta = {}
         meta['IIN'] = metadata[0:6] # Issuer Identification Number
