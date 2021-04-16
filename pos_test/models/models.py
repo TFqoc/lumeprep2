@@ -16,7 +16,7 @@ class pos_test(models.Model):
     def get_orders(self, ids, session_id):
         config_id = self.env['pos.session'].browse(session_id).config_id
         # Use config_id to filter sale orders to just the ones that apply to this store
-        orders = self.env['sale.order'].search(['id','not in', ids])
+        orders = self.env['sale.order'].search([('id','not in', ids)])
         res = {"unpaid_orders":[]}
         for order in orders:
             json_data = {
