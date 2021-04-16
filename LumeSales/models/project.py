@@ -211,15 +211,16 @@ class Tasks(models.Model):
     def parse_barcode(self, code):
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
         dlstring = code
-        if dlstring.__contains__('\n'): 
-            dlstring = dlstring.split('\n') #the characters \ and n are literally in the string in my test.
-        else:
-            dlstring = dlstring.split('0010') #Used for when the code is scanned from an apple device or from a linux device.
+        dlstring = dlstring.split('0010') #Used for when the code is scanned from an apple device or from a linux device.
+        # if dlstring.__contains__('\n'): 
+        #     dlstring = dlstring.split('\n') #the characters \ and n are literally in the string in my test.
+        # else:
+        #     dlstring = dlstring.split('0010') #Used for when the code is scanned from an apple device or from a linux device.
         dlstring = dlstring[2:]
         dlstring = [line.strip() for line in dlstring]
 
         # remove 'ANSI' from first element (It's a fixed header)
-        # dlstring[0] = dlstring[0][5:]
+        dlstring[0] = dlstring[0][5:]
 
         metadata = dlstring[0]
 
