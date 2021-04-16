@@ -3,11 +3,14 @@ odoo.define('pos_test.UpdateOrders', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
+    const TicketButton = require('point_of_sale.TicketButton');
     const Registries = require('point_of_sale.Registries');
+    import { useRef } from "owl/hooks";
 
     class UpdateOrders extends PosComponent {
         constructor(){
             super(...arguments);
+            this.ticketRef = useRef("TicketButton");
         }
         mounted() {
             console.log("Update is mounting");
@@ -37,6 +40,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                     // TODO check returned orders against what we have.
                     //console.log("I got these sale orders: " + result);
                     this.env.pos.import_orders(result);
+                    this.ticketRef.render();
                 },
                 (args) => {
                     console.log("Failed to get new orders from backend.");
