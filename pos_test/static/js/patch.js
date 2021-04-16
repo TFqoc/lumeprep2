@@ -49,7 +49,7 @@ odoo.define('pos_test.PatchTest', function(require) {
             console.log("Product about to be deleted!");
         }
         else{
-          console.log("Setting quantity to: " + quantity + " on " + this.product.display_name);
+          // console.log("Setting quantity to: " + quantity + " on " + this.product.display_name);
         }
         this._super(...arguments);
     },
@@ -63,6 +63,12 @@ odoo.define('pos_test.PatchTest', function(require) {
         // from the same place.
         if (!this.uid){
           this.uid  = this.generate_unique_id();
+        }
+      },
+      init_from_JSON: function(json) {
+        this._super(...arguments);
+        if (!this.sale_order_id){
+          this.sale_order_id = json.sale_order_id;
         }
       },
     });

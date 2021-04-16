@@ -21,6 +21,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                 for (i=0; i<order_list.length; i++){
                     if (order_list[i].sale_order_id){// if exists
                         linked_sale_order_ids.push(order_list[i].sale_order_id);
+                        console.log("Adding Linked Order");
                     }
                 }
                 this.rpc({
@@ -34,8 +35,8 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                     // this.config.current_session_id (pos.session id)
                 }).then((result) => {
                     // TODO check returned orders against what we have.
-                    console.log("I got these sale orders: " + result);
-                    //this.env.pos.import_orders(result);
+                    //console.log("I got these sale orders: " + result);
+                    this.env.pos.import_orders(result);
                 },
                 (args) => {
                     console.log("Failed to get new orders from backend.");
