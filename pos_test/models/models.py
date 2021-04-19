@@ -63,7 +63,7 @@ class pos_test(models.Model):
         vals = {
             'name':'description',
             'order_id':order_id,
-            'product_uom_quantity':quantity,
+            'product_uom_qty':quantity,
             'product_id': product_id,
         }
         self.browse(order_id).order_line = [(0,0,vals)]

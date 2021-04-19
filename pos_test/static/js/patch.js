@@ -3,10 +3,12 @@ odoo.define('pos_test.PatchTest', function(require) {
     'use strict';
 
     const { patch } = require("web.utils");
-    var ProductScreen = require("point_of_sale.ProductScreen");
+    const ProductScreen = require("point_of_sale.ProductScreen");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
     const { useListener } = require('web.custom_hooks');
+    var core = require('web.core');
+    var _t = core._t;
 
 
     const getMethods = (obj) => {
@@ -71,12 +73,13 @@ odoo.define('pos_test.PatchTest', function(require) {
       initialize: function(attributes,options){
         this._super(...arguments);
         // event for when product gets added
-        this.orderlines.on('add',function(){ console.log("Event: Product added!"); }, this);
+        this.orderlines.on('add',this.onAddProduct, this);
         // Since I am making orders manually on the backend
         // this ensures that all the uids are being generated
         // from the same place.
         if (!this.uid){
           this.uid  = this.generate_unique_id();
+          this.name = _.str.sprintf(_t("Order %s"), this.uid);
         }
       },
       init_from_JSON: function(json) {
@@ -86,12 +89,12 @@ odoo.define('pos_test.PatchTest', function(require) {
         }
       },
       onAddProduct: function(){
-        let product = this.currentOrder.get_last_orderline().product;
-        console.log("Adding product id \""+product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
-        this.rpc({
+        let product = this.pos.get_order().get_last_orderline().product;
+        console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
+        this.pos.rpc({
           'model': 'sale.order',
           'method': 'add_item',
-          args: [this.currentOrder.sale_order_id, order.product.id, 1],
+          args: [this.pos.get_order().sale_order_id, product.id, 1],
         });
       }
     });

@@ -40,6 +40,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                     // Pass session_id, session object has reference to config object
                 }).then((result) => {
                     // TODO check returned orders against what we have.
+                    // delete the ones that are outdated
                     //console.log("I got these sale orders: " + result);
                     this.env.pos.import_orders(result);
                     // console.log("calling render on: ");
