@@ -60,7 +60,7 @@ class pos_test(models.Model):
 
         data['old_orders'] = old_orders
 
-        orders = orders.filtered(lambda x: (x.__last_update - date.datetime.now()).total_seconds < 10)
+        orders = orders.filtered(lambda x: (x.write_date - date.datetime.now()).total_seconds < 10)
         data['update_orders'] = self.jsonify_orders(orders, session_id)
         return json.dumps(data, default=str)
 
