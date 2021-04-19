@@ -32,7 +32,7 @@ class TestLumeSaleCommon(SavepointCase):
         #Creating Stores:
 
         cls.lumestore_one = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Goats',
+            'name': 'Peterson',
             'privacy_visibility': 'followers',
             'alias_name': 'project+goats',
             'partner_id': cls.partner_1.id,

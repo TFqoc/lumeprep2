@@ -14,7 +14,7 @@ class Partner(models.Model):
     medical_expiration = fields.Date()
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_21')
-    drivers_license_number = fields.Char()
+    drivers_license_number = fields.text()
     drivers_license_expiration = fields.Date()
 
     last_visit = fields.Datetime()
