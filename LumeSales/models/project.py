@@ -214,10 +214,10 @@ class Tasks(models.Model):
         # dlstring = dlstring.split('0010') #Used for when the code is scanned from an apple device or from a linux device.
         if dlstring.__contains__('\n'): 
              dlstring = dlstring.split('\n') #the characters \ and n are literally in the string in my test.
-        elif:
+        elif dlstring.__contains__('0010'):
              dlstring = dlstring.split('0010') #Used for when the code is scanned from an apple device or from a linux device.
         else: 
-            dlstring = dlstring
+            _logger.debug("Barcode failed to parse." + str(dlstring))
         dlstring = dlstring[2:]
         dlstring = [line.strip() for line in dlstring]
 
