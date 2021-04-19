@@ -41,8 +41,16 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                 }).then((result) => {
                     // TODO check returned orders against what we have.
                     // delete the ones that are outdated
+                    this.env.pos.orders.foreach((order)=>{
+                        if (!order.sale_order_id || result.old_orders.includes(order.sale_order_id)){
+                            order.destroy();
+                        }
+                    }, this);
+
                     //console.log("I got these sale orders: " + result);
-                    this.env.pos.import_orders(result);
+                    this.env.pos.import_orders(result.new_orders);
+
+                    
                     // console.log("calling render on: ");
                     // console.log(this.ticketRef);
                     //this.ticketRef.comp.render();

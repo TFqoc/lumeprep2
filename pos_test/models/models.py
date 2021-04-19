@@ -16,8 +16,9 @@ class pos_test(models.Model):
     def get_orders(self, ids, session_id):
         config_id = self.env['pos.session'].browse(session_id).config_id
         # Use config_id to filter sale orders to just the ones that apply to this store
-        orders = self.env['sale.order'].search([('id','not in', ids)])
-        res = {"unpaid_orders":[]}
+        orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale'])])#more states could be added
+        data = {}
+        new_orders = {"unpaid_orders":[]}
         for order in orders:
             json_data = {
                 'sale_order_id':order.id,
@@ -47,9 +48,17 @@ class pos_test(models.Model):
                     'pack_lot_ids':[], #models.js line 1652
                 }
                 json_data['lines'].append([0,0,line_product_json])
-            res['unpaid_orders'].append(json_data)
-        _logger.info(json.dumps(res, default=str))
-        return json.dumps(res, default=str)
+            new_orders['unpaid_orders'].append(json_data)
+        # _logger.info(json.dumps(new_orders, default=str))
+        data['new_orders'] = new_orders
+        orders = self.env['sale.order'].search([('id','in', ids)])
+        old_orders = []
+        for order in orders:
+            if order.state != 'sale':
+                old_orders.append(order.id)
+
+        data['old_orders'] = old_orders
+        return json.dumps(data, default=str)
 
     @api.model
     def remove_item(self, order_id, product_id):
