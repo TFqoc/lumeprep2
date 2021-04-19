@@ -122,3 +122,4 @@ class pos_test(models.Model):
                 }
                 json_data['lines'].append([0,0,line_product_json])
             list_data.append(json_data)
+        return list_data
