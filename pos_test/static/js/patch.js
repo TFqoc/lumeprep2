@@ -28,15 +28,27 @@ odoo.define('pos_test.PatchTest', function(require) {
         //     console.log(event);
         // },
         _setValue(val){
-            // do things
             console.log("Set Value: \"" + val + "\"");
             if (val == 'remove'){
                 // Product was deleted (or is about to be deleted)
-                // TODO Looks like the selected orderline is moved before this method is called.
-                var order = this.currentOrder.get_selected_orderline();
-                console.log(order);
-                console.log(getLocalMethods(order));
-                // console.log(order.constructor.name); // Turns out this name is already printed as part of the default log statement
+                if (this.currentOrder.sale_order_id){
+                  let order = this.currentOrder.get_selected_orderline();
+                  // Tell the backend which product to remove
+                  console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
+                  this.rpc({
+                    'model': 'sale.order',
+                    'method': 'remove_item',
+                    args: [this.currentOrder.sale_order_id, order.product.id],
+                  });
+                }
+            }
+            else{
+              console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
+                  this.rpc({
+                    'model': 'sale.order',
+                    'method': 'update_item_quantity',
+                    args: [this.currentOrder.sale_order_id, order.product.id, val],
+                  });
             }
             this._super(...arguments);
         },
@@ -58,6 +70,8 @@ odoo.define('pos_test.PatchTest', function(require) {
     patch(models.Order, "ensure uid",{
       initialize: function(attributes,options){
         this._super(...arguments);
+        // event for when product gets added
+        this.orderlines.on('add',function(){ console.log("Event: Product added!"); }, this);
         // Since I am making orders manually on the backend
         // this ensures that all the uids are being generated
         // from the same place.
@@ -71,6 +85,15 @@ odoo.define('pos_test.PatchTest', function(require) {
           this.sale_order_id = json.sale_order_id;
         }
       },
+      onAddProduct: function(){
+        let product = this.currentOrder.get_last_orderline().product;
+        console.log("Adding product id \""+product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
+        this.rpc({
+          'model': 'sale.order',
+          'method': 'add_item',
+          args: [this.currentOrder.sale_order_id, order.product.id, 1],
+        });
+      }
     });
 
     patch(ProductItem,"Product Click",{

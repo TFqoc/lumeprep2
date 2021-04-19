@@ -50,3 +50,27 @@ class pos_test(models.Model):
             res['unpaid_orders'].append(json_data)
         _logger.info(json.dumps(res, default=str))
         return json.dumps(res, default=str)
+
+    @api.model
+    def remove_item(self, order_id, product_id):
+        for line in self.browse(order_id).order_line:
+            if line.product_id.id == product_id:
+                line.unlink()
+                break
+    
+    @api.model
+    def add_item(self, order_id, product_id, quantity):
+        vals = {
+            'name':'description',
+            'order_id':order_id,
+            'product_uom_quantity':quantity,
+            'product_id': product_id,
+        }
+        self.browse(order_id).order_line = [(0,0,vals)]
+
+    @api.model
+    def update_item_quantity(self, order_id, product_id, quantity):
+        for line in self.browse(order_id).order_line:
+            if line.product_id.id == product_id:
+                line.product_uom_quantity = quantity
+                break

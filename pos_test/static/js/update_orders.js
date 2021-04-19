@@ -6,16 +6,19 @@ odoo.define('pos_test.UpdateOrders', function(require) {
     const TicketButton = require('point_of_sale.TicketButton');
     const Registries = require('point_of_sale.Registries');
     const { useRef } = owl.hooks;
-
+    
     class UpdateOrders extends PosComponent {
+        //static components = { TicketButton };
         constructor(){
             super(...arguments);
-            this.ticketRef = useRef("TicketButton");
+            
         }
         mounted() {
-            console.log("Update is mounting");
+            //console.log("Update is mounting");
             //this.getOrders();
             this.getter = setInterval(this.getOrders.bind(this), 10000);
+            //console.log("Getting ref");
+            this.ticketRef = useRef("TicketButton");
         }
         async willStart(){
             await this.getOrders();
@@ -39,16 +42,13 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                     // TODO check returned orders against what we have.
                     //console.log("I got these sale orders: " + result);
                     this.env.pos.import_orders(result);
-                    this.ticketRef.comp.render();
+                    // console.log("calling render on: ");
+                    // console.log(this.ticketRef);
+                    //this.ticketRef.comp.render();
                 },
                 (args) => {
                     console.log("Failed to get new orders from backend.");
                 });
-        }
-        syncOrders(orders){
-            if (orders.length > 0){
-                // TODO create orders
-            }
         }
     }
     UpdateOrders.template = 'UpdateOrders';
