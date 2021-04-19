@@ -33,6 +33,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                         console.log("Adding Linked Order");
                     }
                 }
+                //                 console.log(linked_sale_order_ids);
                 this.rpc({
                     'model': 'sale.order',
                     'method': 'get_orders',
@@ -41,14 +42,17 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                 }).then((result) => {
                     // TODO check returned orders against what we have.
                     // delete the ones that are outdated
-                    this.env.pos.orders.foreach((order)=>{
-                        if (!order.sale_order_id || result.old_orders.includes(order.sale_order_id)){
+                    var data = JSON.parse(result);
+                    for (let order of this.env.pos.get_order_list()){
+                        if (data.old_orders.includes(order.sale_order_id)){
                             order.destroy();
+                            console.log("Deleting order");
                         }
-                    }, this);
-
-                    //console.log("I got these sale orders: " + result);
-                    this.env.pos.import_orders(result.new_orders);
+                        console.log("Sparing order");
+                    }
+//                     console.log("I got these sale orders: " + result);
+//                     console.log(JSON.stringify(data.new_orders));
+                    this.env.pos.import_orders(JSON.stringify(data.new_orders));
 
                     
                     // console.log("calling render on: ");
