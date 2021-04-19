@@ -61,16 +61,17 @@ class pos_test(models.Model):
     @api.model
     def add_item(self, order_id, product_id, quantity):
         vals = {
-            'name':'description',
+            # 'name':'description',
             'order_id':order_id,
             'product_uom_qty':quantity,
             'product_id': product_id,
         }
         self.browse(order_id).order_line = [(0,0,vals)]
+        # TODO Do stuff to add to delivery
 
     @api.model
     def update_item_quantity(self, order_id, product_id, quantity):
         for line in self.browse(order_id).order_line:
             if line.product_id.id == product_id:
-                line.product_uom_quantity = quantity
+                line.product_uom_qty = quantity
                 break

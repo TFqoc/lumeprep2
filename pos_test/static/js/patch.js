@@ -31,10 +31,10 @@ odoo.define('pos_test.PatchTest', function(require) {
         // },
         _setValue(val){
             console.log("Set Value: \"" + val + "\"");
+            let order = this.currentOrder.get_selected_orderline();
             if (val == 'remove'){
                 // Product was deleted (or is about to be deleted)
                 if (this.currentOrder.sale_order_id){
-                  let order = this.currentOrder.get_selected_orderline();
                   // Tell the backend which product to remove
                   console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
                   this.rpc({
