@@ -78,6 +78,7 @@ odoo.define('pos_test.PatchTest', function(require) {
         // this ensures that all the uids are being generated
         // from the same place.
         if (!this.uid){
+          this.sequence_number = this.pos.pos_session.sequence_number++;
           this.uid  = this.generate_unique_id();
           this.name = _.str.sprintf(_t("Order %s"), this.uid);
         }
@@ -98,6 +99,11 @@ odoo.define('pos_test.PatchTest', function(require) {
           args: [this.pos.get_order().sale_order_id, product.id, 1],
         });
       }
+    });
+
+    patch(models.PosModel, "No load json", {
+      load_orders: function(){},
+      _load_orders: function(){},
     });
 
     patch(ProductItem,"Product Click",{

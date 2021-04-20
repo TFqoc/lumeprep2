@@ -31,7 +31,7 @@ class pos_test(models.Model):
         data['old_orders'] = old_orders
 
         orders = orders.filtered(lambda x: (date.datetime.now() - x.write_date).total_seconds() < 10)
-        data['update_orders'] = self.jsonify_orders(orders, session_id)
+        data['update_orders'] = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
         return json.dumps(data, default=str)
 
     @api.model
