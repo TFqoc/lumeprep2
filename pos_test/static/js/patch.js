@@ -5,6 +5,7 @@ odoo.define('pos_test.PatchTest', function(require) {
     const { patch } = require("web.utils");
     const ProductScreen = require("point_of_sale.ProductScreen");
     const PaymentScreen = require("point_of_sale.PaymentScreen");
+    const ReceiptScreen = require("point_of_sale.ReceiptScreen");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
     const { useListener } = require('web.custom_hooks');
@@ -128,5 +129,13 @@ odoo.define('pos_test.PatchTest', function(require) {
         console.log(product); // product should have all fields from the db model that were imported into pos.
     }
     });
+
+  patch(ReceiptScreen, "next button", {
+    orderDone: function() {
+      this.currentOrder.finalize();
+      //const { name, props } = 'name';
+      this.showScreen('TicketScreen');
+  }
+  });
 
 });

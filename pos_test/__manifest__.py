@@ -38,6 +38,7 @@
         'static/xml/button.xml',
         'static/xml/update_orders.xml',
         'static/xml/TicketButton.xml',
+        'static/xml/ReceiptScreen.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
