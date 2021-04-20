@@ -48,12 +48,31 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                             order.destroy();
                             console.log("Deleting order");
                         }
+                        else if (data.update_orders.includes(order.sale_order_id)){
+                            // TODO update order data here
+                            var index = data.update_orders.findIndex((el) => el == order.sale_order_id);
+                            order.initialize({}, {pos:this.env.pos, json:data.update_orders[index]});
+                            // var i;
+                            // var j;
+                            // for (let update_line of data.update_orders.lines){
+                            //     for (let pos_line of order.orderlines){
+                            //         if (update_line.product_id == pos_line.product.id){
+
+                            //         }
+                            //     }
+                            // }
+                            // if order is current order, then re-render it or product screen or whatever
+                            if (this.env.pos.get_order().uid == order.uid){
+                                order.render();
+                            }
+                        }
                         console.log("Sparing order");
                     }
 //                     console.log("I got these sale orders: " + result);
 //                     console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
-
+                    
+                    // TODO Add something to update the records with the update data and re-render them
                     
                     // console.log("calling render on: ");
                     // console.log(this.ticketRef);

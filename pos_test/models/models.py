@@ -20,37 +20,7 @@ class pos_test(models.Model):
         orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale'])])#more states could be added
         data = {}
         new_orders = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
-        # for order in orders:
-        #     json_data = {
-        #         'sale_order_id':order.id,
-        #         'pos_session_id':session_id,
-        #         # 'uid':0,
-        #         'creation_date':order.create_date,
-        #         'user_id':self.env.user.id,
-        #         'fiscal_position_id':False, #optional
-        #         'pricelist_id':order.pricelist_id.id, #optional
-        #         'partner_id':order.partner_id.id,
-        #         'lines':[], #orderline data generated below 
-        #         'statement_ids':[], # leave blank
-        #         'state':'ongoing',
-        #         'amount_return':0, # leave at 0
-        #         'account_move':0, # leaving at 0 for now
-        #         'id':0, #backend id? leaving at 0 for now
-        #         'is_session_closed':False,
-        #     }
-        #     for line in order.order_line:
-        #         line_product_json = {
-        #             'qty':line.product_uom_qty,
-        #             'price_unit':line.price_unit,
-        #             'discount':0,
-        #             'product_id':line.product_id.id,
-        #             'description':line.name,
-        #             'price_extra':line.product_id.price_extra or 0,
-        #             'pack_lot_ids':[], #models.js line 1652
-        #         }
-        #         json_data['lines'].append([0,0,line_product_json])
-        #     new_orders['unpaid_orders'].append(json_data)
-        # _logger.info(json.dumps(new_orders, default=str))
+
         data['new_orders'] = new_orders
         orders = self.env['sale.order'].search([('id','in', ids)])
         old_orders = []
@@ -96,7 +66,7 @@ class pos_test(models.Model):
             json_data = {
                 'sale_order_id':order.id,
                 'pos_session_id':session_id,
-                # 'uid':0,
+                'uid':order.name,
                 'creation_date':order.create_date,
                 'user_id':self.env.user.id,
                 'fiscal_position_id':False, #optional
