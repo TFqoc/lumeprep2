@@ -12,16 +12,16 @@ odoo.define('pos_test.PatchTest', function(require) {
     var _t = core._t;
 
 
-    const getMethods = (obj) => {
-        let properties = new Set()
-        let currentObj = obj
-        do {
-          Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
-        } while ((currentObj = Object.getPrototypeOf(currentObj)))
-        return [...properties.keys()].filter(item => typeof obj[item] === 'function')
-      }
+    // const getMethods = (obj) => {
+    //     let properties = new Set()
+    //     let currentObj = obj
+    //     do {
+    //       Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+    //     } while ((currentObj = Object.getPrototypeOf(currentObj)))
+    //     return [...properties.keys()].filter(item => typeof obj[item] === 'function')
+    //   }
 
-    const getLocalMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+    // const getLocalMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
 
     patch(ProductScreen, "log message", {
         // async _clickProduct(event) {

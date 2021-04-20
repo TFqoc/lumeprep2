@@ -25,7 +25,9 @@ odoo.define('pos_test.CustomButton', function(require) {
                 'method': 'get_all',
                 // args: [some, args],
             });
-            this.env.pos.proxy.printer.open_cashbox();
+            if (this.env.pos.proxy.printer){
+                this.env.pos.proxy.printer.open_cashbox();
+            }
             console.log("You clicked me!");
             console.log(result);
             // print env data

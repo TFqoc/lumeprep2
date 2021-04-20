@@ -30,6 +30,8 @@ class pos_test(models.Model):
         data['old_orders'] = old_orders
 
         orders = orders.filtered(lambda x: x.pos_update == True)
+        for order in orders:
+            order.pos_update = False
         data['update_orders'] = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
         return json.dumps(data, default=str)
 
