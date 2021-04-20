@@ -78,7 +78,7 @@ odoo.define('pos_test.PatchTest', function(require) {
         // Since I am making orders manually on the backend
         // this ensures that all the uids are being generated
         // from the same place.
-        if (!this.uid){
+        if (!this.uid || isNaN(this.uid)){
           this.sequence_number = this.pos.pos_session.sequence_number++;
           this.uid  = this.generate_unique_id();
           this.name = _.str.sprintf(_t("Order %s"), this.uid);
@@ -110,11 +110,10 @@ odoo.define('pos_test.PatchTest', function(require) {
     patch(PaymentScreen, "update backend SO",{
       validateOrder: async function(isForceValidate) {
           await this._super(...arguments);
-          // Some RPC call to the backend
           this.rpc({
             'model': 'sale.order',
             'method': 'finalize',
-            args: [this.pos.get_order().sale_order_id],
+            args: [this.env.pos.get_order().sale_order_id],
           });
       }
   });

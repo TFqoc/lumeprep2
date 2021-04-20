@@ -9,9 +9,8 @@ _logger = logging.getLogger(__name__)
 class pos_test(models.Model):
     _inherit = 'sale.order'
 
-    @api.model
-    def get_all(self):
-        return self.env['sale.order'].search([])
+    pos_update = fields.Boolean(help='Technical field to trigger an update on the pos system for this record')
+    no_pos_update = fields.Boolean(help='Technical field to stop the pos_update field triggering')
 
     @api.model
     def get_orders(self, ids, session_id):
@@ -30,16 +29,19 @@ class pos_test(models.Model):
 
         data['old_orders'] = old_orders
 
-        orders = orders.filtered(lambda x: (date.datetime.now() - x.write_date).total_seconds() < 10)
+        orders = orders.filtered(lambda x: x.pos_update == True)
         data['update_orders'] = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
         return json.dumps(data, default=str)
 
     @api.model
     def remove_item(self, order_id, product_id):
-        for line in self.browse(order_id).order_line:
+        order = self.browse(order_id)
+        order.no_pos_update = True
+        for line in order.order_line:
             if line.product_id.id == product_id:
                 line.unlink()
                 break
+        order.no_pos_update = False
     
     @api.model
     def add_item(self, order_id, product_id, quantity):
@@ -49,15 +51,21 @@ class pos_test(models.Model):
             'product_uom_qty':quantity,
             'product_id': product_id,
         }
-        self.browse(order_id).order_line = [(0,0,vals)]
+        order = self.browse(order_id)
+        order.no_pos_update = True
+        order.order_line = [(0,0,vals)]
         # TODO Do stuff to add to delivery
+        order.no_pos_update = False
 
     @api.model
     def update_item_quantity(self, order_id, product_id, quantity):
-        for line in self.browse(order_id).order_line:
+        order = self.browse(order_id)
+        order.no_pos_update = True
+        for line in order.order_line:
             if line.product_id.id == product_id:
                 line.product_uom_qty = quantity
                 break
+        order.no_pos_update = False
 
     @api.model
     def finalize(self, order_id):
@@ -97,3 +105,15 @@ class pos_test(models.Model):
                 json_data['lines'].append([0,0,line_product_json])
             list_data.append(json_data)
         return list_data
+
+    @api.onchange('partner_id','order_line','payment_term_id')
+    def _on_change(self):
+        if not self.no_pos_update and self.state == 'sale':
+            self.pos_update = True
+
+class SaleLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.onchange('product_id','product_uom_qty')
+    def _on_change(self):
+        self.order_id._on_change()

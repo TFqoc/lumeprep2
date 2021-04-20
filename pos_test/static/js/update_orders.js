@@ -54,23 +54,20 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                             order.destroy();
                             console.log("Deleting order");
                         }
-                        else if (data.update_orders.includes(order.sale_order_id)){
+                        else if (data.update_orders.unpaid_orders.some(e => e.sale_order_id == order.sale_order_id)){
                             // TODO update order data here
-                            //var index = data.update_orders.findIndex((el) => el == order.sale_order_id);
-                            //order.init_from_JSON(data.update_orders[index]);
-                            // var i;
-                            // var j;
-                            // for (let update_line of data.update_orders.lines){
-                            //     for (let pos_line of order.orderlines){
-                            //         if (update_line.product_id == pos_line.product.id){
-
-                            //         }
-                            //     }
-                            // }
-                            // if order is current order, then re-render it or product screen or whatever
-                            if (this.env.pos.get_order().uid == order.uid){
-                                order.render();
+                            // Remove all line data to be replaced by the updated data
+                            for (let line in order.get_orderlines()){
+                                order.remove_orderline(line);
                             }
+                            // Add updated data
+                            var index = data.update_orders.unpaid_orders.findIndex((el) => el.sale_order_id == order.sale_order_id);
+                            order.init_from_JSON(data.update_orders.unpaid_orders[index]);
+                            
+                            // if order is current order, then re-render it or product screen or whatever
+                            // if (this.env.pos.get_order().uid == order.uid){
+                            //     order.render();
+                            // }
                         }
                         else{
                             console.log("Sparing order");
