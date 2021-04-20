@@ -21,6 +21,12 @@ odoo.define('pos_test.UpdateOrders', function(require) {
             this.ticketRef = useRef("TicketButton");
         }
         async willStart(){
+            // destroy all current orders
+            for (let order of this.env.pos.get_order_list()){
+                order.destroy();
+                console.log("Destroying old order");
+            }
+            // get a clean set of orders from the backend
             await this.getOrders();
         }
         async getOrders(){
@@ -50,8 +56,8 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                         }
                         else if (data.update_orders.includes(order.sale_order_id)){
                             // TODO update order data here
-                            var index = data.update_orders.findIndex((el) => el == order.sale_order_id);
-                            order.initialize({}, {pos:this.env.pos, json:data.update_orders[index]});
+                            //var index = data.update_orders.findIndex((el) => el == order.sale_order_id);
+                            //order.init_from_JSON(data.update_orders[index]);
                             // var i;
                             // var j;
                             // for (let update_line of data.update_orders.lines){
@@ -66,11 +72,15 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                                 order.render();
                             }
                         }
-                        console.log("Sparing order");
+                        else{
+                            console.log("Sparing order");
+                        }
                     }
-//                     console.log("I got these sale orders: " + result);
-//                     console.log(JSON.stringify(data.new_orders));
+                    console.log(data.new_orders);
+                    console.log(this.env.pos.get_order_list().length);
+                    // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
+                    console.log(this.env.pos.get_order_list().length);
                     
                     // TODO Add something to update the records with the update data and re-render them
                     

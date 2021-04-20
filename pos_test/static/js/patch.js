@@ -86,6 +86,7 @@ odoo.define('pos_test.PatchTest', function(require) {
         this._super(...arguments);
         if (!this.sale_order_id){
           this.sale_order_id = json.sale_order_id;
+          console.log("Added id: " + this.sale_order_id + " to initialized order");
         }
       },
       onAddProduct: function(){

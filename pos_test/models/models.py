@@ -66,7 +66,7 @@ class pos_test(models.Model):
             json_data = {
                 'sale_order_id':order.id,
                 'pos_session_id':session_id,
-                'uid':order.name,
+                # 'uid':order.name,
                 'creation_date':order.create_date,
                 'user_id':self.env.user.id,
                 'fiscal_position_id':False, #optional
