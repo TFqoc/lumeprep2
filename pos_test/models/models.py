@@ -60,6 +60,10 @@ class pos_test(models.Model):
                 break
 
     @api.model
+    def finalize(self, order_id):
+        self.browse(order_id).state = 'done'
+
+    @api.model
     def jsonify_orders(self, orders, session_id):
         list_data = []
         for order in orders:

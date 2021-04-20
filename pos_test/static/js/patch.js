@@ -4,6 +4,7 @@ odoo.define('pos_test.PatchTest', function(require) {
 
     const { patch } = require("web.utils");
     const ProductScreen = require("point_of_sale.ProductScreen");
+    const PaymentScreen = require("point_of_sale.PaymentScreen");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
     const { useListener } = require('web.custom_hooks');
@@ -105,6 +106,18 @@ odoo.define('pos_test.PatchTest', function(require) {
       load_orders: function(){},
       _load_orders: function(){},
     });
+
+    patch(PaymentScreen, "update backend SO",{
+      validateOrder: async function(isForceValidate) {
+          await this._super(...arguments);
+          // Some RPC call to the backend
+          this.rpc({
+            'model': 'sale.order',
+            'method': 'finalize',
+            args: [this.pos.get_order().sale_order_id],
+          });
+      }
+  });
 
     patch(ProductItem,"Product Click",{
       async willStart() {
