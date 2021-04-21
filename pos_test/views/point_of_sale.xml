@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='inventory_location']" position="after">
+                <xpath expr="//div[@id='inventory_location']" position="after">
                     <h2>Store</h2>
                     <div class="row mt16 o_settings_container" id="store_location">
                         <div class="col-12 col-lg-6 o_setting_box" title="The store that this POS terminal is at.">
