@@ -27,6 +27,7 @@
         # 'security/ir.model.access.csv',
         'views/assets.xml',
         'views/views.xml',
+        'views/point_of_sale.xml',
         'views/templates.xml',
     ],
     # 'assets': {

@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="view_pos_form_inherit" model="ir.ui.view">
+            <field name="name">pos.config.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='inventory_location']" position="after">
+                    <h2>Store</h2>
+                    <div class="row mt16 o_settings_container" id="store_location">
+                        <div class="col-12 col-lg-6 o_setting_box" title="The store that this POS terminal is at.">
+                            <div class="o_setting_right_pane">
+                                <label for="project_id" string="Store Location"/>
+                                <div class="text-muted">
+                                    The store that this POS termial is at. <br/>
+                                    Select a store that has been configured in the Lume Sales app.
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="project_id" required="1" domain="[('company_id', '=', company_id)]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+  </odoo>
