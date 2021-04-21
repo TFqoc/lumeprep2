@@ -33,7 +33,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
               <xpath expr="//search/filter" position="before">
-                <filter string="My Store" name="my_store_pos" domain="[('project_id.allowed_user_ids','=',uid)]"/>
+                <filter string="My Store" name="my_store_pos" domain="[('project_id.allowed_user_ids.id','=',uid)]"/>
               </xpath>
             </field>
           </record>
@@ -46,7 +46,7 @@
             <field name="inherit_id" ref="point_of_sale.action_pos_config_kanban"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[last()]" position="after">
-                    <field name="domain">[('project_id.allowed_user_ids','=',uid)]</field>
+                    <!-- <field name="domain">[('project_id.allowed_user_ids','=',uid)]</field> -->
                     <field name="context">{"search_default_my_store_pos":1}</field>
                 </xpath>
             </field>
