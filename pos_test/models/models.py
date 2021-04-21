@@ -11,13 +11,13 @@ class pos_test(models.Model):
 
     pos_update = fields.Boolean(help='Technical field to trigger an update on the pos system for this record')
     no_pos_update = fields.Boolean(help='Technical field to stop the pos_update field triggering')
-    allowed_users = fields.Many2many(related='task.project_id.allowed_user_ids',readonly=True)
+    # allowed_users = fields.Many2many(related='task.project_id.allowed_user_ids',readonly=True)
 
     @api.model
     def get_orders(self, ids, session_id, user_id):
         config_id = self.env['pos.session'].browse(session_id).config_id
         # Use config_id to filter sale orders to just the ones that apply to this store
-        orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale']),('allowed_users','=',user_id)])
+        orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale']),('task.project_id.allowed_user_ids','=',user_id)])
         data = {}
         new_orders = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
 
