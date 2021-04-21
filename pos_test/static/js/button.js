@@ -19,17 +19,10 @@ odoo.define('pos_test.CustomButton', function(require) {
             super(...arguments);
         }
         async onClick() {
-            // rpc test
-            var result = await this.rpc({
-                'model': 'sale.order',
-                'method': 'get_all',
-                // args: [some, args],
-            });
             if (this.env.pos.proxy.printer){
                 this.env.pos.proxy.printer.open_cashbox();
             }
             console.log("You clicked me!");
-            console.log(result);
             // print env data
             console.log("ENV: ");
             console.log(this.env);

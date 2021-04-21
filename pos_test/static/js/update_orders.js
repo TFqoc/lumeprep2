@@ -43,7 +43,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                 this.rpc({
                     'model': 'sale.order',
                     'method': 'get_orders',
-                    args: [linked_sale_order_ids, this.env.pos.pos_session.id],
+                    args: [linked_sale_order_ids, this.env.pos.pos_session.id, this.env.pos.user.id],
                     // Pass session_id, session object has reference to config object
                 }).then((result) => {
                     // TODO check returned orders against what we have.
