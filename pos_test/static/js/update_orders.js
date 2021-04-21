@@ -62,9 +62,14 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                             }
                             // Add updated data
                             var index = data.update_orders.unpaid_orders.findIndex((el) => el.sale_order_id == order.sale_order_id);
-                            order.init_from_JSON(data.update_orders.unpaid_orders[index]);
+                            
+                            // This method will work, but invoke all the update events
+                            // order.init_from_JSON(data.update_orders.unpaid_orders[index]);
+
+                            // Other idea would be to list the fields to change and do that manually here
                             
                             // if order is current order, then re-render it or product screen or whatever
+                            // Might auto render due to changes, so this might not be needed
                             // if (this.env.pos.get_order().uid == order.uid){
                             //     order.render();
                             // }
