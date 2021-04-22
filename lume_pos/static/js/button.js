@@ -1,5 +1,5 @@
 console.log("Button dot js is loaded! Current test: rpc");
-odoo.define('pos_test.CustomButton', function(require) {
+odoo.define('lume_pos.CustomButton', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');

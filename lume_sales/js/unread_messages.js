@@ -1,5 +1,5 @@
 console.log("Unread Messages has been loaded");
-odoo.define('LumeSales.Unread_Messages', ['web.AbstractField','web.field_registry'], function(require){
+odoo.define('lume_sales.Unread_Messages', ['web.AbstractField','web.field_registry'], function(require){
     "use strict";
 
     var AbstractField = require('web.AbstractField');
