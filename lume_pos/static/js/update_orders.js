@@ -1,5 +1,5 @@
 console.log("UpdateOrders dot js loaded. Test looping calls");
-odoo.define('pos_test.UpdateOrders', function(require) {
+odoo.define('lume_pos.UpdateOrders', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');

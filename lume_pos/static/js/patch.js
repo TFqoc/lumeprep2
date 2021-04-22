@@ -1,5 +1,5 @@
 console.log("Patch dot js loaded. Test patching models.js");
-odoo.define('pos_test.PatchTest', function(require) {
+odoo.define('lume_pos.PatchTest', function(require) {
     'use strict';
 
     const { patch } = require("web.utils");
