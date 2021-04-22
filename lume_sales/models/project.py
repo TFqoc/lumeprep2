@@ -253,90 +253,91 @@ class Tasks(models.Model):
 
         data['drivers_license_number'] = dlstring[14]
 
-        return [0], data
+        return data
 
 
 
 
 
-    def parse_barcode(self, code):
-        # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
-        dlstring = code
-        dlstring = dlstring.split('\n') #the characters \ and n are literally in the string in my test.
-        dlstring = dlstring[2:]
-        dlstring = [line.strip() for line in dlstring]
+    # def parse_barcode(self, code):
+    #     # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
+    #     dlstring = code
+    #     dlstring = dlstring.split('\n') #the characters \ and n are literally in the string in my test.
+    #     dlstring = dlstring[2:]
+    #     dlstring = [line.strip() for line in dlstring]
 
-        # remove 'ANSI' from first element (It's a fixed header)
-        dlstring[0] = dlstring[0][5:]
+    #     # remove 'ANSI' from first element (It's a fixed header)
+    #     dlstring[0] = dlstring[0][5:]
 
-        metadata = dlstring[0]
+    #     metadata = dlstring[0]
 
-        dlstring.remove(metadata)
+    #     dlstring.remove(metadata)
 
-        meta = {}
-        meta['IIN'] = metadata[0:6] # Issuer Identification Number
-        meta['AAMVAV'] = metadata[6:8] # AAMVA Version Number
-        meta['JV'] = metadata[8:10] # Jurisdiction Version Number
-        meta['entries'] = metadata[10:12] # Number of Entries
-        meta['DL'] = metadata[12:14]
-        meta['offset'] = metadata[14:18] # offset for this subfile
-        meta['subfile_length'] = metadata[18:22]
-        meta['DCA'] = metadata[27:] # Jurisdiction specific vehicle class
+    #     meta = {}
+    #     meta['IIN'] = metadata[0:6] # Issuer Identification Number
+    #     meta['AAMVAV'] = metadata[6:8] # AAMVA Version Number
+    #     meta['JV'] = metadata[8:10] # Jurisdiction Version Number
+    #     meta['entries'] = metadata[10:12] # Number of Entries
+    #     meta['DL'] = metadata[12:14]
+    #     meta['offset'] = metadata[14:18] # offset for this subfile
+    #     meta['subfile_length'] = metadata[18:22]
+    #     meta['DCA'] = metadata[27:] # Jurisdiction specific vehicle class
 
-        data = {}
-        fname = ""
-        lname = ""
-        for field in dlstring:
-            fieldID = field[0:3]
-            fieldValue = field[3:]
+    #     data = {}
+    #     fname = ""
+    #     lname = ""
+    #     for field in dlstring:
+    #         fieldID = field[0:3]
+    #         fieldValue = field[3:]
 
-            if fieldID == 'DAC': #first name
-                fname = fieldValue.capitalize()
-                #raise Warning("Name is: " + fieldValue)
-            elif fieldID == 'DCS': #last name
-                lname = fieldValue.capitalize()
-            elif fieldID == 'DAD': #middle name
-                #contact.name = fname + " " + fieldValue.capitalize() + " " + lname
-                data['name'] = fname + " " + fieldValue.capitalize() + " " + lname
-            elif fieldID == 'DAG': #Address line 1
-                words = fieldValue.split(' ')
-                street = ""
-                for w in words:
-                    street = " ".join([street,w.capitalize()])
-                #contact.street = street
-                data['street'] = street
-            elif fieldID == 'DAI': # City name
-                words = fieldValue.split(' ')
-                city = ""
-                for w in words:
-                    city = " ".join([city,w.capitalize()])
-                #contact.city = city
-                data['city'] = city
-            elif fieldID == 'DAJ': # Need to figure out state ID
-                #contact.state_id = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
-                data['state_id'] = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
-            elif fieldID == 'DAK': #ZIP code
-                #contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
-                data['zip'] = fieldValue[:5] + '-' + fieldValue[5:]
-            elif fieldID == 'DBB': #date of birth in numbers
-                month = int(fieldValue[:2])
-                day = int(fieldValue[2:4])
-                year = int(fieldValue[4:])
-                #contact.date_of_birth = datetime.date(year, month, day)
-                data['date_of_birth'] = datetime.date(year, month, day)
-            elif fieldID == 'DBA': #DL expiration Date
-                month = int(fieldValue[:2])
-                day = int(fieldValue[2:4])
-                year = int(fieldValue[4:])
-                #contact.drivers_license_expiration = datetime.date(year, month, day)
-                data['drivers_license_expiration'] = datetime.date(year,month,day)
-            elif fieldID == 'DAQ': # DL number
-                #contact.drivers_license_number = fieldValue
-                data['drivers_license_number'] = fieldValue
-        return meta, data
+    #         if fieldID == 'DAC': #first name
+    #             fname = fieldValue.capitalize()
+    #             #raise Warning("Name is: " + fieldValue)
+    #         elif fieldID == 'DCS': #last name
+    #             lname = fieldValue.capitalize()
+    #         elif fieldID == 'DAD': #middle name
+    #             #contact.name = fname + " " + fieldValue.capitalize() + " " + lname
+    #             data['name'] = fname + " " + fieldValue.capitalize() + " " + lname
+    #         elif fieldID == 'DAG': #Address line 1
+    #             words = fieldValue.split(' ')
+    #             street = ""
+    #             for w in words:
+    #                 street = " ".join([street,w.capitalize()])
+    #             #contact.street = street
+    #             data['street'] = street
+    #         elif fieldID == 'DAI': # City name
+    #             words = fieldValue.split(' ')
+    #             city = ""
+    #             for w in words:
+    #                 city = " ".join([city,w.capitalize()])
+    #             #contact.city = city
+    #             data['city'] = city
+    #         elif fieldID == 'DAJ': # Need to figure out state ID
+    #             #contact.state_id = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+    #             data['state_id'] = self.env['res.country.state'].search(["&",["code","=",fieldValue],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+    #         elif fieldID == 'DAK': #ZIP code
+    #             #contact.zip = fieldValue[:5] + '-' + fieldValue[5:]
+    #             data['zip'] = fieldValue[:5] + '-' + fieldValue[5:]
+    #         elif fieldID == 'DBB': #date of birth in numbers
+    #             month = int(fieldValue[:2])
+    #             day = int(fieldValue[2:4])
+    #             year = int(fieldValue[4:])
+    #             #contact.date_of_birth = datetime.date(year, month, day)
+    #             data['date_of_birth'] = datetime.date(year, month, day)
+    #         elif fieldID == 'DBA': #DL expiration Date
+    #             month = int(fieldValue[:2])
+    #             day = int(fieldValue[2:4])
+    #             year = int(fieldValue[4:])
+    #             #contact.drivers_license_expiration = datetime.date(year, month, day)
+    #             data['drivers_license_expiration'] = datetime.date(year,month,day)
+    #         elif fieldID == 'DAQ': # DL number
+    #             #contact.drivers_license_number = fieldValue
+    #             data['drivers_license_number'] = fieldValue
+    #     return meta, data
 
 class project_inherit(models.Model):
     _inherit = 'project.project'
 
     task_number = fields.Integer(default=0)# Used to generate a task name
+    warehouse_id = fields.Many2one('stock.warehouse')
     # store = fields.Many2one(comodel_name='lume.store')

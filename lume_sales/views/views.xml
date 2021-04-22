@@ -115,17 +115,17 @@
     </record>
 
     <!-- Project Form View -->
-    <!-- <record id="view_project_form_inherit" model="ir.ui.view">
+    <record id="view_project_form_inherit" model="ir.ui.view">
       <field name="name">project.form.inherit</field>
       <field name="model">project.project</field>
       <field name="inherit_id" ref="project.edit_project"/>
       <field name="type">form</field>
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
-          <field name="store"/>
+          <field name="warehouse_id"/>
         </field>
       </field>
-    </record> -->
+    </record>
 
     <!-- Project Search View -->
     <!-- <record id="view_project_search_inherit" model="ir.ui.view">
