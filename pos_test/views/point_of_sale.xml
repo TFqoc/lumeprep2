@@ -38,7 +38,7 @@
             </field>
           </record>
 
-          <record id="action_pos_config_filters" model="ir.actions.act_window">
+          <!-- <record id="action_pos_config_filters" model="ir.actions.act_window">
             <field name="name">Point of Sale</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.config</field>
@@ -46,10 +46,10 @@
             <field name="inherit_id" ref="point_of_sale.action_pos_config_kanban"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[last()]" position="after">
-                    <!-- <field name="domain">[('project_id.allowed_user_ids','in',uid)]</field> -->
+                    <!- <field name="domain">[('project_id.allowed_user_ids','in',uid)]</field> ->
                     <field name="context">{"search_default_my_store_pos":1}</field>
                 </xpath>
             </field>
-          </record>
+          </record> -->
     </data>
   </odoo>
