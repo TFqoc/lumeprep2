@@ -213,7 +213,7 @@ class Tasks(models.Model):
         dlstring = code
         e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
         expr = '|'.join(e)
-        code = re.split(expr, dlstring)
+        dlstring = re.split(expr, dlstring)
         dlstring = [line.strip() for line in dlstring]
 
         data = {}
