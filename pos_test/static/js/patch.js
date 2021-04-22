@@ -6,9 +6,11 @@ odoo.define('pos_test.PatchTest', function(require) {
     const ProductScreen = require("point_of_sale.ProductScreen");
     const PaymentScreen = require("point_of_sale.PaymentScreen");
     const ReceiptScreen = require("point_of_sale.ReceiptScreen");
+    const TicketButton = require("point_of_sale.TicketButton");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
     const { useListener } = require('web.custom_hooks');
+    const { posbus } = require('point_of_sale.utils');
     var core = require('web.core');
     var _t = core._t;
 
@@ -137,6 +139,13 @@ odoo.define('pos_test.PatchTest', function(require) {
         console.log("You just added a product!");
         console.log(product); // product should have all fields from the db model that were imported into pos.
     }
+    });
+    
+    patch(TicketButton,"Re-render trigger", {
+       mounted(){
+          this._super(...arguments);
+          posbus.on('re-render', this, this.render);
+       } ,
     });
 
   // patch(ReceiptScreen, "next button", {
