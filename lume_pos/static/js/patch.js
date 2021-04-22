@@ -120,7 +120,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
     });
 
     patch(PaymentScreen, "update backend SO",{
-      validateOrder: async function(isForceValidate) {
+      _finalizeValidation: async function(isForceValidate) {
           await this._super(...arguments);
           this.rpc({
             'model': 'sale.order',
