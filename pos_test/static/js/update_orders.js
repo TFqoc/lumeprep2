@@ -56,17 +56,14 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                         }
                         else if (data.update_orders.unpaid_orders.some(e => e.sale_order_id == order.sale_order_id)){
                             // TODO update order data here
+                            // Add updated data
+                            var index = data.update_orders.unpaid_orders.findIndex((el) => el.sale_order_id == order.sale_order_id);
+                            
+                            order.updating = true;
                             // Remove all line data to be replaced by the updated data
                             for (let line in order.get_orderlines()){
                                 order.remove_orderline(line);
                             }
-                            // Add updated data
-                            var index = data.update_orders.unpaid_orders.findIndex((el) => el.sale_order_id == order.sale_order_id);
-                            
-                            // This method will work, but invoke all the update events
-                            console.log(order); // find context like object
-                            // add field to act as context
-                            order.updating = true;
                             order.init_from_JSON(data.update_orders.unpaid_orders[index]);
                             order.updating = false;
                             // Other idea would be to list the fields to change and do that manually here
@@ -81,7 +78,7 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                             console.log("Sparing order");
                         }
                     }
-                    console.log(data.new_orders);
+                    console.log(data.update_orders);
                     console.log(this.env.pos.get_order_list().length);
                     // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
