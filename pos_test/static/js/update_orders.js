@@ -64,8 +64,11 @@ odoo.define('pos_test.UpdateOrders', function(require) {
                             var index = data.update_orders.unpaid_orders.findIndex((el) => el.sale_order_id == order.sale_order_id);
                             
                             // This method will work, but invoke all the update events
-                            // order.init_from_JSON(data.update_orders.unpaid_orders[index]);
-
+                            console.log(order); // find context like object
+                            // add field to act as context
+                            order.updating = true;
+                            order.init_from_JSON(data.update_orders.unpaid_orders[index]);
+                            order.updating = false;
                             // Other idea would be to list the fields to change and do that manually here
                             
                             // if order is current order, then re-render it or product screen or whatever

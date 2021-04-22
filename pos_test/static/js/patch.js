@@ -34,25 +34,27 @@ odoo.define('pos_test.PatchTest', function(require) {
         _setValue(val){
             console.log("Set Value: \"" + val + "\"");
             let order = this.currentOrder.get_selected_orderline();
-            if (val == 'remove'){
-                // Product was deleted (or is about to be deleted)
-                if (this.currentOrder.sale_order_id){
-                  // Tell the backend which product to remove
-                  console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
-                  this.rpc({
-                    'model': 'sale.order',
-                    'method': 'remove_item',
-                    args: [this.currentOrder.sale_order_id, order.product.id],
-                  });
-                }
-            }
-            else{
-              console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
-                  this.rpc({
-                    'model': 'sale.order',
-                    'method': 'update_item_quantity',
-                    args: [this.currentOrder.sale_order_id, order.product.id, val],
-                  });
+            if (!order.updating){
+              if (val == 'remove'){
+                  // Product was deleted (or is about to be deleted)
+                  if (this.currentOrder.sale_order_id){
+                    // Tell the backend which product to remove
+                    console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
+                    this.rpc({
+                      'model': 'sale.order',
+                      'method': 'remove_item',
+                      args: [this.currentOrder.sale_order_id, order.product.id],
+                    });
+                  }
+              }
+              else{
+                console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
+                    this.rpc({
+                      'model': 'sale.order',
+                      'method': 'update_item_quantity',
+                      args: [this.currentOrder.sale_order_id, order.product.id, val],
+                    });
+              }
             }
             this._super(...arguments);
         },
@@ -79,11 +81,11 @@ odoo.define('pos_test.PatchTest', function(require) {
         // Since I am making orders manually on the backend
         // this ensures that all the uids are being generated
         // from the same place.
-        if (!this.uid || isNaN(this.uid)){
-          this.sequence_number = this.pos.pos_session.sequence_number++;
-          this.uid  = this.generate_unique_id();
-          this.name = _.str.sprintf(_t("Order %s"), this.uid);
-        }
+        // if (!this.uid || isNaN(this.uid)){
+        //   this.sequence_number = this.pos.pos_session.sequence_number++;
+        //   this.uid  = this.generate_unique_id();
+        //   this.name = _.str.sprintf(_t("Order %s"), this.uid);
+        // }
       },
       init_from_JSON: function(json) {
         this._super(...arguments);
@@ -91,15 +93,22 @@ odoo.define('pos_test.PatchTest', function(require) {
           this.sale_order_id = json.sale_order_id;
           console.log("Added id: " + this.sale_order_id + " to initialized order");
         }
+        if (!this.uid){
+          this.sequence_number = json.name;
+          this.uid = this.generate_unique_id();
+          this.name = _.str.sprintf(_t("Order %s"), this.uid);
+        }
       },
       onAddProduct: function(){
-        let product = this.pos.get_order().get_last_orderline().product;
-        console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
-        this.pos.rpc({
-          'model': 'sale.order',
-          'method': 'add_item',
-          args: [this.pos.get_order().sale_order_id, product.id, 1],
-        });
+        if (!this.pos.get_order().updating){
+          let product = this.pos.get_order().get_last_orderline().product;
+          console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
+          this.pos.rpc({
+            'model': 'sale.order',
+            'method': 'add_item',
+            args: [this.pos.get_order().sale_order_id, product.id, 1],
+          });
+        }
       }
     });
 
@@ -130,12 +139,12 @@ odoo.define('pos_test.PatchTest', function(require) {
     }
     });
 
-  patch(ReceiptScreen, "next button", {
-    orderDone: function() {
-      this.currentOrder.finalize();
-      //const { name, props } = 'name';
-      this.showScreen('TicketScreen');
-  }
-  });
+  // patch(ReceiptScreen, "next button", {
+  //   orderDone: function() {
+  //     this.currentOrder.finalize();
+  //     //const { name, props } = 'name';
+  //     this.showScreen('TicketScreen');
+  // }
+  // });
 
 });
