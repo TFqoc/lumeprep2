@@ -12,7 +12,7 @@ class Tasks(models.Model):
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
-    scan_text = fields.Char()
+    scan_text = fields.Text()
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
