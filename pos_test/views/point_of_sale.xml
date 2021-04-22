@@ -26,7 +26,7 @@
             </field>
         </record>
 
-        <record id="view_pos_search_inherit" model="ir.ui.view">
+        <!-- <record id="view_pos_search_inherit" model="ir.ui.view">
             <field name="name">pos.search.inherit</field>
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_search"/>
@@ -36,7 +36,7 @@
                 <filter string="My Store" name="my_store_pos" domain="[('project_id.allowed_user_ids','in',uid)]"/>
               </xpath>
             </field>
-          </record>
+          </record> -->
 
           <!-- <record id="action_pos_config_filters" model="ir.actions.act_window">
             <field name="name">Point of Sale</field>
