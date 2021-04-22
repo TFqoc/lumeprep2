@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','point_of_sale','sale','LumeSales'],
+    'depends': ['base','point_of_sale','sale','lume_sales'],
 
     # always loaded
     'data': [
@@ -36,7 +36,7 @@
     #     ],
     # },
     'qweb':[
-        'static/xml/button.xml',
+        # 'static/xml/button.xml',
         'static/xml/update_orders.xml',
         'static/xml/ReceiptScreen.xml',
     ],
