@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 import datetime
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class Tasks(models.Model):
             return
         else:
             self.scan_text = False
-        data = self.parse_barcode(text)[1]
+        data = self.parse_all(text)[1]
 
         customer_id = ""
         record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
@@ -207,6 +208,55 @@ class Tasks(models.Model):
             self.save_timesheet(minutes_spent * 60 / 3600, desc)
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
+
+    def parse_all(self, code):
+        dlstring = code
+        e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
+        expr = '|'.join(e)
+        code = re.split(expr, dlstring)
+        dlstring = [line.strip() for line in dlstring]
+
+        data = {}
+        fname = dlstring[3].capitalize()
+        lname = dlstring[2].capitalize()
+        mname = dlstring[4].capitalize()
+        data['name'] = "%s %s %s" % (fname, mname, lname)
+
+        words = dlstring[10].split(' ')
+        street = ""
+        for w in words:
+            street = " ".join([street,w.capitalize()])
+        data['street'] = street
+
+        words = dlstring[11].split(' ')
+        city = ""
+        for w in words:
+            city = " ".join([city,w.capitalize()])
+        data['city'] = city
+
+        data['state_id'] = self.env['res.country.state'].search(["&",["code","=",dlstring[12]],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+
+        data['zip'] = dlstring[13][:5] + '-' + dlstring[13][5:]
+
+        dbb = dlstring[6]
+        month = int(dbb[:2])
+        day = int(dbb[2:4])
+        year = int(dbb[4:])
+        data['date_of_birth'] = datetime.date(year, month, day)
+
+        dlx = dlstring[1]
+        month = int(dlx[:2])
+        day = int(dlx[2:4])
+        year = int(dlx[4:])
+        data['drivers_license_expiration'] = datetime.date(year,month,day)
+
+        data['drivers_license_number'] = dlstring[14]
+
+        return [0], data
+
+
+
+
 
     def parse_barcode(self, code):
         # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
