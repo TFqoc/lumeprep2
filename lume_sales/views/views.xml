@@ -70,9 +70,9 @@
           <attribute name="readonly">1</attribute>
         </xpath>
         <!-- Move customer to left hand side -->
-        <xpath expr="//field[@name='is_project_map_empty']" position="before">
+        <field name="is_project_map_empty" position="before">
           <field name="partner_id" position="move"/>
-        </xpath>
+        </field>
         <!-- Move other stuff to right hand side -->
         <xpath expr="//field[@name='active']" position="before">
           <field name="project_id" position="move"/>
