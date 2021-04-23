@@ -125,11 +125,14 @@ class Tasks(models.Model):
         })
         self.next_stage()
         # Open up the sale order we just created
+        context = dict(self.env.context)
+        context['form_view_initial_mode'] = 'edit'
         return {
             "type":"ir.actions.act_window",
             "res_model":"sale.order",
             "res_id":self.sales_order.id,
             "views":[[False, "form"]],
+            "context":context,
         }
 
     def next_stage(self):
