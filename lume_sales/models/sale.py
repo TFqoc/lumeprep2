@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
-            res = len(record.picking_ids > 0)
+            res = len(record.picking_ids) > 0
             for delivery in record.env['stock.picking'].search([('sale_id','=',record.id)]):
                 for line in delivery.move_ids_without_package:
                     if delivery.state != 'done':
