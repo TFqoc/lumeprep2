@@ -71,7 +71,7 @@
         </xpath>
         
         <!-- Move customer to left hand side -->
-        <xpath expr="//field[@name='is_project_map_empty']" position="before">
+        <xpath expr="//group/group" position="inside">
           <field name="partner_id" position="move"/>
         </xpath>
         <!-- Move other stuff to right hand side -->
