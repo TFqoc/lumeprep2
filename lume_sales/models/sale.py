@@ -6,9 +6,10 @@ class SaleOrder(models.Model):
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
 
+    @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
-            res = True
+            res = len(record.picking_ids > 0)
             for delivery in record.env['stock.picking'].search([('sale_id','=',record.id)]):
                 for line in delivery.move_ids_without_package:
                     if delivery.state != 'done':
