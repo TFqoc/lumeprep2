@@ -63,16 +63,17 @@
       <field name="arch" type="xml">
         <xpath expr="//header/button" position="after">
           <!-- <field name="sales_order" invisible="1"/> -->
-          <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sales_order','!=',False)]}"></button>
+          <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sales_order','!=',False)]}"/>
         </xpath>
         <xpath expr="//header/field[@name='stage_id']" position="attributes">
           <attribute name="options">{'fold_field': 'fold'}</attribute>
           <attribute name="readonly">1</attribute>
         </xpath>
+        
         <!-- Move customer to left hand side -->
-        <field name="is_project_map_empty" position="before">
+        <xpath expr="//field[@name='is_project_map_empty']" position="before">
           <field name="partner_id" position="move"/>
-        </field>
+        </xpath>
         <!-- Move other stuff to right hand side -->
         <xpath expr="//field[@name='active']" position="before">
           <field name="project_id" position="move"/>
@@ -82,7 +83,7 @@
           <field name="recurring_task" position="move"/>
           <field name="tag_ids" position="move"/>
         </xpath>
-
+       
         <field name="partner_id" position="after">
           <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
           <field name="dummy_field" invisible="1"/>
