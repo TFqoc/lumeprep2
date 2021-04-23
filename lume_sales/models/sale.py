@@ -17,6 +17,11 @@ class SaleOrder(models.Model):
                         break
             record.is_delivered = res
 
+    @api.onchange('is_delivered')
+    def on_fulfillment(self):
+        if self.task.stage_id.name != 'Order Ready':
+            self.task.next_stage() 
+
     @api.onchange('partner_id')
     def check_order_lines(self):
         for order in self.order_line:
@@ -28,7 +33,7 @@ class SaleOrder(models.Model):
                 return warning
     
     @api.onchange('state')
-    def lock_state(self):
+    def on_sale_done(self):
         if self.state == 'done':
             self.task.next_stage()
 
