@@ -40,7 +40,7 @@ class Tasks(models.Model):
             return
         else:
             self.scan_text = False
-        data = self.parse_all(text)[1]
+        data = self.parse_all(text)
 
         customer_id = ""
         record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
