@@ -6,7 +6,7 @@ odoo.define('lume_sales.kanban_refresh', function(require){
     KanbanRenderer.include({
         init: function (parent, state, params) {
             this._super.apply(this, arguments);
-            this.refresh = setInterval(this._renderView, 10000);
+            this.refresh = setInterval(this._renderView.bind(this), 10000);
         },
         _renderView_debug: function(){
             this._renderView();
