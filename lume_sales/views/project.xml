@@ -11,8 +11,14 @@
             <field name="order_type"/>
           </xpath>
           <!-- Reorganize title of task -->
-          <xpath expr="//strong/field" position="replace">
-            <field name="partner_id" widget="res_partner_many2one"/>
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[4]" position="replace">
+            <span>
+                <field name="partner_id" widget="res_partner_many2one"/>
+            </span>
+          </xpath>
+          <!-- delete the else tag from the if we replaced above -->
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
+            <!-- Empty -->
           </xpath>
           <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->

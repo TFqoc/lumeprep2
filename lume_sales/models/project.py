@@ -12,6 +12,7 @@ class Tasks(models.Model):
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
+    order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     # stage_id = fields.Many2one(readonly=True)
@@ -93,7 +94,8 @@ class Tasks(models.Model):
     def create(self, vals):
         _logger.info("CREATE NEW TASK")
         project = self.env['project.project'].browse(vals['project_id'])
-        vals['name'] = "Customer Order #" + str(project.task_number)
+        vals['order_number'] = "Customer Order #" + str(project.task_number)
+        vals['name'] = self.env['res.partner'].browse(vals['partner_id']).name
         project.task_number += 1
         res = super(Tasks, self).create(vals)
         res.action_timer_start()
@@ -339,6 +341,6 @@ class Tasks(models.Model):
 class project_inherit(models.Model):
     _inherit = 'project.project'
 
-    task_number = fields.Integer(default=0)# Used to generate a task name
+    task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
     # store = fields.Many2one(comodel_name='lume.store')
