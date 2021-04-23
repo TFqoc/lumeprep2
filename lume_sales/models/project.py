@@ -119,7 +119,7 @@ class Tasks(models.Model):
             'date_order': fields.datetime.now(),
             # 'picking_policy':'direct',
             # 'pricelist_id':'idk',
-            # 'warehouse_id':'',
+            'warehouse_id':self.project_id.warehouse_id.id,
         })
         self.next_stage()
         # Open up the sale order we just created
@@ -131,6 +131,7 @@ class Tasks(models.Model):
         }
 
     def next_stage(self):
+        # TODO add closing stage to this if statement
         if self.stage_id.name == 'Done':
             return
 
