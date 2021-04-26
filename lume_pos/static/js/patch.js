@@ -9,6 +9,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
     const TicketButton = require("point_of_sale.TicketButton");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
+    const ActionpadWidget = require("point_of_sale.ActionpadWidget");
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
     const { posbus } = require('point_of_sale.utils');
@@ -35,14 +36,14 @@ odoo.define('lume_pos.PatchTest', function(require) {
         //     console.log(event);
         // },
         _setValue(val){
-            console.log("Set Value: \"" + val + "\"");
+            // console.log("Set Value: \"" + val + "\"");
             let order = this.currentOrder.get_selected_orderline();
             if (!order.updating){
               if (val == 'remove'){
                   // Product was deleted (or is about to be deleted)
                   if (this.currentOrder.sale_order_id){
                     // Tell the backend which product to remove
-                    console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
+                    // console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
                     this.rpc({
                       'model': 'sale.order',
                       'method': 'remove_item',
@@ -51,7 +52,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
                   }
               }
               else{
-                console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
+                // console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
                     this.rpc({
                       'model': 'sale.order',
                       'method': 'update_item_quantity',
@@ -79,7 +80,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
       set_quantity: function(quantity, keep_price){
         this.order.assert_editable();
         if(quantity === 'remove'){
-            console.log("Product about to be deleted!");
+            // console.log("Product about to be deleted!");
         }
         else{
           // console.log("Setting quantity to: " + quantity + " on " + this.product.display_name);
@@ -106,7 +107,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
         this._super(...arguments);
         if (!this.sale_order_id){
           this.sale_order_id = json.sale_order_id;
-          console.log("Added id: " + this.sale_order_id + " to initialized order");
+          // console.log("Added id: " + this.sale_order_id + " to initialized order");
         }
         if (!this.uid){
           this.sequence_number = json.name;
@@ -117,7 +118,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
       onAddProduct: function(){
         if (!this.pos.get_order().updating){
           let product = this.pos.get_order().get_last_orderline().product;
-          console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
+          // console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
           this.pos.rpc({
             'model': 'sale.order',
             'method': 'add_item',
@@ -149,8 +150,8 @@ odoo.define('lume_pos.PatchTest', function(require) {
         useListener('click-product', this.onAddProduct);
       },
       onAddProduct({ detail: product }){
-        console.log("You just added a product!");
-        console.log(product); // product should have all fields from the db model that were imported into pos.
+        // console.log("You just added a product!");
+        // console.log(product); // product should have all fields from the db model that were imported into pos.
     }
     });
     
@@ -159,6 +160,19 @@ odoo.define('lume_pos.PatchTest', function(require) {
           this._super(...arguments);
           posbus.on('re-render', this, this.render);
        } ,
+    });
+
+    patch(ActionpadWidget, "disable payment button", {
+      async render(){
+        await this._super(...arguments);
+        if (this.env.pos.get_order().state == 'ready'){
+          $("#PaymentButton").removeClass("disabled");
+        }
+        else{
+          $("#PaymentButton").addClass("disabled");
+        }
+        console.log("Rendering Actionpad");
+      }
     });
 
     const PatchedReceiptScreen = (ReceiptScreen) => {

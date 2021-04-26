@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="templates" xml:space="preserve">
     <t t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
-        <xpath expr="//button[2]" position="attributes">
-            <attribute name="t-att-class">button pay {{env.pos.get_current_order().state != 'ready' ? 'disabled':''}}</attribute>
+        <xpath expr="//button[2]" position="inside">
+            <!--             <attribute name="t-att-class">button pay {{(env.pos.get_order().state != 'ready') ? 'disabled':''}}</attribute> -->
+            <!--             <attribute name="id">PaymentButton</attribute> -->
+            <span t-if="env.pos.get_order().state != 'ready'">This order has not been picked yet!</span>
         </xpath>
     </t>
 </templates>
