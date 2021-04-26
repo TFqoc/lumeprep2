@@ -9,6 +9,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
     const TicketButton = require("point_of_sale.TicketButton");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
+    const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
     const { posbus } = require('point_of_sale.utils');
     var core = require('web.core');
@@ -60,6 +61,18 @@ odoo.define('lume_pos.PatchTest', function(require) {
             }
             this._super(...arguments);
         },
+        // Override previous method
+        _onClickPay(){
+          if (this.env.pos.get_order().state != 'ready'){
+            this.showPopup('ErrorPopup', {
+              title: this.env._t('Order not Picked!'),
+              body: this.env._t('This order has not been picked by the back room yet!'),
+            });
+          }
+          else{
+            this.showScreen('PaymentScreen');
+          }
+        }
       });
 
     patch(models.Orderline, "log quantity",{
@@ -148,6 +161,15 @@ odoo.define('lume_pos.PatchTest', function(require) {
        } ,
     });
 
+    const PatchedReceiptScreen = (ReceiptScreen) => {
+      class PatchedReceiptScreen extends ReceiptScreen {
+        get nextScreen(){
+          return {name: 'TicketScreen'};
+        }
+      }
+      return PatchedReceiptScreen;
+    }
+    Registries.Component.extend(ReceiptScreen, PatchedReceiptScreen);
   // patch(ReceiptScreen, "next button", {
   //   orderDone: function() {
   //     this.currentOrder.finalize();
@@ -155,5 +177,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
   //     this.showScreen('TicketScreen');
   // }
   // });
+
+    
 
 });

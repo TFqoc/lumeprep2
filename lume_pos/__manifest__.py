@@ -39,6 +39,7 @@
         # 'static/xml/button.xml',
         'static/xml/update_orders.xml',
         'static/xml/ReceiptScreen.xml',
+        'static/xml/ActionpadWidget.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
