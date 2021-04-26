@@ -191,7 +191,7 @@ class Tasks(models.Model):
         #     self.action_timer_auto_stop()
         #     pass
     
-    def save_timesheet(self, minutes, desc=None):
+    def save_timesheet(self, desc=None):
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             minutes_spent = self.user_timer_id._get_minutes_spent()
             minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
@@ -203,7 +203,7 @@ class Tasks(models.Model):
                 'date': fields.Date.context_today(self),
                 'name': desc or "",
                 'user_id': self.env.uid,
-                'unit_amount': minutes,
+                'unit_amount': minutes_spent,
             }
             return self.env['account.analytic.line'].create(values)
 
