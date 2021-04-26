@@ -147,6 +147,7 @@ class Tasks(models.Model):
                 break
             elif stage == self.stage_id:
                 get_next = True
+        self.change_stage()
 
 
     # Mail module > models > mail_channel.py Line 758
@@ -165,7 +166,7 @@ class Tasks(models.Model):
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
             _logger.info("STOPPING TIMER")
-            self._origin.action_timer_auto_stop(old_stage+" > "+new_stage)
+            self._origin.save_timesheet(old_stage+" > "+new_stage)
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
         
@@ -191,16 +192,20 @@ class Tasks(models.Model):
         #     pass
     
     def save_timesheet(self, minutes, desc=None):
-        values = {
-            'task_id': self.id,
-            'project_id': self.project_id.id,
-            'date': fields.Date.context_today(self),
-            'name': desc or "",
-            'user_id': self.env.uid,
-            'unit_amount': minutes,
-        }
-        self.user_timer_id.unlink()
-        return self.env['account.analytic.line'].create(values)
+        if self.user_timer_id.timer_start and self.display_timesheet_timer:
+            minutes_spent = self.user_timer_id._get_minutes_spent()
+            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+            rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+            minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
+            values = {
+                'task_id': self.id,
+                'project_id': self.project_id.id,
+                'date': fields.Date.context_today(self),
+                'name': desc or "",
+                'user_id': self.env.uid,
+                'unit_amount': minutes,
+            }
+            return self.env['account.analytic.line'].create(values)
 
     def action_timer_auto_stop(self, desc=None):
         # timer was either running or paused
