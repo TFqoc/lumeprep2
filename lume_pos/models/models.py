@@ -123,6 +123,12 @@ class SaleLine(models.Model):
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
+    def _action_done(self):
+        res = super(Picking, self)._action_done()
+        if self.sale_id:
+            self.sale_id.pos_update = True # force the so to update the pos
+        return res
+
     @api.onchange('state')
     def complete_order(self):
         if (self.state == 'done'):
