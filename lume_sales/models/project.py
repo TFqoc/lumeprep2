@@ -15,6 +15,7 @@ class Tasks(models.Model):
     order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
+    time_at_last_save = fields.Int(default=0)
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
@@ -197,6 +198,8 @@ class Tasks(models.Model):
             minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
             rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
             minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
+            minutes_spent -= self.time_at_last_save
+            self.time_at_last_save += minutes_spent
             values = {
                 'task_id': self.id,
                 'project_id': self.project_id.id,
@@ -207,18 +210,18 @@ class Tasks(models.Model):
             }
             return self.env['account.analytic.line'].create(values)
 
-    def action_timer_auto_stop(self, desc=None):
-        # timer was either running or paused
-        _logger.info("ACTION TIMER AUTO STOP: "+str(desc))
-        _logger.info("VALS: %s %s",self.user_timer_id.timer_start, self.display_timesheet_timer)
-        if self.user_timer_id.timer_start and self.display_timesheet_timer:
-            minutes_spent = self.user_timer_id._get_minutes_spent()
-            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
-            rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
-            minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
-            self.save_timesheet(minutes_spent * 60 / 3600, desc)
-            #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
-        #return False
+    # def action_timer_auto_stop(self, desc=None):
+    #     # timer was either running or paused
+    #     _logger.info("ACTION TIMER AUTO STOP: "+str(desc))
+    #     _logger.info("VALS: %s %s",self.user_timer_id.timer_start, self.display_timesheet_timer)
+    #     if self.user_timer_id.timer_start and self.display_timesheet_timer:
+    #         minutes_spent = self.user_timer_id._get_minutes_spent()
+    #         minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+    #         rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+    #         minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
+    #         self.save_timesheet(minutes_spent * 60 / 3600, desc)
+    #         #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
+    #     #return False
 
     def parse_all(self, code):
         dlstring = code
