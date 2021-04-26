@@ -15,7 +15,7 @@ class Tasks(models.Model):
     order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
-    time_at_last_save = fields.Int(default=0)
+    time_at_last_save = fields.Integer(default=0)
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
