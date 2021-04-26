@@ -127,4 +127,4 @@ class Picking(models.Model):
     def complete_order(self):
         if (self.state == 'done'):
             if self.sale_id:
-                self.sale_id._on_change() # force the so to update the pos
+                self.sale_id.pos_update = True # force the so to update the pos
