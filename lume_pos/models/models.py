@@ -88,7 +88,7 @@ class pos_test(models.Model):
                 'partner_id':order.partner_id.id,
                 'lines':[], #orderline data generated below 
                 'statement_ids':[], # leave blank
-                'state':'ongoing' if not order.is_delivered else 'ready',
+                'state':'Ongoing' if not order.is_delivered else 'Ready',
                 'amount_return':0, # leave at 0
                 'account_move':0, # leaving at 0 for now
                 'id':0, #backend id? leaving at 0 for now
@@ -119,3 +119,12 @@ class SaleLine(models.Model):
     @api.onchange('product_id','product_uom_qty')
     def _on_change(self):
         self.order_id._on_change()
+
+class Picking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.onchange('state')
+    def complete_order(self):
+        if (self.state == 'done'):
+            if self.sale_id:
+                self.sale_id._on_change() # force the so to update the pos

@@ -7,6 +7,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
     const PaymentScreen = require("point_of_sale.PaymentScreen");
     const ReceiptScreen = require("point_of_sale.ReceiptScreen");
     const TicketButton = require("point_of_sale.TicketButton");
+    const TicketScreen = require("point_of_sale.TicketScreen");
     const models = require("point_of_sale.models");
     const ProductItem = require("point_of_sale.ProductItem");
     const ActionpadWidget = require("point_of_sale.ActionpadWidget");
@@ -162,18 +163,19 @@ odoo.define('lume_pos.PatchTest', function(require) {
        } ,
     });
 
-    patch(ActionpadWidget, "disable payment button", {
-      async render(){
-        await this._super(...arguments);
-        if (this.env.pos.get_order().state == 'ready'){
-          $("#PaymentButton").removeClass("disabled");
-        }
-        else{
-          $("#PaymentButton").addClass("disabled");
-        }
-        console.log("Rendering Actionpad");
+    patch(TicketScreen, "Status shows state", {
+      getStatus(order) {
+        const name = this._super(...arguments);
+        return order.state || name;
       }
     });
+
+    patch(ActionpadWidget, "disable payment button", {
+      mounted(){
+        this._super(...arguments);
+        posbus.on('updated_order', this, this.render);
+     } ,
+  });
 
     const PatchedReceiptScreen = (ReceiptScreen) => {
       class PatchedReceiptScreen extends ReceiptScreen {

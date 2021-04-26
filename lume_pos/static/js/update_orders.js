@@ -61,6 +61,10 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                             // use json to add new lines and update order values
                             order.init_from_JSON(data.update_orders.unpaid_orders[index]);
                             order.updating = false;
+
+                            if (order == this.env.pos.get_order()){// If order is current order
+                                posbus.trigger('updated_order');
+                            }
                         }
                         else{
                             // console.log("Sparing order");
