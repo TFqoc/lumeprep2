@@ -70,7 +70,7 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                             // console.log("Sparing order");
                         }
                     }
-                    // console.log(data.update_orders);
+                    console.log(data.update_orders);
                     // console.log(this.env.pos.get_order_list().length);
                     // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
