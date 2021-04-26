@@ -88,7 +88,7 @@ class pos_test(models.Model):
                 'partner_id':order.partner_id.id,
                 'lines':[], #orderline data generated below 
                 'statement_ids':[], # leave blank
-                'state':'ongoing',
+                'state':'Ongoing' if not order.is_delivered else 'Ready',
                 'amount_return':0, # leave at 0
                 'account_move':0, # leaving at 0 for now
                 'id':0, #backend id? leaving at 0 for now
@@ -108,7 +108,7 @@ class pos_test(models.Model):
             list_data.append(json_data)
         return list_data
 
-    @api.onchange('partner_id','order_line','payment_term_id')
+    @api.onchange('partner_id','order_line','payment_term_id','is_delivered')
     def _on_change(self):
         if not self.no_pos_update and self.state == 'sale':
             self.pos_update = True
@@ -119,3 +119,12 @@ class SaleLine(models.Model):
     @api.onchange('product_id','product_uom_qty')
     def _on_change(self):
         self.order_id._on_change()
+
+class Picking(models.Model):
+    _inherit = 'stock.picking'
+
+    def _action_done(self):
+        res = super(Picking, self)._action_done()
+        if self.sale_id:
+            self.sale_id.pos_update = True # force the so to update the pos
+        return res

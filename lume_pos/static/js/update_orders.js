@@ -19,7 +19,7 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
             // destroy all current orders
             for (let order of this.env.pos.get_order_list()){
                 order.destroy();
-                console.log("Destroying old order");
+                // console.log("Destroying old order");
             }
             // get a clean set of orders from the backend
             await this.getOrders();
@@ -31,7 +31,7 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                 for (i=0; i<order_list.length; i++){
                     if (order_list[i].sale_order_id){// if exists
                         linked_sale_order_ids.push(order_list[i].sale_order_id);
-                        console.log("Adding Linked Order");
+                        // console.log("Adding Linked Order");
                     }
                 }
                 this.rpc({
@@ -45,7 +45,7 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                     for (let order of this.env.pos.get_order_list()){
                         if (data.old_orders.includes(order.sale_order_id)){
                             order.destroy();
-                            console.log("Deleting order");
+                            // console.log("Deleting order");
                         }
                         else if (data.update_orders.unpaid_orders.some(e => e.sale_order_id == order.sale_order_id)){
                             // Add updated data
@@ -56,23 +56,27 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                             var orderlines = order.orderlines.models;
                             while (orderlines.length > 0){
                                 order.remove_orderline(orderlines[0]);
-                                console.log("Removing a line");
+                                // console.log("Removing a line");
                             }
                             // use json to add new lines and update order values
                             order.init_from_JSON(data.update_orders.unpaid_orders[index]);
                             order.updating = false;
+
+                            if (order == this.env.pos.get_order()){// If order is current order
+                                posbus.trigger('updated_order');
+                            }
                         }
                         else{
-                            console.log("Sparing order");
+                            // console.log("Sparing order");
                         }
                     }
                     console.log(data.update_orders);
-                    console.log(this.env.pos.get_order_list().length);
+                    // console.log(this.env.pos.get_order_list().length);
                     // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
-                    console.log(this.env.pos.get_order_list().length);
+                    // console.log(this.env.pos.get_order_list().length);
                     
-                    console.log("re-rendering ticket button");
+                    // console.log("re-rendering ticket button");
                     posbus.trigger('re-render');
                 },
                 (args) => {

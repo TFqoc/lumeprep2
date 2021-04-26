@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <!-- Kanban View for tasks -->
+    <record id="view_project_task_kanban_inherit" model="ir.ui.view">
+        <field name="name">project.task.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+           <!-- Needed field tag to access the model field later in this view -->
+          <xpath expr="/kanban/field" position="after">
+            <field name="order_type"/>
+          </xpath>
+          <!-- Reorganize title of task -->
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[4]" position="replace">
+            <span>
+                <field name="partner_id" widget="res_partner_many2one"/>
+            </span>
+          </xpath>
+          <!-- delete the else tag from the if we replaced above -->
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
+            <!-- Empty -->
+          </xpath>
+          <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
+            <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
+            <!-- <br/> -->
+            <field name="timer_start" widget="live_timer"/>
+            <br/>
+            <span>
+              <span t-if="record.order_type.raw_value == 'delivery'" class="fa fa-bus"></span>
+              <span t-if="record.order_type.raw_value == 'store'" class="fa fa-cart-arrow-down"></span>
+              <span t-if="record.order_type.raw_value == 'online'" class="fa fa-laptop"></span>
+            </span>
+            <span class="o_MessagingMenu_icon fa fa-comments"></span>
+            <field name="message_unread_counter" widget="count_counter"/>
+          </xpath>
+          <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)[2]" position="replace">
+            <!-- Replace user avatar for customer "partner" avatar -->
+            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="24" height="24" style="border-radius: 50%; margin-left: 6px;" class="o_m2o_avatar"/>
+          </xpath>
+        </field>
+      </record>
+    </data>
+</odoo>

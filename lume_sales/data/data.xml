@@ -22,10 +22,10 @@
             <field name="sequence">30</field>
             <field name="name">Order Ready</field>
         </record>
-        <record id="lume_stage_4" model="project.task.type">
+        <!-- <record id="lume_stage_4" model="project.task.type">
             <field name="sequence">40</field>
             <field name="name">Payment</field>
-        </record>
+        </record> -->
         <record id="lume_stage_500" model="project.task.type">
             <field name="sequence">500</field>
             <field name="name">Done</field>
@@ -35,8 +35,8 @@
 
         <!-- Project/Store -->
         <record id="lume_store_project" model="project.project">
-            <field name="name">Lume Store 1</field>
-            <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')), (4, ref('lume_stage_4')),(4, ref('lume_stage_500'))]"/>
+            <field name="name">Lume Store Template</field>
+            <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')),(4, ref('lume_stage_500'))]"/>
         </record>
     </data>
 </odoo>
