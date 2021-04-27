@@ -16,7 +16,7 @@ class pos_test(models.Model):
     def get_orders(self, ids, session_id, user_id):
         config_id = self.env['pos.session'].browse(session_id).config_id
         # This filters includes anyone explicitly listed on the project, as we as anyone who has permission to see it (administrator rights on project app)
-        orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale']),('task.project_id','=',config_id.project_id)]) # ('task.project_id.allowed_user_ids','=',user_id)
+        orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale']),('task.project_id','=',config_id.project_id.id)]) # ('task.project_id.allowed_user_ids','=',user_id)
         data = {}
         new_orders = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
 
