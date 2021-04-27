@@ -173,6 +173,8 @@ class Tasks(models.Model):
             self._origin.save_timesheet(old_stage+" > "+new_stage)
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
+        else:
+            self.action_timer_pause()
         
         return {
     'warning': {'title': "Info", 'message': old_stage+" > "+new_stage, 'type': 'notification'},

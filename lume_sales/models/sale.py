@@ -34,11 +34,6 @@ class SaleOrder(models.Model):
                 }
                 self.partner_id = False
                 return warning
-    
-    @api.onchange('state')
-    def on_sale_done(self):
-        if self.state == 'done':
-            self.task.next_stage()
 
     def action_confirm(self):
         ret = super(SaleOrder, self).action_confirm()
