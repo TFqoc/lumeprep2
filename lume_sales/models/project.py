@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from .barcode_parse import parse_code
 import datetime
 import logging
 import re
@@ -42,7 +43,9 @@ class Tasks(models.Model):
             return
         else:
             self.scan_text = False
-        data = self.parse_all(text)
+        data = parse_code(text)
+        # Change state_id from text value to a reference to the state record in the database.
+        data['state_id'] = self.env['res.country.state'].search(["&",["code","=",data['state_id']],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
 
         customer_id = ""
         record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
@@ -170,6 +173,8 @@ class Tasks(models.Model):
             self._origin.save_timesheet(old_stage+" > "+new_stage)
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
+        else:
+            self.action_timer_pause()
         
         return {
     'warning': {'title': "Info", 'message': old_stage+" > "+new_stage, 'type': 'notification'},
@@ -223,51 +228,51 @@ class Tasks(models.Model):
     #         #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
     #     #return False
 
-    def parse_all(self, code):
-        dlstring = code
-        e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
-        expr = '|'.join(e)
-        dlstring = dlstring.replace('0010','') # To clear out the newline representation for mac/linux machines
-        dlstring = re.split(expr, dlstring)
-        dlstring = [line.strip() for line in dlstring]
+    # def parse_all(self, code):
+    #     dlstring = code
+    #     e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
+    #     expr = '|'.join(e)
+    #     dlstring = dlstring.replace('0010','') # To clear out the newline representation for mac/linux machines
+    #     dlstring = re.split(expr, dlstring)
+    #     dlstring = [line.strip() for line in dlstring]
 
-        data = {}
-        fname = dlstring[3].capitalize()
-        lname = dlstring[2].capitalize()
-        mname = dlstring[4].capitalize()
-        data['name'] = "%s %s %s" % (fname, mname, lname)
+    #     data = {}
+    #     fname = dlstring[3].capitalize()
+    #     lname = dlstring[2].capitalize()
+    #     mname = dlstring[4].capitalize()
+    #     data['name'] = "%s %s %s" % (fname, mname, lname)
 
-        words = dlstring[10].split(' ')
-        street = ""
-        for w in words:
-            street = " ".join([street,w.capitalize()])
-        data['street'] = street
+    #     words = dlstring[10].split(' ')
+    #     street = ""
+    #     for w in words:
+    #         street = " ".join([street,w.capitalize()])
+    #     data['street'] = street
 
-        words = dlstring[11].split(' ')
-        city = ""
-        for w in words:
-            city = " ".join([city,w.capitalize()])
-        data['city'] = city
+    #     words = dlstring[11].split(' ')
+    #     city = ""
+    #     for w in words:
+    #         city = " ".join([city,w.capitalize()])
+    #     data['city'] = city
 
-        data['state_id'] = self.env['res.country.state'].search(["&",["code","=",dlstring[12]],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+    #     data['state_id'] = self.env['res.country.state'].search(["&",["code","=",dlstring[12]],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
 
-        data['zip'] = dlstring[13][:5] + '-' + dlstring[13][5:]
+    #     data['zip'] = dlstring[13][:5] + '-' + dlstring[13][5:]
 
-        dbb = dlstring[6]
-        month = int(dbb[:2])
-        day = int(dbb[2:4])
-        year = int(dbb[4:])
-        data['date_of_birth'] = datetime.date(year, month, day)
+    #     dbb = dlstring[6]
+    #     month = int(dbb[:2])
+    #     day = int(dbb[2:4])
+    #     year = int(dbb[4:])
+    #     data['date_of_birth'] = datetime.date(year, month, day)
 
-        dlx = dlstring[1]
-        month = int(dlx[:2])
-        day = int(dlx[2:4])
-        year = int(dlx[4:])
-        data['drivers_license_expiration'] = datetime.date(year,month,day)
+    #     dlx = dlstring[1]
+    #     month = int(dlx[:2])
+    #     day = int(dlx[2:4])
+    #     year = int(dlx[4:])
+    #     data['drivers_license_expiration'] = datetime.date(year,month,day)
 
-        data['drivers_license_number'] = dlstring[14]
+    #     data['drivers_license_number'] = dlstring[14]
 
-        return data
+    #     return data
 
 
 

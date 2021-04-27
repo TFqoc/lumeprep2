@@ -16,8 +16,11 @@ class SaleOrder(models.Model):
                         res = False
                         break
             record.is_delivered = res
+            if record.is_delivered:
+                record.on_fulfillment()
 
-    @api.onchange('is_delivered')
+    # Onchange doesn't seem to trigger for calculated fields
+    # @api.onchange('is_delivered')
     def on_fulfillment(self):
         if self.task.stage_id.name != 'Order Ready':
             self.task.next_stage() 
@@ -31,11 +34,6 @@ class SaleOrder(models.Model):
                 }
                 self.partner_id = False
                 return warning
-    
-    @api.onchange('state')
-    def on_sale_done(self):
-        if self.state == 'done':
-            self.task.next_stage()
 
     def action_confirm(self):
         ret = super(SaleOrder, self).action_confirm()

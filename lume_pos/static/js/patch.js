@@ -65,7 +65,7 @@ odoo.define('lume_pos.PatchTest', function(require) {
         },
         // Override previous method
         _onClickPay(){
-          if (this.env.pos.get_order().state != 'ready'){
+          if (this.env.pos.get_order().state != 'Ready'){
             // this.showPopup('ErrorPopup', {
             //   title: this.env._t('Order not Picked!'),
             //   body: this.env._t('This order has not been picked by the back room yet!'),
