@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_transfer_tree" model="ir.ui.view">
+            <field name="name">metrc.transfer.tree</field>
+            <field name="model">metrc.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Transfers">
+                    <field name="src_license"/>
+                    <field name="transfer_type"/>
+                    <field name="move_line_id"/>
+                    <field name="product_name"/>
+                    <field name="package_label"/>
+                    <field name="manifest_number"/>
+                    <field name="transfer_id"/>
+                    <field name="package_id"/>
+                    <field name="package_type"/>
+                    <field name="shipper_facility_license_number"/>
+                    <field name="shipper_facility_name"/>
+                    <field name="shipment_package_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_transfer_search" model="ir.ui.view">
+            <field name="name">metrc.transfer.search</field>
+            <field name="model">metrc.transfer</field>
+            <field name="arch" type="xml">
+                <search string="Metrc Transfer">
+                    <field name="src_license"/>
+                    <field name="package_label"/>
+                    <field name="product_name"/>
+                    <field name="shipment_package_state"/>
+                    <field name="package_type"/>
+                    <field name="transfer_type"/>
+                    <field name="manifest_number"/>
+                    <field name="transporter_facility_license_number"/>
+                    <field name="transporter_facility_name"/>
+                    <field name="shipper_facility_license_number"/>
+                    <field name="shipper_facility_name"/>
+                    <separator/>
+                    <filter string="Shipped" name="shipped_package" domain="[('shipment_package_state', '=', 'Shipped')]"/>
+                    <filter string="Accepted" name="accepted_package" domain="[('shipment_package_state', '=', 'Accepted')]"/>
+                    <filter string="Rejected" name="rejected_package" domain="[('shipment_package_state', '=', 'Rejected')]"/>
+                    <separator/>
+                    <filter string="Unprocessed" name="unused_tranfers" domain="[('move_line_id', '=', False)]"/>
+                    <filter string="Processed" name="used_tranfers" domain="[('move_line_id', '!=', False)]"/>
+                    <separator/>
+                    <group string='Group by...'>
+                        <filter string="Source License" name="groupby_src_license" context="{'group_by':'src_license'}"/>
+                        <filter string="Transfer Type" name="groupby_transfer_type" context="{'group_by':'transfer_type'}"/>
+                        <filter string="Shipment Package State" name="groupby_shipment_package_state" context="{'group_by':'shipment_package_state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_transfer_form" model="ir.ui.view">
+            <field name="name">metrc.transfer.form</field>
+            <field name="model">metrc.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Transfer">
+                    <header>
+                        <button string='Update Transfer &amp; Packages' type="object" name="update_transfer_packages"/>
+                        <button string='Update Package Detail' type="object" name="update_transfer_package"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_title" name="title">
+                            <h1>
+                                <field name="transfer_id"/> - <field name="src_license"/>
+                            </h1>
+                        </div>
+                        <field name="transfer_type" widget="radio"/>
+                        <group>
+                            <field name='move_line_id' readonly="1"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="manifest_number"/>
+                                <field name="shipment_license_type"/>
+                                <field name="shipper_facility_license_number"/>
+                                <field name="shipper_facility_name"/>
+                                <field name="name"/>
+
+                            </group>
+                            <group>
+                                <field name="transporter_facility_license_number"/>
+                                <field name="transporter_facility_name"/>
+                                <field name="driver_name"/>
+                                <field name="driver_occupational_license_number"/>
+                                <field name="driver_vehicle_license_number"/>
+                                <field name="vehicle_make"/>
+                                <field name="vehicle_model"/>
+                                <field name="vehicle_license_plate_number"/>
+                            </group>
+                            <group>
+                                <field name="delivery_id"/>
+                                <field name="delivery_count"/>
+                                <field name="received_delivery_count"/>
+                                <field name="package_count"/>
+                                <field name="received_package_count"/>
+                            </group>
+                            <group>
+                                <field name="created_date_time"/>
+                                <field name="created_by_user_name"/>
+                                <field name="last_modified"/>
+                                <field name="contains_plant_package"/>
+                                <field name="contains_product_package"/>
+                                <field name="contains_testing_sample"/>
+                                <field name="contains_product_requires_remediation"/>
+                                <field name="contains_remediated_product_package"/>
+                            </group>
+                            <group>
+                                <field name="recipient_facility_license_number"/>
+                                <field name="recipient_facility_name"/>
+                                <field name="shipment_type_name"/>
+                                <field name="shipment_transaction_type"/>
+                                <field name="delivery_package_count"/>
+                                <field name="delivery_received_package_count"/>
+                            </group>
+                            <group>
+                                <field name="estimated_departure_date_time"/>
+                                <field name="actual_departure_date_time"/>
+                                <field name="estimated_arrival_date_time"/>
+                                <field name="actual_arrival_date_time"/>
+                                <field name="received_date_time"/>
+                            </group>
+                        </group>
+                        <group string='Package Details'>
+                            <group>
+                                <field name="package_id"/>
+                                <field name="package_label"/>
+                                <field name="package_type"/>
+                                <field name="source_harvest_names"/>
+                                <field name="product_name"/>
+                                <field name="product_category_name"/>
+                                <field name="lab_testing_state"/>
+                                <field name="production_batch_number"/>
+                                <field name="is_testing_sample"/>
+                            </group>
+                            <group>
+                                <field name="product_requires_remediation"/>
+                                <field name="contains_remediated_product"/>
+                                <field name="remediation_date"/>
+                                <field name="shipment_package_state"/>
+                                <field name="shipped_quantity"/>
+                                <field name="shipped_unit_of_measure_name"/>
+                                <field name="gross_unit_of_weight_name"/>
+                                <field name="received_quantity"/>
+                                <field name="received_unit_of_measure_name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_transfer">
+            <field name="name">Transfers</field>
+            <field name="res_model">metrc.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Transfers.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_action_view_metrc_transfer"
+                action="action_view_metrc_transfer"
+                name="Transfers"
+                parent="metrc_base.submenu_metrc_data"
+                sequence="99"
+                groups="metrc_base.group_metrc_manager"/>
+
+
+    </data>
+</odoo>

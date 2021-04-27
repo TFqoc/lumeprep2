@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="wizard_merge_lot_form" model="ir.ui.view">
+        <field name="name">lot.merge.wizard.from</field>
+        <field name="model">lot.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="picking_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="warehouse_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="location_id"/>
+                    </group>
+                    <notebook>
+                        <page name="destination_lots" string="New Metrc Tags">
+                            <field name="target_lot_ids" options="{'no_open': True}">
+                                <tree delete="0" create="0" editable="bottom">
+                                    <field name="lot_name" required="True"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="uom_id" readonly="1"/>
+                                    <field name="qty_available" readonly="1"/>
+                                    <field name="uom_id" readonly="1"/>
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="lot_ids" widget="many2many_tags" readonly="1" string="Source Lots"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="confirm_merge" type="object" string="Consolidate" class="btn btn-sm btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="merge_lot_confirmation" model="ir.ui.view">
+        <field name="name">merge.lot.wizard.confirmation</field>
+        <field name="model">lot.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Merge confirmation">
+                <sheet>
+                    <group>
+                        <field name="message_body" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Ok" type="object" name="consolidate_lots"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Modify" type="object" name="modify_merge"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="merge_lot_confirmation_yes_no" model="ir.ui.view">
+        <field name="name">merge.lot.wizard.confirmation</field>
+        <field name="model">lot.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Merge confirmation">
+                <sheet>
+                    <group>
+                        <field name="message_body" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Ok" type="object" name="modify_merge"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_merge_lot_wizard" model="ir.actions.act_window">
+        <field name="name">Package Consolidation Wizard</field>
+        <field name="res_model">lot.merge.wizard</field>
+
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

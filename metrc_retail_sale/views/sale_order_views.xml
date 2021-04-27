@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_order_form_inherit_metrc_retail" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.metrc.retail</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sales_person']" position="before">
+                <group string="Metrc Information" name="metrc_fields">
+                    <field name="metrc_retail_state"  groups="metrc_base.group_metrc_user"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='license_id']" position="after">
+                <field name="customer_type" invisible="1"/>
+                <field name="patient_license_number"
+                       attrs="{'required': [('customer_type', '!=', 'Consumer')],
+                               'invisible': [('customer_type', '=', 'Consumer')]}"/>
+                <field name="caregiver_license_number"
+                       attrs="{'required': [('customer_type', '=', 'Caregiver')],
+                               'invisible': [('customer_type', '!=', 'Caregiver')]}"/>
+                <field name="ext_patient_id_method"
+                       attrs="{'required': [('customer_type', '=', 'External Patient')],
+                               'invisible': [('customer_type', '!=', 'External Patient')]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_sales_order_filter_inherit_metrc_retail" model="ir.ui.view">
+        <field name="name">sale.order.list.select</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter name="groupby_metrc_retail_state" string="Metrc Retail Status" domain="[]" context="{'group_by': 'metrc_retail_state'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_open_pos_sale_orders" model="ir.actions.act_window">
+        <field name="name">Sale orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_groupby_metrc_retail_state': 1}</field>
+        <field name="domain">[('metrc_retail_state', '!=', 'Draft')]</field>
+    </record>
+    <menuitem id="menu_metrc_sale_orders"
+        name="Sale Orders"
+        parent="metrc_retail.menu_metrc_retail"
+        action="action_open_pos_sale_orders"
+        sequence="20" groups="metrc_base.group_metrc_user"/>
+</odoo>

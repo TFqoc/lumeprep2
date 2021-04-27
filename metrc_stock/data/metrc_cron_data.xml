@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.cron" id="cron_metrc_push_packages_to_metrc">
+        <field name="name">Metrc : Golive - Push packages to Metrc</field>
+        <field name="model_id" ref="stock.model_stock_production_lot"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+warehouse = env['ir.config_parameter'].sudo().get_param('metrc_push_warehouse_id')
+result = False
+if bool(warehouse) != False:
+    warehouse_obj = env['stock.warehouse'].browse(int(warehouse))
+    result = model._push_packages(warehouse_obj)
+if result:
+    env['ir.config_parameter'].sudo().set_param('metrc_push_warehouse_id', False)
+    sync_date = env['ir.config_parameter'].sudo().get_param('metrc_pull_sync_date', False)
+    env['metrc.transfer']._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=sync_date)
+    env['metrc.transfer']._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=sync_date)
+]]></field>
+        <field name="interval_number">100</field>
+        <field name="interval_type">days</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">0</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_sync_packages">
+        <field name="name">Metrc: Synchronize  Packages</field>
+        <field name="model_id" ref="stock.model_stock_production_lot"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+model._sync_packages()
+]]></field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">0</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_update_transfer_nightly">
+        <field name="name">Metrc : Do Transfer Persistent, (Nightly - For all internal licenses)</field>
+        <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Metrc Method definition signature for metrc_transfer model only:
+#
+#   _cron_do_import_transfers(self, transfer_type, metrc_license=False, force_last_sync_date=False, automatic=True, raise_for_error=False, ignore_last_modfied_filter=False)
+#       Function to sync the Metrc Transfers with the database persistent model
+#       it will perform table sync for give transfer type for few licenses if metrc_license
+#       is passed else it will do for all active facility license.
+#
+#       @param transfer_type  <list>: Takes list of valid transfer types only valid values are incoming, outgoing and rejected
+#       @param metrc_license  <list>|<recorset metrc.license>: pass list of facility license database ids (i.e.[1,2,3,...]) or
+#                                                              browse desire record and pass recordset of  metrc.license
+#       @param force_last_sync_date <datetime>: if passed it will start the transfer check from give date else it will look in last 24 hours.
+#                                               also this takes datetime object only.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#       @param ignore_last_modfied_filter <bool>: If true then lastModifiedStart and lastModified end as specific datetimes passed while fetching the transfers from metrc
+#                                                 If False then lastModifed filter won't be passed in requests.
+#
+#   Example method call, you can use :
+#
+#   1) Do transfer sync for all license for give transfer type for last 24 hours
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'])
+#
+#   2) Do transfer sync for license 1 and 2 for given transfer type for last 24 hours
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], metrc_license=[1,2])
+#
+#   3) Do transfer sync for all license for give transfer type for last 30 days
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+#
+#   4) Do transfer sync for given license for give transfer type for last 10 days
+#       - model._cron_do_import_transfers(['outgoing',], [2], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=10))
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'])
+]]></field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_update_transfer_atwill">
+        <field name="name">Metrc : Do Transfer Persistent (At will- For all internal licenses for last 120 days)</field>
+        <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+#--------------------------------------------------------------------------------------------------------
+# Metrc Method definition signature for metrc_transfer model only:
+#
+#   _cron_do_import_transfers(self, transfer_type, metrc_license=False, force_last_sync_date=False, automatic=True, raise_for_error=False, ignore_last_modfied_filter=False)
+#       Function to sync the Metrc Transfers with the database persistent model
+#       it will perform table sync for give transfer type for few licenses if metrc_license
+#       is passed else it will do for all active facility license.
+#
+#       @param transfer_type  <list>: Takes list of valid transfer types only valid values are incoming, outgoing and rejected
+#       @param metrc_license  <list>|<recorset metrc.license>: pass list of facility license database ids (i.e.[1,2,3,...]) or
+#                                                              browse desire record and pass recordset of  metrc.license
+#       @param force_last_sync_date <datetime>: if passed it will start the transfer check from give date else it will look in last 24 hours.
+#                                               also this takes datetime object only.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#       @param ignore_last_modfied_filter <bool>: If true then lastModifiedStart and lastModified end as specific datetimes passed while fetching the transfers from metrc
+#                                                 If False then lastModifed filter won't be passed in requests.
+#
+#   Example method call, you can use :
+#
+#   1) Do transfer sync for all license for give transfer type for last 24 hours
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'])
+#
+#   2) Do transfer sync for license 1 and 2 for given transfer type for last 24 hours
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], metrc_license=[1,2])
+#
+#   3) Do transfer sync for all license for give transfer type for last 30 days
+#       - model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+#
+#   4) Do transfer sync for given license for give transfer type for last 10 days
+#       - model._cron_do_import_transfers(['outgoing',], [2], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=10))
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+
+model._cron_do_import_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+
+]]></field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="is_metrc">True</field>
+        <field name="active">False</field>
+        <field name="numbercall">1</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_import_active_packages">
+        <field name="name">Metrc : Import Active Packages</field>
+        <field name="model_id" ref="stock.model_stock_production_lot"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+model._cron_do_import_packages(force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+]]></field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="is_metrc">True</field>
+        <field name="active">False</field>
+        <field name="numbercall">1</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_sync_packages_history">
+        <field name="name">Metrc: Retroactively build transfer packages history</field>
+        <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+#--------------------------------------------------------------------------------------------------------
+# Metrc Method definition signature for metrc_transfer model only:
+#
+#   _cron_do_history_transfers(self, transfer_type, metrc_license=False, force_last_sync_date=False, automatic=True, raise_for_error=False)
+#       Function to automatically assign coorrect move to the metrc transfer.
+#
+#       @param transfer_type  <list>: Takes list of valid transfer types only valid values are incoming, outgoing and rejected
+#       @param metrc_license  <list>|<recorset metrc.license>: pass list of facility license database ids (i.e.[1,2,3,...]) or
+#                                                              browse desire record and pass recordset of  metrc.license
+#       @param force_last_sync_date <datetime>: if passed it will start the transfer check from give date else it will look in last 24 hours.
+#                                               also this takes datetime object only.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#
+#   Example method call, you can use :
+#
+#   1) Do history sync for all license for given transfer type for last 24 hours
+#       - model._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'])
+#
+#   2) Do history sync for license 1 and 2 for given transfer type for last 24 hours
+#       - model._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'], metrc_license=[1,2])
+#
+#   3) Do history sync for all license for given transfer type for last 30 days
+#       - model._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+#
+#   4) Do history sync for given license for given transfer type for last 10 days
+#       - model._cron_do_history_transfers(['outgoing',], [2], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=10))
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+model._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'])
+]]></field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="is_metrc">True</field>
+        <field name="active">False</field>
+        <field name="numbercall">1</field>
+    </record>
+</odoo>

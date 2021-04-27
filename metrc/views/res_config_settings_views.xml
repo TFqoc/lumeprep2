@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="metrc_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">metrc.res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Metrc" string="Metrc" data-key="metrc" groups="metrc_base.group_metrc_manager">
+                    <h2 groups="metrc_base.group_metrc_manager">Select the Metrc Account to Configure</h2>
+                    <div class="row mt16 o_settings_container" id="metrc_account_selection_settings" groups="metrc_base.group_metrc_manager">
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="metrc_accont">
+                            <div class="o_setting_right_pane">
+                                <label string="Account" for="metrc_account_id"/>
+                                <div class="text-muted">
+                                    Settings on this page will apply to this Metrc account and action will be performed using this account Metrc credentails
+                                </div>
+                                <div class="mt16">
+                                    <field name="metrc_account_id" widget="selection" required="1"/>
+                                </div>
+                                <div>
+                                    <button name="action_metrc_account_create_new" type="object" string="Create a New Account" class="btn-secondary" icon="fa-arrow-right"/>
+                                </div>
+                                <label string="Account Name" for="account_name"/>
+                                <div class="mt8">
+                                    <field name="account_name" required="1" placeholder="Admin for Acme Inc"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Metrc Credentails &amp; User Settings</h2>
+                    <div class="row mt16 o_settings_container" id="metrc_credentails_setting">
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_vendor_key">
+                            <div class="o_setting_right_pane">
+                                <label string="Metrc Vendor API Key" for="account_software_api_key"/>
+                                <div class="text-muted">
+                                    Your Vendor API Key is to be used by every user of your software at all times, regardless of which company, location, or user is using it.
+                                </div>
+                                <div class="mt8">
+                                    <field name="account_software_api_key" required="1" password="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_env">
+                            <div class="o_setting_left_pane">
+                                <field name="prod_environment"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Active Production Mode" for="prod_environment"/>
+                                <div class="text-muted">
+                                    This setting will enable proudction mode on this account and will initiate and make changes to Metrc live account using supplied crendetails.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_user_key">
+                            <div class="o_setting_right_pane">
+                                <label string="Metrc User API Key" for="account_user_api_key"/>
+                                <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
+                                    Users' API key, which only you can generate and obtain. This API key is tied directly to the User's account (not the company or facility)
+                                </div>
+                                <div class="mt8">
+                                    <field name="account_user_api_key" required="1" password="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_service_account">
+                            <div class="o_setting_left_pane">
+                                <field name="service_account"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Service Account" for="service_account"/>
+                                <div class="text-muted">
+                                    Makes account service account which will be this account to be used for matitnance and backgroud data sunchronization authetication
+                                </div>
+<!--                                TODO: FIx why open account logs action is not working on res.config settings -->
+<!--                                <div class="content-group" attrs="{'invisible': [('service_account', '=', False)]}">-->
+<!--                                    <div class="mt16">-->
+<!--                                        <div>-->
+<!--                                            <button string="View Account Logs" type="object" name="open_account_logs" icon="fa-external-link-square" class="oe_link"/>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_api_version">
+                            <div class="o_setting_right_pane">
+                                <label string="Metrc API Version" for="metrc_api_version"/>
+                                <div class="mt8">
+                                    <field name="metrc_api_version" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_debug">
+                            <div class="o_setting_left_pane">
+                                <field name="debug_logging"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Enable API Debugging" for="debug_logging"/>
+                                <div class="text-muted">
+                                    Enabled API debugging on this account, where system will record all API call requests/reponses in database logging
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_account_user">
+                            <div class="o_setting_right_pane">
+                                <label string="Related User" for="related_user"/>
+                                <div class="text-muted">
+                                    Related system user for given credentails
+                                </div>
+                                <div class="mt8">
+                                    <field name="related_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 attrs="{'invisible': [('service_account', '=', False)]}">Documents Synchronization Settings</h2>
+                    <div class="row mt16 o_settings_container" id="metrc_import_model_setting" attrs="{'invisible': [('service_account', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_licenses">
+                            <div class="o_setting_left_pane">
+                                <field name="import_licenses"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <button string="Facility Licenses" type="action" name="%(metrc.action_view_metrc_license)s" class="oe_link"/>
+                                <div class="text-muted">
+                                    Enable importing facility licenses using this user account
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('import_licenses', '=', False)]}">
+                                    <div>
+                                        <button string=" Import Facility Licenses" type="object" name="do_import_licenses" icon="fa-cloud-download" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_licenses">
+                            <div class="o_setting_left_pane">
+                                <field name="import_labtest_types"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <button string="Labtest Types" type="action" name="%(metrc.action_open_metrc_labtest_type)s" class="oe_link"/>
+                                <div class="text-muted">
+                                    Enable importing labtest types for this users allowed license
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('import_labtest_types', '=', False)]}">
+                                    <div class="mt16">
+                                        <div>
+                                            <button string=" Import Labtest Types" type="object" name="do_import_labtest_types" icon="fa-cloud-download" class="oe_link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_metrc_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'metrc'}</field>
+    </record>
+
+    <menuitem name="Settings" id="menu_action_metrc_configuration" action="action_metrc_configuration" parent="metrc_base.menu_metrc_config" groups="base.group_system,metrc_base.group_metrc_manager" sequence="1"/>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_inherit_metrc" model="ir.ui.view">
+        <field name="name">metrc.pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//notebook/page[last()]" position="after">
+                    <page string="Metrc Information">
+                        <group>
+                            <field name="metrc_retail_state"/>
+                        </group>
+                        <field name="metrc_notes" readonly="1"/>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record id="view_pos_order_search_inherit_metrc_retail" model="ir.ui.view">
+        <field name="name">pos.order.list.select</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter string="Metrc Retail State" name="groupby_metrc_retail_state" domain="[]" context="{'group_by': 'metrc_retail_state'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_open_metrc_pos_orders" model="ir.actions.act_window">
+        <field name="name">POS orders</field>
+        <field name="res_model">pos.order</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_groupby_metrc_retail_state': 1}</field>
+        <field name="domain">[('metrc_retail_state', '!=', 'Draft')]</field>
+    </record>
+    <menuitem id="menu_metrc_pos_orders"
+        name="POS Orders"
+        parent="metrc_retail.menu_metrc_retail"
+        action="action_open_metrc_pos_orders"
+        sequence="10" groups="metrc_base.group_metrc_user"/>
+</odoo>

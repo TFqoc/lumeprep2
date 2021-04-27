@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_metrc_catelog_item"
+          parent="metrc_base.menu_root_metrc"
+          name="Items/Catalog"
+          sequence="20" groups="metrc_base.group_metrc_user"/>
+</odoo>

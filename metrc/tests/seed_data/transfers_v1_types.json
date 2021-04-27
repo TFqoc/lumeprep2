@@ -1,0 +1,23 @@
+[
+    {
+        "Name": "Return",
+        "ForLicensedShipments": true,
+        "ForExternalIncomingShipments": true,
+        "ForExternalOutgoingShipments": true,
+        "RequiresPackagesGrossWeight": false
+    },
+    {
+        "Name": "Transfer",
+        "ForLicensedShipments": true,
+        "ForExternalIncomingShipments": true,
+        "ForExternalOutgoingShipments": true,
+        "RequiresPackagesGrossWeight": false
+    },
+    {
+        "Name": "Wholesale Manifest",
+        "ForLicensedShipments": true,
+        "ForExternalIncomingShipments": true,
+        "ForExternalOutgoingShipments": true,
+        "RequiresPackagesGrossWeight": false
+    }
+]

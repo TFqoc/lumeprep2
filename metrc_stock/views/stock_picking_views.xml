@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Invalid view stock.picking.form.inherited.metrc definition in metrc/views/stock_picking_views.xml  -->
+    <record model="ir.ui.view" id="metrc_view_stock_picking_form">
+        <field name="name">stock.picking.form.inherited.metrc</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <data>
+                <header position="after">
+                    <div class="alert alert-success text-center o_form_header" role="alert" attrs="{'invisible': [('transfer_template_created','=',False)],}">
+                        <span>A transfer template was created for the outgoing picking.</span>
+                    </div>
+                    <div class="alert alert-success text-center o_form_header" role="alert" attrs="{'invisible': [('external_transfer','=',False)],}">
+                        <span>This is an external incoming transfer and transfer for same has been created in Metrc.</span>
+                    </div>
+                </header>
+                <field name="partner_id" position="after">
+                    <field name="partner_license_id"
+                                domain="[('partner_id', 'child_of', partner_id)]"
+                                context="{'default_base_type': 'External'}"
+                                attrs="{'invisible': [('require_metrc_validation', '=', False)], 'required': [('require_metrc_validation', '=', True)]}"/>
+                    <field name="facility_license_id" readonly="1"
+                                attrs="{'invisible': [('require_metrc_validation', '=', False)], 'required': [('require_metrc_validation', '=', True)]}"
+                                options="{'no_open': True, 'no_open': True}"/>
+                </field>
+                <button name="do_print_picking" position="after">
+                    <field name="to_consolidate" invisible="1"/>
+                    <button name="action_consolidate_lots" string="Consolidate Packages" type="object" attrs="{'invisible': [('to_consolidate', '=', False)]}"/>
+                </button>
+                <field name="backorder_id" position="after">
+                    <field name="require_metrc_validation" invisible="1"/>
+                    <field name="moving_metrc_product" invisible="1"/>
+                    <field name="manifest_number" readonly="1" attrs="{'invisible': [('manifest_number', '=', False)]}"/>
+                    <field name="processed_date" readonly="1" attrs="{'invisible': [('processed_date', '=', False)]}"/>
+                    <field name="metrc_delivery_id" readonly="1" attrs="{'invisible': [('metrc_delivery_id', '=', False)]}"/>
+                    <field name="transfer_type_id" options="{'no_create': True}" attrs="{'invisible': [('require_metrc_validation', '=', False)]}"/>
+                    <field name="no_metrc" groups="metrc_base.group_metrc_manager" attrs="{'invisible': [('moving_metrc_product', '=', False)]}"/>
+                </field>
+                <xpath expr="//notebook/page[@name='extra']/group[last()]" position="after">
+                    <group string="Tranfer Details (Metrc)" attrs="{'invisible': [('picking_type_code', 'not in', ('incoming', 'outgoing'))]}">
+                        <group>
+                            <field name="transfer_template_created" groups="metrc_base.group_metrc_manager"
+                                        attrs="{'invisible': [('transfer_template_created', '=', False), ('picking_type_code', '!=', 'outgoing')]}"/>
+                            <field name="not_metrc_enabled" groups="metrc_base.group_metrc_manager"
+                                        attrs="{'invisible': [('not_metrc_enabled', '=', False), ('picking_type_code', '!=', 'outgoing')]}"/>
+                            <field name="external_transfer" groups="metrc_base.group_metrc_manager"
+                                        attrs="{'invisible': [('external_transfer', '=', False), ('picking_type_code', '!=', 'incoming')]}"/>
+                            <field name="transporter_license_id"
+                                        options="{'no_create': True, 'no_open': True}"
+                                        domain="[('permit_type', 'in', ('Distributor', 'Transportation'))]"/>
+                            <field name="vehicle_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="driver_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="arrival_date" string="Estimated Arrival Date"/>
+                            <field name="route" attrs="{'required': [('picking_type_code', 'in', ('incoming', 'outgoing')), '|',('external_transfer', '!=', False), ('transfer_template_created', '!=', False)]}"/>
+                            <field name="has_layover" attrs="{'required': [('picking_type_code', 'in', ('incoming', 'outgoing')), '|',('external_transfer', '!=', False), ('transfer_template_created', '!=', False)]}"/>
+                        </group>
+                    </group>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

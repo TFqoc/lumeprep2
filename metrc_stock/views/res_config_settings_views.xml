@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="metrc_stock_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">metrc_stock.res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="21"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='metrc_import_model_setting']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_package_adjust_reasons">
+                    <div class="o_setting_left_pane">
+                        <field name="import_package_adjust_reasons"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <button string="Package Adjust Reasons" type="action" name="%(metrc_stock.action_open_package_adjust_reasons)s" class="oe_link"/>
+                        <div class="text-muted">
+                            Enable importing package adjustment reason for this users allowed license
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('import_package_adjust_reasons', '=', False)]}">
+                            <div>
+                                <button string=" Import Package Adjust Reasons" type="object" name="do_import_package_adjust_reasons" icon="fa-cloud-download" class="oe_link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_transfer_types">
+                    <div class="o_setting_left_pane">
+                        <field name="import_transfer_types"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <button string="Transfer Types" type="action" name="%(metrc_stock.action_open_metrc_transfer_type)s" class="oe_link"/>
+                        <div class="text-muted">
+                            Enable importing Transfer Types for this users allowed license
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('import_transfer_types', '=', False)]}">
+                            <div class="mt16">
+                                <div>
+                                    <button string=" Import Transfer Types" type="object" name="do_import_transfer_types" icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

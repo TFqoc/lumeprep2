@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_strains_tree" model="ir.ui.view">
+            <field name="name">metrc.strains.tree</field>
+            <field name="model">metrc.strains</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Accounts">
+                    <field name="name"/>
+                    <field name="test_status"/>
+                    <field name="thc_level"/>
+                    <field name="cbd_level"/>
+                    <field name="genetics"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_strains_search" model="ir.ui.view">
+            <field name="name">metrc.strains.search</field>
+            <field name="model">metrc.strains</field>
+            <field name="arch" type="xml">
+                <search string="Metrc Strains">
+                    <field name="name"/>
+                    <field name="test_status"/>
+                    <field name="thc_level"/>
+                    <field name="cbd_level"/>
+                    <field name="genetics"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_strains_form" model="ir.ui.view">
+            <field name="name">metrc.strains.form</field>
+            <field name="model">metrc.strains</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Strains">
+                    <div class="o_panel">
+                        <field name="banner_message" readonly="True"/>
+                    </div>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_title" name="title">
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Acme Inc"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="test_status"/>
+                                <field name="thc_level"/>
+                                <field name="cbd_level"/>
+                            </group>
+                            <group>
+                                <field name="indica_per"/>
+                                <field name="sativa_per"/>
+                                <field name="genetics"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_strains">
+            <field name="name">Strains</field>
+            <field name="res_model">metrc.strains</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="metrc_product.view_metrc_strains_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc strains.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_action_view_metrc_strains"
+                action="action_view_metrc_strains"
+                name="Strains"
+                parent="menu_metrc_catelog_item"
+                sequence="10"
+                groups="metrc_base.group_metrc_manager"/>
+
+
+    </data>
+</odoo>

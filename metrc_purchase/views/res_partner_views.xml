@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_partner_filter_inherit_metrc_purchase" model="ir.ui.view">
+        <field name="name">res.partner.filter.inherit.metrc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="after">
+                <filter string="Metrc Vendors" name="metrc_vendors" domain="[('license_vendor', '=', True), ('supplier_rank', '>', 0)]"/>
+            </filter>
+        </field>
+    </record>
+    <record id="action_metrc_vendors_form_metrc" model="ir.actions.act_window">
+        <field name="name">Metrc Enabled Vendors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{"search_default_metrc_vendors":1}</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+            </p><p>
+            Odoo helps you easily track all activities related to
+            a customer: discussions, history of business opportunities,
+            documents, etc.
+        </p>
+        </field>
+    </record>
+    <menuitem id="menu_metrc_enabled_customers"
+              name="Vendors"
+              parent="metrc_base.menu_metrc_contacts"
+              action="action_metrc_vendors_form_metrc"
+              sequence="1" groups="metrc_base.group_metrc_user"/>
+</odoo>

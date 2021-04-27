@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="metrc_account_caliva" model="metrc.account">
+        	<field name="name">Caliva Metrc Account</field>
+            <field name="active" eval="True"/>
+            <field name="service_account" eval="True"/>
+            <field name="prod_environment" eval="False"/>
+            <field name="software_api_key">NVnKWYXvy48xz9hM14LJvapNkg5nYVOvJEuTwqLFc3IDsIpv</field>
+            <field name="user_api_key">1Wp6gGnFgKZUTgxJBYliM0YQP0sem9CTHJeZZf7csegfibky</field>
+        </record>
+
+        <!-- Metrc License Issuer Data -->
+        <record id="metrc_license_issuer_0" model="metrc.license.issuer">
+            <field name="name">Bureau of Cannabis Control</field>
+        </record>
+        <record id="metrc_license_issuer_1" model="metrc.license.issuer">
+            <field name="name">Department of Food and Agriculture</field>
+        </record>
+        <record id="metrc_license_issuer_2" model="metrc.license.issuer">
+            <field name="name">Department of Public Health</field>
+        </record>
+    </data>
+</odoo>

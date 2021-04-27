@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_product_account_form_inherit_metrc" model="ir.ui.view">
+            <field name="name">metrc.account.form.inherit.metrc_product</field>
+            <field name="model">metrc.account</field>
+            <field name="inherit_id" ref="metrc_base.view_metrc_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='div_import_models']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box" id="div_import_model_3">
+                        <div class="o_setting_left_pane">
+                            <field name="import_category"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="import_category"/>
+                            <div class="text-muted">
+                                Import Metrc Item categories
+                            </div>
+                            <div class="content-group">
+                                <div class="mt8" attrs="{'invisible': [('import_category', '=', False)]}">
+                                    <button string="Import Category" type="object" name="do_import_category"
+                                            icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                                <div>
+                                    <button string="Open Categories" type="action" name="%(metrc_product.action_view_metrc_product_category)s"
+                                            icon="fa-external-link" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Metrc"
+        id="menu_root_metrc"
+        web_icon="metrc_base,static/description/icon.png"
+        groups="metrc_base.group_metrc_user" sequence="99">
+        <menuitem id="menu_metrc_customers"
+                  name="Licenses" sequence="5"
+                  groups="metrc_base.group_metrc_user"/>
+        <menuitem id="menu_metrc_contacts"
+                  name="Contacts" sequence="15"
+                  groups="metrc_base.group_metrc_user"/>
+        <menuitem id="menu_metrc_config"
+                  name="Configuration" sequence="99"
+                  groups="metrc_base.group_metrc_manager">
+            <menuitem id="submenu_metrc_data"
+                      name="Metrc Data" sequence="99"
+                      groups="metrc_base.group_metrc_manager"/>
+        </menuitem>
+    </menuitem>
+</odoo>
