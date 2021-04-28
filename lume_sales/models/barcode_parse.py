@@ -5,7 +5,7 @@ def parse_code(code):
     if code.split('DAJ')[1][0:2] == 'MI':
         return parse_MI(code)
     dlstring = code
-    e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
+    e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD','DCF']
     expr = '|'.join(e)
     dlstring = dlstring.replace('0010','') # To clear out the newline representation for mac/linux machines
     dlstring = re.split(expr, dlstring)
