@@ -1,4 +1,4 @@
-console.log("KanbanRefresh has been loaded. Testing pause the reload. messages");
+console.log("KanbanRefresh has been loaded. Testing unmounting");
 odoo.define('lume_sales.kanban_refresh', function(require){
     "use strict";
 
@@ -10,10 +10,21 @@ odoo.define('lume_sales.kanban_refresh', function(require){
     patch(SearchBar, "Refresh search every 10 seconds", {
         mounted() {
             this._super(...arguments);
-            setInterval(this.refresh.bind(this), 15000);
+            if (['project.task','stock.picking'].includes(this.model.config.modelName)){
+                this.refresher = setInterval(this.refresh.bind(this), 15000);
+            }
             bus.on('quick_create_start', this, this.pause);
             bus.on('quick_create_end', this, this.unpause);
             this.paused = false;
+        },
+        willUnmount(){
+            console.log("Unmounting");
+            this._super(...arguments);
+            bus.off('quick_create_start', this);
+            bus.off('quick_create_end', this);
+            if (this.refresher){
+                clearInterval(this.refresher);
+            }
         },
         refresh(){
             if (!this.paused){
