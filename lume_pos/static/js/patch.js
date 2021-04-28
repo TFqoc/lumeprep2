@@ -95,14 +95,6 @@ odoo.define('lume_pos.PatchTest', function(require) {
         this._super(...arguments);
         // event for when product gets added
         this.orderlines.on('add',this.onAddProduct, this);
-        // Since I am making orders manually on the backend
-        // this ensures that all the uids are being generated
-        // from the same place.
-        // if (!this.uid || isNaN(this.uid)){
-        //   this.sequence_number = this.pos.pos_session.sequence_number++;
-        //   this.uid  = this.generate_unique_id();
-        //   this.name = _.str.sprintf(_t("Order %s"), this.uid);
-        // }
       },
       init_from_JSON: function(json) {
         this._super(...arguments);
@@ -145,16 +137,16 @@ odoo.define('lume_pos.PatchTest', function(require) {
       }
   });
 
-    patch(ProductItem,"Product Click",{
-      async willStart() {
-        this._super(...arguments);
-        useListener('click-product', this.onAddProduct);
-      },
-      onAddProduct({ detail: product }){
-        // console.log("You just added a product!");
-        // console.log(product); // product should have all fields from the db model that were imported into pos.
-    }
-    });
+    // patch(ProductItem,"Product Click",{
+    //   async willStart() {
+    //     this._super(...arguments);
+    //     useListener('click-product', this.onAddProduct);
+    //   },
+    //   onAddProduct({ detail: product }){
+    //     // console.log("You just added a product!");
+    //     // console.log(product); // product should have all fields from the db model that were imported into pos.
+    // }
+    // });
     
     patch(TicketButton,"Re-render trigger", {
        mounted(){
