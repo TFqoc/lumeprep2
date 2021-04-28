@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -36,9 +37,12 @@ class SaleOrder(models.Model):
                 return warning
 
     def action_confirm(self):
+        if not self.order_line:
+            raise ValidationError("You must have at least one sale order line in order to confirm this Sale Order!")
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
             self.task.next_stage()
+        return ret
         # POS will now pick up the SO because it is in 'sale' state
 
 class SaleLine(models.Model):
