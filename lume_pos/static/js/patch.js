@@ -38,28 +38,33 @@ odoo.define('lume_pos.PatchTest', function(require) {
         // },
         _setValue(val){
             // console.log("Set Value: \"" + val + "\"");
-            let order = this.currentOrder.get_selected_orderline();
-            if (!order.updating){
-              if (val == 'remove'){
-                  // Product was deleted (or is about to be deleted)
-                  if (this.currentOrder.sale_order_id){
-                    // Tell the backend which product to remove
-                    // console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
-                    this.rpc({
-                      'model': 'sale.order',
-                      'method': 'remove_item',
-                      args: [this.currentOrder.sale_order_id, order.product.id],
-                    });
-                  }
+            try{
+              let order = this.currentOrder.get_selected_orderline();
+              if (!order.updating){
+                if (val == 'remove'){
+                    // Product was deleted (or is about to be deleted)
+                    if (this.currentOrder.sale_order_id){
+                      // Tell the backend which product to remove
+                      // console.log("Deleting product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\"");
+                      this.rpc({
+                        'model': 'sale.order',
+                        'method': 'remove_item',
+                        args: [this.currentOrder.sale_order_id, order.product.id],
+                      });
+                    }
+                }
+                else{
+                  // console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
+                      this.rpc({
+                        'model': 'sale.order',
+                        'method': 'update_item_quantity',
+                        args: [this.currentOrder.sale_order_id, order.product.id, val],
+                      });
+                }
               }
-              else{
-                // console.log("Updating product id \""+order.product.id+"\" from sale id \""+this.currentOrder.sale_order_id+"\" to qty: " + val);
-                    this.rpc({
-                      'model': 'sale.order',
-                      'method': 'update_item_quantity',
-                      args: [this.currentOrder.sale_order_id, order.product.id, val],
-                    });
-              }
+            }
+            catch(err){
+              console.log(err);
             }
             this._super(...arguments);
         },
@@ -109,14 +114,19 @@ odoo.define('lume_pos.PatchTest', function(require) {
         }
       },
       onAddProduct: function(){
-        if (!this.pos.get_order().updating){
-          let product = this.pos.get_order().get_last_orderline().product;
-          // console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
-          this.pos.rpc({
-            'model': 'sale.order',
-            'method': 'add_item',
-            args: [this.pos.get_order().sale_order_id, product.id, 1],
-          });
+        try{
+          if (!this.pos.get_order().updating){
+            let product = this.pos.get_order().get_last_orderline().product;
+            // console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
+            this.pos.rpc({
+              'model': 'sale.order',
+              'method': 'add_item',
+              args: [this.pos.get_order().sale_order_id, product.id, 1],
+            });
+          }
+        }
+        catch(err){
+          console.log(err);
         }
       }
     });
@@ -152,14 +162,26 @@ odoo.define('lume_pos.PatchTest', function(require) {
        mounted(){
           this._super(...arguments);
           posbus.on('re-render', this, this.render);
-       } ,
+       },
+       willUnmount(){
+        this._super(...arguments);
+        posbus.off('re-render', this);
+     }
     });
 
     patch(TicketScreen, "Status shows state", {
       getStatus(order) {
         const name = this._super(...arguments);
         return order.state || name;
-      }
+      },
+      mounted() {
+        this._super(...arguments);
+        posbus.on('updated_order', this, this.render);
+    },
+    willUnmount() {
+        this._super(...arguments);
+        posbus.off('updated_order', this);
+    },
     });
 
     patch(ActionpadWidget, "disable payment button", {
@@ -167,6 +189,10 @@ odoo.define('lume_pos.PatchTest', function(require) {
         this._super(...arguments);
         posbus.on('updated_order', this, this.render);
      } ,
+     willUnmount() {
+      this._super(...arguments);
+      posbus.off('updated_order', this);
+    }
   });
 
     const PatchedReceiptScreen = (ReceiptScreen) => {
