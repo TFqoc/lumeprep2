@@ -95,8 +95,9 @@ class TestLumeSaleCommon(SavepointCase):
                 }),
                 (0, 0, {
                     'name': 'Done',
-                    '': True, #Folds the stage in Kaliban view
-                    'sequence': 400,
+                    'fold': True, #Folds the stage in Kaliban view
+                    'is_closed': True,
+                    'sequence': 500,
                 })]
             })
         cls.lumestore_two = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
@@ -123,8 +124,9 @@ class TestLumeSaleCommon(SavepointCase):
                 }),
                 (0, 0, {
                     'name': 'Done',
-                    '': True,
-                    'sequence': 400,
+                    'fold': True, #Folds the stage in Kaliban view
+                    'is_closed': True,
+                    'sequence': 500,
                 })]
             })
 
