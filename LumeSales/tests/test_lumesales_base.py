@@ -16,28 +16,57 @@ class TestLumeSaleCommon(SavepointCase):
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
 
         cls.user_receptionist = Users.create({
-            'Name': 'Pete Zeria'
+            'Name': 'Pete Zeria',
+            'login': 'pzlume',
+            'email': 'p.z@example.com',
+            'signature': 'Pete Zeria',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_luminary = Users.create({
-            'Name': 'Justin Case'
+            'Name': 'Justin Case',
+            'login': 'jclume',
+            'email': 'j.c@example.com',
+            'signature': 'Justin Case',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_picking = Users.create({
-            'Name': 'Adam Zaple'
+            'Name': 'Adam Zaple',
+            'login': 'azlume',
+            'email': 'a.z@example.com',
+            'signature': 'Adam Zaple',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_cashier = Users.create({
-            'Name': 'Robin Banks'
+            'Name': 'Robin Banks',
+            'login': 'rblume',
+            'email': 'r.b@example.com',
+            'signature': 'Robin Banks',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_manager = Users.create({
-            'Name': 'Ella Vader'
+            'Name': 'Ella Vader',
+            'login': 'evlume',
+            'email': 'e.v@example.com',
+            'signature': 'Ella Vader',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_district_manager = Users.create({
-            'Name': 'Adam Sandler'
+            'Name': 'Adam Sandler',
+            'login': 'aslume',
+            'email': 'a.s@example.com',
+            'signature': 'Adam Sandler',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         #Creating Stores:
@@ -66,6 +95,7 @@ class TestLumeSaleCommon(SavepointCase):
                 }),
                 (0, 0, {
                     'name': 'Done',
+                    '': True, #Folds the stage in Kaliban view
                     'sequence': 400,
                 })]
             })
@@ -93,6 +123,7 @@ class TestLumeSaleCommon(SavepointCase):
                 }),
                 (0, 0, {
                     'name': 'Done',
+                    '': True,
                     'sequence': 400,
                 })]
             })
