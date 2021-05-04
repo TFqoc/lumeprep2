@@ -17,7 +17,7 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.user_receptionist = Users.create({
             'Name': 'Pete Zeria'
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
         cls.user_luminary = Users.create({
