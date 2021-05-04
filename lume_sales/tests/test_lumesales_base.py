@@ -237,13 +237,3 @@ class TestLumeSaleCommon(SavepointCase):
             'delivery_steps': 'ship_only',
             
         })
-
-
-
-# is_medical = fields.Boolean()
-# medical_id = fields.Char()
-# medical_expiration = fields.Date()
-# date_of_birth = fields.Date()
-# is_over_21 = fields.Boolean(compute='_compute_21')
-# drivers_license_number = fields.Char()
-# drivers_license_expiration = fields.Date()
