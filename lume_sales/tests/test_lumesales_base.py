@@ -1,5 +1,6 @@
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import UserError
+import datetime
 
 class TestLumeSaleCommon(SavepointCase): 
     
@@ -69,17 +70,22 @@ class TestLumeSaleCommon(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
         })
 
-        #Creating Stores:
+        #Creating Stores as above:
 
-        cls.lumestore_one = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+        Stores = cls.env['project.project'].with_context({'mail_create_nolog': True})
+
+        cls.lumestore_one = Stores.create({
             'name': 'Peterson',
+            'warehouse_id': 'lumehouse_one',
+            'allow_timesheets': True,
+            'allow_timesheets_timer': True,
             'privacy_visibility': 'followers',
             'alias_name': 'project+peterson',
-            'partner_id': cls.partner_1.id,
+            #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
                     'name': 'Check In',
-                    'sequence': 1,
+                    'sequence': 1, #Sets the location of the stage within the project application
                 }),
                 (0, 0, {
                     'name': 'Build Cart',
@@ -96,15 +102,18 @@ class TestLumeSaleCommon(SavepointCase):
                 (0, 0, {
                     'name': 'Done',
                     'fold': True, #Folds the stage in Kaliban view
-                    'is_closed': True,
+                    'is_closed': True, #Makes all tasks within the 
                     'sequence': 500,
                 })]
             })
-        cls.lumestore_two = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+        cls.lumestore_two = Stores.create({
             'name': 'Escanaba',
+            'warehouse_id': 'lumehouse_two',
+            'allow_timesheets': True, #Used to keep track of the time a customer spent at each station.
+            'allow_timesheets_timer': True, 
             'privacy_visibility': 'followers',
             'alias_name': 'project+escanaba',
-            'partner_id': cls.partner_1.id,
+            #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
                     'name': 'Check In',
@@ -129,4 +138,112 @@ class TestLumeSaleCommon(SavepointCase):
                     'sequence': 500,
                 })]
             })
+        #Creating customers that already exist within the system:
 
+        Customers = cls.env['res.partner'].with_context({'mail_create_nolog': True})
+
+        cls.customer_rec = Customers.create({
+            'name': 'Eve Love',
+            'is_company': False,
+            'company_type': 'person',
+            'street': '629 Mad Dog Lane',
+            'city': 'Detroit',
+            'state': 'Michigan',
+            'zip': '48205',
+            'phone': '555-555-5555',
+            'email': 'ev@example.com',
+            'date_of_birth': datetime.date('1987', '2', '17'),
+            'is_medical': False,
+            'drivers_license_number': 'C3335473939576',
+            'drivers_license_expiration': datetime.date('2021', '12', '31')
+
+        })
+
+        cls.customer_med = Customers.create({
+            'name': 'Helen Hywater',
+            'is_company': False,
+            'company_type': 'person',
+            'street': '404 Error Place',
+            'city': 'Detroit',
+            'state': 'Michigan',
+            'zip': '48205',
+            'phone': '555-555-5555',
+            'email': 'hh@example.com',
+            'date_of_birth': datetime.date('1999', '5', '14'),
+            'is_medical': True,
+            'medical_id': 'CG-18-089765',
+            'medical_expiration': datetime.date('2021', '9', '13'),
+            'drivers_license_number': 'H1112222333344',
+            'drivers_license_expiration': datetime.date('2021', '12', '31')
+        })
+
+        cls.customer_banned = Customers.create({
+            'name': 'Bennie Factor',
+            'is_company': False,
+            'company_type': 'person',
+            'street': '555 Linger Longer Road',
+            'city': 'Detroit',
+            'state': 'Michigan',
+            'zip': '48205',
+            'phone': '555-555-5555',
+            'email': 'bf@example.com',
+            'date_of_birth': datetime.date('1999', '10', '21'),
+            'is_medical': False,
+            'warnings': 3,
+            'drivers_license_number': 'B4345545332311',
+            'drivers_license_expiration': datetime.date('2021', '12', '31')
+
+        })
+        
+        #Creating products as above. 
+
+        Products = cls.env['product.template']
+        Uom = cls.env['uom.uom']
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+
+        cls.product_med = Products.create({
+            'name': 'Bloodstar 3.5G',
+            'type': 'product',
+            'available_in_pos': True,
+            'is_medical': True,
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id
+        })
+
+        cls.product_rec = Products.create({
+            'name': 'Jenny Kush 3.5G',
+            'type': 'product',
+            'available_in_pos': True,
+            'is_medical': False,
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id
+        })
+
+        #Creating warehouses as above.
+        Warehouses = cls.env['stock.warehouse']
+
+        cls.lumehouse_one = Warehouses.create({
+            'name': 'Peterson',
+            'code': 'Pete',
+            'reception_steps': 'one_step',
+            'delivery_steps': 'ship_only',
+
+        })
+
+        cls.lumehouse_two = Warehouses.create({
+            'name': 'Escanaba',
+            'code': 'ESCA',
+            'reception_steps': 'one_step',
+            'delivery_steps': 'ship_only',
+            
+        })
+
+
+
+# is_medical = fields.Boolean()
+# medical_id = fields.Char()
+# medical_expiration = fields.Date()
+# date_of_birth = fields.Date()
+# is_over_21 = fields.Boolean(compute='_compute_21')
+# drivers_license_number = fields.Char()
+# drivers_license_expiration = fields.Date()
