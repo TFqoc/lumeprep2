@@ -16,6 +16,7 @@
           <field name="medical_expiration" string="MM Exp"/>
           <field name="date_of_birth" string="DOB"/>
           <field name="is_over_21" string="21+"/>
+          <field name="is_expired" string="Expired" invisible="1"/>
           <field name="drivers_license_number" string="Drivers #"/>
           <field name="drivers_license_expiration" string="DL Expiration"/>
           <button name="warn" string="Issue Warning" type="object" class="btn btn-primary" />
