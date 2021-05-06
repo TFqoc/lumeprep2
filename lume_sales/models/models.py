@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 import datetime
+from dateutil.relativedelta import relativedelta
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -13,7 +14,8 @@ class Partner(models.Model):
     medical_id = fields.Char()
     medical_expiration = fields.Date()
     date_of_birth = fields.Date()
-    is_over_21 = fields.Boolean(compute='_compute_21')
+    is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
+    is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
 
@@ -23,13 +25,23 @@ class Partner(models.Model):
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
 
     @api.depends('date_of_birth')#will be accurate when dob is entered, but not if they later become 21
-    def _compute_21(self):
+    def _compute_age(self):
         for record in self:
             if record.date_of_birth is False:# In case dob is not set yet
                 record.is_over_21 = False
+                record.is_over_18 = False
             else:
                 difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
                 record['is_over_21'] = difference_in_years >= 21
+                record['is_over_18'] = difference_in_years >= 18
+
+    def _search_is_over_21(self, operator, value):
+        years_ago = datetime.datetime.now() - relativedelta(years=21)
+        return [('date_of_birth', '<', years_ago)]
+
+    def _search_is_over_18(self, operator, value):
+        years_ago = datetime.datetime.now() - relativedelta(years=18)
+        return [('date_of_birth', '<=', years_ago)]
 
 
     @api.depends('warnings')
