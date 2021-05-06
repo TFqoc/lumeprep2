@@ -102,3 +102,18 @@ class TimeMix(models.AbstractModel):
         #self._stop_timer_in_progress()
         timer = self.user_timer_id
         timer.action_timer_resume()
+
+    @api.depends_context('uid')
+    def _compute_user_timer_id(self):
+        """ Get the timers according these conditions
+            :user_id is is the current user
+            :res_id is the current record
+            :res_model is the current model
+            limit=1 by security but the search should never have more than one record
+        """
+        for record in self:
+            record.user_timer_id = self.env['timer.timer'].search([
+                # ('user_id', '=', record.env.user.id),
+                ('res_id', '=', record.id),
+                ('res_model', '=', record._name)
+            ], limit=1)
