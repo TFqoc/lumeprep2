@@ -31,7 +31,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'j.c@example.com',
             'signature': 'Justin Case',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
         cls.user_picking = Users.create({
@@ -40,7 +40,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'a.z@example.com',
             'signature': 'Adam Zaple',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
         cls.user_cashier = Users.create({
@@ -49,7 +49,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'r.b@example.com',
             'signature': 'Robin Banks',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
         cls.user_manager = Users.create({
@@ -58,7 +58,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'e.v@example.com',
             'signature': 'Ella Vader',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
         cls.user_district_manager = Users.create({
@@ -67,7 +67,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'a.s@example.com',
             'signature': 'Adam Sandler',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
         #Creating Stores as above:
@@ -102,7 +102,7 @@ class TestLumeSaleCommon(SavepointCase):
                 (0, 0, {
                     'name': 'Done',
                     'fold': True, #Folds the stage in Kaliban view
-                    'is_closed': True, #Makes all tasks within the 
+                    'is_closed': True, #Makes all tasks within the stage be marked as "Done".
                     'sequence': 500,
                 })]
             })
@@ -143,13 +143,13 @@ class TestLumeSaleCommon(SavepointCase):
         Customers = cls.env['res.partner'].with_context({'mail_create_nolog': True})
 
         cls.customer_rec = Customers.create({
-            'name': 'Eve Love',
+            'name': 'Eve A. Love',
             'is_company': False,
             'company_type': 'person',
             'street': '629 Mad Dog Lane',
             'city': 'Detroit',
             'state': 'Michigan',
-            'zip': '48205',
+            'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',
             'date_of_birth': datetime.date('1987', '2', '17'),
@@ -160,13 +160,13 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_med = Customers.create({
-            'name': 'Helen Hywater',
+            'name': 'Helen N. Hywater',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Error Place',
             'city': 'Detroit',
             'state': 'Michigan',
-            'zip': '48205',
+            'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
             'date_of_birth': datetime.date('1999', '5', '14'),
@@ -178,13 +178,13 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_banned = Customers.create({
-            'name': 'Bennie Factor',
+            'name': 'Bennie F. Factor',
             'is_company': False,
             'company_type': 'person',
             'street': '555 Linger Longer Road',
             'city': 'Detroit',
             'state': 'Michigan',
-            'zip': '48205',
+            'zip': '48201-0001,
             'phone': '555-555-5555',
             'email': 'bf@example.com',
             'date_of_birth': datetime.date('1999', '10', '21'),
@@ -198,7 +198,6 @@ class TestLumeSaleCommon(SavepointCase):
         #Creating products as above. 
 
         Products = cls.env['product.template']
-        Uom = cls.env['uom.uom']
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
         cls.product_med = Products.create({
