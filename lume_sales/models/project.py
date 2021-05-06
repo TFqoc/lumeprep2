@@ -3,6 +3,7 @@ from .barcode_parse import parse_code
 import datetime
 import logging
 import re
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -68,7 +69,8 @@ class Tasks(models.Model):
         # self.name = "Customer Order #" + str(self.project_id.task_number)
         # self.project_id.task_number += 1
         self.partner_id = customer_id
-
+        if self.partner_id._compute_age() or not self.partner_id.is_over_21:
+            raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',

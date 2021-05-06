@@ -16,6 +16,7 @@ class Partner(models.Model):
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
     is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
+    is_expired = fields.Boolean(compute='_compute_expired', search='_search_expired')
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
 
@@ -23,6 +24,13 @@ class Partner(models.Model):
 
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
+
+    def _compute_expired(self):
+        for record in self:
+            record.is_expired = True
+
+    def _search_expired(self, operation, value):
+        return [('id','=',1)]
 
     @api.depends('date_of_birth')#will be accurate when dob is entered, but not if they later become 21
     def _compute_age(self):
@@ -37,7 +45,7 @@ class Partner(models.Model):
 
     def _search_is_over_21(self, operator, value):
         years_ago = datetime.datetime.now() - relativedelta(years=21)
-        return [('date_of_birth', '<', years_ago)]
+        return [('date_of_birth', '<=', years_ago)]
 
     def _search_is_over_18(self, operator, value):
         years_ago = datetime.datetime.now() - relativedelta(years=18)

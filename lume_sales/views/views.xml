@@ -29,6 +29,7 @@
         </field>
         <field name="image_1920" position="before">
           <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
+          <widget name="web_ribbon" title="Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired', '=', False)]}"/>
         </field>
       </field>
     </record>
