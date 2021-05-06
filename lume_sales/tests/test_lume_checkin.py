@@ -31,4 +31,6 @@ class TestBarcodeParse(TestLumeSaleCommon):
             'module': 'project',
             'name': 'checkinbarcodetest_project_task_37',
             'res_id': record.id})
+
+    def test_manditory_fields(self)
     

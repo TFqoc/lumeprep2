@@ -14,3 +14,14 @@ class TestComputedFields(TestLumeSaleCommon):
             self.customer_rec.is_over_21,
             "Error in compute_21 computed field: Customer does not register as over age despite being far older."
         )
+
+class TestCustomerProfile(TestLumeSaleCommon):
+    def test_warn(self):
+        self.customer_rec.warn
+        self.assertEqual(
+            self.customer_rec.warn,  
+            1, 
+            "Error in Partner Model: Number of warnings does not increase with the current method."
+        )
+    
+    
