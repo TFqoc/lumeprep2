@@ -16,12 +16,12 @@
                 </xpath>
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
-                    <button name="create" string="Add a Product" class="btn-primary oe_edit_only" type="object"/>
+                    <button name="open_catalog" string="Add a Product" class="btn-primary oe_edit_only" type="object"/>
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
-                <field name="order_line" position="attributes">
+                <!-- <field name="order_line" position="attributes">
                     <attribute name="widget">so_section_and_note</attribute>
-                  </field>
+                  </field> -->
             </field>
         </record>
     </data>

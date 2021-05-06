@@ -7,6 +7,16 @@ class SaleOrder(models.Model):
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
 
+    def open_catalog(self):
+        return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'res_model': 'product.template',
+                'target': 'new', #for popup style window
+                # 'res_id': customer_id,
+            }
+
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
