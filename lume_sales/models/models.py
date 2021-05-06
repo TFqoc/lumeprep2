@@ -43,6 +43,10 @@ class Partner(models.Model):
     def verify_address(self):
         pass
 
+    def _compute_expirations(self):
+        for record in self:
+            record._compute_21()
+
 
     
 # class Store(models.Model):

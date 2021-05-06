@@ -153,6 +153,15 @@ class Tasks(models.Model):
                 get_next = True
         self.change_stage()
 
+    def get_previous_stage_name(self):
+        for stage in self.project_id.type_ids:
+            if get_next:
+                self.stage_id = stage
+                break
+            elif stage == self.stage_id:
+                get_next = True
+        pass
+
 
     # Mail module > models > mail_channel.py Line 758
 
@@ -165,7 +174,7 @@ class Tasks(models.Model):
     @api.onchange('stage_id')
     def change_stage(self):
         new_stage = self.stage_id.name
-        old_stage = self._origin.stage_id.name
+        old_stage = self._origin.stage_id.name if self._origin.stage_id.name != new_stage else self.get_previous_stage_name()
         self._origin.stage_id = self.stage_id
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
