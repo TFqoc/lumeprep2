@@ -5,8 +5,10 @@
             <field name="name">metrc.product.alias.tree</field>
             <field name="model">metrc.product.alias</field>
             <field name="arch" type="xml">
-                <tree string="Metrc Accounts">
+                <tree string="Product Alias">
                     <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="license_id"/>
                 </tree>
             </field>
         </record>
@@ -18,6 +20,7 @@
                 <search string="Product Alias">
                     <field name="alias_name"/>
                     <field name="product_id"/>
+                    <field name="license_id"/>
                 </search>
             </field>
         </record>
@@ -34,8 +37,11 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="alias_name"/>
-                            <field name="product_id"/>
+                            <group>
+                                <field name="alias_name"/>
+                                <field name="product_id"/>
+                                <field name="license_id"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
