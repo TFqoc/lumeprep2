@@ -22,7 +22,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'p.z@example.com',
             'signature': 'Pete Zeria',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
         })
 
         cls.user_luminary = Users.create({
