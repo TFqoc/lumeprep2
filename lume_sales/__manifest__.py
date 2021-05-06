@@ -34,6 +34,7 @@
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',
+        'data/ir_cron_data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
