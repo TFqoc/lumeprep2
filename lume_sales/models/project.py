@@ -207,7 +207,7 @@ class Tasks(models.Model):
             'user_id': self.env.uid,
             'unit_amount': minutes,
         }
-        self.user_timer_id.unlink()
+        self.user_timer_id.sudo().unlink()
         return self.env['account.analytic.line'].create(values)
 
     def action_timer_auto_stop(self, desc=None):
