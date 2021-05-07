@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
                 'target': 'current',
                 'res_id': self.id,
+                'context': {'lpc_sale_order_id': self.id},
             }
 
     @api.depends('picking_ids.move_ids_without_package.state')
