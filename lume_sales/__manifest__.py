@@ -35,6 +35,7 @@
         'views/sale.xml',
         'views/project.xml',
         'views/product_catalog.xml',
+        'views/actions.xml',
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',

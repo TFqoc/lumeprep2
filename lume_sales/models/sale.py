@@ -29,6 +29,32 @@ class SaleOrder(models.Model):
                 'target': 'new',
                 'res_id': self.id,
                 'context': {'lpc_sale_order_id': self.id},
+                'domain': [],
+                # 'search_view_id': (id, name),
+            }
+    def open_catalogV2(self):
+        self.ensure_one()
+        action = self.env.ref('lume_sales.lume_product_catalog')
+        action.update({
+            'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
+            'target': 'current',
+            'res_id': self.id,
+            'context': {'lpc_sale_order_id': self.id},
+            'domain': [],
+        })
+        return action
+        return {
+                'type': 'ir.actions.act_window',
+                'name': 'Product Catalog',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'res_model': 'product.product',
+                'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
+                'target': 'current',
+                'res_id': self.id,
+                'context': {'lpc_sale_order_id': self.id},
+                'domain': [],
+                # 'search_view_id': (id, name),
             }
 
     @api.depends('picking_ids.move_ids_without_package.state')
