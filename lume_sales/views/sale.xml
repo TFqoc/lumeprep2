@@ -17,6 +17,7 @@
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
                     <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
+                    <span style="width: 10px;"/>
                     <button name="open_catalogV2" string="Add a Product (window)" class="btn-primary oe_edit_only" type="object"/>
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
