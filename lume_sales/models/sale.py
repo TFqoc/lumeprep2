@@ -21,6 +21,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return {
                 'type': 'ir.actions.act_window',
+                'name': 'Product Catalog',
                 'view_type': 'kanban',
                 'view_mode': 'kanban',
                 'res_model': 'product.product',

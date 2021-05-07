@@ -2,6 +2,26 @@ odoo.define('lume_sales.ProductKanbanModel', function (require) {
     "use strict";
     
     const KanbanModel = require('web.KanbanModel');
+    var KanbanRecord = require('web.KanbanRecord');
+
+    KanbanRecord.include({
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * @override
+         * @private
+         */
+         _openRecord: function () {
+            if (this.modelName === 'product.product') {
+                return;
+            }
+            else{
+                this._super.apply(this, arguments);
+            }
+         },
+        });
     
     return KanbanModel.extend({
     
