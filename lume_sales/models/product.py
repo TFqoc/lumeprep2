@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
@@ -35,7 +36,7 @@ class Product(models.Model):
         sale_order = self._get_contextual_lpc_sale_order()
         if sale_order:
             for product in self:
-                sale_line = self.env['sale.order.line'].search([('order_id', '=', sale_order.sale_order_id.id), ('product_id', '=', product.id), '|', '|', ('qty_delivered', '=', 0.0), ('qty_delivered_method', '=', 'manual'), ('state', 'not in', ['sale', 'done'])], limit=1)
+                sale_line = self.env['sale.order.line'].search([('order_id', '=', sale_order.id), ('product_id', '=', product.id), '|', '|', ('qty_delivered', '=', 0.0), ('qty_delivered_method', '=', 'manual'), ('state', 'not in', ['sale', 'done'])], limit=1)
                 if sale_line:  # existing line: change ordered qty (and delivered, if delivered method)
                     vals = {
                         'product_uom_qty': product.lpc_quantity
@@ -73,6 +74,10 @@ class Product(models.Model):
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
+            if not sale_order:
+                raise ValidationError("No sale order")
+            if not quantity:
+                raise ValidationError("Quantity: " + str(quantity))
             return
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
