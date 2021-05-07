@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
                 'type': 'ir.actions.act_window',
                 'view_type': 'kanban',
                 'view_mode': 'kanban',
-                'res_model': 'product.template',
+                'res_model': 'product.product',
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
                 'target': 'new', #for popup style window
                 'res_id': self.id,
