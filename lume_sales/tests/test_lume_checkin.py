@@ -7,7 +7,7 @@ class TestCheckIn(TestLumeSaleCommon):
 
 class TestBarcodeParse(TestLumeSaleCommon):
     def setUp(self):
-        super().setUp() 
+        super().setUp()  
         
 
         # TODO: Check or Find active_id link (external id or otherwise)
