@@ -63,14 +63,14 @@ class Product(models.Model):
                     sale_line = self.env['sale.order.line'].create(vals)
 
     @api.model
-    def _get_contextual_lpc_task(self):
+    def _get_contextual_lpc_sale_order(self):
         sale_order_id = self.env.context.get('lpc_sale_order_id')
         if sale_order_id:
             return self.env['sale.order'].browse(sale_order_id)
         return self.env['sale.order']
 
     def set_lpc_quantity(self, quantity):
-        sale_order = self._get_contextual_lpc_task()
+        sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
             return
