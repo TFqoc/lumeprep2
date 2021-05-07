@@ -6,13 +6,13 @@
         <field name="model">product.product</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <kanban edit="0" class="o_kanban_mobile" js_class="lpc_product_kanban">
+            <kanban edit="0" class="o_kanban_mobile o_fsm_material_kanban" js_class="lpc_product_kanban">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="product_template_attribute_value_ids"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="o_kanban_record d-flex" style="min-height: 100px;align-items:center;">
+                        <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;">
                             <div class="o_kanban_image">
                                 <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </div>
