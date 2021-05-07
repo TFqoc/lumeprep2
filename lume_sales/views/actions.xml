@@ -3,7 +3,7 @@
         <record id="lume_product_catalog" model="ir.actions.act_window">
             <field name="name">Product Catalog</field>
             <field name="res_model">product.product</field>
-            <field name="view_type">kanban</field>
+            <field name="view_mode">kanban</field>
         </record>
     </data>
 </odoo>
