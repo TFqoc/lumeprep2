@@ -18,13 +18,15 @@ class SaleOrder(models.Model):
 # https://www.odoo.com/forum/help-1/how-to-execute-a-python-function-on-kanban-click-130496
 
     def open_catalog(self):
+        self.ensure_one()
         return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'kanban',
                 'view_mode': 'kanban',
                 'res_model': 'product.template',
+                'view_id': 'lume_sales.product_product_kanban_catalog',
                 'target': 'new', #for popup style window
-                # 'res_id': customer_id,
+                'res_id': self.id,
             }
 
     @api.depends('picking_ids.move_ids_without_package.state')

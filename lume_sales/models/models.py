@@ -84,11 +84,6 @@ class User(models.Model):
 
     # store = fields.Many2many(comodel_name='lume.store')
 
-class product_addons(models.Model):
-    _inherit='product.template'
-
-    is_medical = fields.Boolean()
-
 ####
 # Allow multiple task timers going at once.
 ####

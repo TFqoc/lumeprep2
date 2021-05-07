@@ -22,6 +22,9 @@
     # any module necessary for this one to work correctly
     'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','barcodes'],
 
+    'qweb': [
+        "static/src/xml/lpc_quantity.xml"
+    ],
 
     # always loaded
     'data': [
@@ -31,6 +34,7 @@
         'views/assets.xml',
         'views/sale.xml',
         'views/project.xml',
+        'views/product_catalog.xml',
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',
