@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
                 'view_mode': 'kanban',
                 'res_model': 'product.product',
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
-                'target': 'new', #for popup style window
+                'target': 'current',
                 'res_id': self.id,
             }
 
