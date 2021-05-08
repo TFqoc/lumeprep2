@@ -6,7 +6,8 @@
     'depends': [
         'metrc',
         'metrc_product',
-        'purchase_stock'
+        'purchase_stock',
+        'metrc_stock',
     ],
     'author': 'Odoo Inc',
     'license': 'OEEL-1',
