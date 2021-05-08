@@ -111,9 +111,10 @@
                                 <field name="metrc_type"  widget="radio" options="{'horizontal': true}" />
                                 <field name="base_type" widget="radio" options="{'horizontal': true}" invisible="1"/>
                                 <field name="license_number"/>
-                                <field name="company_id" attrs="{'invisible': [('base_type', '=', 'External')], 'required': [('base_type', '=', 'Internal')]}"/>
+                                <field name="company_id" attrs="{'invisible': [('base_type', 'in', ('External', 'Patient'))], 'required': [('base_type', '=', 'Internal')]}"/>
                                 <field name="partner_id" force_save="1" attrs="{'readonly': [('base_type', '=', 'Internal')], 'required': [('base_type', '=', 'External')]}"/>
-                                <field name="permit_type" attrs="{'required': [('base_type', '=', 'Internal')]}"/>
+                                <field name="permit_type" attrs="{'required': [('base_type', '=', 'Internal')],
+                                                                  'invisible': [('base_type', '=', 'Patient')]}"/>
                             </group>
                             <group>
                                 <field name="usage_type"/>
@@ -122,6 +123,17 @@
                                             options="{'no_create': true}"/>
                                 <field name="issue_date" attrs="{'required': [('base_type', '=', 'Internal')]}"/>
                                 <field name="expire_date" required="1"/>
+                            </group>
+                            <group string="Allotment" attrs="{'invisible': [('base_type', '!=', 'Patient')]}">
+                                <label for="flower_available"/>
+                                <div>
+                                    <field name="flower_available" readonly="1"/> Ounce(s)
+                                </div>
+                                <label for="thc_available"/>
+                                <div>
+                                    <field name="thc_available" readonly="1"/> Ounce(s)
+                                </div>
+                                <field name="purchase_amount" readonly="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -189,6 +201,20 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_metrc_patient_license">
+            <field name="name">Patient Licenses</field>
+            <field name="res_model">metrc.license</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('base_type', '=', 'Patient')]</field>
+            <field name="context">{'default_base_type': 'Patient'}</field>
+            <field name="search_view_id" ref="metrc.view_metrc_license_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc licenses.
+                </p>
+            </field>
+        </record>
+
 
         <menuitem id="menu_action_view_metrc_license"
                 action="action_view_metrc_license"
@@ -200,6 +226,13 @@
         <menuitem id="menu_action_view_metrc_customer_license"
                 action="action_view_metrc_customer_license"
                 name="Customer Licenses"
+                parent="metrc_base.menu_metrc_customers"
+                sequence="1"
+                groups="metrc_base.group_metrc_user"/>
+
+        <menuitem id="menu_action_view_metrc_patient_license"
+                action="action_view_metrc_patient_license"
+                name="Patient Licenses"
                 parent="metrc_base.menu_metrc_customers"
                 sequence="1"
                 groups="metrc_base.group_metrc_user"/>
