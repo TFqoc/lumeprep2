@@ -76,6 +76,25 @@ class TestLumeSaleCommon(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
         })
 
+        #Creating warehouses as above.
+        Warehouses = cls.env['stock.warehouse']
+
+        cls.lumehouse_one = Warehouses.create({
+            'name': 'Peterson',
+            'code': 'Pete',
+            'reception_steps': 'one_step',
+            'delivery_steps': 'ship_only',
+
+        })
+
+        cls.lumehouse_two = Warehouses.create({
+            'name': 'Escanaba',
+            'code': 'ESCA',
+            'reception_steps': 'one_step',
+            'delivery_steps': 'ship_only',
+            
+        })
+
         #Creating Stores as above:
 
         Stores = cls.env['project.project'].with_context({'mail_create_nolog': True})
@@ -222,23 +241,4 @@ class TestLumeSaleCommon(SavepointCase):
             'is_medical': False,
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
-        })
-
-        #Creating warehouses as above.
-        Warehouses = cls.env['stock.warehouse']
-
-        cls.lumehouse_one = Warehouses.create({
-            'name': 'Peterson',
-            'code': 'Pete',
-            'reception_steps': 'one_step',
-            'delivery_steps': 'ship_only',
-
-        })
-
-        cls.lumehouse_two = Warehouses.create({
-            'name': 'Escanaba',
-            'code': 'ESCA',
-            'reception_steps': 'one_step',
-            'delivery_steps': 'ship_only',
-            
         })
