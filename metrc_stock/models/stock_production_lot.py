@@ -334,7 +334,7 @@ class StockProductionLot(models.Model):
                 package_lot_id_dict = {lot._get_metrc_name(): lot for lot in package_lots}
                 packages_not_processed = []
                 for package in modified_packages:
-                    product = ProductProduct._get_product(license, package['ProductName'], package['UnitOfMeasureName'], package['Item']['ProductCategoryName'])
+                    product = ProductProduct._get_product(license, package['Item']['ProductName'], package['UnitOfMeasureName'], package['Item']['ProductCategoryName'])
                     if package['Label'] in package_lot_dict.keys():
                         lot = package_lot_id_dict[package['Label']]
                         lot.write({
@@ -519,7 +519,7 @@ class StockProductionLot(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,
-            'views': [(self.env.ref('metrc.split_lot_wizard_form').id, 'form')],
+            'views': [(self.env.ref('metrc_stock.split_lot_wizard_form').id, 'form')],
             'context': {'move_ref': self.name, 'custom_qty': True},
             'domain': [],
             'target': 'new'
@@ -573,6 +573,7 @@ class StockProductionLot(models.Model):
     def _cron_do_import_packages(self, force_last_sync_date=False,
                                  automatic=True, raise_for_error=False, ignore_last_modfied_filter=False):
         metrc_account = self.env.user.ensure_metrc_account()
+        print("here")
         StockProductionLot = self.env['stock.production.lot']
         ProductProduct = self.env['product.product']
         AdjustmentReason = self.env['metrc.package.adjust.reason']
