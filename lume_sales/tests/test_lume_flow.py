@@ -1,14 +1,15 @@
 import logging
 from . test_lumesales_base import TestLumeSaleCommon
+from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
 
-
+@tagged('lume')
 class TestLumeSOPosition(TestLumeSaleCommon):
     def test_so_creation(self):
 
 
-
+@tagged('lume')
 class TestLumeTaskPosition(TestLumeSaleCommon):
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
         uid = self.env.ref('base.user_admin').id

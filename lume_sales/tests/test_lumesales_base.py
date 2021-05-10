@@ -1,10 +1,11 @@
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
 import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
 
+@tagged('lume')
 class TestLumeSaleCommon(SavepointCase): 
     
     @classmethod #Creates the base data for the tests to use.
@@ -83,7 +84,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Peterson',
             'warehouse_id': 'lumehouse_one',
             'allow_timesheets': True,
-            'allow_timesheets_timer': True,
+            'allow_timesheet_timer': True,
             'privacy_visibility': 'followers',
             'alias_name': 'project+peterson',
             #'partner_id': cls.partner_1.id,
@@ -115,7 +116,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Escanaba',
             'warehouse_id': 'lumehouse_two',
             'allow_timesheets': True, #Used to keep track of the time a customer spent at each station.
-            'allow_timesheets_timer': True, 
+            'allow_timesheet_timer': True, 
             'privacy_visibility': 'followers',
             'alias_name': 'project+escanaba',
             #'partner_id': cls.partner_1.id,

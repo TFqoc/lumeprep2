@@ -1,8 +1,10 @@
 import logging
 from . test_lumesales_base import TestLumeSaleCommon
+from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
 
+@tagged('lume')
 class TestComputedFields(TestLumeSaleCommon):
     def test_is_banned(self):
         self.assertTrue(
@@ -22,6 +24,7 @@ class TestComputedFields(TestLumeSaleCommon):
         self.assertTrue(False, "This should always fail.")
         _logger.info("Lume Tests are Running.")
 
+@tagged('lume')
 class TestCustomerProfile(TestLumeSaleCommon):
     def test_warn(self):
         self.customer_rec.warn
