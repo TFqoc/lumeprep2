@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
                 # 'search_view_id': (id, name),
             }
 
-    @api.depends('picking_ids.move_ids_without_package.state')
+    # @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
             res = len(record.picking_ids) > 0
