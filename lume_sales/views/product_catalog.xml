@@ -1,5 +1,5 @@
 <odoo>
-
+    <data>
     <!-- Material kanban -->
     <record id="product_product_kanban_catalog" model="ir.ui.view">
         <field name="name">product.template.kanban.catalog</field>
@@ -69,5 +69,5 @@
               </field>
         </field>
     </record>
-    
+    </data>
 </odoo>
