@@ -1,6 +1,9 @@
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import UserError
 import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class TestLumeSaleCommon(SavepointCase): 
     
