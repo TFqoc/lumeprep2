@@ -89,7 +89,7 @@
                     <button name="sync_package" type="object" string="Sync" class="btn btn-primary" attrs="{'invisible': [('is_metric_product', '=', False)]}" groups="metrc_base.group_metrc_user"/>
                 </header>
             </xpath>
-            <xpath expr="//sheet//field[@name='display_complete']" position="before">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="after">
                 <widget name="web_ribbon" title="Not Editable" bg_color="bg-danger" attrs="{'invisible': [('name_readonly', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
