@@ -186,7 +186,7 @@ class TestLumeSaleCommon(SavepointCase):
             'street': '555 Linger Longer Road',
             'city': 'Detroit',
             'state': 'Michigan',
-            'zip': '48201-0001,
+            'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'bf@example.com',
             'date_of_birth': datetime.date('1999', '10', '21'),
