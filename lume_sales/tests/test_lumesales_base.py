@@ -82,7 +82,7 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.lumestore_one = Stores.create({
             'name': 'Peterson',
-            'warehouse_id': 'lumehouse_one',
+            'warehouse_id': Warehouses.search([('name', '=', 'lumehouse_one')], limit=1).id,
             'allow_timesheets': True,
             'allow_timesheet_timer': True,
             'privacy_visibility': 'followers',
@@ -114,7 +114,7 @@ class TestLumeSaleCommon(SavepointCase):
             })
         cls.lumestore_two = Stores.create({
             'name': 'Escanaba',
-            'warehouse_id': 'lumehouse_two',
+            'warehouse_id': Warehouses.search([('name', '=', 'lumehouse_two')], limit=1).id
             'allow_timesheets': True, #Used to keep track of the time a customer spent at each station.
             'allow_timesheet_timer': True, 
             'privacy_visibility': 'followers',
