@@ -137,7 +137,7 @@ class TestLumeSaleCommon(SavepointCase):
                     'name': 'Done',
                     'fold': True, #Folds the stage in Kaliban view
                     'is_closed': True,
-                    'sequence': 500,
+                    'sequence': 500, 
                 })]
             })
         #Creating customers that already exist within the system:
