@@ -65,7 +65,10 @@
         <field name="inherit_id" ref="product.product_search_form_view"/>
         <field name="arch" type="xml">
               <field name="name" position="after">
-                  <filter string="Label" domain="[]" context="" />
+                <searchpanel>
+                    <field name="categ_id"/>
+                    <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
+                </searchpanel>
               </field>
         </field>
     </record>
