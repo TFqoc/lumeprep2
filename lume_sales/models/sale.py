@@ -17,32 +17,23 @@ class SaleOrder(models.Model):
 
 # https://www.odoo.com/forum/help-1/how-to-execute-a-python-function-on-kanban-click-130496
 
-    def open_catalog(self):
-        self.ensure_one()
-        return {
-                'type': 'ir.actions.act_window',
-                'name': 'Product Catalog',
-                'view_type': 'kanban',
-                'view_mode': 'kanban',
-                'res_model': 'product.product',
-                'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
-                'target': 'new',
-                'res_id': self.id,
-                'context': {'lpc_sale_order_id': self.id},
-                'domain': [],
-                'search_view_id': ('category_grouping_search', 'Catagory Grouping'),
-            }
+    # def open_catalog(self):
+    #     self.ensure_one()
+    #     return {
+    #             'type': 'ir.actions.act_window',
+    #             'name': 'Product Catalog',
+    #             'view_type': 'kanban',
+    #             'view_mode': 'kanban',
+    #             'res_model': 'product.product',
+    #             'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
+    #             'target': 'new',
+    #             'res_id': self.id,
+    #             'context': {'lpc_sale_order_id': self.id},
+    #             'domain': [],
+    #             'search_view_id': ('category_grouping_search', 'Catagory Grouping'),
+    #         }
     def open_catalogV2(self):
         self.ensure_one()
-        # action = self.env.ref('lume_sales.lume_product_catalog')
-        # action.update({
-        #     'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
-        #     'target': 'current',
-        #     'res_id': self.id,
-        #     'context': {'lpc_sale_order_id': self.id},
-        #     'domain': [],
-        # })
-        # return action
         return {
                 'type': 'ir.actions.act_window',
                 'name': 'Product Catalog',
@@ -57,7 +48,7 @@ class SaleOrder(models.Model):
                 # 'search_view_id': (id, name),
             }
 
-    # @api.depends('picking_ids.move_ids_without_package.state')
+    @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
             res = len(record.picking_ids) > 0

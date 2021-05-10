@@ -20,7 +20,7 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','barcodes'],
+    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes'],
 
     'qweb': [
         "static/src/xml/lpc_quantity.xml"
