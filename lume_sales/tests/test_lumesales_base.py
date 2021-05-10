@@ -22,7 +22,7 @@ class TestLumeSaleCommon(SavepointCase):
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
 
         cls.user_receptionist = Users.create({
-            'Name': 'Pete Zeria',
+            'name': 'Pete Zeria',
             'login': 'pzlume',
             'email': 'p.z@example.com',
             'signature': 'Pete Zeria',
@@ -31,7 +31,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.user_luminary = Users.create({
-            'Name': 'Justin Case',
+            'name': 'Justin Case',
             'login': 'jclume',
             'email': 'j.c@example.com',
             'signature': 'Justin Case',
@@ -40,7 +40,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.user_picking = Users.create({
-            'Name': 'Adam Zaple',
+            'name': 'Adam Zaple',
             'login': 'azlume',
             'email': 'a.z@example.com',
             'signature': 'Adam Zaple',
@@ -49,7 +49,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.user_cashier = Users.create({
-            'Name': 'Robin Banks',
+            'name': 'Robin Banks',
             'login': 'rblume',
             'email': 'r.b@example.com',
             'signature': 'Robin Banks',
@@ -58,7 +58,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.user_manager = Users.create({
-            'Name': 'Ella Vader',
+            'name': 'Ella Vader',
             'login': 'evlume',
             'email': 'e.v@example.com',
             'signature': 'Ella Vader',
@@ -67,7 +67,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.user_district_manager = Users.create({
-            'Name': 'Adam Sandler',
+            'name': 'Adam Sandler',
             'login': 'aslume',
             'email': 'a.s@example.com',
             'signature': 'Adam Sandler',
