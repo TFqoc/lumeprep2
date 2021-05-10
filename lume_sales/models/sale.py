@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
                 'res_id': self.id,
                 'context': {'lpc_sale_order_id': self.id},
                 'domain': [],
-                # 'search_view_id': (id, name),
+                'search_view_id': ('category_grouping_search', 'Catagory Grouping'),
             }
     def open_catalogV2(self):
         self.ensure_one()

@@ -58,5 +58,16 @@
             </kanban>
         </field>
     </record>
+
+    <record id="category_grouping_search" model="ir.ui.view">
+        <field name="name">Catagory Grouping</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+              <field name="name" position="after">
+                  <filter string="Label" domain="[]" context="" />
+              </field>
+        </field>
+    </record>
     
 </odoo>
