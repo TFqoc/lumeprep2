@@ -68,7 +68,7 @@ class StockPackageWizard(models.TransientModel):
         product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
         if resp:
             if 'Quantity' in resp:
-                if resp['ProductName'] == product.metrc_name:
+                if resp['Item']['ProductName'] == product.metrc_name:
                     self.lot_id.write({
                         'metrc_qty': resp['Quantity'],
                         'metrc_id': resp['Id'],
@@ -89,7 +89,7 @@ class StockPackageWizard(models.TransientModel):
                 else:
                     wizard_vals.update({
                         'message': '<p><div><h3>Package found in METRC but with different product: <b>%s.</b><br/>'
-                                   'Can not sync with <b>%s</b>.</h3></div></p>' % (resp['ProductName'],
+                                   'Can not sync with <b>%s</b>.</h3></div></p>' % (resp['Item']['ProductName'],
                                                                                     product.metrc_name),
                         'virtual_available': product.virtual_available,
                         'wh_qty_available': product.qty_available,
