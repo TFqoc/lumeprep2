@@ -69,7 +69,7 @@ class SplitLotWizard(models.TransientModel):
             quants = Quants._gather(wiz.lot_id.product_id, wiz.location_id, lot_id=wiz.lot_id, strict=True)
             reserved_qty = sum(quants.mapped('reserved_quantity'))
             wiz.warehouse_lot_qty = wh_product.qty_available - reserved_qty
-            wiz.lot_qty = loc_product.qty_available - reserved_qty
+            wiz.lot_qty = wh_product.qty_available - reserved_qty
             if wiz.picking_id:
                 move_lines = wiz.picking_id.mapped('move_line_ids').filtered(lambda l: l.lot_id == wiz.lot_id)
                 wiz.warehouse_lot_qty = wiz.warehouse_lot_qty + sum(move_lines.mapped('product_uom_qty'))
