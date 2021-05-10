@@ -87,7 +87,7 @@ class Product(models.Model):
         if wizard_product_lot:
             return wizard_product_lot
         self.lpc_quantity = quantity
-        return sale_order.open_catalog()
+        # return sale_order.open_catalog()
         return True
 
     # Is override by lpc_stock to manage lot
