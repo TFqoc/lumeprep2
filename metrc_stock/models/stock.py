@@ -108,7 +108,7 @@ class StockMoveLine(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,
-            'views': [(self.env.ref('metrc.split_lot_wizard_form').id, 'form')],
+            'views': [(self.env.ref('metrc_stock.split_lot_wizard_form').id, 'form')],
             'context': {'move_ref': self.picking_id.name, 'move_line_id': self.id},
             'domain': [],
             'target': 'new'

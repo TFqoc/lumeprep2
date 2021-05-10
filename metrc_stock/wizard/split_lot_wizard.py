@@ -69,7 +69,7 @@ class SplitLotWizard(models.TransientModel):
             quants = Quants._gather(wiz.lot_id.product_id, wiz.location_id, lot_id=wiz.lot_id, strict=True)
             reserved_qty = sum(quants.mapped('reserved_quantity'))
             wiz.warehouse_lot_qty = wh_product.qty_available - reserved_qty
-            wiz.lot_qty = wh_product.qty_available - reserved_qty
+            wiz.lot_qty = loc_product.qty_available - reserved_qty
             if wiz.picking_id:
                 move_lines = wiz.picking_id.mapped('move_line_ids').filtered(lambda l: l.lot_id == wiz.lot_id)
                 wiz.warehouse_lot_qty = wiz.warehouse_lot_qty + sum(move_lines.mapped('product_uom_qty'))
@@ -176,17 +176,18 @@ class SplitLotWizard(models.TransientModel):
             raise UserError(_("Can not split more then what is available."))
         if not self.warehouse_id.metrc_manu_type_id:
             raise UserError(_("Operation type for split lot is not configured on warehouse {}".format(self.warehouse_id.name)))
-        production_order = self.env['mrp.production'].with_context({'skip_bom': True}).create({
+        production_order = self.env['mrp.production'].create({
             'picking_type_id': self.warehouse_id.metrc_manu_type_id.id,
             'product_id': self.lot_id.product_id.id,
             'location_src_id': self.location_id.id,
             'location_dest_id': self.location_id.id,
             'product_uom_id': self.lot_id.product_id.uom_id.id,
             'product_qty': total_quantity,
+            'qty_producing': total_quantity,
             'split_lot_multi': True,
             'origin': self.env.context.get('move_ref', '')
         })
-        production_order._generate_finished_moves()
+        production_order.write({'move_finished_ids': [(0,0, move_vals) for move_vals in production_order._get_moves_finished_values()]})
         production_order._generate_raw_move_split_multi(self.split_lot_lines)
         production_order.move_raw_ids._action_confirm()
         production_order.move_finished_ids._action_confirm()
@@ -220,7 +221,7 @@ class SplitLotWizard(models.TransientModel):
                 }
                 self.env['stock.move.line'].create(vals)
         for raw_move, finish_move in zip(production_order.move_raw_ids.mapped('move_line_ids'), production_order.finished_move_line_ids):
-            raw_move.write({'lot_produced_ids': [(4, finish_move.lot_id.id)], 'qty_done': raw_move.product_qty})
+            raw_move.write({'qty_done': raw_move.product_qty})
         try:
             if self.env.context.get('move_line_id'):
                 move_line = self.env['stock.move.line'].sudo().browse(int(self.env.context.get('move_line_id')))
@@ -309,7 +310,7 @@ class SplitLotWizard(models.TransientModel):
                 order_vals.update({'split_lot_multi': True})
             else:
                 order_vals.update({'split_lot': True})
-            production_order = self.env['mrp.production'].with_context({'skip_bom': True}).create()
+            production_order = self.env['mrp.production'].create()
             production_order._generate_finished_moves()
             if is_multi:
                 production_order._generate_raw_move_split_multi(wiz.split_lot_lines)
@@ -443,17 +444,19 @@ class SplitLotWizard(models.TransientModel):
                    and (float_is_zero(wiz.new_lot_quantity, precision_rounding=wiz.uom_id.rounding)):
                     #  Re-tagging the whole lot
                     qty_to_produce = wiz.product_qty
-                production_order = self.env['mrp.production'].with_context({'skip_bom': True}).create({
+                production_order = self.env['mrp.production'].create({
                     'picking_type_id': wiz.warehouse_id.metrc_manu_type_id.id,
                     'product_id': wiz.lot_id.product_id.id,
                     'location_src_id': wiz.location_id.id,
                     'location_dest_id': wiz.location_id.id,
                     'product_uom_id': wiz.lot_id.product_id.uom_id.id,
                     'product_qty': qty_to_produce,
+                    'qty_producing': qty_to_produce,
                     'split_lot': True,
                     'origin': self.env.context.get('move_ref', '')
                 })
-                production_order._generate_finished_moves()
+                finished_move_vals = production_order._get_moves_finished_values()
+                production_order.write({'move_finished_ids': [(0,0, move_vals) for move_vals in finished_move_vals]})
                 production_order._generate_raw_move_split()
                 production_order.move_raw_ids._action_confirm()
                 production_order.move_finished_ids._action_confirm()
@@ -465,8 +468,9 @@ class SplitLotWizard(models.TransientModel):
                             'product_id': wiz.lot_id.product_id.id,
                             'company_id': production_order.company_id.id
                         })
+                production_order.lot_producing_id = lot
                 for raw_move_line in production_order.move_raw_ids.mapped('move_line_ids'):
-                    raw_move_line.write({'lot_produced_ids':  [(4, lot.id)], 'qty_done': raw_move_line.product_qty})
+                    raw_move_line.write({'qty_done': raw_move_line.product_qty})
                 for move in production_order.move_finished_ids:
                     quantity = production_order.product_qty
                     location_dest_id = move.location_dest_id._get_putaway_strategy(production_order.product_id).id or move.location_dest_id.id
