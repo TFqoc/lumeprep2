@@ -19,6 +19,7 @@ class Partner(models.Model):
     is_expired = fields.Boolean(compute='_compute_expired', search='_search_expired')
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
+    pref_name = fields.Char()
 
     last_visit = fields.Datetime()
 

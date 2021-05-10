@@ -12,15 +12,15 @@
           </xpath>
           <!-- Reorganize title of task -->
           <xpath expr="//div[@class='o_kanban_record_headings']/*[4]" position="replace">
-            <span>
+            <span style="font-weight: bold;">
                 <field name="partner_id" widget="res_partner_many2one"/>
             </span>
           </xpath>
-          <!-- delete the else tag from the if we replaced above -->
+          <!-- Delete the else tag from the if we replaced above -->
           <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
             <!-- Empty -->
           </xpath>
-          <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="after">
+          <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="inside">
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
             <!-- <br/> -->
             <field name="timer_start" widget="live_timer"/>
@@ -33,9 +33,15 @@
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
           </xpath>
-          <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)[2]" position="replace">
+          <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
-            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="24" height="24" style="border-radius: 50%; margin-left: 6px;" class="o_m2o_avatar"/>
+            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px;" class="o_m2o_avatar"/>
+          </xpath>
+          <!-- Replace a bunch of icons we are not using -->
+          <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
+          <!-- Color border -->
+          <xpath expr="//templates/t/div" position="attributes">
+            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};></attribute>
           </xpath>
         </field>
       </record>

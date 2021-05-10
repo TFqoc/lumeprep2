@@ -21,7 +21,7 @@ class Tasks(models.Model):
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
-    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
+    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
 
     def on_barcode_scanned(self, barcode):
         _logger.info("BARCODE SCANNED")
@@ -234,6 +234,15 @@ class Tasks(models.Model):
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
+    def get_color(self):
+        name_to_color = {
+            'store': 'steelblue',
+            'curb': 'firebrick',
+            'delivery': 'mediumseagreen',
+            'online': 'goldenrod',
+        }
+        return name_to_color.get(self.order_type, 'black')
+        
     # def parse_all(self, code):
     #     dlstring = code
     #     e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
