@@ -21,7 +21,8 @@ class MetrcLicense(models.Model):
     license_number = fields.Char(string='License Number', required=True, index=True, tracking=True)
     base_type = fields.Selection(selection=[
                         ('Internal', 'Facility'),
-                        ('External', 'Customer/Vendor')
+                        ('External', 'Customer/Vendor'),
+                        ('Patient', 'Patient'),
                     ], required=True, string='Type', index=True,
                     default='External', tracking=True)
     metrc_type = fields.Selection(selection=[
@@ -79,6 +80,9 @@ class MetrcLicense(models.Model):
                     help="Small-sized logo of the brand. It is automatically "
                     "resized as a 64x64px image, with aspect ratio preserved. "
                     "Use this field anywhere a small image is required.")
+    flower_available = fields.Float("Available Flower")
+    thc_available = fields.Float("Available THC")
+    purchase_amount = fields.Float("Purchase Amount Days")
 
     _sql_constraints = [
         ('uniq_license_by_customer', 'unique (license_number, base_type, partner_id)', 'Customer/Company can not have duplicate license number!'),
@@ -152,7 +156,6 @@ class MetrcLicense(models.Model):
                               ' consider archiving the license or set it expired by adding'
                               ' license expiration date in past.'))
         return super(MetrcLicense, self).unlink()
-
 
 class MetrcLicenseIssuer(models.Model):
 

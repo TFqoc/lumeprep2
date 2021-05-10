@@ -7,6 +7,7 @@
         'metrc',
         'metrc_product',
         'sale_stock',
+        'metrc_stock',
     ],
     'author': 'Odoo Inc',
     'license': 'OEEL-1',

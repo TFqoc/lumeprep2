@@ -35,7 +35,6 @@ class StockMoveLine(models.Model):
     lot_qty = fields.Float(string="Available lot qty", compute="_compute_split_needed")
     split_needed = fields.Boolean(compute="_compute_split_needed")
     bypass_metrc_reporting = fields.Boolean(copy=True)
-    reported_to_metrc = fields.Boolean(help="Technical Field to determine Metrc reporting")
 
     @api.constrains('lot_id', 'lot_name')
     def check_lot_existance(self):

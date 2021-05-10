@@ -506,7 +506,8 @@ class StockPicking(models.Model):
                                             'name_readonly': True
                                         })
                                 if metrc_transfer_id.product_name != move_line_id.product_id.display_name:
-                                    MetrcProdctAlias.upsert_alias(metrc_transfer_id.product_name, move_line_id.product_id)
+                                    MetrcProdctAlias.upsert_alias(metrc_transfer_id.product_name, move_line_id.product_id,
+                                                                  self.partner_license_id)
 
                         elif metrc_transfer_id.shipment_package_state in ['Rejected', 'Returned']:
                             move_line_id.qty_done = 0
