@@ -189,19 +189,13 @@ class MrpProduction(models.Model):
             metrc_msg += "</ul>"
             self.message_post(body=_(metrc_msg), message_type="notification", subtype_xmlid="mail.mt_comment")
 
-    def _generate_moves(self):
-        for production in self:
-            if not self.env.context.get('skip_bom'):
-                super(MrpProduction, production)._generate_moves()
-        return True
-
     def _generate_raw_move_split(self, quantity=False):
         consume_qty = quantity or self.product_qty
-        original_quantity = (self.product_qty - self.qty_produced) or 1.0
+        original_quantity = (self.qty_producing - self.qty_produced) or 1.0
         data = {
             'name': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
+            'date_deadline': self.date_planned_start,
             'bom_line_id': False,
             'product_id': self.product_id.id,
             'product_uom_qty': consume_qty,
@@ -213,6 +207,7 @@ class MrpProduction(models.Model):
             'price_unit': self.product_id.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self.name,
+            'state': 'draft',
             'warehouse_id': self.location_src_id.get_warehouse().id,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
