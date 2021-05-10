@@ -177,10 +177,10 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',
-            'date_of_birth': datetime.date('1987', '2', '17'),
+            'date_of_birth': datetime.date(1987, 2, 17),
             'is_medical': False,
             'drivers_license_number': 'C3335473939576',
-            'drivers_license_expiration': datetime.date('2021', '12', '31')
+            'drivers_license_expiration': datetime.date(2021, 12, 31)
 
         })
 
@@ -194,12 +194,12 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
-            'date_of_birth': datetime.date('1999', '5', '14'),
+            'date_of_birth': datetime.date(1999, 5, 14),
             'is_medical': True,
             'medical_id': 'CG-18-089765',
-            'medical_expiration': datetime.date('2021', '9', '13'),
+            'medical_expiration': datetime.date(2021, 9, 13),
             'drivers_license_number': 'H1112222333344',
-            'drivers_license_expiration': datetime.date('2021', '12', '31')
+            'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
 
         cls.customer_banned = Customers.create({
@@ -212,11 +212,11 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'bf@example.com',
-            'date_of_birth': datetime.date('1999', '10', '21'),
+            'date_of_birth': datetime.date(1999, 10, 21),
             'is_medical': False,
             'warnings': 3,
             'drivers_license_number': 'B4345545332311',
-            'drivers_license_expiration': datetime.date('2021', '12', '31')
+            'drivers_license_expiration': datetime.date(2021, 12, 31)
 
         })
         
