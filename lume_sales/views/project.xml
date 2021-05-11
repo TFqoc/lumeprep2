@@ -45,7 +45,7 @@
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
           <xpath expr="//templates/t/div" position="attributes">
-            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};</attribute>
+            <!-- <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};</attribute> -->
             <!--<t t-set="color" t-value="margin-bottom: 10px; border-width: 5px; border-color: firebrick; {{'blue' if order_type else 'red'}}"/>-->
             <!--<t t-if="record.order_type.raw_value == 'store'">-->
             <!--  <attribute t-if="record.order_type.raw_value == 'store'" name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: steelblue;</attribute>-->
@@ -62,8 +62,7 @@
             <!--<attribute name="t-attf-id"><t t-esc="color"/>red</attribute>-->
           </xpath>
           <xpath expr="//progressbar" position="replace">
-            <!--  <progressbar field="order_type" colors="{'store': 'steelblue', 'online': 'goldenrod', 'curb': 'firebrick', 'delivery': 'mediumseagreen'}"/>-->
-            <progressbar field="order_type" colors="{&quot;store&quot;: &quot;steelblue&quot;, &quot;online&quot;: &quot;goldenrod&quot;, &quot;delivery&quot;: &quot;mediumseagreen&quot;, &quot;curb&quot;: &quot;firebrick&quot;}"/>
+            <progressbar field="order_type" colors="{&quot;store&quot;: &quot;store&quot;, &quot;online&quot;: &quot;online&quot;, &quot;delivery&quot;: &quot;delivery&quot;, &quot;curb&quot;: &quot;curb&quot;}"/>
           </xpath>
         </field>
       </record>
