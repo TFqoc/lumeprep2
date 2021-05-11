@@ -9,10 +9,12 @@
             <script type="text/javascript" src="lume_sales/static/src/js/live_timer.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/so_section_and_note.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/project_kanban.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/progressbar.js"></script>
 
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/lpc_product_quantity.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/model.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/view.js"></script>
+
             <link rel="stylesheet" type="text/scss" href="lume_sales/static/src/scss/product_product_views.scss"/>
             <link rel="stylesheet" type="text/css" href="lume_sales/static/src/scss/kanban.css"/>
         </xpath>
