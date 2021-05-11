@@ -33,15 +33,37 @@
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
           </xpath>
+          <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top'])" position="inside">
+            <!-- Replace user avatar for customer "partner" avatar -->
+            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar"/>
+            <img t-if="record.order_type.raw_value == 'store'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32"/>
+          </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
-            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px;" class="o_m2o_avatar"/>
           </xpath>
           <!-- Replace a bunch of icons we are not using -->
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
           <xpath expr="//templates/t/div" position="attributes">
-            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};></attribute>
+            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};</attribute>
+            <!--<t t-set="color" t-value="margin-bottom: 10px; border-width: 5px; border-color: firebrick; {{'blue' if order_type else 'red'}}"/>-->
+            <!--<t t-if="record.order_type.raw_value == 'store'">-->
+            <!--  <attribute t-if="record.order_type.raw_value == 'store'" name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: steelblue;</attribute>-->
+            <!--</t>-->
+            <!--<t t-elif="record.order_type.raw_value == 'curb'">-->
+            <!--  <attribute t-if="record.order_type.raw_value == 'curb'" name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: firebrick;</attribute>-->
+            <!--</t>-->
+            <!--<t t-elif="record.order_type.raw_value == 'delivery'">-->
+            <!--  <attribute t-if="record.order_type.raw_value == 'delivery'" name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: mediumseagreen;</attribute>-->
+            <!--</t>-->
+            <!--<t t-if="record.order_type.raw_value == 'online'">-->
+            <!--  <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: goldenrod;</attribute>-->
+            <!--</t>-->
+            <!--<attribute name="t-attf-id"><t t-esc="color"/>red</attribute>-->
+          </xpath>
+          <xpath expr="//progressbar" position="replace">
+            <!--  <progressbar field="order_type" colors="{'store': 'steelblue', 'online': 'goldenrod', 'curb': 'firebrick', 'delivery': 'mediumseagreen'}"/>-->
+            <progressbar field="order_type" colors="{&quot;store&quot;: &quot;steelblue&quot;, &quot;online&quot;: &quot;goldenrod&quot;, &quot;delivery&quot;: &quot;mediumseagreen&quot;, &quot;curb&quot;: &quot;firebrick&quot;}"/>
           </xpath>
         </field>
       </record>

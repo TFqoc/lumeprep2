@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="templates" xml:space="preserve">
+    <t t-inherit="web.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//div[@class='o_cp_bottom_right']/div/t/FilterMenu" position="replace">
+            <!-- Content -->
+            <t t-if="context is stuff">
+                <button>Hi I am a button</button>
+            </t>
+            <t t-else="">
+                <FilterMenu t-if="props.searchMenuTypes.includes('filter')"
+                            class="o_filter_menu"
+                            fields="fields"
+                        />
+            </t>
+        </xpath>
+    </t>
+</templates>
