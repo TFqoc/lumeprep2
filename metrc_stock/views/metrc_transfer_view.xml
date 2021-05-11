@@ -138,6 +138,7 @@
                                 <field name="product_category_name"/>
                                 <field name="lab_testing_state"/>
                                 <field name="production_batch_number"/>
+                                <field name="source_package_labels"/>
                                 <field name="is_testing_sample"/>
                             </group>
                             <group>

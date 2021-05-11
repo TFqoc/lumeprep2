@@ -388,6 +388,12 @@ class StockPicking(models.Model):
             backorders_ids = self._split_create_backorder()
             return backorders_ids
         return True
+    
+    def action_open_metrc_transfer(self):
+        action_data = self.env.ref('metrc_stock.action_view_metrc_transfer').read()[0]
+        action_data['domain'] = [('move_line_id', 'in', self.move_line_ids.ids)]
+        action_data['name'] = 'Processed METRC Transfers'
+        return action_data
 
     def search_metrc_transfer_lot(self, lot_name, transfer_type=False, license_number=False, move_strict=True, latest_only=True):
         MetrcTransfer = self.env['metrc.transfer']
@@ -682,7 +688,7 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         if not self.moving_metrc_product:
             return False
         move_lines_todo = self._get_metrc_moves_todo()
-        return self.env['stock.move.line'].search([('production_id', '!=', False), ('move_id.raw_material_production_id', '=', False),
+                return self.env['stock.move.line'].search([('production_id', '!=', False), ('move_id.raw_material_production_id', '=', False),
                                                               ('production_id.split_lot_multi', '=', True), ('state', '=', 'done'),
                                                               ('lot_id', 'in', move_lines_todo.mapped('lot_id').ids)])
 
