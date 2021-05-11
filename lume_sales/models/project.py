@@ -18,6 +18,7 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
+    customer_type = fields.Selection(related='partner_id.customer_type')
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
@@ -234,18 +235,6 @@ class Tasks(models.Model):
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
-    border_color = fields.Char(compute="_compute_color", store=True)
-
-    @api.depends('order_type')
-    def _compute_color(self):
-        name_to_color = {
-            'store': 'steelblue',
-            'curb': 'firebrick',
-            'delivery': 'mediumseagreen',
-            'online': 'goldenrod',
-        }
-        for record in self:
-            record.border_color = name_to_color.get(record.order_type, 'black')
         
     # def parse_all(self, code):
     #     dlstring = code
