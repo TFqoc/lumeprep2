@@ -688,7 +688,7 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         if not self.moving_metrc_product:
             return False
         move_lines_todo = self._get_metrc_moves_todo()
-                return self.env['stock.move.line'].search([('production_id', '!=', False), ('move_id.raw_material_production_id', '=', False),
+        return self.env['stock.move.line'].search([('production_id', '!=', False), ('move_id.raw_material_production_id', '=', False),
                                                               ('production_id.split_lot_multi', '=', True), ('state', '=', 'done'),
                                                               ('lot_id', 'in', move_lines_todo.mapped('lot_id').ids)])
 
