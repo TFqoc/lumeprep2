@@ -62,6 +62,12 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    # We have to use onchange here to update the tasks type so it will show up for the kanban renderer
+    @api.onchange('customer_type')
+    def _onchange_customer_type(self):
+        if self.task:
+            self.task.customer_type = self.customer_type
+
     def verify_address(self):
         pass
 
