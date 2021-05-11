@@ -18,7 +18,7 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
-    customer_type = fields.Selection(related='partner_id.customer_type')
+    customer_type = fields.Selection(related='partner_id.customer_type', store=True)
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
