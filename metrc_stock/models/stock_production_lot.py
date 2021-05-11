@@ -436,6 +436,7 @@ class StockProductionLot(models.Model):
             })
         try:
             inv_adjst.with_context({'bypass_check': True, 'bypass_adjust': True})._action_done()
+            inv_adjst.flush()
         except Exception as ex:
             _logger.error('cannot validate inventory adjustment[%s][ID:%d]' % (inv_adjst.name, inv_adjst.id))
             inv_adjst.action_cancel_draft()
@@ -665,6 +666,7 @@ class StockProductionLot(models.Model):
                         'reason_id': reason.id,
                         'facility_license_id': license.id,
                         'start_empty': True,
+                        'downstream': True,
                     })
                     inv_adjst._action_start()
                     inv_line_datas = []

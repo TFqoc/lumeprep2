@@ -95,6 +95,7 @@ class MetrcTransfer(models.Model):
     received_quantity = fields.Float(string='Received Quantity', digits=(16, 4))
     received_unit_of_measure_name = fields.Char(string='Received Unit Of Measure Name')
     move_line_id = fields.Many2one(comodel_name='stock.move.line', string='Associated Product Move', ondelete='set null', index=True, copy=False)
+    source_package_labels = fields.Char(string='Source Packages')
 
     def _assert_transfer_param(self, license_number, transfer_type, update_date=False, transfer_date=False):
         """
@@ -223,6 +224,7 @@ class MetrcTransfer(models.Model):
             'package_label': package['PackageLabel'],
             'package_type': package['PackageType'],
             'source_harvest_names': package['SourceHarvestNames'],
+            'source_package_labels': package['SourcePackageLabels'],
             'product_name': package['ProductName'],
             'product_category_name': package['ProductCategoryName'],
             'lab_testing_state': package['LabTestingState'],
