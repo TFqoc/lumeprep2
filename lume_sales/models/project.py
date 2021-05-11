@@ -234,7 +234,7 @@ class Tasks(models.Model):
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
-    border_color = fields.Char(compute="_compute_color")
+    border_color = fields.Char(compute="_compute_color", store=True)
 
     @api.depends('order_type')
     def _compute_color(self):
