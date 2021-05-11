@@ -234,14 +234,18 @@ class Tasks(models.Model):
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
-    def get_color(self):
+    border_color = fields.Char(compute="_compute_color")
+
+    @api.depends('order_type')
+    def _compute_color(self):
         name_to_color = {
             'store': 'steelblue',
             'curb': 'firebrick',
             'delivery': 'mediumseagreen',
             'online': 'goldenrod',
         }
-        return name_to_color.get(self.order_type, 'black')
+        for record in self:
+            record.border_color = name_to_color.get(record.order_type, 'black')
         
     # def parse_all(self, code):
     #     dlstring = code

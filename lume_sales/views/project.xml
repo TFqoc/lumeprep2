@@ -36,7 +36,9 @@
           <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top']/div)" position="after">
             <!-- Replace user avatar for customer "partner" avatar -->
             <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar"/>
-            <img t-if="record.order_type.raw_value == 'store'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32"/>
+            <img t-if="record.parter_id.customer_type.raw_value == 'medical'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32"/>
+            <img t-if="record.parter_id.customer_type.raw_value == 'adult'" src="/lume_sales/static/src/image/heart-128.png" alt="heart" width="32" height="32"/>
+            <img t-if="record.parter_id.customer_type.raw_value == 'caregiver'" src="/lume_sales/static/src/image/blue_cross_white_blue-128.png" alt="cross" width="32" height="32"/>
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
@@ -45,7 +47,7 @@
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
           <xpath expr="//templates/t/div" position="attributes">
-            <!-- <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.get_color()}};</attribute> -->
+            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.border_color}};</attribute>
             <!--<t t-set="color" t-value="margin-bottom: 10px; border-width: 5px; border-color: firebrick; {{'blue' if order_type else 'red'}}"/>-->
             <!--<t t-if="record.order_type.raw_value == 'store'">-->
             <!--  <attribute t-if="record.order_type.raw_value == 'store'" name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: steelblue;</attribute>-->
