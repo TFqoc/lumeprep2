@@ -164,7 +164,7 @@ class Tasks(models.Model):
         get_next = False
         for stage in self.project_id.type_ids:
             if get_next:
-                return stage
+                return stage.name
             elif stage == self.stage_id:
                 get_next = True
 
