@@ -3,6 +3,7 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
     'use strict';
     
     var ProjectKanbanController = require('project.project_kanban');
+    var QuickCreate = require('web.kanban_record_quick_create');
     var KanbanRecord = require('web.KanbanRecord');
 
     KanbanRecord.include({
@@ -41,6 +42,8 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                     }
                     else{
                         // console.log("Calling superfun");
+                        // TODO if no cart, then rpc back to activate build cart
+                        // then execute action to open cart window (Sales Order)
                         superfun.apply(self, arguments);
                     }
                 });
@@ -64,6 +67,30 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
         //         this._super.apply(this, arguments);
         //     }
         // },
+    });
+
+    QuickCreate.include({
+        _add: function(options){
+            var self = this;
+            if (!this.model == 'project.task'){
+                this._super.apply(this, arguments);
+            }
+            else{
+                this.controller.commitChanges().then(function(){
+                    let data = self.controller.getChanges();
+                    if (data.partner_id){
+                        self.do_action({
+                            type: 'ir.actions.act_window',
+                            views: [[false, 'form']],
+                            res_model: 'res.partner',
+                            res_id: data.partner_id,
+                            flags: {mode: 'edit'},
+                            context: {check_in_window: true},
+                        });
+                    }
+                });
+            }
+        }
     });
     
     return KanbanRecord;
