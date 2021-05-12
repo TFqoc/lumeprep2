@@ -65,8 +65,8 @@ class Partner(models.Model):
 
     def check_in(self):
         ctx = self.env.context
-        _logger.debug("CTX: " + str(ctx))
-        project = self.env['project.project'].search(['id','=',ctx.get('project_id')], limit=1)
+        _logger.info("CTX: " + str(ctx))
+        project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': int(ctx['partner_id']),
