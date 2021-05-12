@@ -71,7 +71,7 @@
                   <button class="oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" icon="fa-usd" modifiers="{}" options="{}">
                     <field string="Order History" name="sale_order_count" widget="statinfo" modifiers="{'readonly':true}" id="sale_order_count"/>
                   </button>
-                  <button class="oe_stat_button" type="action" name="%(project_task_action_from_partner)d"
+                  <button class="oe_stat_button" type="action" name="%(project.project_task_action_from_partner)d"
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" attrs="{'invisible': [('task_count', '=', 0)]}"
                         icon="fa-tasks">
                         <field  string="Tasks" name="task_count" widget="statinfo"/>
