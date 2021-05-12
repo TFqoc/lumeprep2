@@ -71,13 +71,14 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
 
     QuickCreate.include({
         _add: function(options){
-            var self = this;
             if (!this.model == 'project.task'){
                 this._super.apply(this, arguments);
             }
             else{
+                var self = this;
                 this.controller.commitChanges().then(function(){
                     let data = self.controller.getChanges();
+                    console.log(data);
                     if (data.partner_id){
                         self.do_action({
                             type: 'ir.actions.act_window',
@@ -85,7 +86,11 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                             res_model: 'res.partner',
                             res_id: data.partner_id,
                             flags: {mode: 'edit'},
-                            context: {check_in_window: true},
+                            context: {
+                                check_in_window: true,
+                                order_type: data.order_type,
+                                project_id: data.project_id,
+                                partner_id: data.partner_id},
                         });
                     }
                 });

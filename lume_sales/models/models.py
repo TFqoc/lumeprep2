@@ -63,11 +63,22 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
-    # # We have to use onchange here to update the tasks type so it will show up for the kanban renderer
-    # @api.onchange('customer_type')
-    # def _onchange_customer_type(self):
-    #     if self.task:
-    #         self.task.customer_type = self.customer_type
+    def check_in(self):
+        ctx = self.env.context
+        project = self.env['project.project'].search(['id','=',ctx['project_id']], limit=1)
+        stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
+        self.env['project.task'].create({
+            'partner_id': int(ctx['partner_id']),
+            'project_id': project.id,
+            'order_type': ctx['order_type'],
+        })
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "res_id":project.id,
+            "views":[[False, "kanban"]],
+            "target": 'main',
+        }
 
     def verify_address(self):
         pass
