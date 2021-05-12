@@ -355,3 +355,6 @@ class project_inherit(models.Model):
     task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
     # store = fields.Many2one(comodel_name='lume.store')
+
+    # MEO
+    #DL_med_image = fields.Image(string="Upload Driver's License or Medical ID Image")
