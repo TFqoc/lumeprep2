@@ -73,12 +73,17 @@ class Partner(models.Model):
             'project_id': project.id,
             'order_type': ctx['order_type'],
         })
+        action_context = {
+            'default_project_id': project.id,
+        }
         return {
             "type":"ir.actions.act_window",
             "res_model":"project.task",
-            "res_id":project.id,
             "views":[[False, "kanban"]],
+            "name": 'Tasks',
             "target": 'main',
+            "domain": [('project_id', '=', project.id)],
+            "context": {'default_project_id': project.id},
         }
 
     def verify_address(self):
