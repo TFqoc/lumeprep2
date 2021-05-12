@@ -124,6 +124,8 @@ class Tasks(models.Model):
         self.dummy_field = 'dummy'
 
     def build_cart(self):
+        if not self.project_id.warehouse_id:
+            raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
         self.sales_order = self.env['sale.order'].create({
             'partner_id':self.partner_id.id,
             'task':self.id,
@@ -159,13 +161,13 @@ class Tasks(models.Model):
         self.change_stage()
 
     def get_previous_stage_name(self):
+        get_next = False
         for stage in self.project_id.type_ids:
             if get_next:
                 self.stage_id = stage
                 break
             elif stage == self.stage_id:
                 get_next = True
-        pass
 
 
     # Mail module > models > mail_channel.py Line 758
