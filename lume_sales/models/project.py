@@ -20,6 +20,7 @@ class Tasks(models.Model):
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
     customer_type = fields.Selection(related="partner_id.customer_type")
+    blink_threshold = fields.Integer(related="project_id.blink_threshold")
     # stage_id = fields.Many2one(readonly=True)
     # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
 
@@ -368,4 +369,11 @@ class project_inherit(models.Model):
 
     task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
+    blink_threshold = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
+
+# class ProjectTaskType(models.Model):
+#     _inherit = 'project.task.type'
+
+
+

@@ -108,6 +108,7 @@
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
+          <field name="blink_threshold"/>
         </field>
       </field>
     </record>

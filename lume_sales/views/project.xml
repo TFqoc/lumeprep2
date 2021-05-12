@@ -26,11 +26,11 @@
             <!-- <br/> -->
             <field name="timer_start" widget="live_timer"/>
             <br/>
-            <span>
+            <!-- <span>
               <span t-if="record.order_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
               <span t-if="record.order_type.raw_value == 'store'" class="fa fa-cart-arrow-down" title="store"></span>
               <span t-if="record.order_type.raw_value == 'online'" class="fa fa-laptop" title="online"></span>
-            </span>
+            </span> -->
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
           </xpath>

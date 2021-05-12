@@ -10,7 +10,7 @@ odoo.define('timer.live_timer', function (require) {
     
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
-            this.className = 'o_field_widget o_readonly_modifier text-danger ml-auto h5 ml-4 font-weight-bold';
+            this.className = 'o_field_widget o_readonly_modifier text-success ml-auto h5 ml-4 font-weight-bold';
         },
         /**
          * @override
@@ -48,6 +48,12 @@ odoo.define('timer.live_timer', function (require) {
                     } else {
                         this.time.addSecond();
                         this.$el.text(this.time.toString());
+                        // TODO update this with real get methods
+                        this.blinking = this.time.convertToSeconds() / 60 >= this.record.data.blink_threshold;
+                        if (this.blinking){
+                            this.$el.toggleClass('text-success');
+                            this.$el.toggleClass('timer-flash');
+                        }
                     }
                 }, 1000);
             } else if (!this.record.data.timer_pause){
