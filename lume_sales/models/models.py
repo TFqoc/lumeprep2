@@ -20,7 +20,7 @@ class Partner(models.Model):
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
-    # pref_name = fields.Char()
+    pref_name = fields.Char()
     customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     last_visit = fields.Datetime()

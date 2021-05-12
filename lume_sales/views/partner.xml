@@ -10,6 +10,9 @@
                       <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
                   </header>
               </xpath>
+              <field name="name" position="after">
+                <field name="pref_name" string="Preferred Name"/>
+              </field>
               <field name="vat" position="after">
                 <field name="is_medical" string="Is Medical" invisible="1"/>
                 <field name="customer_type" string="Customer Type"/>
