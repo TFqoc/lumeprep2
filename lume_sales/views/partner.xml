@@ -8,7 +8,7 @@
               <xpath expr="//form//sheet" position="before">
                   <header>
                       <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
-                      <button name="write" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)"/>
+                      <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)"/>
                   </header>
               </xpath>
               <field name="type" position="after">
