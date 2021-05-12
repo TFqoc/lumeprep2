@@ -6,10 +6,15 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_kanban"/>
         <field name="arch" type="xml">
+          <!-- Make tasks not draggable -->
+          <xpath expr="/kanban" position="attributes">
+            <attribute name="records_draggable">false</attribute>
+          </xpath>
            <!-- Needed field tag to access the model field later in this view -->
           <xpath expr="/kanban/field" position="after">
             <field name="order_type"/>
             <field name="customer_type"/>
+            <field name="blink_threshold"/>
           </xpath>
           <!-- Reorganize title of task -->
           <xpath expr="//div[@class='o_kanban_record_headings']/*[4]" position="replace">
