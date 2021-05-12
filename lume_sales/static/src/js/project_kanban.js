@@ -2,7 +2,7 @@ console.log("Loaded Project kanban lume clickthrough");
 odoo.define('lume_sales.project_kanban_custom', function (require) {
     'use strict';
     
-    var ProjectKanbanController = require('project.project_kanban');
+    // var ProjectKanbanController = require('project.project_kanban');
     var QuickCreate = require('web.kanban_record_quick_create');
     var KanbanRecord = require('web.KanbanRecord');
 
@@ -70,11 +70,12 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
     });
 
     QuickCreate.include({
-        _add: function(options){
+        _onAddClicked: function(ev){
             if (!this.model == 'project.task'){
                 this._super.apply(this, arguments);
             }
             else{
+                ev.stopPropagation();
                 var self = this;
                 this.controller.commitChanges().then(function(){
                     let data = self.controller.getChanges();
