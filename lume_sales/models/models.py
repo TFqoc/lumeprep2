@@ -63,6 +63,10 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    ###########################################################
+    # Called from a button on the contact form
+    # All validation checks should be done in this method
+    ###########################################################
     def check_in(self):
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
@@ -73,9 +77,6 @@ class Partner(models.Model):
             'project_id': project.id,
             'order_type': ctx['order_type'],
         })
-        action_context = {
-            'default_project_id': project.id,
-        }
         return {
             "type":"ir.actions.act_window",
             "res_model":"project.task",
