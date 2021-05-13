@@ -50,5 +50,6 @@ class TestCustomerProfile(TestLumeSaleCommon):
             self.customer_rec.warnings,  
             1, 
             "Error in Partner Model: Number of warnings does not increase with the current method."
+        )
     
     
