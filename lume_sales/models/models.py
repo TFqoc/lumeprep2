@@ -76,6 +76,7 @@ class Partner(models.Model):
             'partner_id': int(ctx['partner_id']),
             'project_id': project.id,
             'order_type': ctx['order_type'],
+            'user_id': False,
         })
         return {
             "type":"ir.actions.act_window",

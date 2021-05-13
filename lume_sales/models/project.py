@@ -133,6 +133,7 @@ class Tasks(models.Model):
             # 'picking_policy':'direct',
             # 'pricelist_id':'idk',
             'warehouse_id':self.project_id.warehouse_id.id,
+            'user_id': self.env.uid,
         })
         self.next_stage()
         # Open up the sale order we just created
