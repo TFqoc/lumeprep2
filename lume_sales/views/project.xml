@@ -17,6 +17,11 @@
             <field name="blink_threshold"/>
           </xpath>
           <!-- Reorganize title of task -->
+          <field name="partner_id" position="replace">
+            <t t-if="False"> <!-- TODO Some contition about caregivers -->
+              <!-- <field name="caregiver_name"/> -->
+            </t>
+          </field>
           <xpath expr="//div[@class='o_kanban_record_headings']/*[4]" position="replace">
             <span style="font-weight: bold;">
                 <field name="partner_id" widget="res_partner_many2one"/>
@@ -50,11 +55,7 @@
           <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
           </xpath>
-          <field name="name" position="replace">
-            <t t-if="False"> <!-- TODO Some contition about caregivers -->
-              <field name="name"/>
-            </t>
-          </field>
+          
           <!-- Replace a bunch of icons we are not using -->
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
