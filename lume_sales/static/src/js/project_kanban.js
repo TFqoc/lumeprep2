@@ -46,7 +46,8 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                         // then execute action to open cart window (Sales Order)
                         self._rpc({
                             model: 'project.task',
-                            method: 'build_cart',
+                            method: 'generate_cart',
+                            args: [result[0].id],
                         });
                         // superfun.apply(self, arguments);
                     }

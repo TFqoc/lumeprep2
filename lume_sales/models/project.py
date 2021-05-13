@@ -121,6 +121,11 @@ class Tasks(models.Model):
                 return stage.id
         return False
 
+    # This method exists only as an endpoint for js to call
+    @api.model
+    def generate_cart(self, id):
+        self.browse(id).build_cart()
+
     def build_cart(self):
         if not self.project_id.warehouse_id:
             raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
