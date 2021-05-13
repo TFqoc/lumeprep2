@@ -22,7 +22,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lume_sales.lume_stage_1').id
         })
-        record_ids = [self.Test_Task.id]
+        record_ids = [Test_Task.id]
         # TODO: This needs to be set to be the id of the current row's record.
         active_id = self.env.context.get('active_id', [])
         # TODO: This needs to be all models currently loaded in the wizard
