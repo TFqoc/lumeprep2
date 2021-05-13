@@ -22,10 +22,10 @@
             <field name="sequence">30</field>
             <field name="name">Order Ready</field>
         </record>
-        <!-- <record id="lume_stage_4" model="project.task.type">
+        <record id="lume_stage_4" model="project.task.type">
             <field name="sequence">40</field>
-            <field name="name">Payment</field>
-        </record> -->
+            <field name="name">Out for Delivery</field>
+        </record>
         <record id="lume_stage_500" model="project.task.type">
             <field name="sequence">500</field>
             <field name="name">Done</field>

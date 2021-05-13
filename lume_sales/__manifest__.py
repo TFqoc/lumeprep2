@@ -20,8 +20,11 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','barcodes'],
+    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes'],
 
+    'qweb': [
+        "static/src/xml/lpc_quantity.xml"
+    ],
 
     # always loaded
     'data': [
@@ -31,9 +34,13 @@
         'views/assets.xml',
         'views/sale.xml',
         'views/project.xml',
+        'views/product_catalog.xml',
+        'views/actions.xml',
+        'views/partner.xml',
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',
+        'data/ir_cron_data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
