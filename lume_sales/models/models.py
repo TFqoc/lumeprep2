@@ -31,7 +31,7 @@ class Partner(models.Model):
 
     def _compute_expired(self):
         for record in self:
-            record.is_expired = True
+            record.is_expired = record.medical_expiration < datetime.datetime.now() or record.drivers_license_expiration < datetime.datetime.now()
 
     def _search_expired(self, operation, value):
         return [('id','=',1)]
