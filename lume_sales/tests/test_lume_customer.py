@@ -20,9 +20,9 @@ class TestComputedFields(TestLumeSaleCommon):
         )
         _logger.info("Test Compute Twenty-One Status: Complete.")
 
-    def test_lume_testing(self):
-        self.assertTrue(False, "This should always fail.")
-        _logger.info("Lume Tests are Running.")
+    # def test_lume_testing(self):
+    #     self.assertTrue(False, "This should always fail.")
+    #     _logger.info("Lume Tests are Running.")
 
 @tagged('lume')
 class TestCustomerProfile(TestLumeSaleCommon):
