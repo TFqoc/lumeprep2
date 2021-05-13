@@ -356,7 +356,10 @@ class project_inherit(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse')
     # store = fields.Many2one(comodel_name='lume.store')
 
-    # MEO
+# MEO
+class project_tasks_inherit(models.Model):
+    _inherit ='project.task'
+
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=100, max_height=210, verify_resolution=True)
     # MEO End
