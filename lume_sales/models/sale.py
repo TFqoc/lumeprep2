@@ -65,7 +65,7 @@ class SaleOrder(models.Model):
     # @api.onchange('is_delivered')
     def on_fulfillment(self):
         if self.task.stage_id.name != 'Order Ready':
-            self.task.next_stage() 
+            self.task.change_stage(3) 
 
     @api.onchange('partner_id')
     def check_order_lines(self):
@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
             raise ValidationError("You must have at least one sale order line in order to confirm this Sale Order!")
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
-            self.task.next_stage()
+            self.task.change_stage(2)
         return ret
         # POS will now pick up the SO because it is in 'sale' state
 

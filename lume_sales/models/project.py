@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+TASK_STAGES = ["Check In","Build Cart","Fulfillment","Order Ready","Out for Delivery","Done"]
+
 class Tasks(models.Model):
     _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
@@ -131,7 +133,7 @@ class Tasks(models.Model):
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
         })
-        self.next_stage()
+        self.change_stage(1)
         # Open up the sale order we just created
         context = dict(self.env.context)
         context['form_view_initial_mode'] = 'edit'
@@ -143,28 +145,13 @@ class Tasks(models.Model):
             "context":context,
         }
 
-    def next_stage(self):
-        # TODO add closing stage to this if statement
-        if self.stage_id.name == 'Done':
+    def change_stage(self, stage_index):
+        if self.stage_id.name == 'Done' or self.stage_id.is_closed:
             return
-
-        get_next = False
-        for stage in self.project_id.type_ids:
-            if get_next:
-                self.stage_id = stage
-                break
-            elif stage == self.stage_id:
-                get_next = True
-        self.change_stage()
-
-    def get_previous_stage_name(self):
-        get_next = False
-        for stage in self.project_id.type_ids:
-            if get_next:
-                return stage.name
-            elif stage == self.stage_id:
-                get_next = True
-
+        stage_name = TASK_STAGES[stage_index]
+        old_name = self.stage_id.name
+        self.stage_id = self.stage_id_from_name(stage_name)
+        self.capture_time(old_name)
 
     # Mail module > models > mail_channel.py Line 758
 
@@ -175,9 +162,9 @@ class Tasks(models.Model):
         target_record.unlink()
 
     @api.onchange('stage_id')
-    def change_stage(self):
+    def capture_time(self, old_stage):
         new_stage = self.stage_id.name
-        old_stage = self._origin.stage_id.name if self._origin.stage_id.name != new_stage else self.get_previous_stage_name()
+        old_stage = old_stage or self._origin.stage_id.name
         self._origin.stage_id = self.stage_id
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
