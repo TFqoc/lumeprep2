@@ -43,7 +43,7 @@ class TestCustomerProfile(TestLumeSaleCommon):
             1, 
             "Error in Partner Model: Number of warnings does not increase with the current method."
         )
-        _logger.info("Test Warn Status: Complete.")
+        _logger.info("Test Warn Status: Complete.") 
 
     def test_warn_test(self):
         self.assertEqual(
