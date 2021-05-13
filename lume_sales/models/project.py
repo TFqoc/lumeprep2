@@ -361,5 +361,5 @@ class project_tasks_inherit(models.Model):
     _inherit ='project.task'
 
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
-                                   max_width=100, max_height=210, verify_resolution=True)
+                                   max_width=200, max_height=400, verify_resolution=True)
     # MEO End
