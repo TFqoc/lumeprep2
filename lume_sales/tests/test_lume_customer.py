@@ -27,13 +27,17 @@ class TestComputedFields(TestLumeSaleCommon):
 @tagged('lume')
 class TestCustomerProfile(TestLumeSaleCommon):
     def test_warn(self):
-        record_ids = [self.customer_rec.id]
-        uid = self.env.ref('base.user_admin').id
+        #Class is set up with the data before the test.
+
+        record_ids = [self.customer_rec.id] #Id of the record being manipulated.
+        uid = self.env.ref('base.user_admin').id #Id of the user doing the action.
         self.env['res.partner'].browse(record_ids).with_context({
             'allowed_company_ids': [1],
             'lang': 'en_US',
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).warn()
+
+        #The result is tested. If the result is what is expected, the test passes. If the result is unexpected, the test fails.
         self.assertEqual(
             self.customer_rec.warnings,  
             1, 
