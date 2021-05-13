@@ -47,8 +47,8 @@
         <field name="arch" type="xml">
             <!--<notebook position="inside">-->
             <page name="description_page" position="before">
-                <page string="DL/Med ID" name="DL_image">
-
+                <page string="DL/Med ID" name="DL_med_image">
+                    <field name="DL_or_med_image" />
                 </page>
             </page>
             <!--</notebook>-->

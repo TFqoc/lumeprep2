@@ -357,4 +357,6 @@ class project_inherit(models.Model):
     # store = fields.Many2one(comodel_name='lume.store')
 
     # MEO
-    #DL_med_image = fields.Image(string="Upload Driver's License or Medical ID Image")
+    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
+                                   max_width=100, max_height=210, verify_resolution=True)
+    # MEO End
