@@ -37,8 +37,8 @@ class Partner(models.Model):
         for record in self:
             record.is_banned = self.warnings >= 3
     
-    def warn(self):
-        self.warnings += 1
+    #def warn(self):
+        #self.warnings += 1
 
     def verify_address(self):
         pass
