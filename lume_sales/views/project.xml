@@ -26,10 +26,10 @@
             <span style="font-weight: bold;">
                 <field name="partner_id" widget="res_partner_many2one"/>
             </span>
-            <field name="monetary_display"/>
+            <strong><field name="monetary_display"/></strong>
           </xpath>
           <!-- Delete the else tag from the if we replaced above -->
-          <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[6]" position="replace">
             <!-- Empty -->
           </xpath>
           <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="inside">
