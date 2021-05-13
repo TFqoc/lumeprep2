@@ -45,6 +45,7 @@ METRC Stock
         'wizard/warehouse_package_adjustment_views.xml',
         'wizard/metrc_package_adjustment_views.xml',
         'wizard/metrc_push_data.xml',
+        'wizard/package_item_change.xml',
 
         # data
         'data/metrc_cron_data.xml',

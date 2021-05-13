@@ -33,9 +33,6 @@ Metrc Integration
         'views/res_config_settings_views.xml',
         'report/flower_package_lables.xml',
 
-        # wizard views
-        'wizard/package_item_change.xml',
-
         # data
         'data/metrc_cron_data.xml',
         'data/metrc_uom_data.xml',
