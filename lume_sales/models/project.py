@@ -105,11 +105,13 @@ class Tasks(models.Model):
 
     def _compute_monetary_display(self):
         for record in self:
-            if record.stage_id.name in ["",""]:
+            if record.stage_id.name in ["Fulfillment","Order Ready","Out for Delivery"]:
                 qty = 0
                 for line in record.sales_order.order_line:
                     qty += line.product_uom_qty
                 record.monetary_display = "%s Qty: %s" % (str(record.sales_order.amount_total), str(qty))
+            else:
+                record.monetary_display = False
 
     def stage_id_from_name(self, name):
         for stage in self.project_id.type_ids:
