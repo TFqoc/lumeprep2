@@ -45,15 +45,15 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <!--<notebook position="inside">-->
-            <page name="description_page" position="before">
+            <notebook position="inside">
+            <!--<page name="description_page" position="before">-->
                 <group>
                     <page string="DL/Med ID" name="DL_med_image">
                         <field name="DL_or_med_image" />
                     </page>
                 </group>
-            </page>
-            <!--</notebook>-->
+            <!--</page>-->
+            </notebook>
         </field>
       </record>
       <!-- MEO - END -->
