@@ -19,7 +19,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'name': 'Test',
             'user_id': uid,
             'project_id': self.lumestore_one.id,
-            'partner_id': self.partner_2.id,
+            'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lumestore_one.type_ids.Check In').id
         })
         # TODO: This needs to be set to be the id of the current row's record.
