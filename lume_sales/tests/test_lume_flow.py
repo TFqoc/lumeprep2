@@ -24,9 +24,9 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         })
         record_ids = [Test_Task.id]
         # TODO: This needs to be set to be the id of the current row's record.
-        active_id = [self.env.ref('Test_Task').project_id.id]
+        active_id = [self.env.ref('lume_sales.Test_Task').project_id.id]
         # TODO: This needs to be all models currently loaded in the wizard
-        active_ids = [self.env.ref('Test_Task').project_id.id]
+        active_ids = [self.env.ref('lume_sales.Test_Task').project_id.id]
 
         uid = self.env.ref('base.user_admin').id
         self.env['project.task'].browse(record_ids).with_context({
