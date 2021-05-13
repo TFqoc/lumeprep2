@@ -16,8 +16,8 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         uid = self.env.ref('base.user_admin').id
         # TODO: This needs to be the id of the task being moved.
         record_ids = Task.create({
-            'name':
-            'user_id':
+            'name': 'Test',
+            'user_id': uid,
             'project_id': self.lumestore_one.id,
             'partner_id': self.partner_2.id,
             'stage_id': self.env.ref('lumestore_one.type_ids.Check In').id
