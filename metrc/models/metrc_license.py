@@ -83,10 +83,28 @@ class MetrcLicense(models.Model):
     flower_available = fields.Float("Available Flower")
     thc_available = fields.Float("Available THC")
     purchase_amount = fields.Float("Purchase Amount Days")
+    facility_license_id = fields.Many2one(comodel_name='metrc.license', string="Facliilty License",
+                                          domain=[('base_type', '=', 'Internal')],
+                                          ondelete='set null')
+    
 
     _sql_constraints = [
         ('uniq_license_by_customer', 'unique (license_number, base_type, partner_id)', 'Customer/Company can not have duplicate license number!'),
     ]
+
+    def refresh_allotments(self):
+        metrc_account = self.env.user.ensure_metrc_account()
+        uri = '/patients/v1/statuses/{}'.format(self.license_number)
+        params = {
+            'licenseNumber': self.facility_license_id.license_number,
+        }
+        patient_data = metrc_account.fetch('GET', uri, params=params)
+        if patient_data:
+            self.update({
+                'flower_available': 1.0,
+                'thc_available': 1.0,
+                'purchase_amount': 10.0,
+            })
 
     def toggle_active(self):
         super(MetrcLicense, self).toggle_active()
