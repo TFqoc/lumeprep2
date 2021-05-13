@@ -44,7 +44,11 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                         // console.log("Calling superfun");
                         // TODO if no cart, then rpc back to activate build cart
                         // then execute action to open cart window (Sales Order)
-                        superfun.apply(self, arguments);
+                        self._rpc({
+                            model: 'project.task',
+                            method: 'build_cart',
+                        });
+                        // superfun.apply(self, arguments);
                     }
                 });
                 
