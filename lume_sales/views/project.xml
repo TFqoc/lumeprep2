@@ -21,6 +21,7 @@
             <span style="font-weight: bold;">
                 <field name="partner_id" widget="res_partner_many2one"/>
             </span>
+            <field name="monetary_display"/>
           </xpath>
           <!-- Delete the else tag from the if we replaced above -->
           <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
@@ -49,6 +50,11 @@
           <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
           </xpath>
+          <field name="name" position="replace">
+            <t t-if="False"> <!-- TODO Some contition about caregivers -->
+              <field name="name"/>
+            </t>
+          </field>
           <!-- Replace a bunch of icons we are not using -->
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->

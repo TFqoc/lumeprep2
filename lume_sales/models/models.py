@@ -3,6 +3,7 @@
 from odoo import models, fields, api
 import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -68,8 +69,15 @@ class Partner(models.Model):
     # All validation checks should be done in this method
     ###########################################################
     def check_in(self):
+        # Validation checks
+        if self.is_banned:
+            raise ValidationError("This customer has been banned and cannot be checked in!")
+        if self.is_expired:
+            raise ValidationError("This customer has an expired licence! Please update licence information to allow customer to check in.")
+        if self._compute_age() or not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
+            raise ValidationError("This customer is not old enough to buy drugs!")
         ctx = self.env.context
-        _logger.info("CTX: " + str(ctx))
+        # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({

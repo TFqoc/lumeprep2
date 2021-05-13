@@ -1,8 +1,6 @@
 from odoo import models, fields, api
 from .barcode_parse import parse_code
-import datetime
 import logging
-import re
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -21,23 +19,22 @@ class Tasks(models.Model):
     time_at_last_save = fields.Integer(default=0)
     customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
-    # stage_id = fields.Many2one(readonly=True)
-    # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
+    monetary_display = fields.Char(compute='_compute_monetary_display')
 
     order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
 
-    def on_barcode_scanned(self, barcode):
-        _logger.info("BARCODE SCANNED")
-        if self.partner_id:
-            self.show_customer_form = True
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'res.partner',
-                'target': 'new', #for popup style window
-                'res_id': self.partner_id.id
-            }
+    # def on_barcode_scanned(self, barcode):
+    #     _logger.info("BARCODE SCANNED")
+    #     if self.partner_id:
+    #         self.show_customer_form = True
+    #         return {
+    #             'type': 'ir.actions.act_window',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'res_model': 'res.partner',
+    #             'target': 'new', #for popup style window
+    #             'res_id': self.partner_id.id
+    #         }
         # raise NotImplementedError("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented")
 
     @api.onchange('scan_text')
@@ -69,8 +66,6 @@ class Tasks(models.Model):
             })
             customer_id = new_customer.id
 
-        # self.name = "Customer Order #" + str(self.project_id.task_number)
-        # self.project_id.task_number += 1
         self.partner_id = customer_id
         if self.partner_id._compute_age() or not self.partner_id.is_over_21:
             raise ValidationError("This customer is not old enough to buy drugs!")
@@ -84,28 +79,13 @@ class Tasks(models.Model):
                 'res_id': customer_id,
             }
 
-    # @api.depends('partner_id')
-    # def _compute_show_customer_form(self):
-    #     if self.partner_id:
-    #         self.show_customer_form = True
-    #         return {
-    #             'type': 'ir.actions.act_window',
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'res_model': 'res.partner',
-    #             'target': 'new', #for popup style window
-    #             'res_id': self.partner_id.id
-    #         }
-    #     else:
-    #         self.show_customer_form = False
-
     @api.model
     def create(self, vals):
-        _logger.info("CREATE NEW TASK")
-        project = self.env['project.project'].browse(vals['project_id'])
-        vals['order_number'] = "Customer Order #" + str(project.task_number)
-        vals['name'] = self.env['res.partner'].browse(vals['partner_id']).name
-        project.task_number += 1
+        # _logger.info("CREATE NEW TASK")
+        # project = self.env['project.project'].browse(vals['project_id'])
+        # vals['order_number'] = "Customer Order #" + str(project.task_number)
+        # vals['name'] = self.env['res.partner'].browse(vals['partner_id']).name
+        # project.task_number += 1
         res = super(Tasks, self).create(vals)
         res.action_timer_start()
         return res
@@ -122,6 +102,20 @@ class Tasks(models.Model):
             channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
 
         self.dummy_field = 'dummy'
+
+    def _compute_monetary_display(self):
+        for record in self:
+            if record.stage_id.name in ["",""]:
+                qty = 0
+                for line in record.sales_order.order_line:
+                    qty += line.product_uom_qty
+                record.monetary_display = "%s Qty: %s" % (str(record.sales_order.amount_total), str(qty))
+
+    def stage_id_from_name(self, name):
+        for stage in self.project_id.type_ids:
+            if stage.name == name:
+                return stage.id
+        return False
 
     def build_cart(self):
         if not self.project_id.warehouse_id:
