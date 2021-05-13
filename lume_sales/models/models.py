@@ -96,6 +96,7 @@ class Partner(models.Model):
             "views":[[False, "kanban"]],
             "name": 'Tasks',
             "target": 'main',
+            "res_id": project.id,
             "domain": [('project_id', '=', project.id)],
             "context": {'default_project_id': project.id},
         }
