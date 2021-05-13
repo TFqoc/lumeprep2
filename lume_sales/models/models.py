@@ -31,7 +31,10 @@ class Partner(models.Model):
 
     def _compute_expired(self):
         for record in self:
-            record.is_expired = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
+            try:
+                record.is_expired = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
+            except:
+                record.is_expired = True
 
     def _search_expired(self, operation, value):
         return [('id','=',1)]
@@ -85,6 +88,7 @@ class Partner(models.Model):
             'project_id': project.id,
             'order_type': ctx['order_type'],
             'user_id': False,
+            'name': self.pref_name or self.name,
         })
         return {
             "type":"ir.actions.act_window",
