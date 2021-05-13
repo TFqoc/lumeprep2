@@ -20,7 +20,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'user_id': uid,
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
-            'stage_id': self.env.ref('lumestore_one.type_ids.Check In').id
+            'stage_id': self.env.ref('lume_sales.lume_stage_1').id
         })
         # TODO: This needs to be set to be the id of the current row's record.
         active_id = self.env.context.get('active_id', [])
