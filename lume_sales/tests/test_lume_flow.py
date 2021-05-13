@@ -15,13 +15,14 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
         # TODO: This needs to be the id of the task being moved.
-        record_ids = Task.create({
+        Test_Task = Task.create({
             'name': 'Test',
             'user_id': uid,
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lume_sales.lume_stage_1').id
         })
+        record_ids = [self.Test_Task.id]
         # TODO: This needs to be set to be the id of the current row's record.
         active_id = self.env.context.get('active_id', [])
         # TODO: This needs to be all models currently loaded in the wizard
