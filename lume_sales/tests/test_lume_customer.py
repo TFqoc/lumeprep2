@@ -29,7 +29,7 @@ class TestCustomerProfile(TestLumeSaleCommon):
     def test_warn(self):
         self.customer_rec.warn
         self.assertEqual(
-            self.customer_rec.warn,  
+            self.customer_rec.warnings,  
             1, 
             "Error in Partner Model: Number of warnings does not increase with the current method."
         )
