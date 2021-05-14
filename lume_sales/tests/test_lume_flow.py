@@ -14,7 +14,6 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
-        # TODO: This needs to be the id of the task being moved.
         Test_Task = Task.create({
             'name': 'Test',
             'user_id': uid, #Change to person assigned to that task.
@@ -23,10 +22,8 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'stage_id': self.env.ref('lume_sales.lume_stage_1').id
         })
         record_ids = [Test_Task.id]
-        # TODO: This needs to be set to be the id of the current row's record.
         active_id = [Test_Task.id]
-        # TODO: This needs to be all models currently loaded in the wizard
-        active_ids = [self.lumestore_one.id]
+        active_ids = [Test_Task.id, self.lumestore_one.id]
 
         uid = self.env.ref('base.user_admin').id
         self.env['project.task'].browse(record_ids).with_context({
@@ -40,10 +37,44 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).build_cart()
 
+        #Test Task Position.
+
         self.assertEqual(
             Test_Task.stage_id.sequence,
             10, 
             "Error in build_cart: Task did not move to the appropriate stage."
+        )
+
+        #Validating Sale_Order
+        # TODO: Assert that the Order Type is carried over to the Sale Order.
+
+        self.AssertTrue(
+            self.Test_Task.sales_order,
+            "Error in build_cart: Sale Order was not created."
+        )
+
+        self.AssertEqual(
+            self.Test_Task.sales_order.task.id,
+            self.Test_Task.id,
+            "Error in build_cart: Task was not tied to Sale Order."
+        )
+
+        self.AssertEqual(
+            self.Test_Task.sales_order.warehouse_id.id,
+            self.lumestore_one.warehouse_id.id,
+            "Error in build_cart: Sale Order did not have the correct warehouse."
+        )
+
+        self.AssertEqual(
+            self.Test_Task.sales_order.partner_id.id,
+            self.customer_rec.id,
+            "Error in build_cart: Sale Order did not have the correct customer."
+        )
+
+        self.AssertEqual(
+            self.Test_Task.sales_order.user_id.id,
+            self.Test_Task.uid,
+            "Error in build_cart: Sale Order did not have the correct user id."
         )
 
 
