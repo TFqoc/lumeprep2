@@ -49,31 +49,31 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         # TODO: Assert that the Order Type is carried over to the Sale Order.
 
         self.assertTrue(
-            self.Test_Task.sales_order,
+            Test_Task.sales_order,
             "Error in build_cart: Sale Order was not created."
         )
 
         self.assertEqual(
-            self.Test_Task.sales_order.task.id,
-            self.Test_Task.id,
+            Test_Task.sales_order.task.id,
+            Test_Task.id,
             "Error in build_cart: Task was not tied to Sale Order."
         )
 
         self.assertEqual(
-            self.Test_Task.sales_order.warehouse_id.id,
+            Test_Task.sales_order.warehouse_id.id,
             self.lumestore_one.warehouse_id.id,
             "Error in build_cart: Sale Order did not have the correct warehouse."
         )
 
         self.assertEqual(
-            self.Test_Task.sales_order.partner_id.id,
+            Test_Task.sales_order.partner_id.id,
             self.customer_rec.id,
             "Error in build_cart: Sale Order did not have the correct customer."
         )
 
         self.assertEqual(
-            self.Test_Task.sales_order.user_id.id,
-            self.Test_Task.uid,
+            Test_Task.sales_order.user_id.id,
+            Test_Task.uid,
             "Error in build_cart: Sale Order did not have the correct user id."
         )
 
