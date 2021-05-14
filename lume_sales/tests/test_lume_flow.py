@@ -17,7 +17,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         # TODO: This needs to be the id of the task being moved.
         Test_Task = Task.create({
             'name': 'Test',
-            'user_id': uid,
+            'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lume_sales.lume_stage_1').id
