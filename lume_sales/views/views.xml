@@ -1,39 +1,5 @@
 <odoo>
   <data>
-    <record id="res_partner_inherit" model="ir.ui.view">
-      <field name="name">res.partner.inherit</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//form//sheet" position="before">
-            <header>
-                <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
-            </header>
-        </xpath>
-        <field name="vat" position="after">
-          <field name="is_medical" string="Is Medical"/>
-          <field name="medical_id" string="MMM ID"/>
-          <field name="medical_expiration" string="MM Exp"/>
-          <field name="date_of_birth" string="DOB"/>
-          <field name="is_over_21" string="21+"/>
-          <field name="drivers_license_number" string="Drivers #"/>
-          <field name="drivers_license_expiration" string="DL Expiration"/>
-          <button name="warn" string="Issue Warning" type="object" class="btn btn-primary" />
-          <field name="is_banned" invisible="1"/>
-          <field name="warnings" invisible="1"/>
-          <div>
-            <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: gold;" attrs="{'invisible': [('warnings', '&lt;', '1')]}" aria-label="Warning 1" title="Warning 1"/>
-            <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: orange;" attrs="{'invisible': [('warnings', '&lt;', '2')]}" aria-label="Warning 2" title="Warning 2"/>
-            <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon" style="color: red;" attrs="{'invisible': [('warnings', '&lt;', '3')]}" aria-label="Warning 3" title="Warning 3"/>
-          </div>
-        </field>
-        <field name="image_1920" position="before">
-          <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
-        </field>
-      </field>
-    </record>
-
-
     <!-- Quick Create task menu -->
     <record id="view_project_kanban_quick_create_inherit" model="ir.ui.view">
       <field name="name">project.task.quick_create.inherit</field>
@@ -51,6 +17,7 @@
           <field name="order_type"/>
         </field>
         <field name="name" position="replace"></field>
+        <field name="user_id" position="replace"></field>
       </field>
     </record>
 
@@ -105,6 +72,7 @@
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
+          <field name="blink_threshold"/>
         </field>
       </field>
     </record>

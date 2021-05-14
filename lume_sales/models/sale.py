@@ -7,6 +7,47 @@ class SaleOrder(models.Model):
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
 
+# <button class="oe_stat_button" type="object" name="open_tracebility" icon="fa-arrows-v" string="Tracebility" widget="statinfo"/>
+
+
+# @api.multi
+# def open_tracebility(self):
+#     res = self.env['ir.actions.act_window'].for_xml_id('custom_module_name', 'wizard_action')
+#     return res
+
+# https://www.odoo.com/forum/help-1/how-to-execute-a-python-function-on-kanban-click-130496
+
+    # def open_catalog(self):
+    #     self.ensure_one()
+    #     return {
+    #             'type': 'ir.actions.act_window',
+    #             'name': 'Product Catalog',
+    #             'view_type': 'kanban',
+    #             'view_mode': 'kanban',
+    #             'res_model': 'product.product',
+    #             'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
+    #             'target': 'new',
+    #             'res_id': self.id,
+    #             'context': {'lpc_sale_order_id': self.id},
+    #             'domain': [],
+    #             'search_view_id': ('category_grouping_search', 'Catagory Grouping'),
+    #         }
+    def open_catalogV2(self):
+        self.ensure_one()
+        return {
+                'type': 'ir.actions.act_window',
+                'name': 'Product Catalog',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'res_model': 'product.product',
+                'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
+                'target': 'current',
+                'res_id': self.id,
+                'context': {'lpc_sale_order_id': self.id},
+                'domain': [],
+                # 'search_view_id': (id, name),
+            }
+
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
@@ -24,7 +65,7 @@ class SaleOrder(models.Model):
     # @api.onchange('is_delivered')
     def on_fulfillment(self):
         if self.task.stage_id.name != 'Order Ready':
-            self.task.next_stage() 
+            self.task.change_stage(3) 
 
     @api.onchange('partner_id')
     def check_order_lines(self):
@@ -41,7 +82,7 @@ class SaleOrder(models.Model):
             raise ValidationError("You must have at least one sale order line in order to confirm this Sale Order!")
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
-            self.task.next_stage()
+            self.task.change_stage(2)
         return ret
         # POS will now pick up the SO because it is in 'sale' state
 

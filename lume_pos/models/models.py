@@ -74,7 +74,7 @@ class pos_test(models.Model):
         order = self.browse(order_id)
         order.state = 'done'
         if order.task:
-            order.task.next_stage()
+            order.task.change_stage(5)
 
     @api.model
     def jsonify_orders(self, orders, session_id):
