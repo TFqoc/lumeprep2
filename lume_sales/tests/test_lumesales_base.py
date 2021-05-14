@@ -19,6 +19,7 @@ class TestLumeSaleCommon(SavepointCase):
         #user_group_district_manager = cls.env.res('Permissions Group Goes Here')
 
         _logger.warning("Setting up data for Lume Test.")
+        # TODO: Remove.
 
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
 

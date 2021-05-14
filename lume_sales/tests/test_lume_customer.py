@@ -12,6 +12,7 @@ class TestComputedFields(TestLumeSaleCommon):
             "Error in is_banned computed field: Customer was not banned despite having three or more strikes."
         )
         _logger.warning("Test Is Banned Status: Complete.")
+        # TODO: Remove.
 
     def test_compute_21(self):
         self.assertTrue(
@@ -19,6 +20,7 @@ class TestComputedFields(TestLumeSaleCommon):
             "Error in compute_21 computed field: Customer does not register as over age despite being far older."
         )
         _logger.warning("Test Compute Twenty-One Status: Complete.")
+        # TODO: Remove.
 
     # def test_lume_testing(self):
     #     self.assertTrue(False, "This should always fail.")
@@ -44,6 +46,7 @@ class TestCustomerProfile(TestLumeSaleCommon):
             "Error in Partner Model: Number of warnings does not increase with the current method."
         )
         _logger.warning("Test Warn Status: Complete.") 
+        # TODO: Remove.
 
     # def test_warn_test(self):
     #     self.assertEqual(
