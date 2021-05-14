@@ -170,6 +170,10 @@ class Tasks(models.Model):
         # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
 
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
+        self.order_type = self.partner_id.order_type
+
     @api.onchange('stage_id')
     def capture_time(self, old_stage):
         new_stage = self.stage_id.name
