@@ -372,8 +372,8 @@ class project_tasks_inherit(models.Model):
     try:
         # Catches exceptions caused scan not being an image
         #DL_or_med_image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image))
-        image = tools.base64_to_image(DL_or_med_image)
-        image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image))
+        #image = tools.base64_to_image(DL_or_med_image)
+        image = tools.image_fix_orientation(DL_or_med_image)
     except (AttributeError, KeyError, IndexError):
         pass
 
