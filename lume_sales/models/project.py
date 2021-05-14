@@ -366,14 +366,15 @@ class project_tasks_inherit(models.Model):
                                    max_width=600, max_height=300, verify_resolution=True)
     #DL_or_med_image = ImageOps.exif_transpose(DL_or_med_image)
     try:
+        _logger.debug("Using EXIF tags")
         for orientation in ExifTags.TAGS.keys():
             if ExifTags.TAGS[orientation] == 'Orientation':
-                _logger.info("Exif tag for orientation found")
+                _logger.debug("Exif tag for orientation found")
                 break
 
         exif = DL_or_med_image._getexif()
 
-        _logger.info("Orientation:" + exif[orientation])
+        _logger.debug("Orientation:" + exif[orientation])
         if exif[orientation] == 3:
             image = DL_or_med_image.rotate(180, expand=True)
         elif exif[orientation] == 6:
@@ -382,6 +383,7 @@ class project_tasks_inherit(models.Model):
             image = DL_or_med_image.rotate(90, expand=True)
 
     except (AttributeError, KeyError, IndexError):
+        _logger.debug("Exception encountered:" + AttributeError)
         # cases: image don't have getexif
         pass
     # MEO End
