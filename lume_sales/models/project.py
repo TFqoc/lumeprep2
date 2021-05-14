@@ -4,7 +4,7 @@ import datetime
 import logging
 import re
 
-
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -368,12 +368,13 @@ class project_tasks_inherit(models.Model):
 
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
-
+    DL_or_med_image_64 = base64.b64encode(DL_or_med_image)
     try:
         # Catches exceptions caused scan not being an image
         #DL_or_med_image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image))
-        #image = tools.base64_to_image(DL_or_med_image)
-        image = tools.image_fix_orientation(DL_or_med_image)
+        image = tools.base64_to_image(DL_or_med_image_64)
+        image = tools.image_fix_orientation(DL_or_med_image_64)
+        DL_or_med_image = image
     except (AttributeError, KeyError, IndexError):
         pass
 
