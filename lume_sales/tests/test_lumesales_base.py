@@ -125,6 +125,10 @@ class TestLumeSaleCommon(SavepointCase):
                     'sequence': 30,
                 }),
                 (0, 0, {
+                    'name': 'Out for Delivery',
+                    'sequence': 40,
+                }),
+                (0, 0, {
                     'name': 'Done',
                     'fold': True, #Folds the stage in Kaliban view
                     'is_closed': True, #Makes all tasks within the stage be marked as "Done".
@@ -155,6 +159,10 @@ class TestLumeSaleCommon(SavepointCase):
                 (0, 0, {
                     'name': 'Order Ready',
                     'sequence': 30,
+                }),
+                (0, 0, {
+                    'name': 'Out for Delivery',
+                    'sequence': 40,
                 }),
                 (0, 0, {
                     'name': 'Done',
