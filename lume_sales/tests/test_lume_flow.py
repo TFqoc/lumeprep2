@@ -73,7 +73,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
 
         self.assertEqual(
             Test_Task.sales_order.user_id.id,
-            Test_Task.uid,
+            uid,
             "Error in build_cart: Sale Order did not have the correct user id."
         )
 
