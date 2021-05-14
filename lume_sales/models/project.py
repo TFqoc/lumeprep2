@@ -368,10 +368,12 @@ class project_tasks_inherit(models.Model):
     try:
         for orientation in ExifTags.TAGS.keys():
             if ExifTags.TAGS[orientation] == 'Orientation':
+                _logger.info("Exif tag for orientation found")
                 break
 
         exif = DL_or_med_image._getexif()
 
+        _logger.info("Orientation:" + exif[orientation])
         if exif[orientation] == 3:
             image = DL_or_med_image.rotate(180, expand=True)
         elif exif[orientation] == 6:
