@@ -30,6 +30,7 @@ class Partner(models.Model):
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
 
+    @api.depends('medical_expiration')
     def _compute_expired_medical(self):
         for record in self:
             try:
@@ -37,6 +38,7 @@ class Partner(models.Model):
             except:
                 record.is_expired_medical = True
 
+    @api.depends('drivers_license_expiration')
     def _compute_expired_dl(self):
         for record in self:
             try:
