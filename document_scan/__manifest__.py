@@ -7,7 +7,7 @@
     'author' : 'Tiny SPRL - AJM Technologies S.A',
     'website': "http://www.qocinnovations.com",
     'description' : """This module add document scan post-processing to documents""",
-    'depends': ['document'],
+    'depends': ['documents'],
 
     'data': [
         'security/groups.xml',
