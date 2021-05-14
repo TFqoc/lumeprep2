@@ -77,6 +77,10 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             "Error in build_cart: Sale Order did not have the correct user id."
         )
 
+        # TODO Assert that the view has changed to be that of the Sale Order as well as the Sale Order is already in edit mode.
+
+        _logger.debug("Test Build Cart Status: Complete.")
+
 
     
 
