@@ -1,4 +1,5 @@
 #from PIL import ImageOps
+from PIL import ExifTags
 from odoo import models, fields, api
 from .barcode_parse import parse_code
 import datetime
@@ -364,4 +365,21 @@ class project_tasks_inherit(models.Model):
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
     #DL_or_med_image = ImageOps.exif_transpose(DL_or_med_image)
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+
+        exif = DL_or_med_image._getexif()
+
+        if exif[orientation] == 3:
+            image = DL_or_med_image.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            image = DL_or_med_image.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            image = DL_or_med_image.rotate(90, expand=True)
+
+    except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
+        pass
     # MEO End
