@@ -172,7 +172,7 @@ class Tasks(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner(self):
-        self.order_type = self.partner_id.order_type
+        self.order_type = self.partner_id.customer_type
 
     @api.onchange('stage_id')
     def capture_time(self, old_stage):
