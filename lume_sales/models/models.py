@@ -83,10 +83,12 @@ class Partner(models.Model):
     ###########################################################
     def check_in(self):
         _logger.info("CTX: " + str(self.env.context))
+        _logger.info("GET VALUE: " + self.env.context.get('order_type'))
+        _logger.info("Expression result" + str(self.is_expired_medical and self.env.context.get('order_type') == 'medical'))
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
-        if self.is_expired_medical and self.env.context.get('order_type') is 'medical':
+        if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
             raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
