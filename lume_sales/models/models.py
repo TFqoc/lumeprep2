@@ -82,9 +82,6 @@ class Partner(models.Model):
     # All validation checks should be done in this method
     ###########################################################
     def check_in(self):
-        _logger.info("CTX: " + str(self.env.context))
-        _logger.info("GET VALUE: " + self.env.context.get('order_type'))
-        _logger.info("Expression result" + str(self.is_expired_medical and self.env.context.get('order_type') == 'medical'))
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")

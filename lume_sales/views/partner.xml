@@ -35,8 +35,8 @@
                 </div>
               </field>
               <field name="image_1920" position="before">
-                <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
                 <widget name="web_ribbon" title="Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False),('is_expired_dl','=',False)]}"/>
+                <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
               </field>
               <field name="category_id" position="attributes">
                   <attribute name="string">Customer Groups</attribute>
