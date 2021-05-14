@@ -82,6 +82,7 @@ class Partner(models.Model):
     # All validation checks should be done in this method
     ###########################################################
     def check_in(self):
+        _logger.info("CTX: " + str(self.env.context))
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
