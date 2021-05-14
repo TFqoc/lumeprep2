@@ -12,6 +12,7 @@
           </xpath>
            <!-- Needed field tag to access the model field later in this view -->
           <xpath expr="/kanban/field" position="after">
+            <field name="fulfillment_type"/>
             <field name="order_type"/>
             <field name="customer_type"/>
             <field name="blink_threshold"/>
@@ -41,16 +42,16 @@
             <field name="timer_start" widget="live_timer"/>
             <br/>
             <!-- <span>
-              <span t-if="record.order_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
-              <span t-if="record.order_type.raw_value == 'store'" class="fa fa-cart-arrow-down" title="store"></span>
-              <span t-if="record.order_type.raw_value == 'online'" class="fa fa-laptop" title="online"></span>
+              <span t-if="record.fulfillment_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
+              <span t-if="record.fulfillment_type.raw_value == 'store'" class="fa fa-cart-arrow-down" title="store"></span>
+              <span t-if="record.fulfillment_type.raw_value == 'online'" class="fa fa-laptop" title="online"></span>
             </span> -->
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top']/div)" position="after">
             <!-- Replace user avatar for customer "partner" avatar -->
-            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar"/>
+            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
             <img t-if="record.customer_type.raw_value == 'medical'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32"/>
             <img t-if="record.customer_type.raw_value == 'adult'" src="/lume_sales/static/src/image/heart-128.png" alt="heart" width="32" height="32"/>
             <img t-if="record.customer_type.raw_value == 'caregiver'" src="/lume_sales/static/src/image/blue_cross_white_blue-128.png" alt="cross" width="32" height="32"/>
@@ -63,10 +64,10 @@
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
           <xpath expr="//templates/t/div" position="attributes">
-            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.order_type.raw_value == 'curb' ? 'firebrick' : (record.order_type.raw_value == 'store' ? 'steelblue' : (record.order_type.raw_value == 'online' ? 'goldenrod' : (record.order_type.raw_value == 'delivery' ? 'mediumseagreen' : 'black')))}};</attribute>
+            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.fulfillment_type.raw_value == 'curb' ? 'firebrick' : (record.fulfillment_type.raw_value == 'store' ? 'steelblue' : (record.fulfillment_type.raw_value == 'online' ? 'goldenrod' : (record.fulfillment_type.raw_value == 'delivery' ? 'mediumseagreen' : 'black')))}};</attribute>
           </xpath>
           <xpath expr="//progressbar" position="replace">
-            <progressbar field="order_type" colors="{&quot;store&quot;: &quot;store&quot;, &quot;online&quot;: &quot;online&quot;, &quot;delivery&quot;: &quot;delivery&quot;, &quot;curb&quot;: &quot;curb&quot;}"/>
+            <progressbar field="fulfillment_type" colors="{&quot;store&quot;: &quot;store&quot;, &quot;online&quot;: &quot;online&quot;, &quot;delivery&quot;: &quot;delivery&quot;, &quot;curb&quot;: &quot;curb&quot;}"/>
           </xpath>
         </field>
       </record>

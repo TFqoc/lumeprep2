@@ -96,6 +96,7 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                             flags: {mode: 'edit'},
                             context: {
                                 check_in_window: true,
+                                fulfillment_type: data.fulfillment_type,
                                 order_type: data.order_type,
                                 project_id: data.project_id,
                                 partner_id: data.partner_id},

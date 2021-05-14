@@ -17,7 +17,8 @@ class Partner(models.Model):
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
     is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
-    is_expired = fields.Boolean(compute='_compute_expired', search='_search_expired')
+    is_expired_medical = fields.Boolean(compute='_compute_expired_medical', search='_search_expired_medical')
+    is_expired_dl = fields.Boolean(compute='_compute_expired_dl', search='_search_expired_dl')
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
@@ -29,12 +30,19 @@ class Partner(models.Model):
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
 
-    def _compute_expired(self):
+    def _compute_expired_medical(self):
         for record in self:
             try:
-                record.is_expired = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
+                record.is_expired_medical = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
             except:
-                record.is_expired = True
+                record.is_expired_medical = True
+
+    def _compute_expired_dl(self):
+        for record in self:
+            try:
+                record.is_expired_dl = record.drivers_license_expiration < datetime.date.today()
+            except:
+                record.is_expired_dl = True
 
     def _search_expired(self, operation, value):
         return [('id','=',1)]
@@ -75,8 +83,10 @@ class Partner(models.Model):
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
-        if self.is_expired:
-            raise ValidationError("This customer has an expired licence! Please update licence information to allow customer to check in.")
+        if self.is_expired_medical and self.env.context['order_type'] is 'medical':
+            raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
+        if self.is_expired_dl:
+            raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
         if self._compute_age() or not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
             raise ValidationError("This customer is not old enough to buy drugs!")
         ctx = self.env.context
@@ -86,6 +96,7 @@ class Partner(models.Model):
         self.env['project.task'].create({
             'partner_id': int(ctx['partner_id']),
             'project_id': project.id,
+            'fulfillment_type': ctx['fulfillment_type'],
             'order_type': ctx['order_type'],
             'user_id': False,
             'name': self.pref_name or self.name,

@@ -23,7 +23,8 @@ class Tasks(models.Model):
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
 
-    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
+    fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
+    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
 
     # def on_barcode_scanned(self, barcode):
     #     _logger.info("BARCODE SCANNED")
@@ -129,12 +130,15 @@ class Tasks(models.Model):
     def build_cart(self):
         if not self.project_id.warehouse_id:
             raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
+        # Reconcile my order_type with customer's order type
+
         self.sales_order = self.env['sale.order'].create({
             'partner_id':self.partner_id.id,
             'task':self.id,
             'date_order': fields.datetime.now(),
             # 'picking_policy':'direct',
             # 'pricelist_id':'idk',
+            'order_type': self.order_type,
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
         })
