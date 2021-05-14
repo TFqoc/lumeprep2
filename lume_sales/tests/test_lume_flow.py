@@ -40,8 +40,10 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).build_cart()
 
-        self.assertTrue(False, "This should Fail."
-
+        self.assertEqual(
+            Test_Task.stage_id.sequence,
+            10, 
+            "Error in build_cart: Task did not move to the appropriate stage."
         )
 
 
