@@ -101,7 +101,7 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.lumestore_one = Stores.create({
             'name': 'Peterson',
-            'warehouse_id': cls.lumehouse_one.id
+            'warehouse_id': cls.lumehouse_one.id,
             'allow_timesheets': True,
             'allow_timesheet_timer': True,
             'privacy_visibility': 'followers',
