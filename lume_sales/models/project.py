@@ -370,15 +370,15 @@ class project_tasks_inherit(models.Model):
                                    max_width=600, max_height=300, verify_resolution=True)
     DL_or_med_image_64 = base64.b64encode(DL_or_med_image)
     _logger.debug("DL_or_med_image_64:" + DL_or_med_image_64)
-    try:
-        # Catches exceptions caused scan not being an image
-        #DL_or_med_image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image))
-        #image = tools.base64_to_image(DL_or_med_image_64)
-        image = tools.base64_to_image(tools.base64_to_image(DL_or_med_image_64))
-        image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image_64))
-        DL_or_med_image = image
-    except (AttributeError, KeyError, IndexError):
-        pass
+    # try:
+    #     # Catches exceptions caused scan not being an image
+    #     #DL_or_med_image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image))
+    #     #image = tools.base64_to_image(DL_or_med_image_64)
+    #     image = tools.base64_to_image(tools.base64_to_image(DL_or_med_image_64))
+    #     image = tools.image_fix_orientation(tools.base64_to_image(DL_or_med_image_64))
+    #     DL_or_med_image = image
+    # except (AttributeError, KeyError, IndexError):
+    #     pass
 
     # DL_or_med_image = ImageOps.exif_transpose(DL_or_med_image)
 
