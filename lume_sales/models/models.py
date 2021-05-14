@@ -89,7 +89,7 @@ class Partner(models.Model):
             raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if self._compute_age() or not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
+        if not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
             raise ValidationError("This customer is not old enough to buy drugs!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
