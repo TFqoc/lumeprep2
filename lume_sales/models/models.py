@@ -87,9 +87,13 @@ class Partner(models.Model):
             raise ValidationError("This customer has been banned and cannot be checked in!")
         if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
             raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
+        if not self.medical_id:
+            raise ValidationError("Invalid medical id!")
+        if not self.drivers_license_number:
+            raise ValidationError("Invalid drivers licence!")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
+        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and self.is_over_18): # TODO: Add validation for 18 year olds with medical cards
             raise ValidationError("This customer is not old enough to buy drugs!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
