@@ -1,15 +1,17 @@
 from odoo import models, fields, api
 from .barcode_parse import parse_code
-import datetime
 import logging
-import re
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
+
+TASK_STAGES = ["Check In","Build Cart","Fulfillment","Order Ready","Out for Delivery","Done"]
 
 class Tasks(models.Model):
     _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
     _description = 'project.task'
+    _order = "create_date, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
@@ -17,23 +19,24 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
-    # stage_id = fields.Many2one(readonly=True)
-    # show_customer_form = fields.Boolean(compute='_compute_show_customer_form')
+    customer_type = fields.Selection(related="partner_id.customer_type")
+    blink_threshold = fields.Integer(related="project_id.blink_threshold")
+    monetary_display = fields.Char(compute='_compute_monetary_display')
 
-    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website')], default='store')
+    order_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
 
-    def on_barcode_scanned(self, barcode):
-        _logger.info("BARCODE SCANNED")
-        if self.partner_id:
-            self.show_customer_form = True
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'res.partner',
-                'target': 'new', #for popup style window
-                'res_id': self.partner_id.id
-            }
+    # def on_barcode_scanned(self, barcode):
+    #     _logger.info("BARCODE SCANNED")
+    #     if self.partner_id:
+    #         self.show_customer_form = True
+    #         return {
+    #             'type': 'ir.actions.act_window',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'res_model': 'res.partner',
+    #             'target': 'new', #for popup style window
+    #             'res_id': self.partner_id.id
+    #         }
         # raise NotImplementedError("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented")
 
     @api.onchange('scan_text')
@@ -65,10 +68,9 @@ class Tasks(models.Model):
             })
             customer_id = new_customer.id
 
-        # self.name = "Customer Order #" + str(self.project_id.task_number)
-        # self.project_id.task_number += 1
         self.partner_id = customer_id
-
+        if self.partner_id._compute_age() or not self.partner_id.is_over_21:
+            raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
@@ -79,28 +81,13 @@ class Tasks(models.Model):
                 'res_id': customer_id,
             }
 
-    # @api.depends('partner_id')
-    # def _compute_show_customer_form(self):
-    #     if self.partner_id:
-    #         self.show_customer_form = True
-    #         return {
-    #             'type': 'ir.actions.act_window',
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'res_model': 'res.partner',
-    #             'target': 'new', #for popup style window
-    #             'res_id': self.partner_id.id
-    #         }
-    #     else:
-    #         self.show_customer_form = False
-
     @api.model
     def create(self, vals):
-        _logger.info("CREATE NEW TASK")
-        project = self.env['project.project'].browse(vals['project_id'])
-        vals['order_number'] = "Customer Order #" + str(project.task_number)
-        vals['name'] = self.env['res.partner'].browse(vals['partner_id']).name
-        project.task_number += 1
+        # _logger.info("CREATE NEW TASK")
+        # project = self.env['project.project'].browse(vals['project_id'])
+        # vals['order_number'] = "Customer Order #" + str(project.task_number)
+        # vals['name'] = self.env['res.partner'].browse(vals['partner_id']).name
+        # project.task_number += 1
         res = super(Tasks, self).create(vals)
         res.action_timer_start()
         return res
@@ -118,7 +105,30 @@ class Tasks(models.Model):
 
         self.dummy_field = 'dummy'
 
+    def _compute_monetary_display(self):
+        for record in self:
+            if record.stage_id.name in ["Fulfillment","Order Ready","Out for Delivery"]:
+                qty = 0
+                for line in record.sales_order.order_line:
+                    qty += line.product_uom_qty
+                record.monetary_display = "$%.2f Qty: %s" % (record.sales_order.amount_total, str(qty))
+            else:
+                record.monetary_display = False
+
+    def stage_id_from_name(self, name):
+        for stage in self.project_id.type_ids:
+            if stage.name == name:
+                return stage.id
+        return False
+
+    # This method exists only as an endpoint for js to call
+    @api.model
+    def generate_cart(self, id):
+        return self.browse(id).build_cart()
+
     def build_cart(self):
+        if not self.project_id.warehouse_id:
+            raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
         self.sales_order = self.env['sale.order'].create({
             'partner_id':self.partner_id.id,
             'task':self.id,
@@ -126,8 +136,9 @@ class Tasks(models.Model):
             # 'picking_policy':'direct',
             # 'pricelist_id':'idk',
             'warehouse_id':self.project_id.warehouse_id.id,
+            'user_id': self.env.uid,
         })
-        self.next_stage()
+        self.change_stage(1)
         # Open up the sale order we just created
         context = dict(self.env.context)
         context['form_view_initial_mode'] = 'edit'
@@ -139,20 +150,13 @@ class Tasks(models.Model):
             "context":context,
         }
 
-    def next_stage(self):
-        # TODO add closing stage to this if statement
-        if self.stage_id.name == 'Done':
+    def change_stage(self, stage_index):
+        if self.stage_id.name == 'Done' or self.stage_id.is_closed:
             return
-
-        get_next = False
-        for stage in self.project_id.type_ids:
-            if get_next:
-                self.stage_id = stage
-                break
-            elif stage == self.stage_id:
-                get_next = True
-        self.change_stage()
-
+        stage_name = TASK_STAGES[stage_index]
+        old_name = self.stage_id.name
+        self.stage_id = self.stage_id_from_name(stage_name)
+        self.capture_time(old_name)
 
     # Mail module > models > mail_channel.py Line 758
 
@@ -163,9 +167,9 @@ class Tasks(models.Model):
         target_record.unlink()
 
     @api.onchange('stage_id')
-    def change_stage(self):
+    def capture_time(self, old_stage):
         new_stage = self.stage_id.name
-        old_stage = self._origin.stage_id.name
+        old_stage = old_stage or self._origin.stage_id.name
         self._origin.stage_id = self.stage_id
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
@@ -207,7 +211,7 @@ class Tasks(models.Model):
             'user_id': self.env.uid,
             'unit_amount': minutes,
         }
-        self.user_timer_id.unlink()
+        self.user_timer_id.sudo().unlink()
         return self.env['account.analytic.line'].create(values)
 
     def action_timer_auto_stop(self, desc=None):
@@ -223,6 +227,7 @@ class Tasks(models.Model):
             #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
         #return False
 
+        
     # def parse_all(self, code):
     #     dlstring = code
     #     e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
@@ -354,4 +359,11 @@ class project_inherit(models.Model):
 
     task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
+    blink_threshold = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
+
+# class ProjectTaskType(models.Model):
+#     _inherit = 'project.task.type'
+
+
+

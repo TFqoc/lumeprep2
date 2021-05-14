@@ -115,13 +115,13 @@ odoo.define('lume_pos.PatchTest', function(require) {
       },
       onAddProduct: function(){
         try{
-          if (!this.pos.get_order().updating){
-            let product = this.pos.get_order().get_last_orderline().product;
+          if (!this.updating){
+            let product = this.get_last_orderline().product;
             // console.log("Adding product id \""+product.id+"\" from sale id \""+this.pos.get_order().sale_order_id+"\"");
             this.pos.rpc({
               'model': 'sale.order',
               'method': 'add_item',
-              args: [this.pos.get_order().sale_order_id, product.id, 1],
+              args: [this.sale_order_id, product.id, 1],
             });
           }
         }
