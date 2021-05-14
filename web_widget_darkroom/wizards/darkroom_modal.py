@@ -71,7 +71,6 @@ class DarkroomModal(models.TransientModel):
         default=lambda s: s._default_image(),
     )
 
-    @api.multi
     def action_save(self):
         self.ensure_one()
 
