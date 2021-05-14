@@ -57,8 +57,8 @@ class Partner(models.Model):
                 record.is_over_18 = False
             else:
                 difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
-                record['is_over_21'] = difference_in_years >= 21
-                record['is_over_18'] = difference_in_years >= 18
+                record.is_over_21 = difference_in_years >= 21
+                record.is_over_18 = difference_in_years >= 18
 
     def _search_is_over_21(self, operator, value):
         years_ago = datetime.datetime.now() - relativedelta(years=21)
@@ -87,14 +87,14 @@ class Partner(models.Model):
             raise ValidationError("This customer has been banned and cannot be checked in!")
         if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
             raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
-        if not self.medical_id:
+        if not self.medical_id and self.env.context.get('order_type') == 'medical':
             raise ValidationError("Invalid medical id!")
         if not self.drivers_license_number:
             raise ValidationError("Invalid drivers licence!")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and self.is_over_18): # TODO: Add validation for 18 year olds with medical cards
-            raise ValidationError("This customer is not old enough to buy drugs!")
+        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and self.is_over_18):
+            raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
@@ -124,6 +124,7 @@ class Partner(models.Model):
     def _compute_expirations(self):
         for record in self:
             record._compute_21()
+            record._compute_18()
 
 
     
