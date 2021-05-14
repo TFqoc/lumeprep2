@@ -48,10 +48,8 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                             model: 'project.task',
                             method: 'generate_cart',
                             args: [result[0].id],
-                        }).then(function(result){
-                            // self.do_action({
-                                
-                            // });
+                        }).then(function(result2){
+                            self.do_action(result2[0]);
                         });
                         // superfun.apply(self, arguments);
                     }
