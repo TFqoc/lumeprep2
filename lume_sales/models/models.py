@@ -59,6 +59,7 @@ class Partner(models.Model):
                 difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
                 record.is_over_21 = difference_in_years >= 21
                 record.is_over_18 = difference_in_years >= 18
+                _logger.info("AGE: " + str(difference_in_years))
 
     def _search_is_over_21(self, operator, value):
         years_ago = datetime.datetime.now() - relativedelta(years=21)
