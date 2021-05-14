@@ -1,0 +1,207 @@
+<openerp>
+  <data>
+
+        <record model="ir.ui.view" id="document_directory_form">
+            <field name="name">document.directory.form</field>
+            <field name="model">document.directory</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="document.view_document_directory_form" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Processing">
+                        <field name="to_process" colspan="2"/>
+                        <field name="scanning_device" colspan="2"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="document_scanning_device_form">
+            <field name="name">document.scanning.device.form</field>
+            <field name="model">document.scanning.device</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Scanning Devices">
+                    <field name="name" select="1"/>
+                    <field name="model" select="1"/>
+                    <group colspan="2" col="2">
+                        <separator string="Resolution" colspan="2"/>
+                        <field name="auto_resolution"/>
+                        <field name="resolution" attrs="{'readonly':[('auto_resolution','=',True)]}"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Checkbox detection" colspan="2"/>
+                        <field name="threshold"/>
+                        <field name="deviance_max"/>
+                        <field name="deviance_threshold"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Others Options" colspan="2"/>
+                        <field name="debug"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="document_scanning_device_tree">
+            <field name="name">document.scanning.device.tree</field>
+            <field name="model">document.scanning.device</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Scanning Devices">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="auto_resolution"/>
+                    <field name="resolution"/>
+                    <field name="debug"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="document_scanning_device_search">
+            <field name="name">document.scanning.device.search</field>
+            <field name="model">document.scanning.device</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scanning Devices">
+                    <field name="model"/>
+                    <field name="name"/>
+                    <field name="auto_resolution"/>
+                    <field name="resolution"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="document_scanning_device_act">
+            <field name="name">Document Scanning Device</field>
+            <field name="res_model">document.scanning.device</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="document_scanning_device_search"/>
+        </record>
+
+        <menuitem id="document_scanning_device_menu"
+                parent="knowledge.menu_document_configuration"
+                action="document_scanning_device_act"/>
+
+        <record model="ir.ui.view" id="document_scanning_action_form">
+            <field name="name">document.scanning.action.form</field>
+            <field name="model">document.scanning.action</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Scanning Action">
+                    <field name="name" select="1"/>
+                    <field name="priority"/>
+                    <field name="res_model"/>
+                    <field name="function"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="document_scanning_action_tree">
+            <field name="name">document.scanning.action.tree</field>
+            <field name="model">document.scanning.action</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Scanning Action">
+                    <field name="name"/>
+                    <field name="res_model"/>
+                    <field name="priority"/>
+                    <field name="function"/>
+                </tree>
+			</field>
+		</record>
+
+        <record model="ir.ui.view" id="document_scanning_action_search">
+            <field name="name">document.scanning.action.search</field>
+            <field name="model">document.scanning.action</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scanning Action">
+                    <field name="name"/>
+                    <field name="res_model"/>
+                    <field name="function"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="document_scanning_action_act">
+            <field name="name">Document Scanning Action</field>
+            <field name="res_model">document.scanning.action</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="document_scanning_action_search"/>
+        </record>
+
+        <menuitem id="document_scanning_action_menu"
+			parent="knowledge.menu_document_configuration"
+            action="document_scanning_action_act"/>
+
+        <record id="view_document_scanning_rename_search" model="ir.ui.view">
+            <field name="name">document.scanning.rename.search</field>
+            <field name="model">document.scanning.rename</field>
+            <field name="type">search</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Document Scanning Rename">
+                    <field name="res_model"/>
+                    <field name="rename_cond"/>
+                    <field name="rename_pattern"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_document_scanning_rename_tree" model="ir.ui.view">
+            <field name="name">document.scanning.rename.tree</field>
+            <field name="model">document.scanning.rename</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Document Scanning Rename">
+                    <field name="res_model"/>
+                    <field name="rename_cond"/>
+                    <field name="rename_pattern"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_document_scanning_rename_form" model="ir.ui.view">
+            <field name="name">document.scanning.rename.form</field>
+            <field name="model">document.scanning.rename</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Document Scanning Rename">
+                    <field name="res_model" select="1" colspan="4"/>
+                    <field name="rename_cond"/>
+                    <field name="rename_pattern"/>
+                    <label colspan="4" string="Available pattern variable are:
+						- res_model: The model attached (ex: res.partner)
+						- res_id: The resource id (ex: 1)
+						- page_num: The document page number
+						- docnum: The document number
+						- doctype: The document type (is a string, '0': standard, '1': annex, '2': skip this document)
+						- ext: The file extension
+						- obj_name: The orignal object file name
+						- obj_id: The original object id (attachement id)"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_document_scanning_rename_view">
+            <field name="name">Document Scanning Rename</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.scanning.rename</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_document_scanning_rename_search"/>
+        </record>
+
+        <menuitem id="menu_document_scanning_rename"
+	        parent="knowledge.menu_document_configuration"
+	        action="act_open_document_scanning_rename_view"/>
+
+  </data>
+</openerp>

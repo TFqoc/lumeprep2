@@ -48,7 +48,8 @@
             <notebook position="inside">
             <!--<page name="description_page" position="before">-->
                 <page string="DL/Med ID" name="DL_med_image">
-                    <field name="DL_or_med_image" widget="darkroom" options="{'minWidth': 300}" required="1"/>
+                    <!--<field name="DL_or_med_image" widget="darkroom" options="{'minWidth': 300}" required="1"/>-->
+                    <field name="DL_or_med_image" widget="image" required="1"/>
                 </page>
             <!--</page>-->
             </notebook>
