@@ -17,7 +17,8 @@ class Partner(models.Model):
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
     is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
-    is_expired = fields.Boolean(compute='_compute_expired', search='_search_expired')
+    is_expired_medical = fields.Boolean(compute='_compute_expired_medical', search='_search_expired_medical')
+    is_expired_dl = fields.Boolean(compute='_compute_expired_dl', search='_search_expired_dl')
     drivers_license_number = fields.Char()
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
@@ -29,12 +30,21 @@ class Partner(models.Model):
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
 
-    def _compute_expired(self):
+    @api.depends('medical_expiration')
+    def _compute_expired_medical(self):
         for record in self:
             try:
-                record.is_expired = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
+                record.is_expired_medical = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
             except:
-                record.is_expired = True
+                record.is_expired_medical = True
+
+    @api.depends('drivers_license_expiration')
+    def _compute_expired_dl(self):
+        for record in self:
+            try:
+                record.is_expired_dl = record.drivers_license_expiration < datetime.date.today()
+            except:
+                record.is_expired_dl = True
 
     def _search_expired(self, operation, value):
         return [('id','=',1)]
@@ -47,8 +57,9 @@ class Partner(models.Model):
                 record.is_over_18 = False
             else:
                 difference_in_years = (datetime.date.today() - record['date_of_birth']).days / 365.25
-                record['is_over_21'] = difference_in_years >= 21
-                record['is_over_18'] = difference_in_years >= 18
+                record.is_over_21 = difference_in_years >= 21
+                record.is_over_18 = difference_in_years >= 18
+                _logger.info("AGE: " + str(difference_in_years))
 
     def _search_is_over_21(self, operator, value):
         years_ago = datetime.datetime.now() - relativedelta(years=21)
@@ -75,10 +86,16 @@ class Partner(models.Model):
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
-        if self.is_expired:
-            raise ValidationError("This customer has an expired licence! Please update licence information to allow customer to check in.")
-        if self._compute_age() or not self.is_over_21: # TODO: Add validation for 18 year olds with medical cards
-            raise ValidationError("This customer is not old enough to buy drugs!")
+        if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
+            raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
+        if not self.medical_id and self.env.context.get('order_type') == 'medical':
+            raise ValidationError("Invalid medical id!")
+        if not self.drivers_license_number:
+            raise ValidationError("Invalid drivers licence!")
+        if self.is_expired_dl:
+            raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
+        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
+            raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
@@ -86,6 +103,7 @@ class Partner(models.Model):
         self.env['project.task'].create({
             'partner_id': int(ctx['partner_id']),
             'project_id': project.id,
+            'fulfillment_type': ctx['fulfillment_type'],
             'order_type': ctx['order_type'],
             'user_id': False,
             'name': self.pref_name or self.name,
@@ -107,6 +125,7 @@ class Partner(models.Model):
     def _compute_expirations(self):
         for record in self:
             record._compute_21()
+            record._compute_18()
 
 
     

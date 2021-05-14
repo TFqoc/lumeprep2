@@ -21,7 +21,8 @@
                 <field name="medical_expiration" string="MM Exp"/>
                 <field name="date_of_birth" string="DOB"/>
                 <field name="is_over_21" string="21+" invisible="1"/>
-                <field name="is_expired" string="Expired" invisible="1"/>
+                <field name="is_expired_medical" string="Expired Medical" invisible="1"/>
+                <field name="is_expired_dl" string="Expired DL" invisible="1"/>
                 <field name="drivers_license_number" string="Drivers #"/>
                 <field name="drivers_license_expiration" string="DL Expiration"/>
                 <button name="warn" string="Issue Warning" type="object" class="btn btn-primary oe_edit_only" />
@@ -34,8 +35,8 @@
                 </div>
               </field>
               <field name="image_1920" position="before">
+                <widget name="web_ribbon" title="Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False),('is_expired_dl','=',False)]}"/>
                 <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}"/>
-                <widget name="web_ribbon" title="Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired', '=', False)]}"/>
               </field>
               <field name="category_id" position="attributes">
                   <attribute name="string">Customer Groups</attribute>
