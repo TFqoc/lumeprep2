@@ -8,10 +8,6 @@ class SaleOrder(models.Model):
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # For product validation
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
-    # MEO start
-    DL_or_med_image = fields.Image(string="Driver's License and Medical ID Images",
-                                   max_width=600, max_height=300, verify_resolution=True)
-    # MEO end
 
     # def open_catalog(self):
     #     self.ensure_one()
