@@ -27,6 +27,13 @@
                 <!-- <field name="order_line" position="attributes">
                     <attribute name="widget">so_section_and_note</attribute>
                   </field> -->
+                <!-- MEO Start -->
+                <notebook position="inside">
+                    <page string="DL/Med ID" name="DL_med_image">
+                        <field name="DL_or_med_image" />
+                    </page>
+                </notebook>
+                <!-- MEO End -->
             </field>
         </record>
     </data>
