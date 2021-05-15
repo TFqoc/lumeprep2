@@ -370,6 +370,6 @@ class project_tasks_inherit(models.Model):
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
 
-    _logger.debug("DL_or_med_image:" + DL_or_med_image.format)
+    #_logger.debug("DL_or_med_image:" + DL_or_med_image.format)
     #_logger.debug("Result of hastattr:" + hasattr(ImageOps, 'exif_transpose'))
 # MEO End
