@@ -5,7 +5,7 @@ import logging
 import re
 
 #import base64
-from PIL import ImageOps
+#from PIL import ImageOps
 
 _logger = logging.getLogger(__name__)
 
@@ -371,5 +371,5 @@ class project_tasks_inherit(models.Model):
                                    max_width=600, max_height=300, verify_resolution=True)
 
     _logger.debug("DL_or_med_image:" + DL_or_med_image.format)
-    _logger.debug("Result of hastattr:" + hasattr(ImageOps, 'exif_transpose'))
+    #_logger.debug("Result of hastattr:" + hasattr(ImageOps, 'exif_transpose'))
 # MEO End
