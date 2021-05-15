@@ -3,6 +3,10 @@ from .barcode_parse import parse_code
 import logging
 from odoo.exceptions import ValidationError
 
+# MEO Start
+import base64
+# MEO End
+
 _logger = logging.getLogger(__name__)
 
 TASK_STAGES = ["Check In","Build Cart","Fulfillment","Order Ready","Out for Delivery","Done"]
@@ -379,7 +383,8 @@ class project_tasks_inherit(models.Model):
 
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
-
+    DL_or_med_image_64 = base64.b64encode(DL_or_med_image)
+    _logger.debug("DL_or_med_image_64:" + DL_or_med_image_64)
 # MEO End
 
 
