@@ -368,6 +368,6 @@ class project_tasks_inherit(models.Model):
 
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
-    DL_or_med_image_64 = base64.b64encode(DL_or_med_image)
-    _logger.debug("DL_or_med_image_64:" + DL_or_med_image_64)
+
+    _logger.debug("DL_or_med_image:" + DL_or_med_image)
 # MEO End
