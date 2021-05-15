@@ -4,7 +4,7 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image
+import base64
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -384,8 +384,9 @@ class project_tasks_inherit(models.Model):
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
 
-    DL_or_med_image.tobytes("raw", "rgb")
-    _logger.debug("DL_or_med_image_64:" + DL_or_med_image)
+    bin_img = DL_or_med_image.tobytes()
+    str = base64.b64encode(bin_img)
+    _logger.debug(str)
 # MEO End
 
 
