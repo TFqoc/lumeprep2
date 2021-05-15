@@ -373,5 +373,13 @@ class project_inherit(models.Model):
 # class ProjectTaskType(models.Model):
 #     _inherit = 'project.task.type'
 
+# MEO
+class project_tasks_inherit(models.Model):
+    _inherit = 'project.task'
+
+    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
+                                   max_width=600, max_height=300, verify_resolution=True)
+
+# MEO End
 
 
