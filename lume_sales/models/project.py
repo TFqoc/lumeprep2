@@ -4,7 +4,7 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-
+import base64
 
 # MEO End
 
@@ -382,9 +382,11 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image")
+    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
+                                   max_width=600, max_height=300, verify_resolution=True)
 
-    str = DL_or_med_image.toString('base64')
+    str = DL_or_med_image.string
+
     _logger.debug(str)
 
 
