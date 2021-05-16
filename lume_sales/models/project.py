@@ -382,7 +382,7 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    #DL_or_med_image = fields.Image("Upload DL or Medical ID Image", compute='_adjust_image', max_width=600, max_height=300, store=True)
+    # DL_or_med_image = fields.Image("Upload DL or Medical ID Image", compute='_adjust_image', max_width=600, max_height=300, store=True)
     DL_or_med_image = fields.Image("Upload DL or Medical ID Image", max_width=600,
                                    max_height=300, verify_resolution=True)
     DL_or_med_image_adjusted = fields.Image("Adjusted Image", compute='_adjust_image')
@@ -412,10 +412,10 @@ class project_tasks_inherit(models.Model):
 
             # image_rotate_90 = image.transpose(Image.ROTATE_90)
             # record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
-            record.DL_or_med_image_adjusted = tools.image_fix_orientation(image)
-            record.DL_or_med_image = tools.image_to_base64(record.DL_or_med_image_adjusted, 'PNG')
-            #record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
-            #record.DL_or_med_image = record.DL_or_med_image_adjusted
+            image_rotated = tools.image_fix_orientation(image)
+            record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotated, 'PNG')
+            # record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
+            record.DL_or_med_image = record.DL_or_med_image_adjusted
 
 # MEO End
 
