@@ -378,14 +378,16 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    DL_or_med_image = fields.Image("Upload DL or Medical ID Image", compute='_adjust_image',
-                                   max_width=600, max_height=300, store=True)
+    #DL_or_med_image = fields.Image("Upload DL or Medical ID Image", compute='_adjust_image', max_width=600, max_height=300, store=True)
+    DL_or_med_image = fields.Image("Upload DL or Medical ID Image", max_width=600,
+                                   max_height=300, store=True)
 
     #@api.onchange('DL_or_med_image')
-    def _adjust_image(self):
-        for record in self:
-            image = record.DL_or_med_image
-            record.DL_or_med_image = tools.image_fix_orientation(image)
+    # def _adjust_image(self):
+    #     for record in self:
+    #         print("In _adjust_image")
+    #         image = record.DL_or_med_image
+    #         record.DL_or_med_image = tools.image_fix_orientation(image)
             # record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
 
 # MEO End
