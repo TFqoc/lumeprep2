@@ -82,7 +82,7 @@
                 <page string="DL/Med ID" name="DL_med_image">
                     <!--<field name="DL_or_med_image" widget="darkroom" options="{'minWidth': 600}" required="1"/>-->
                     <field name="DL_or_med_image" widget="image" required="1"/>
-                    <field name="DL_or_med_image_adjusted" invisible="1">
+                    <field name="DL_or_med_image_adjusted" widget="image" invisible="1">
                 </page>
             <!--</page>-->
             </notebook>
