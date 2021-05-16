@@ -378,14 +378,14 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
-                                   compute='_get_orientation',
-                                   max_width=600, max_height=300, verify_resolution=True)
+    DL_or_med_image = fields.Binary(string='Upload DL or Medical ID Image',
+                                    compute='_adjust_image')
 
     @api.depends('DL_or_med_image')
-    def _get_orientation(self):
+    def _adjust_image(self):
         for record in self:
             record.DL_or_med_image = tools.image_fix_orientation(record.DL_or_med_image)
+            record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
 
 # MEO End
 
