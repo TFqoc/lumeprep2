@@ -4,32 +4,36 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image, ExifTags
+from PIL import Image, ExifTags, ImageOps
 from PIL.ExifTags import TAGS
+
 # MEO End
 
 _logger = logging.getLogger(__name__)
 
-TASK_STAGES = ["Check In","Build Cart","Fulfillment","Order Ready","Out for Delivery","Done"]
+TASK_STAGES = ["Check In", "Build Cart", "Fulfillment", "Order Ready", "Out for Delivery", "Done"]
+
 
 class Tasks(models.Model):
     _name = 'project.task'
-    _inherit = ['project.task','barcodes.barcode_events_mixin']
+    _inherit = ['project.task', 'barcodes.barcode_events_mixin']
     _description = 'project.task'
     _order = "create_date, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
     order_number = fields.Char(readonly=True)
-    dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
+    dummy_field = fields.Char(compute='_compute_dummy_field', store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
     customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
 
-    fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
-    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
+    fulfillment_type = fields.Selection(
+        selection=[('store', 'In Store'), ('delivery', 'Delivery'), ('online', 'Website'), ('curb', 'Curbside')],
+        default='store')
+    order_type = fields.Selection(selection=[('medical', 'Medical'), ('adult', 'Adult'), ('caregiver', 'Caregiver')])
 
     # def on_barcode_scanned(self, barcode):
     #     _logger.info("BARCODE SCANNED")
@@ -43,7 +47,7 @@ class Tasks(models.Model):
     #             'target': 'new', #for popup style window
     #             'res_id': self.partner_id.id
     #         }
-        # raise NotImplementedError("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented")
+    # raise NotImplementedError("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented")
 
     @api.onchange('scan_text')
     def auto_fill(self):
@@ -54,14 +58,17 @@ class Tasks(models.Model):
             self.scan_text = False
         data = parse_code(text)
         # Change state_id from text value to a reference to the state record in the database.
-        data['state_id'] = self.env['res.country.state'].search(["&",["code","=",data['state_id']],"|",["country_id.name","=","United States"],["country_id.name","=","Canada"]])
+        data['state_id'] = self.env['res.country.state'].search(
+            ["&", ["code", "=", data['state_id']], "|", ["country_id.name", "=", "United States"],
+             ["country_id.name", "=", "Canada"]])
 
         customer_id = ""
-        record_exists = self.env['res.partner'].search([['drivers_license_number','=',data['drivers_license_number']]])
+        record_exists = self.env['res.partner'].search(
+            [['drivers_license_number', '=', data['drivers_license_number']]])
         if len(record_exists) > 0:
             customer_id = record_exists[0].id
 
-        else: #create new customer, then create task
+        else:  # create new customer, then create task
             new_customer = self.env['res.partner'].create({
                 'name': data['name'],
                 'street': data['street'],
@@ -79,13 +86,13 @@ class Tasks(models.Model):
             raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'res.partner',
-                'target': 'new', #for popup style window
-                'res_id': customer_id,
-            }
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.partner',
+            'target': 'new',  # for popup style window
+            'res_id': customer_id,
+        }
 
     @api.model
     def create(self, vals):
@@ -98,22 +105,22 @@ class Tasks(models.Model):
         res.action_timer_start()
         return res
 
-    def get_message_count(self, id): #called from js widget for display purposes
+    def get_message_count(self, id):  # called from js widget for display purposes
         return self.browse(id).message_unread_counter
-    
+
     def _compute_dummy_field(self):
         # Mail module > models > mail_channel.py Line 743
-                # active_id = self.env.context.get('active_ids', []) #gets id of task
+        # active_id = self.env.context.get('active_ids', []) #gets id of task
         # self.env['mail.channel'].search([''])   #channel_seen(None)
         message_id = self.message_ids[0].id
         for channel in self.message_channel_ids:
-            channel.channel_seen(message_id) #should be the id of the message to be marked as seen.
+            channel.channel_seen(message_id)  # should be the id of the message to be marked as seen.
 
         self.dummy_field = 'dummy'
 
     def _compute_monetary_display(self):
         for record in self:
-            if record.stage_id.name in ["Fulfillment","Order Ready","Out for Delivery"]:
+            if record.stage_id.name in ["Fulfillment", "Order Ready", "Out for Delivery"]:
                 qty = 0
                 for line in record.sales_order.order_line:
                     qty += line.product_uom_qty
@@ -134,17 +141,18 @@ class Tasks(models.Model):
 
     def build_cart(self):
         if not self.project_id.warehouse_id:
-            raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
+            raise ValidationError(
+                "No warehouse is set for this store! A warehouse must be set on this store to continue.")
         # Reconcile my order_type with customer's order type
 
         self.sales_order = self.env['sale.order'].create({
-            'partner_id':self.partner_id.id,
-            'task':self.id,
+            'partner_id': self.partner_id.id,
+            'task': self.id,
             'date_order': fields.datetime.now(),
             # 'picking_policy':'direct',
             # 'pricelist_id':'idk',
             'order_type': self.order_type,
-            'warehouse_id':self.project_id.warehouse_id.id,
+            'warehouse_id': self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
         })
         self.change_stage(1)
@@ -152,11 +160,11 @@ class Tasks(models.Model):
         context = dict(self.env.context)
         context['form_view_initial_mode'] = 'edit'
         return {
-            "type":"ir.actions.act_window",
-            "res_model":"sale.order",
-            "res_id":self.sales_order.id,
-            "views":[[False, "form"]],
-            "context":context,
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "res_id": self.sales_order.id,
+            "views": [[False, "form"]],
+            "context": context,
         }
 
     def change_stage(self, stage_index):
@@ -184,23 +192,24 @@ class Tasks(models.Model):
         new_stage = self.stage_id.name
         old_stage = old_stage or self._origin.stage_id.name
         self._origin.stage_id = self.stage_id
-        _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
+        _logger.info("Timer Vals: %s %s", self.user_timer_id.timer_start, self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
             _logger.info("STOPPING TIMER")
-            self._origin.action_timer_auto_stop(old_stage+" > "+new_stage)
+            self._origin.action_timer_auto_stop(old_stage + " > " + new_stage)
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
         # else:
         #     self.action_timer_pause()
-        
+
         return {
-    'warning': {'title': "Info", 'message': old_stage+" > "+new_stage, 'type': 'notification'},
-}
-    
+            'warning': {'title': "Info", 'message': old_stage + " > " + new_stage, 'type': 'notification'},
+        }
+
     def save_timesheet_fragment(self, desc=None):
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             minutes_spent = self.user_timer_id._get_minutes_spent()
-            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+            minimum_duration = int(
+                self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
             rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
             minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
             minutes_spent -= self.time_at_last_save
@@ -229,18 +238,18 @@ class Tasks(models.Model):
 
     def action_timer_auto_stop(self, desc=None):
         # timer was either running or paused
-        _logger.info("ACTION TIMER AUTO STOP: "+str(desc))
-        _logger.info("VALS: %s %s",self.user_timer_id.timer_start, self.display_timesheet_timer)
+        _logger.info("ACTION TIMER AUTO STOP: " + str(desc))
+        _logger.info("VALS: %s %s", self.user_timer_id.timer_start, self.display_timesheet_timer)
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
             minutes_spent = self.user_timer_id._get_minutes_spent()
-            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+            minimum_duration = int(
+                self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
             rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
             minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
             self.save_timesheet(minutes_spent * 60 / 3600, desc)
-            #return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
-        #return False
+            # return self._action_open_new_timesheet(minutes_spent * 60 / 3600)
+        # return False
 
-        
     # def parse_all(self, code):
     #     dlstring = code
     #     e = ['DAC', 'DCS', 'DAD', 'DAG', 'DAI', 'DAJ', 'DAK', 'DBB', 'DBA', 'DAQ', 'DBC', 'DAY', 'DAU', 'DBD']
@@ -286,10 +295,6 @@ class Tasks(models.Model):
     #     data['drivers_license_number'] = dlstring[14]
 
     #     return data
-
-
-
-
 
     # def parse_barcode(self, code):
     #     # @\n\u001e\rANSI 636031080102DL00410270ZW03110017DLDCAD\nDCBB\nDCDNONE\nDBA02092025\nDCSFULLMER\nDACTRISTAN\nDADJAMES\nDBD03022017\nDBB02091996\nDBC1\nDAYBLU\nDAU069 IN\nDAG147 E KLUBERTANZ DR\nDAISUN PRAIRIE\nDAJWI\nDAK535901448  \nDAQF4568109604909\nDCFOTWJH2017030215371750\nDCGUSA\nDDEN\nDDFN\nDDGN\nDCK0130100071337399\nDDAN\nDDB09012015\rZWZWA13846120417\r
@@ -367,13 +372,15 @@ class Tasks(models.Model):
     #             data['drivers_license_number'] = fieldValue
     #     return meta, data
 
+
 class project_inherit(models.Model):
     _inherit = 'project.project'
 
-    task_number = fields.Integer(default=1)# Used to generate a task name
+    task_number = fields.Integer(default=1)  # Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
     blink_threshold = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
+
 
 # class ProjectTaskType(models.Model):
 #     _inherit = 'project.task.type'
@@ -396,19 +403,19 @@ class project_tasks_inherit(models.Model):
             _logger.info("Image type:" + str(type(image)))
             _logger.info("Image size:" + str(image.size))
 
-            # try:
-            #     for orientation in ExifTags.TAGS.keys():
-            #         if ExifTags.TAGS[orientation] == 'Orientation':
-            #             _logger.info("EXIF orientation tag FOUND.")
-            #             break
-            #     exif = image._getexif()
-            #     if exif:
-            #         _logger.info("Orientation:" + str(exif[orientation]))
-            #     else:
-            #         _logger.info("Issue getting EXIF orientation tag.")
-            # except (AttributeError, KeyError, IndexError):
-            #     _logger.info("No EXIF orientation tag exists.")
-            #     pass
+            try:
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        _logger.info("EXIF orientation tag FOUND.")
+                        break
+                exif = image._getexif()
+                if exif:
+                    _logger.info("Orientation:" + str(exif[orientation]))
+                else:
+                    _logger.info('Issue getting EXIF orientation tag.')
+            except (AttributeError, KeyError, IndexError):
+                _logger.info("No EXIF orientation tag exists.")
+                pass
 
             # image_rotate_90 = image.transpose(Image.ROTATE_90)
             # record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
@@ -418,5 +425,3 @@ class project_tasks_inherit(models.Model):
             record.DL_or_med_image = record.DL_or_med_image_adjusted
 
 # MEO End
-
-
