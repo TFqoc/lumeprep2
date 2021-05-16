@@ -381,7 +381,6 @@ class project_tasks_inherit(models.Model):
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
 
-    @api.multi
     @api.depends('image')
     def _get_image(self):
         for rec in self:
