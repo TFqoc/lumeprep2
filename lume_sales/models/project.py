@@ -1,12 +1,8 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, tools
 from .barcode_parse import parse_code
 import logging
 from odoo.exceptions import ValidationError
 
-# MEO Start
-import base64
-
-# MEO End
 
 _logger = logging.getLogger(__name__)
 
@@ -385,11 +381,11 @@ class project_tasks_inherit(models.Model):
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
                                    max_width=600, max_height=300, verify_resolution=True)
 
-    str = DL_or_med_image.string
-
-    _logger.debug(str)
-
-
+    @api.multi
+    @api.depends('image')
+    def _get_image(self):
+        for rec in self:
+            rec.DL_or_med_image = tools.image_fix_orientation(rec.image)
 
 # MEO End
 
