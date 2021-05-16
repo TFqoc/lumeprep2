@@ -399,9 +399,13 @@ class project_tasks_inherit(models.Model):
             try:
                 for orientation in ExifTags.TAGS.keys():
                     if ExifTags.TAGS[orientation] == 'Orientation':
+                        _logger.info("EXIF orientation tag FOUND.")
                         break
                 image_exif = image._getexif()
-                _logger.info("Orientation:" + str(image_exif[orientation]))
+                if image_exif[orientation] is None:
+                    _logger.info("EXIF orientation tag exists, but not set.")
+                else:
+                    _logger.info("Orientation:" + str(image_exif[orientation]))
             except (AttributeError, KeyError, IndexError):
                 _logger.info("No EXIF orientation tag exists.")
                 pass
