@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 # MEO Start
 from PIL import Image, ImageDraw, PngImagePlugin
+from odoo.exceptions import UserError
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -391,8 +392,9 @@ class project_tasks_inherit(models.Model):
         for record in self:
             _logger.info("In _adjust_image")
             image = tools.base64_to_image(record.DL_or_med_image)
-            self.assertEqual(type(image), PngImagePlugin.PngImageFile, "base64 as bytes, correct format")
-            self.assertEqual(image.size, (600, 400), "base64 as bytes, correct size")
+            _logger.info("Image type:" + type(image))
+            _logger.info("Image size:" + image.size)
+
 
 # MEO End
 
