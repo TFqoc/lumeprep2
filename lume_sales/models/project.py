@@ -382,10 +382,10 @@ class project_tasks_inherit(models.Model):
                                    compute='_get_orientation',
                                    max_width=600, max_height=300, verify_resolution=True)
 
-    @api.depends('image')
+    @api.depends('DL_or_med_image')
     def _get_orientation(self):
-        for rec in self:
-            rec.DL_or_med_image = tools.image_fix_orientation(rec.image)
+        for record in self:
+            record.DL_or_med_image = tools.image_fix_orientation(record.DL_or_med_image)
 
 # MEO End
 
