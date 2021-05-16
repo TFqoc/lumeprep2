@@ -393,8 +393,8 @@ class project_tasks_inherit(models.Model):
         for record in self:
             _logger.info("In _adjust_image")
             new_img = Image.new('RGBA', (600, 400))
-            new_img.putdata(record.DL_or_med_image)
-            record.DL_or_med_image = record.DL_or_med_image.transpose(Image.ROTATE_90)
+            new_img.putdata(record.DL_or_med_image_adjusted)
+            record.DL_or_med_image = record.DL_or_med_image_adjusted.transpose(Image.ROTATE_90)
             # record.DL_or_med_image_adjusted = tools.image_fix_orientation(record.DL_or_med_image_adjusted)
             # record.DL_or_med_image = record.DL_or_med_image_adjusted
             # record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
