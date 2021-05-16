@@ -396,22 +396,23 @@ class project_tasks_inherit(models.Model):
             _logger.info("Image type:" + str(type(image)))
             _logger.info("Image size:" + str(image.size))
 
-            try:
-                for orientation in ExifTags.TAGS.keys():
-                    if ExifTags.TAGS[orientation] == 'Orientation':
-                        _logger.info("EXIF orientation tag FOUND.")
-                        break
-                exif = image._getexif()
-                if exif:
-                    _logger.info("Orientation:" + str(exif[orientation]))
-                else:
-                    _logger.info("Issue getting EXIF orientation tag.")
-            except (AttributeError, KeyError, IndexError):
-                _logger.info("No EXIF orientation tag exists.")
-                pass
+            # try:
+            #     for orientation in ExifTags.TAGS.keys():
+            #         if ExifTags.TAGS[orientation] == 'Orientation':
+            #             _logger.info("EXIF orientation tag FOUND.")
+            #             break
+            #     exif = image._getexif()
+            #     if exif:
+            #         _logger.info("Orientation:" + str(exif[orientation]))
+            #     else:
+            #         _logger.info("Issue getting EXIF orientation tag.")
+            # except (AttributeError, KeyError, IndexError):
+            #     _logger.info("No EXIF orientation tag exists.")
+            #     pass
 
-            image_rotate_90 = image.transpose(Image.ROTATE_90)
-            record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
+            # image_rotate_90 = image.transpose(Image.ROTATE_90)
+            # record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
+            record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
             record.DL_or_med_image = record.DL_or_med_image_adjusted
 
 # MEO End
