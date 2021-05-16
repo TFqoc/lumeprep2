@@ -382,9 +382,11 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    DL_or_med_image = fields.Binary(string="Upload Driver's License or Medical ID Image")
+    DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image")
 
-    DL_or_med_image_64 = base64.b64encode(DL_or_med_image)
+    _logger.debug(DL_or_med_image.column_format)
+    _logger.debug(DL_or_med_image.column_type)
+    _logger.debug(DL_or_med_image.type)
 
 
 
