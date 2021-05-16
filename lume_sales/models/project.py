@@ -386,7 +386,7 @@ class project_tasks_inherit(models.Model):
     @api.onchange('DL_or_med_image')
     def _adjust_image(self):
         for record in self:
-            print("In _adjust_image")
+            _logger.info("In _adjust_image")
             record.DL_or_med_image_adjusted = record.DL_or_med_image
             record.DL_or_med_image_adjusted = tools.image_fix_orientation(record.DL_or_med_image_adjusted)
             record.DL_or_med_image = record.DL_or_med_image_adjusted
