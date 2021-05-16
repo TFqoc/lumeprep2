@@ -4,8 +4,8 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image, ImageDraw, PngImagePlugin
-from odoo.exceptions import UserError
+from PIL import Image, ExifTags
+from PIL.ExifTags import TAGS
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -395,6 +395,16 @@ class project_tasks_inherit(models.Model):
             image = tools.base64_to_image(record.DL_or_med_image)
             _logger.info("Image type:" + str(type(image)))
             _logger.info("Image size:" + str(image.size))
+
+            try:
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                image_exif = image._getexif()
+                _logger.info("Orientation:" + str(image_exif[orientation]))
+            except (AttributeError, KeyError, IndexError):
+                _logger.info("No EXIF orientation tag exists.")
+                pass
 
             image_rotate_90 = image.transpose(Image.ROTATE_90)
             record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
