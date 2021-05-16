@@ -412,8 +412,10 @@ class project_tasks_inherit(models.Model):
 
             # image_rotate_90 = image.transpose(Image.ROTATE_90)
             # record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
-            record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
-            record.DL_or_med_image = record.DL_or_med_image_adjusted
+            record.DL_or_med_image_adjusted = tools.image_fix_orientation(image)
+            record.DL_or_med_image = tools.image_to_base64(record.DL_or_med_image_adjusted, 'PNG')
+            #record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
+            #record.DL_or_med_image = record.DL_or_med_image_adjusted
 
 # MEO End
 
