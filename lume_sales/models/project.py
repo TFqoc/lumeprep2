@@ -378,9 +378,9 @@ class project_inherit(models.Model):
 class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
-    DL_or_med_image = fields.Image(string='Upload DL or Medical ID Image', compute='_adjust_image')
+    DL_or_med_image = fields.Binary(string='Upload DL or Medical ID Image', attachment=True, compute='_adjust_image')
 
-    @api.depends('DL_or_med_image')
+    @api.onchange('DL_or_med_image')
     def _adjust_image(self):
         for record in self:
             record.DL_or_med_image = tools.image_fix_orientation(record.DL_or_med_image)
