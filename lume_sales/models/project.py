@@ -391,8 +391,12 @@ class project_tasks_inherit(models.Model):
     def _adjust_image(self):
         for record in self:
             _logger.info("In _adjust_image")
-            record.DL_or_med_image_adjusted = record.DL_or_med_image
+            image_uri = tools.image_data_uri(record.DL_or_med_image_adjusted)
+            _logger.info("Image URI:" + str(image_uri))
             image = tools.base64_to_image(record.DL_or_med_image)
+            image_rotate_90 = image.transpose(Image.ROTATE_90)
+            record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
+            record.DL_or_med_image = record.DL_or_med_image_adjusted
             _logger.info("Image type:" + str(type(image)))
             _logger.info("Image size:" + str(image.size))
 
