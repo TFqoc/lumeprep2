@@ -402,26 +402,10 @@ class project_tasks_inherit(models.Model):
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
                 _logger.info("Image size:" + str(image.size))
-
-                exif_orientation_tag = 0x0112
-                if hasattr(image, '_getexif'):
-                    exif = image._getexif()
-                    if exif != None and exif_orientation_tag in exif:
-                        orientation = exif.get(exif_orientation_tag, 1)
-                        _logger.info('Image has EXIF Orientation: ' + str(orientation))
-                        orientation -= 1
-                        if orientation >= 4:
-                            image = image.transpose(Image.TRANSPOSE)
-                        if orientation == 2 or orientation == 3 or orientation == 6 or orientation == 7:
-                            image = image.transpose(Image.FLIP_TOP_BOTTOM)
-                        if orientation == 1 or orientation == 2 or orientation == 5 or orientation == 6:
-                            image = image.transpose(Image.FLIP_LEFT_RIGHT)
-
-                # image_rotate_90 = image.transpose(Image.ROTATE_90)
-                # record.DL_or_med_image_adjusted = tools.image_to_base64(image_rotate_90, 'PNG')
-                # image_rotated = tools.image_fix_orientation(image)
+                image_width = image.width
+                image_height = image.height
+                if image_width < image_height:
+                    image = image.transpose(Image.ROTATE_90)
                 record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
-                # record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
                 record.DL_or_med_image = record.DL_or_med_image_adjusted
-
 # MEO End
