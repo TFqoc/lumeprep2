@@ -4,7 +4,9 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
+import base64
 from PIL import Image
+import numpy as np
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -390,8 +392,9 @@ class project_tasks_inherit(models.Model):
     def _adjust_image(self):
         for record in self:
             _logger.info("In _adjust_image")
-            image_raw = Image.frombytes('RGBA', (128, 128), record.DL_or_med_image, 'raw')
-            record.DL_or_med_image = image_raw.transpose(Image.ROTATE_90)
+            new_img = Image.new('RGBA', (600, 400))
+            new_img.putdata(record.DL_or_med_image)
+            record.DL_or_med_image = record.DL_or_med_image.transpose(Image.ROTATE_90)
             # record.DL_or_med_image_adjusted = tools.image_fix_orientation(record.DL_or_med_image_adjusted)
             # record.DL_or_med_image = record.DL_or_med_image_adjusted
             # record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
