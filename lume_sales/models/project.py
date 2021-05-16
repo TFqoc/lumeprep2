@@ -379,10 +379,11 @@ class project_tasks_inherit(models.Model):
     _inherit = 'project.task'
 
     DL_or_med_image = fields.Image(string="Upload Driver's License or Medical ID Image",
+                                   compute='_get_orientation',
                                    max_width=600, max_height=300, verify_resolution=True)
 
     @api.depends('image')
-    def _get_image(self):
+    def _get_orientation(self):
         for rec in self:
             rec.DL_or_med_image = tools.image_fix_orientation(rec.image)
 
