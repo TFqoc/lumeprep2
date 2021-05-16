@@ -392,8 +392,8 @@ class project_tasks_inherit(models.Model):
         for record in self:
             _logger.info("In _adjust_image")
             image = tools.base64_to_image(record.DL_or_med_image)
-            _logger.info("Image type:" + type(image))
-            _logger.info("Image size:" + image.size)
+            _logger.info("Image type:" + str(type(image)))
+            _logger.info("Image size:" + str(image.size))
 
 
 # MEO End
