@@ -385,7 +385,7 @@ class project_tasks_inherit(models.Model):
     def _adjust_image(self):
         for record in self:
             record.DL_or_med_image = tools.image_fix_orientation(record.DL_or_med_image)
-            record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
+            # record.DL_or_med_image = tools.resize(record.DL_or_med_image, max_width=600, max_height=300)
 
 # MEO End
 
