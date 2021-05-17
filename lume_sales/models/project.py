@@ -4,7 +4,8 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image
+from PIL import Image, ImageEnhance
+
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -411,8 +412,12 @@ class project_tasks_inherit(models.Model):
                 right_box = (right_side_start, 0, image_width, image_height)
                 left_cropped_image = image.crop(left_box)
                 right_cropped_image = image.crop(right_box)
-                left_cropped_image = left_cropped_image.convert("L")
-                right_cropped_image = right_cropped_image.convert("L")
+                left_cropped_image = ImageEnhance.Color(left_cropped_image)
+                left_cropped_image.enhance(0)
+                right_cropped_image = ImageEnhance.Color(right_cropped_image)
+                right_cropped_image.enhance(0)
+                # left_cropped_image = left_cropped_image.convert("L")
+                # right_cropped_image = right_cropped_image.convert("L")
                 left_pixels = left_cropped_image.getdata()
                 right_pixels = right_cropped_image.getdata()
                 black_thresh = 30
