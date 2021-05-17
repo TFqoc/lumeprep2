@@ -395,10 +395,9 @@ class project_tasks_inherit(models.Model):
 
     @api.onchange('DL_or_med_image')
     def _adjust_image(self):
-        if self.DL_or_med_image_adjusted is not None:
-            for record in self:
-                _logger.info("In _adjust_image")
-
+        for record in self:
+            _logger.info("In _adjust_image")
+            if len(record.DL_or_med_image_adjusted) > 0:
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
                 _logger.info("Image size:" + str(image.size))
