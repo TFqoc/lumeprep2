@@ -395,7 +395,7 @@ class project_tasks_inherit(models.Model):
 
     @api.onchange('DL_or_med_image')
     def _adjust_image(self):
-        if self.DL_or_med_image is not None:
+        if self.DL_or_med_image_adjusted is not None:
             for record in self:
                 _logger.info("In _adjust_image")
 
