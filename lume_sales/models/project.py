@@ -395,9 +395,10 @@ class project_tasks_inherit(models.Model):
 
     @api.onchange('DL_or_med_image')
     def _adjust_image(self):
-        for record in self:
-            _logger.info("In _adjust_image")
-            try:
+        if self.DL_or_med_image is not None:
+            for record in self:
+                _logger.info("In _adjust_image")
+
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
                 _logger.info("Image size:" + str(image.size))
@@ -436,7 +437,4 @@ class project_tasks_inherit(models.Model):
 
                 record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
                 record.DL_or_med_image = record.DL_or_med_image_adjusted
-            except AttributeError:
-                _logger.info("No image exists yet.")
-                pass
 # MEO End
