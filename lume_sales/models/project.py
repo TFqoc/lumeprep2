@@ -397,8 +397,8 @@ class project_tasks_inherit(models.Model):
     def _adjust_image(self):
         for record in self:
             _logger.info("In _adjust_image")
-            _logger.info(str(record.DL_or_med_image))
-            if str(record.DL_or_med_image) is not False:
+            _logger.info("DL Record:" + str(record.DL_or_med_image))
+            if record.DL_or_med_image is not False:
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
                 _logger.info("Image size:" + str(image.size))
