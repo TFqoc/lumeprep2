@@ -98,7 +98,7 @@ class Partner(models.Model):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
-        project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
+        project = self.env['project.project'].browse(ctx.get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': int(ctx['partner_id']),

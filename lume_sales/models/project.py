@@ -11,7 +11,7 @@ class Tasks(models.Model):
     _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
     _description = 'project.task'
-    _order = "create_date, priority desc, sequence, id desc"
+    _order = "date_last_stage_update, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
     sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)

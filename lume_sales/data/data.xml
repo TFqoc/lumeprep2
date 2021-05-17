@@ -36,7 +36,7 @@
         <!-- Project/Store -->
         <record id="lume_store_project" model="project.project">
             <field name="name">Lume Store Template</field>
-            <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')),(4, ref('lume_stage_500'))]"/>
+            <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')),(4, ref('lume_stage_4')),(4, ref('lume_stage_500'))]"/>
         </record>
     </data>
 </odoo>
