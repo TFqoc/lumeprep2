@@ -87,7 +87,7 @@ class Partner(models.Model):
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
         if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
-            raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
+            raise ValidationError("This customer has an expired medical licence! Please update medical licence information to allow customer to check in.\nIf this is a new medical customer, please make sure to change customer type to Medical")
         if not self.medical_id and self.env.context.get('order_type') == 'medical':
             raise ValidationError("Invalid medical id!")
         if not self.drivers_license_number:

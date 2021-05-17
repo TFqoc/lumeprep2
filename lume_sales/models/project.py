@@ -70,8 +70,6 @@ class Tasks(models.Model):
             customer_id = new_customer.id
 
         self.partner_id = customer_id
-        if self.partner_id._compute_age() or not self.partner_id.is_over_21:
-            raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
