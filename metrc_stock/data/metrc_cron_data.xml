@@ -197,4 +197,36 @@ model._cron_do_history_transfers(['incoming', 'outgoing', 'rejected'])
         <field name="active">False</field>
         <field name="numbercall">1</field>
     </record>
+    <record model="ir.cron" id="cron_metrc_import_metrc_locations">
+        <field name="name">Metrc: Import Metrc Locations</field>
+        <field name="model_id" ref="metrc.model_metrc_license"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+#----------------------------------------------------------------------------------------------------------------------
+# _cron_do_model_import(self, metrc_account, metrc_notrack=False, license=False, automatic=True, raise_for_error=True):
+#    Method to import strains/package adjust reason/metrc item category, labtest types from all/specific metrc license(s).
+#    This method can be called with any object that inherits metrc.meta class.
+#       @param metrc_account  <recordset>: Takes the metrc.account recordset.
+#                                  This account credentionals will be used in metrc communication within this function.
+#       @param metrc_notrack <bool>: to determine that fetched record will trigger metrc meta change or not.
+#       @param license <recordset>: Takes the recordset of type metrc.license.
+#                           Strains will be fetched from metrc for this license only.
+#       @param automatic <bool>: To determine that system should commit changes after each iteration or not.
+#                        Rescue mechanism to update maximum from metrc in odoo.
+#       @param raise_for_error <bool>: Flag to raise the errors function is throwing or not.
+#                              If true all UserErrors/ValidationErrors will be raised. Should be False due to cron.
+# Returns <bool> after fetching all the metrc data.
+#-----------------------------------------------------------------------------------------------------------------------
+account = env.user.metrc_account_id
+if not account:
+    raise Warning("Metrc account not associated with {}.\nPlease configure one.".format(env.user.name))
+for license in env['metrc.meta'].get_internal_licenses():
+    env['metrc.location.type']._cron_do_model_import(account, license=license)
+    env['metrc.location']._cron_do_model_import(account, license=license)
+]]></field>
+        <field name="interval_number">1</field>
+        <field name="is_metrc">True</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+    </record>
 </odoo>
