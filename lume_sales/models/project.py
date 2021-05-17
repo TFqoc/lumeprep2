@@ -4,9 +4,7 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image, ExifTags, ImageOps
-from PIL.ExifTags import TAGS
-
+from PIL import Image
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -406,6 +404,35 @@ class project_tasks_inherit(models.Model):
                 image_height = image.height
                 if image_width < image_height:
                     image = image.transpose(Image.ROTATE_90)
+
+                left_side_end = image_width/2
+                right_side_start = left_side_end + 1
+                left_box = (0, 0, left_side_end, image_height)
+                right_box = (right_side_start, 0, image_width, image_height)
+                left_cropped_image = image.crop(left_box)
+                right_cropped_image = image.crop(right_box)
+                left_cropped_image = left_cropped_image.convert("L")
+                right_cropped_image = right_cropped_image.convert("L")
+                left_pixels = left_cropped_image.getdata()
+                right_pixels = right_cropped_image.getdata()
+                black_thresh = 50
+                left_black = 0
+                for left_pixel in left_pixels:
+                    if left_pixel < black_thresh:
+                        left_black += 1
+                ln = len(left_pixels)
+                right_black = 0
+                for right_pixel in right_pixels:
+                    if right_pixel < black_thresh:
+                        right_black += 1
+                rn = len(left_pixels)
+                left_blackness = left_black/float(ln)
+                right_blackness = right_black/float(rn)
+                _logger.info("left_blackness:" + str(left_blackness))
+                _logger.info("right_blackness:" + str(right_blackness))
+                if right_blackness > left_blackness:
+                    image = image.transpose(Image.ROTATE_180)
+
                 record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
                 record.DL_or_med_image = record.DL_or_med_image_adjusted
 # MEO End
