@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_location_view_form_inherit_metrc_stock" model="ir.ui.view">
+        <field name="name">stock.location.view.form.inherit.metrc_stock</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <field name="usage" position="after">
+                <field name="metrc_location_id" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

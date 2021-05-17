@@ -172,14 +172,12 @@
             </field>
         </record>
 
-
         <menuitem id="menu_action_view_metrc_transfer"
                 action="action_view_metrc_transfer"
                 name="Transfers"
-                parent="metrc_base.submenu_metrc_data"
+                parent="metrc.menu_metrc_inventory_item"
                 sequence="99"
                 groups="metrc_base.group_metrc_manager"/>
-
 
     </data>
 </odoo>
