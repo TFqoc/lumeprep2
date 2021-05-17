@@ -43,7 +43,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             Test_Task.stage_id.sequence,
             10, 
             "Error in build_cart: Task did not move to the appropriate stage."
-        )
+            )
 
         #Validating Sale_Order
         # TODO: Assert that the Order Type is carried over to the Sale Order.
@@ -51,31 +51,31 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
         self.assertTrue(
             Test_Task.sales_order,
             "Error in build_cart: Sale Order was not created."
-        )
+            )
 
         self.assertEqual(
             Test_Task.sales_order.task.id,
             Test_Task.id,
             "Error in build_cart: Task was not tied to Sale Order."
-        )
+            )
 
         self.assertEqual(
             Test_Task.sales_order.warehouse_id.id,
             self.lumestore_one.warehouse_id.id,
             "Error in build_cart: Sale Order did not have the correct warehouse."
-        )
+            )
 
         self.assertEqual(
             Test_Task.sales_order.partner_id.id,
             self.customer_rec.id,
             "Error in build_cart: Sale Order did not have the correct customer."
-        )
+            )
 
         self.assertEqual(
             Test_Task.sales_order.user_id.id,
             uid,
             "Error in build_cart: Sale Order did not have the correct user id."
-        )
+            )
 
         # TODO Assert that the view has changed to be that of the Sale Order as well as the Sale Order is already in edit mode.
 
