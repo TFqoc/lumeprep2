@@ -415,7 +415,7 @@ class project_tasks_inherit(models.Model):
                 right_cropped_image = right_cropped_image.convert("L")
                 left_pixels = left_cropped_image.getdata()
                 right_pixels = right_cropped_image.getdata()
-                black_thresh = 50
+                black_thresh = 30
                 left_black = 0
                 for left_pixel in left_pixels:
                     if left_pixel < black_thresh:
