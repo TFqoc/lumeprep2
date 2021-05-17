@@ -400,6 +400,7 @@ class project_tasks_inherit(models.Model):
             _logger.info("DL Record:" + str(record.DL_or_med_image))
             if str(record.DL_or_med_image) == "False":
                 _logger.info("Image has not been loaded yet.")
+                record.DL_or_med_image_adjusted = record.DL_or_med_image
             else:
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
