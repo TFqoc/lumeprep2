@@ -182,7 +182,7 @@ class TestLumeSaleCommon(SavepointCase):
             'company_type': 'person',
             'street': '629 Mad Dog Lane',
             'city': 'Detroit',
-            'state_id': cls.env['res.country.state'].search([("code","=", "MI")], limit=1).id,
+            'state_id': cls.env['res.country.state'].search([("code","=", "MI")], limit=1).id, #Validate this is returning the correct value.
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',

@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 @tagged('lume')
-class TestLumeTaskPosition(TestLumeSaleCommon):
+class TestRecLumeFlow(TestLumeSaleCommon):
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
@@ -37,7 +37,7 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).build_cart()
 
-        #Test Task Position.
+        #Validate Task Position.
 
         self.assertEqual(
             Test_Task.stage_id.sequence,
@@ -81,6 +81,14 @@ class TestLumeTaskPosition(TestLumeSaleCommon):
 
         _logger.warning("Test Build Cart Status: Complete.")
         # TODO: Remove.
+    def test_barcode_parse(self):
+        """Checking that the barcode parses correctly."""
+        pass #TODO: Paste runbot code.
+    def test_add_button(self):
+        pass #TODO: Paste runbot code.
+    def test_check_in_button(self):
+        
+        pass #TODO: Paste runbot code.
 
 
     
