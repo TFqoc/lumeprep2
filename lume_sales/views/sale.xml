@@ -14,6 +14,9 @@
                 <xpath expr="//div[@class='oe_button_box']/button[@name='action_view_delivery']/field" position="attributes">
                     <attribute name="string">Picks</attribute>
                 </xpath>
+                <field name="partner_id" position="after">
+                    <field name="order_type" readonly="1"/>
+                </field>
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
                     <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>

@@ -67,6 +67,7 @@
             <field name="name" position="after">
                 <searchpanel>
                     <field name="categ_id"/>
+                    <field name="effect"/>
                     <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
                 </searchpanel>
             </field>

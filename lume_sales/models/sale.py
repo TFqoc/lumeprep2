@@ -6,16 +6,8 @@ class SaleOrder(models.Model):
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
-
-# <button class="oe_stat_button" type="object" name="open_tracebility" icon="fa-arrows-v" string="Tracebility" widget="statinfo"/>
-
-
-# @api.multi
-# def open_tracebility(self):
-#     res = self.env['ir.actions.act_window'].for_xml_id('custom_module_name', 'wizard_action')
-#     return res
-
-# https://www.odoo.com/forum/help-1/how-to-execute-a-python-function-on-kanban-click-130496
+    # For product validation
+    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
 
     # def open_catalog(self):
     #     self.ensure_one()
@@ -34,6 +26,7 @@ class SaleOrder(models.Model):
     #         }
     def open_catalogV2(self):
         self.ensure_one()
+        show_medical = self.order_type == 'medical'
         return {
                 'type': 'ir.actions.act_window',
                 'name': 'Product Catalog',
@@ -44,7 +37,7 @@ class SaleOrder(models.Model):
                 'target': 'current',
                 'res_id': self.id,
                 'context': {'lpc_sale_order_id': self.id},
-                'domain': [],
+                'domain': [('is_medical','=',show_medical)],
                 # 'search_view_id': (id, name),
             }
 
