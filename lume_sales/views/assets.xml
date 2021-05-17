@@ -13,6 +13,7 @@
 
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/lpc_product_quantity.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/model.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/renderer.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/view.js"></script>
 
             <link rel="stylesheet" type="text/scss" href="lume_sales/static/src/scss/product_product_views.scss"/>
