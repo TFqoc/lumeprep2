@@ -359,7 +359,6 @@ class MetrcMeta(models.AbstractModel):
                             'default_metrc_id': record.get("Id"),
                             'default_metrc_license_id': license.id if license else False,
                         }
-                        print(new_field_vals)
                         if search_records:
                             if self._name == "product.product":
                                 search_records.with_context(metrc_ctx)._track_metrc_model_data()
@@ -369,7 +368,7 @@ class MetrcMeta(models.AbstractModel):
                                 search_record.with_context(metrc_ctx).write(new_field_vals)
                         else:
                             # if self._name != 'product.product':
-                            default_vals = self._get_default_values()
+                            default_vals = self.with_context(metrc_ctx)._get_default_values()
                             if new_field_vals.get('item_cat_id') and self._name == 'product.product':
                                 new_field_vals.update({'metrc_item_cat_id': new_field_vals['item_cat_id']})
                             new_field_vals.update(default_vals)

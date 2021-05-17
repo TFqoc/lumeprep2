@@ -79,11 +79,6 @@ class StockProductionLot(models.Model):
         return self.metrc_tag if self.is_legacy_lot else self.name
 
     def get_metrc_package_qty(self):
-        # resp = self._fetch_metrc_package()
-        # if resp:
-        #     self.metrc_qty =  resp['Quantity']
-        # else:
-        #     raise UserError(_('Package not found on metrc.'))
         wiz = self.env['stock.package.wizard'].create({'lot_id': self.id})
         action = self.env.ref('metrc_stock.action_view_stock_package_wizard').read()[0]
         action.update({

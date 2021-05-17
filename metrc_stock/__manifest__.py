@@ -28,11 +28,13 @@ METRC Stock
         # Model Views
         'views/transfer_type_views.xml',
         'views/metrc_transfer_view.xml',
+        'views/metrc_location_views.xml',
         'views/package_adjust_reason_views.xml',
         'views/stock_move_views.xml',
         # 'views/stock_quant_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_views.xml',
+        'views/stock_location_views.xml',
         'views/metrc_account_views.xml',
         'views/res_config_settings_views.xml',
 
@@ -45,8 +47,10 @@ METRC Stock
         'wizard/warehouse_package_adjustment_views.xml',
         'wizard/metrc_package_adjustment_views.xml',
         'wizard/metrc_push_data.xml',
+        'wizard/package_item_change.xml',
 
         # data
         'data/metrc_cron_data.xml',
+        'data/action_data.xml',
     ],
 }

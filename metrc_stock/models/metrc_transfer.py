@@ -7,8 +7,9 @@ import logging
 from datetime import datetime, timedelta
 from dateutil import parser
 
-from odoo import fields, models, registry
+from odoo import api, fields, models, registry
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -81,6 +82,7 @@ class MetrcTransfer(models.Model):
     package_type = fields.Char(string='Package Type')
     source_harvest_names = fields.Char(string='Source Harvest Names')
     product_name = fields.Char(string='Product Name')
+    product_id = fields.Many2one(related='move_line_id.product_id')
     product_category_name = fields.Char(string='Product Category Name')
     lab_testing_state = fields.Char(string='Lab Testing State')
     production_batch_number = fields.Char(string='Production Batch Number')
@@ -700,3 +702,52 @@ class MetrcTransfer(models.Model):
             cr.commit()
             cr.close()
         return True
+    
+    @api.model
+    def action_consolidate_lots(self):
+        MetrcAlias = self.env['metrc.product.alias']
+        MergeLotWizard = self.env['lot.merge.wizard']
+        ProductProduct = self.env['product.product']
+        metrc_transfers = self.browse(self.env.context.get('active_ids'))
+        transfer_move_lines = metrc_transfers.mapped('move_line_id')
+        picking_id = metrc_transfers.mapped('move_line_id').mapped('picking_id')
+        warehouse_id = picking_id[0].picking_type_id.warehouse_id
+        if not all(metrc_transfers.mapped('move_line_id')):
+            raise ValidationError(_("Consolidation for packages which are not received in odoo is not possible.\n"
+                                    "Please receive them first."))
+        alias_map = { mt.id: False for mt in metrc_transfers }
+        for mt in metrc_transfers:
+            if not mt.product_id:
+                alias = MetrcAlias.search([
+                    ('alias_name', '=', mt.product_name),
+                    ('license_id.license_number', '=', mt.shipper_facility_license_number)], limit=1)
+                alias_map[mt.id] = alias
+        lot_datas = {prod: [] for prod in transfer_move_lines.mapped('product_id')}
+        for lot in transfer_move_lines.mapped('lot_id'):
+            if lot.product_id in lot_datas.keys():
+                lot_datas[lot.product_id].append(lot)
+        new_lot_lines = []
+        for prod, lots in lot_datas.items():
+            qty_available = []
+            for lot in lots:
+                prod.flush()
+                prod = prod.with_context(lot_id=lot.id, warehouse=warehouse_id.id)
+                qty_available.append(prod.qty_available)
+            new_lot_lines.append({
+                'lot_ids': [(6, 0, [l.id for l in lots])],
+                'product_id': prod.id,
+                'qty_available': sum(qty_available),
+                'quantity': sum(qty_available)
+                })
+        wiz = MergeLotWizard.create({
+            'picking_id': picking_id[0].id,
+            'warehouse_id': warehouse_id.id,
+            'source_lot_ids': [(6, 0, metrc_transfers.mapped('move_line_id').mapped('lot_id').ids)],
+            'target_lot_ids': [(0, 0, lot_line) for lot_line in new_lot_lines],
+        })
+        action_data = self.env.ref('metrc_stock.action_open_merge_lot_wizard').read()[0]
+        action_data['res_id'] = wiz.id
+        return action_data
+
+
+

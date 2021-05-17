@@ -710,9 +710,10 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
             for prod, lots in lot_datas.items():
                 qty_available = []
                 for lot in lots:
+                    prod.flush()
                     prod = prod.with_context(lot_id=lot.id, warehouse=warehouse_id.id)
                     qty_available.append(prod.qty_available)
-                new_lot_lines. append({
+                new_lot_lines.append({
                     'lot_ids': [(6, 0, [l.id for l in lots])],
                     'product_id': prod.id,
                     'qty_available': sum(qty_available),
@@ -744,6 +745,6 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
                     'domain': {},
                     'target': 'new'
                 }
-            action_data = self.env.ref('metrc.action_open_merge_lot_wizard').read()[0]
+            action_data = self.env.ref('metrc_stock.action_open_merge_lot_wizard').read()[0]
             action_data['res_id'] = wiz.id
             return action_data

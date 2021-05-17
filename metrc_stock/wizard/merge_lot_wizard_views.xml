@@ -9,7 +9,8 @@
                     <group>
                         <field name="picking_id" readonly="1" options="{'no_open': True}"/>
                         <field name="warehouse_id" readonly="1" options="{'no_open': True}"/>
-                        <field name="location_id"/>
+                        <field name="location_id" readonly="1"/>
+                        <field name="location_dest_id" readonly="1"/>
                     </group>
                     <notebook>
                         <page name="destination_lots" string="New Metrc Tags">
