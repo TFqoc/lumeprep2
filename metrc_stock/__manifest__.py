@@ -51,5 +51,6 @@ METRC Stock
 
         # data
         'data/metrc_cron_data.xml',
+        'data/action_data.xml',
     ],
 }

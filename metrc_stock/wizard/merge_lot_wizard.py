@@ -14,6 +14,7 @@ class MergeLotWizard(models.TransientModel):
     picking_id = fields.Many2one(comodel_name='stock.picking')
     warehouse_id = fields.Many2one(comodel_name='stock.warehouse')
     location_id = fields.Many2one(related='picking_id.location_id')
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
     source_lot_ids = fields.Many2many(comodel_name='stock.production.lot')
     target_lot_ids = fields.One2many(comodel_name='lot.merge.wizard.line', inverse_name='merge_wiz_id')
     message_body = fields.Html()
@@ -33,20 +34,21 @@ class MergeLotWizard(models.TransientModel):
             'res_id': self.id,
             'view_type': 'form',
             'view_mode': 'form',
-            'views': [(self.env.ref('metrc.merge_lot_confirmation').id, 'form')],
+            'views': [(self.env.ref('metrc_stock.merge_lot_confirmation').id, 'form')],
             'context': {},
             'domain': {},
             'target': 'new'
         }
 
     def modify_merge(self):
-        action_data = self.env.ref('metrc.action_open_merge_lot_wizard').read()[0]
+        action_data = self.env.ref('metrc_stock.action_open_merge_lot_wizard').read()[0]
         action_data['res_id'] = self.id
         return action_data
 
     def consolidate_lots(self):
         picking_lots = self.picking_id.move_line_ids.mapped('lot_id')
-        self.picking_id.do_unreserve()
+        if self.picking_id.state != 'done':
+            self.picking_id.do_unreserve()
         StockProductLot = self.env['stock.production.lot']
         lots_produced = StockProductLot
         for target_line in self.target_lot_ids:
@@ -57,17 +59,22 @@ class MergeLotWizard(models.TransientModel):
                 if not self.warehouse_id.metrc_manu_type_id:
                     raise UserError(_("Operation type for split lot is not configured on warehouse {}".format(self.warehouse_id.name)))
                 qty_to_produce = target_line.quantity
-                production_order = self.env['mrp.production'].with_context({'skip_bom': True}).create({
+                location = self.location_id.id
+                if self.picking_id.picking_type_code == 'incoming':
+                    location = self.location_dest_id.id
+                production_order = self.env['mrp.production'].create({
                     'picking_type_id': self.warehouse_id.metrc_manu_type_id.id,
                     'product_id': target_line.product_id.id,
-                    'location_src_id': self.location_id.id,
-                    'location_dest_id': self.location_id.id,
+                    'location_src_id': location,
+                    'location_dest_id': location,
                     'product_uom_id': target_line.uom_id.id,
                     'product_qty': qty_to_produce,
+                    'qty_producing': qty_to_produce,
                     'split_lot': True,
                     'origin': self.env.context.get('move_ref', '')
                 })
-                production_order._generate_finished_moves()
+                finished_move_vals = production_order._get_moves_finished_values()
+                production_order.write({'move_finished_ids': [(0,0, move_vals) for move_vals in finished_move_vals]})
                 production_order._generate_raw_move_split()
                 production_order.move_raw_ids._action_confirm()
                 production_order.move_finished_ids._action_confirm()
@@ -81,7 +88,7 @@ class MergeLotWizard(models.TransientModel):
                             'company_id': production_order.company_id.id
                         })
                 for raw_move_line in production_order.move_raw_ids.mapped('move_line_ids'):
-                    raw_move_line.write({'lot_produced_ids': [(4, lot.id)], 'qty_done': raw_move_line.product_qty})
+                    raw_move_line.write({'qty_done': raw_move_line.product_qty})
                 for move in production_order.move_finished_ids:
                     quantity = production_order.product_qty
                     location_dest_id = move.location_dest_id._get_putaway_strategy(production_order.product_id).id or move.location_dest_id.id
@@ -110,7 +117,7 @@ class MergeLotWizard(models.TransientModel):
                         lot_to_unlink.unlink()
                         # returning the reserved quantities wizard after cancelling the MO.
                         return result
-                    production_order.move_raw_ids.mapped('move_line_ids').write({'lot_produced_ids': [(4, lot.id)]})
+                    # production_order.move_raw_ids.mapped('move_line_ids').write({'lot_produced_ids': [(4, lot.id)]})
                     lots_produced |= lot
                     lot._update_custom_fields(production_order.move_raw_ids.mapped('move_line_ids')[0].lot_id)
                 except UserError as e:
@@ -124,13 +131,23 @@ class MergeLotWizard(models.TransientModel):
                     lot_to_unlink.unlink()
                     raise UserError(_("Failed to process the manufacturing order {} for lot consolidation.".format(production_order.name)))
                 message_body = "This lot is created using manufacturing order: <a href=# data-oe-model=mrp.production data-oe-id={}>{}</a>".format(production_order.id, production_order.name)
-                lot.message_post(body=_(message_body), message_type="notification", subtype="mail.mt_comment")
+                lot.message_post(body=_(message_body), message_type="notification", subtype_xmlid="mail.mt_comment")
         if lots_produced:
             other_lots = picking_lots - self.target_lot_ids.mapped('lot_ids')
             for new_lot in (lots_produced + other_lots):
                 reserved_move = self.picking_id.move_lines.filtered(lambda ml: ml.product_id == new_lot.product_id)
-                reserved_move._update_reserved_quantity(reserved_move.product_uom_qty, new_lot.product_qty, reserved_move.location_id, lot_id=new_lot)
-                reserved_move._recompute_state()
+                if reserved_move:
+                    reserved_move._update_reserved_quantity(reserved_move.product_uom_qty, new_lot.product_qty, reserved_move.location_id, lot_id=new_lot)
+                    reserved_move._recompute_state()
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Consolidated Lots',
+                'res_model': 'stock.production.lot',
+                'view_mode': 'form',
+                'context': {},
+                'domain': [('id', 'in', lots_produced.ids)],
+                'target': 'self'
+            }
 
 
 class MergeLotWizardLine(models.TransientModel):

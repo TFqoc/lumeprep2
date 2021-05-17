@@ -85,7 +85,6 @@ class MetrcMeta(models.AbstractModel):
             tracked_records = MetrcModel.search(domain)
             need_sync = self._context.get('need_sync') if 'need_sync' in self._context else self._metrc_license_require
             if not tracked_records:
-                print("found")
                 for model_record in self:
                     vals = {
                         'name': model_record.name,
@@ -370,11 +369,9 @@ class MetrcMeta(models.AbstractModel):
                         else:
                             # if self._name != 'product.product':
                             default_vals = self.with_context(metrc_ctx)._get_default_values()
-                            print(default_vals)
                             if new_field_vals.get('item_cat_id') and self._name == 'product.product':
                                 new_field_vals.update({'metrc_item_cat_id': new_field_vals['item_cat_id']})
                             new_field_vals.update(default_vals)
-                            print(new_field_vals)
                             self.with_context(metrc_ctx).create(new_field_vals)
                         if automatic:
                             cr.commit()

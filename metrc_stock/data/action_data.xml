@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_open_wizard_consolidation" model="ir.actions.server">
+        <field name="name">Consolidate Lots</field>
+        <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
+		<field name="state">code</field>
+		<field name="code"><![CDATA[
+records.action_consolidate_lots()
+			]]>
+		</field>
+		<field name="binding_model_id" ref="metrc_stock.model_metrc_transfer"/>
+	</record>
+</odoo>
