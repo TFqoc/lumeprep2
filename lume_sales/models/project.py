@@ -406,8 +406,8 @@ class project_tasks_inherit(models.Model):
                 if image_width < image_height:
                     image = image.transpose(Image.ROTATE_90)
 
-                left_side_end = image_width/2
-                right_side_start = left_side_end + 1
+                left_side_end = image_width/3
+                right_side_start = (left_side_end*2) + 1
                 left_box = (0, 0, left_side_end, image_height)
                 right_box = (right_side_start, 0, image_width, image_height)
                 left_cropped_image = image.crop(left_box)
@@ -416,7 +416,7 @@ class project_tasks_inherit(models.Model):
                 right_cropped_image = right_cropped_image.convert("L")
                 left_pixels = left_cropped_image.getdata()
                 right_pixels = right_cropped_image.getdata()
-                black_thresh = 10
+                black_thresh = 60
                 left_black = 0
                 for left_pixel in left_pixels:
                     if left_pixel < black_thresh:
