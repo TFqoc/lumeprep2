@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # For product validation
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
+    ordered_qty = fields.Float(compute='_compute_ordered_qty')
 
     # def open_catalog(self):
     #     self.ensure_one()
@@ -54,11 +55,19 @@ class SaleOrder(models.Model):
             if record.is_delivered:
                 record.on_fulfillment()
 
+    @api.depends('order_line')
+    def _compute_ordered_qty(self):
+        for record in self:
+            qty = 0
+            for line in record.order_line:
+                qty += line.product_uom_qty
+            record.ordered_qty = qty
+
     # Onchange doesn't seem to trigger for calculated fields
     # @api.onchange('is_delivered')
     def on_fulfillment(self):
         if self.task.stage_id.name != 'Order Ready':
-            self.task.change_stage(3) 
+            self.task.change_stage(3)
 
     @api.onchange('partner_id')
     def check_order_lines(self):
@@ -69,6 +78,11 @@ class SaleOrder(models.Model):
                 }
                 self.partner_id = False
                 return warning
+
+    @api.model
+    def get_cart_totals(self, id):
+        record = self.browse(id)
+        return (record.amount_total, record.ordered_qty)
 
     def action_confirm(self):
         if not self.order_line:
