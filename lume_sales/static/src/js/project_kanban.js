@@ -49,7 +49,7 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                             method: 'generate_cart',
                             args: [result[0].id],
                         }).then(function(result2){
-                            self.do_action(result2[0]);
+                            self.do_action(result2);
                         });
                         // superfun.apply(self, arguments);
                     }
@@ -96,6 +96,7 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                             flags: {mode: 'edit'},
                             context: {
                                 check_in_window: true,
+                                fulfillment_type: data.fulfillment_type,
                                 order_type: data.order_type,
                                 project_id: data.project_id,
                                 partner_id: data.partner_id},

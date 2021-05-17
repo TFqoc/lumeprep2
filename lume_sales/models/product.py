@@ -7,11 +7,13 @@ class ProductTemplate(models.Model):
     _inherit='product.template'
 
     is_medical = fields.Boolean()
+    effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
 
 class Product(models.Model):
     _inherit = 'product.product'
 
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
+    effect = fields.Selection(related="product_tmpl_id.effect", store=True)
 
     @api.depends_context('lpc_sale_order_id')
     def _compute_lpc_quantity(self):
