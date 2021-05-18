@@ -134,6 +134,10 @@ class MrpProduction(models.Model):
         move_lines.mapped('lot_id')._update_metrc_id()
 
     def _report_lots_to_metrc(self, move_line_ids):
+        if not self.location_dest_id.metrc_location_id:
+            raise UserError(_("Metrc Location is not set on {}.\n"
+                              "Please configure one to proceed.".format(self.location_dest_id.name)))
+        metrc_location = self.location_dest_id.metrc_location_id.name
         consumed_quantities = self.get_consumed_ingredients()
         metrc_reported_lines = self.env['stock.move.line']
         ProdctionLot = self.env['stock.production.lot']
@@ -151,7 +155,6 @@ class MrpProduction(models.Model):
                 for raw_move in self.move_raw_ids.filtered(lambda m: m.product_id.is_metric_product):
                     msg += "\n- {} Qty required {}, Qty done {}".format(raw_move.product_id.metrc_name, raw_move.product_uom_qty, raw_move.quantity_done)
                 raise UserError(_(msg))
-            metrc_location = self.location_dest_id.metrc_location_id and self.location_dest_id.metrc_location_id.name or 'n/a'
             package_data.append({
                 'Tag': lot_name,
                 'Location': metrc_location,
@@ -160,7 +163,9 @@ class MrpProduction(models.Model):
                 'UnitOfMeasure': line.product_id.metrc_uom_id.name if line.product_id.diff_metrc_uom and line.product_id.metrc_uom_id else line.product_id.uom_id.name,
                 'Ingredients': ingredients,
                 'ActualDate': fields.Date.to_string(fields.Date.today()),
-                'PatientLicenseNumber': 'n/a'
+                'PatientLicenseNumber': 'n/a',
+                'IsProductionBatch': line.lot_id.is_production_batch,
+                'ProductionBatchNumber': line.lot_id.batch_number or '',
             })
         metrc_account = self.env.user.ensure_metrc_account()
         uri = '/{}/{}/{}'.format('packages', metrc_account.api_version, 'create')

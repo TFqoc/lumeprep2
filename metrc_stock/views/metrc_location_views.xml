@@ -39,7 +39,8 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="facility_license_id"/>
+                            <field name="facility_license_id"
+                                   domain="[('base_type', '=', 'Internal')]"/>
                         </group>
                         <group>
                             <field name="location_type_id"/>

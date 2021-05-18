@@ -141,9 +141,9 @@ class MergeLotWizard(models.TransientModel):
                     reserved_move._recompute_state()
             return {
                 'type': 'ir.actions.act_window',
-                'name': 'Consolidated Lots',
+                'name': _('Consolidated Lots'),
                 'res_model': 'stock.production.lot',
-                'view_mode': 'form',
+                'view_mode': 'tree',
                 'context': {},
                 'domain': [('id', 'in', lots_produced.ids)],
                 'target': 'self'

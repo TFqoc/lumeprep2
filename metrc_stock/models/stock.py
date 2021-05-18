@@ -132,6 +132,7 @@ class StockInventory(models.Model):
     is_metrc_adjustment = fields.Boolean(compute="_compute_is_metrc_adjustment")
     banner_message = fields.Html(compute="_compute_banner_message")
     downstream = fields.Boolean(help="Adjustment from METRC -> ODOO")
+    do_not_adjust = fields.Boolean(string="Don't report to METRC", help="Check this field to bypass metrc reporting.")
 
     @api.depends('product_ids', 'line_ids')
     def _compute_is_metrc_adjustment(self):
@@ -182,7 +183,8 @@ class StockInventory(models.Model):
             product = ProductProduct.browse(val['product_id'])
             val.update({
                 'reason_id': product.is_metric_product and self.reason_id and self.reason_id.id or False,
-                'reason_note': self.reason_note
+                'reason_note': self.reason_note,
+                'do_not_adjust': self.do_not_adjust,
             })
         return values
 
@@ -289,6 +291,8 @@ class StockInventory(models.Model):
             action_data['context'].update({'default_reason_id': self.reason_id.id})
         if self.reason_note:
             action_data['context'].update({'default_reason_note': self.reason_note})
+        if self.do_not_adjust:
+            action_data['context'].update({'default_do_not_adjust': self.do_not_adjust})
         return action_data
 
 
