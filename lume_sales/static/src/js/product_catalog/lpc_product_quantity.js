@@ -37,8 +37,9 @@ var LPCProductQty = FieldInteger.extend({
     this._super.apply(this, arguments);
     var $target = this.$el;
     var self = this;
-//     console.log($target.prev().on("click",(function(event){self._valueChange('lpc_quantity', -1);console.log("-");}).bind(self)));
-//     console.log($target.next().on("click",(function(event){self._valueChange('lpc_quantity', 1);console.log("+");}).bind(self)));
+       console.log("Calling widget start.");
+    $target.prev().on("click",(function(event){self._valueChange('lpc_quantity', -1);console.log("-");}).bind(self));
+    $target.next().on("click",(function(event){self._valueChange('lpc_quantity', 1);console.log("+");}).bind(self));
     return Promise.resolve();
    },
 
@@ -59,14 +60,17 @@ var LPCProductQty = FieldInteger.extend({
                 changes: changes,
             });
             // TODO RPC here
+            console.log("RPC Call")
             let params = new URLSearchParams(window.location.hash);
             this._rpc({
                 model: 'sale.order',
                 method: 'get_cart_totals',
+                context: {lpc_sale_order_id: parseInt(params.get('#active_id')),},
                 args: [parseInt(params.get('#active_id'))],
             }).then(function(data){
                 $("#TOTAL").text(`Total: $${data[0].toFixed(2)}`);
-                $("QTY").text(`Quantity: ${data[1].toFixed(1)}`);
+                $("#QTY").text(`Quantity: ${data[1].toFixed(1)}`);
+                console.log(`RPC Data: ${data}`);
             });
         }
     },
