@@ -16,9 +16,8 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                 }).then(function(data){
                     let price = data[0];
                     let qty = data[1];
-                    self.$el.prepend("<div style='flex: 100%'>$${price}<br/>Qty: ${qty}</div>");
-                    console.log(self.$el);
-                    console.log(self.activeActions);
+                    let style = "flex: 100%; justify-content: space-between; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%; text-align: right; font-weight: bold; font-size: 1.3em;";
+                    self.$el.prepend(`<div style='${style}'><p id="TOTAL">Total: $${price.toFixed(2)}</p><p id="QTY">Quantity: ${qty.toFixed(1)}</p></div>`);
                  });
             });
         },

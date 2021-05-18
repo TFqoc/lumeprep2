@@ -29,6 +29,16 @@ var LPCProductQty = FieldInteger.extend({
             this.isReadonly = true;
         }
     },
+    /*
+    * @override
+    */
+   start: function(){
+    var $target = this.$el.parent().parent();
+    var self = this;
+    $target.prev().on("click",(function(event){self._valueChange('lpc_quantity', -1);}).bind(self));
+    $target.next().on("click",(function(event){self._valueChange('lpc_quantity', 1);}).bind(self));
+    return Promise.resolve();
+   },
 
     /**
      * @private
@@ -41,10 +51,19 @@ var LPCProductQty = FieldInteger.extend({
             this.do_warn(false, _t("Please enter an integer value"));
         } else {
             var changes = {};
-            changes[target_name] =  parseInt(target_value);;
+            changes[target_name] =  parseInt(target_value);
             this.trigger_up('field_changed', {
                 dataPointID: this.dataPointID,
                 changes: changes,
+            });
+            // TODO RPC here
+            this._rpc({
+                model: 'sale.order',
+                method: 'get_cart_totals',
+                args: [parseInt(params.get('#active_id'))],
+            }).then(function(data){
+                $("#TOTAL").text(`Total: $${data[0].toFixed(2)}`);
+                $("QTY").text(`Quantity: ${data[1].toFixed(1)}`);
             });
         }
     },
