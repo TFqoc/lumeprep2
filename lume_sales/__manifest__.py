@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.3',
+    'version': '0.31',
 
     # any module necessary for this one to work correctly
     'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes'],
@@ -46,4 +46,9 @@
     'demo': [
         'demo/demo.xml',
     ],
+
+    'external_dependencies': {
+        'python': ['face_recognition'],
+
+    },
 }

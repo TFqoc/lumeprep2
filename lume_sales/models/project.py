@@ -447,6 +447,6 @@ class project_tasks_inherit(models.Model):
                 record.DL_or_med_image = record.DL_or_med_image_adjusted
                 # Find the image on the Driver's License to save as customer logo image
                 face_locations = face_recognition.face_locations(image)
-                _logger.info("Faces found" + face_locations)
+                _logger.info("Faces found" + str(face_locations))
 
 # MEO End
