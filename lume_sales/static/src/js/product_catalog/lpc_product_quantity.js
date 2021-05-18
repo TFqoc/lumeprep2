@@ -1,3 +1,4 @@
+console.log("Click test 1")
 odoo.define('lume_sales.lpc_product_quantity', function (require) {
 "use strict";
 
@@ -33,10 +34,11 @@ var LPCProductQty = FieldInteger.extend({
     * @override
     */
    start: function(){
-    var $target = this.$el.parent().parent();
+    this._super.apply(this, arguments);
+    var $target = this.$el;
     var self = this;
-    $target.prev().on("click",(function(event){self._valueChange('lpc_quantity', -1);}).bind(self));
-    $target.next().on("click",(function(event){self._valueChange('lpc_quantity', 1);}).bind(self));
+//     console.log($target.prev().on("click",(function(event){self._valueChange('lpc_quantity', -1);console.log("-");}).bind(self)));
+//     console.log($target.next().on("click",(function(event){self._valueChange('lpc_quantity', 1);console.log("+");}).bind(self)));
     return Promise.resolve();
    },
 
@@ -57,6 +59,7 @@ var LPCProductQty = FieldInteger.extend({
                 changes: changes,
             });
             // TODO RPC here
+            let params = new URLSearchParams(window.location.hash);
             this._rpc({
                 model: 'sale.order',
                 method: 'get_cart_totals',

@@ -77,7 +77,7 @@ class Product(models.Model):
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
             if not sale_order:
-                raise ValidationError("No sale order")
+                raise ValidationError("No sale order" + str(self.env.context))
             if not quantity:
                 raise ValidationError("Quantity: " + str(quantity))
             return

@@ -9,15 +9,18 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
                 let params = new URLSearchParams(window.location.hash);
+                console.log(`Requesting data from Hash: ${window.location.hash}`);
+                let id = parseInt(params.get('#active_id')) || parseInt(params.get('#id'))
                  self._rpc({
                     model: 'sale.order',
                     method: 'get_cart_totals',
-                    args: [parseInt(params.get('#active_id'))],
+                    args: [id],
                 }).then(function(data){
                     let price = data[0];
                     let qty = data[1];
                     let style = "flex: 100%; justify-content: space-between; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%; text-align: right; font-weight: bold; font-size: 1.3em;";
                     self.$el.prepend(`<div style='${style}'><p id="TOTAL">Total: $${price.toFixed(2)}</p><p id="QTY">Quantity: ${qty.toFixed(1)}</p></div>`);
+                     console.log(`Data: ${data}`);
                  });
             });
         },
