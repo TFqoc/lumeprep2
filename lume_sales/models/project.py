@@ -4,8 +4,8 @@ import logging
 from odoo.exceptions import ValidationError
 
 # MEO Start
-from PIL import Image, ImageEnhance
-
+from PIL import Image
+import face_recognition
 # MEO End
 
 _logger = logging.getLogger(__name__)
@@ -397,11 +397,14 @@ class project_tasks_inherit(models.Model):
     def _adjust_image(self):
         for record in self:
             _logger.info("In _adjust_image")
-            _logger.info("DL Record:" + str(record.DL_or_med_image))
+
             if str(record.DL_or_med_image) == "False":
+                # Bypass if no image exists when entering "edit" mode
                 _logger.info("Image has not been loaded yet.")
                 record.DL_or_med_image_adjusted = record.DL_or_med_image
             else:
+                # If image exists and is vertically oriented, set correct
+                # orientation by rotation by 90 degrees
                 image = tools.base64_to_image(record.DL_or_med_image)
                 _logger.info("Image type:" + str(type(image)))
                 _logger.info("Image size:" + str(image.size))
@@ -409,7 +412,9 @@ class project_tasks_inherit(models.Model):
                 image_height = image.height
                 if image_width < image_height:
                     image = image.transpose(Image.ROTATE_90)
-
+                # If image exists and is horizontally oriented but flipped,
+                # set correct orientation by rotation by 180 degrees.
+                # This probably won't work with images that are right justified.
                 left_side_end = image_width/3
                 right_side_start = (left_side_end*2) + 1
                 left_box = (0, 0, left_side_end, image_height)
@@ -437,7 +442,11 @@ class project_tasks_inherit(models.Model):
                 _logger.info("right_blackness:" + str(right_blackness))
                 if right_blackness > left_blackness:
                     image = image.transpose(Image.ROTATE_180)
-
+                # Save the correctly oriented image
                 record.DL_or_med_image_adjusted = tools.image_to_base64(image, 'PNG')
                 record.DL_or_med_image = record.DL_or_med_image_adjusted
+                # Find the image on the Driver's License to save as customer logo image
+                face_locations = face_recognition.face_locations(image)
+                _logger.info("Faces found" + face_locations)
+
 # MEO End
