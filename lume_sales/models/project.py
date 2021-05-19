@@ -448,5 +448,4 @@ class project_tasks_inherit(models.Model):
                 # Find the image on the Driver's License to save as customer logo image
                 face_locations = face_recognition.face_locations(image)
                 _logger.info("Faces found" + str(face_locations))
-
 # MEO End 2
