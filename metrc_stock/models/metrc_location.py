@@ -76,6 +76,7 @@ class MetrcLocation(models.Model):
 
     @api.model
     def create(self, vals):
+        self = self.with_context({'default_metrc_license_id': vals.get('facility_license_id')})
         location = super(MetrcLocation, self).create(vals)
         if not self.env.context.get('import_mode'):
             location._match_with_metrc(location.facility_license_id, raise_for_error=False)
@@ -122,13 +123,13 @@ class MetrcLocation(models.Model):
                 if metrc_data:
                     ctx = {
                         'default_metrc_id': metrc_data['Id'],
-                        'default_is_used': metrc_data['IsUsed'],
+                        'default_is_used': metrc_data.get('IsUsed', False),
                         'default_metrc_license_id': license.id,
                         'default_metrc_account_id': metrc_account.id,
                         'need_sync': False,
                         'import_mode': True
                     }
-                    # creating/updateing the metric model data befoe start processing.
+                    # creating/updateing the metric model data before start processing.
                     location.with_context(ctx)._track_metrc_model_data()
                     model_data = location.get_metrc_model_data(license=license)
                     if not all([location[f] == metrc_data[metrc_field_names[f]] for f in metrc_fields]):
