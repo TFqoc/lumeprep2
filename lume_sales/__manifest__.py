@@ -48,8 +48,7 @@
     ],
 
     'external_dependencies': {
-        'python': ['face_recognition'],
         'bin': ['cmake'],
-
+        'python': ['face_recognition'],
     },
 }
