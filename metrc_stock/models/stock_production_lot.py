@@ -41,6 +41,8 @@ class StockProductionLot(models.Model):
     is_legacy_lot = fields.Boolean(tracking=True)
     metrc_id = fields.Integer(string="Metrc ID", tracking=True)
     name_readonly = fields.Boolean(help="Technical field to determine lot name is editable or not.")
+    batch_number = fields.Char(string='Production Batch No.')
+    is_production_batch = fields.Boolean(string='Production Batch?')
 
     def toggle_name_readonly(self):
         for lot in self:
@@ -211,6 +213,8 @@ class StockProductionLot(models.Model):
                 lot.metrc_qty = resp['Quantity']
                 lot.labtest_state = resp['LabTestingState']
                 lot.testing_state_date = resp['LabTestingStateDate']
+                lot.is_production_batch = resp['IsProductionBatch']
+                lot.batch_number = resp['ProductionBatchNumber']
             else:
                 _logger.info(_("Package {} not found on metrc for product {}.".format(lot._get_metrc_name(), lot.product_id.metrc_name)))
 
@@ -484,7 +488,7 @@ class StockProductionLot(models.Model):
                 raise UserError(_("Lot already synced. You can not perform modifications."))
         return super(StockProductionLot, self).write(vals)
 
-    def _finish_package_in_metrc(self, license):
+    def finish_package_in_metrc(self, license):
         params = {'licenseNumber': license}
         metrc_account = self.env.user.ensure_metrc_account()
         data = {
@@ -492,6 +496,14 @@ class StockProductionLot(models.Model):
             'ActualDate': fields.Date.to_string(fields.Date.today())
         }
         return metrc_account.fetch('POST', '/packages/v1/finish', data=data, params=params)
+    
+    def unfinish_package_in_metrc(self, license):
+        params = {'licenseNumber': license}
+        metrc_account = self.env.user.ensure_metrc_account()
+        data = {
+            'Label': self._get_metrc_name(),
+        }
+        return metrc_account.fetch('POST', '/packages/v1/unfinish', data=data, params=params)
 
     def split_lot_quantity(self):
         self.ensure_one()

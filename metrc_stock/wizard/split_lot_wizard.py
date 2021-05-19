@@ -65,7 +65,7 @@ class SplitLotWizard(models.TransientModel):
         for wiz in self:
             location_warehouse = wiz.location_id.get_warehouse()
             wh_product = wiz.lot_id.product_id.with_context(lot_id=wiz.lot_id.id, warehouse=location_warehouse.id)
-            loc_product = wiz.lot_id.product_id.with_context(lot_id=wiz.lot_id.id, warehouse=location_warehouse.id, location=wiz.location_id.id)
+            loc_product = wiz.lot_id.product_id.with_context(lot_id=wiz.lot_id.id, location=wiz.location_id.id)
             quants = Quants._gather(wiz.lot_id.product_id, wiz.location_id, lot_id=wiz.lot_id, strict=True)
             reserved_qty = sum(quants.mapped('reserved_quantity'))
             wiz.warehouse_lot_qty = wh_product.qty_available - reserved_qty
@@ -201,7 +201,9 @@ class SplitLotWizard(models.TransientModel):
                 lot = StockProductLot.create({
                         'name': line.metrc_tag,
                         'company_id': production_order.company_id.id,
-                        'product_id': self.lot_id.product_id.id
+                        'product_id': self.lot_id.product_id.id,
+                        'is_production_batch': self.lot_id.is_production_batch,
+                        'batch_number': self.lot_id.batch_number,
                     })
             lots_dict.update({line.metrc_tag: lot})
         for move in production_order.move_finished_ids:
@@ -466,7 +468,9 @@ class SplitLotWizard(models.TransientModel):
                     lot = StockProductLot.create({
                             'name': wiz.new_lot_number,
                             'product_id': wiz.lot_id.product_id.id,
-                            'company_id': production_order.company_id.id
+                            'company_id': production_order.company_id.id,
+                            'is_production_batch': wiz.lot_id.is_production_batch,
+                            'batch_number': wiz.lot_id.batch_number
                         })
                 production_order.lot_producing_id = lot
                 for raw_move_line in production_order.move_raw_ids.mapped('move_line_ids'):
@@ -505,6 +509,7 @@ class SplitLotWizard(models.TransientModel):
                 except ValidationError as ve:
                     raise ValidationError(ve)
                 except Exception:
+                    raise
                     lot_to_unlink = production_order.finished_move_line_ids.mapped('lot_id')
                     production_order.button_unreserve()
                     production_order.action_cancel()

@@ -132,7 +132,9 @@ class StockPackageWizard(models.TransientModel):
                 'testing_state_date': resp['LabTestingStateDate'],
                 'metrc_qty': resp['Quantity'],
                 'metrc_id': resp['Id'],
-                'name_readonly': True
+                'name_readonly': True,
+                'is_production_batch': resp['IsProductionBatch'],
+                'batch_number': resp['ProductionBatchNumber'],
             })
             quants = self.lot_id.sudo().quant_ids.filtered(lambda q: q.location_id.usage == 'internal')
             quants = self.env['stock.quant'].sudo().read_group([('location_id.usage', '=', 'internal'), ('id', 'in', quants.ids)], ['location_id', 'quantity'], ['location_id'])

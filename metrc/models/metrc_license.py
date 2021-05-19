@@ -101,9 +101,9 @@ class MetrcLicense(models.Model):
         patient_data = metrc_account.fetch('GET', uri, params=params)
         if patient_data:
             self.update({
-                'flower_available': 1.0,
-                'thc_available': 1.0,
-                'purchase_amount': 10.0,
+                'flower_available': patient_data['FlowerOuncesAvailable'],
+                'thc_available': patient_data['ThcOuncesAvailable'],
+                'purchase_amount': patient_data['PurchaseAmountDays'],
             })
 
     def toggle_active(self):
