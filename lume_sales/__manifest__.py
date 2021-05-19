@@ -9,7 +9,7 @@
     'description': """
         Long description of module's purpose
     """,
-# 
+    #
     'author': "QOC Innovations",
     'website': "http://www.qocinnovations.com",
 
@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.31',
+    'version': '0.32',
 
     # any module necessary for this one to work correctly
     'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes'],
@@ -48,7 +48,7 @@
     ],
 
     'external_dependencies': {
-        'python': ['face_recognition'],
+        'python': ['cmake', 'face_recognition'],
 
     },
 }
