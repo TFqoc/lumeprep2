@@ -449,4 +449,4 @@ class project_tasks_inherit(models.Model):
                 face_locations = face_recognition.face_locations(image)
                 _logger.info("Faces found" + str(face_locations))
 
-# MEO End
+# MEO End 2
