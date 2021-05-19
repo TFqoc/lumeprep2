@@ -119,7 +119,7 @@
                             <group>
                                 <field name="usage_type"/>
                                 <field name="facility_license_id" options="{'no_create': True}" groups="metrc_base.group_metrc_admin"
-                                       attrs="{'invisible': [('base_type', '!=', 'Patient')]}"/>
+                                       attrs="{'invisible': [('base_type', '!=', 'Patient')], 'required': [('base_type', '=', 'Patient')]}"/>
                                 <field name="issuer_id" context="{'default_license_vendor': True, 'default_customer': False, 'default_supplier': False}"/>
                                 <field name="metrc_account_id" attrs="{'required': [('base_type', '=', 'Internal')], 'invisible': [('base_type', '!=', 'Internal')]}"
                                             options="{'no_create': true}"/>
