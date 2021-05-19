@@ -488,7 +488,7 @@ class StockProductionLot(models.Model):
                 raise UserError(_("Lot already synced. You can not perform modifications."))
         return super(StockProductionLot, self).write(vals)
 
-    def _finish_package_in_metrc(self, license):
+    def finish_package_in_metrc(self, license):
         params = {'licenseNumber': license}
         metrc_account = self.env.user.ensure_metrc_account()
         data = {
@@ -496,6 +496,14 @@ class StockProductionLot(models.Model):
             'ActualDate': fields.Date.to_string(fields.Date.today())
         }
         return metrc_account.fetch('POST', '/packages/v1/finish', data=data, params=params)
+    
+    def unfinish_package_in_metrc(self, license):
+        params = {'licenseNumber': license}
+        metrc_account = self.env.user.ensure_metrc_account()
+        data = {
+            'Label': self._get_metrc_name(),
+        }
+        return metrc_account.fetch('POST', '/packages/v1/unfinish', data=data, params=params)
 
     def split_lot_quantity(self):
         self.ensure_one()
