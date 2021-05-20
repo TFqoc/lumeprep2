@@ -7,7 +7,13 @@ odoo.define('lume_pos.StoreName', function(require) {
 
     class StoreName extends PosComponent {
         get store_name(){
-            return this.pos.config.project_id[1];
+            // In case the pos or config is not loaded yet
+            try{
+                return this.env.pos.config.project_id[1];
+            }
+            catch(err){
+                return "Loading...";
+            }
         }
     }
     StoreName.template = 'StoreName';

@@ -7,7 +7,7 @@
     </t>
     <t t-name="StoreName" owl="1">
         <div class="oe_status">
-            <span class="username">
+            <span style="font-size: 20px; line-height: 20px;">
                 <t t-esc="store_name"/>
             </span>
         </div>
