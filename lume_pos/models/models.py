@@ -33,7 +33,7 @@ class pos_test(models.Model):
         for order in orders:
             order.pos_update = False
         data['update_orders'] = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
-        data['new_customers'] = {"new_customers":self.env['res.partner'].search([('id','not in',customer_ids)])}
+        data['new_customers'] = {"new_customers":self.jsonify_customers(self.env['res.partner'].search([('id','not in',customer_ids)]))}
         return json.dumps(data, default=str)
 
     @api.model
