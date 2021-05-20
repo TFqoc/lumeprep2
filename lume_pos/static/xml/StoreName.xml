@@ -4,7 +4,8 @@
         <xpath expr="//div[hasclass('pos-branding')]/img" position="after">
             <div class="oe_status">
                 <span class="username">
-                    <t t-esc="this.pos.config.project_id[1]"/>
+                    <t t-esc="Object.keys(obj)"/>
+                    <t t-esc="arguments"/>
                 </span>
             </div>
         </xpath>
