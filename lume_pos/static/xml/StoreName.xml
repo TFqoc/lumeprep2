@@ -4,7 +4,7 @@
         <xpath expr="//div[hasclass('pos-branding')]/img" position="after">
             <div class="oe_status">
                 <span class="username">
-                    <t t-esc="this.env.pos.config.project_id[1]"/>
+                    <t t-esc="this.pos.config.project_id[1]"/>
                 </span>
             </div>
         </xpath>
