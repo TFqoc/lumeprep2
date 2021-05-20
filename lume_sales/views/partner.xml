@@ -15,7 +15,7 @@
           <field name="pref_name" string="Preferred Name" />
         </field>
         <field name="vat" position="after">
-          <field name="is_medical" string="Is Medical" invisible="1" />
+          <!-- <field name="is_medical" string="Is Medical" invisible="1" /> -->
           <field name="customer_type" string="Customer Type" />
           <field name="medical_id" string="MMM ID" widget="formatted_char" />
           <field name="medical_expiration" string="MM Exp" />
