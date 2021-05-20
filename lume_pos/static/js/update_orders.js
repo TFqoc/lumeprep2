@@ -1,4 +1,4 @@
-console.log("UpdateOrders dot js loaded. Test looping calls");
+console.log("UpdateOrders dot js loaded. 2");
 odoo.define('lume_pos.UpdateOrders', function(require) {
     'use strict';
 
@@ -37,12 +37,13 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                 this.rpc({
                     'model': 'sale.order',
                     'method': 'get_orders',
-                    args: [linked_sale_order_ids, this.env.pos.pos_session.id, this.env.pos.user.id],
+                    args: [linked_sale_order_ids, this.env.pos.pos_session.id, this.env.pos.user.id, this.env.pos.db.partner_sorted],
                     // Pass session_id, session object has reference to config object
                 }).then((result) => {
                     // delete the ones that are outdated
                     console.log(this.env.pos);
                     var data = JSON.parse(result);
+                    console.log(data.new_customers);
                     for (let order of this.env.pos.get_order_list()){
                         if (data.old_orders.includes(order.sale_order_id)){
                             order.destroy();
@@ -72,6 +73,8 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                         }
                     }
                     console.log(data.update_orders);
+                    // this.env.pos.db.add_partners(data.new_customers);
+                    
                     // console.log(this.env.pos.get_order_list().length);
                     // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));

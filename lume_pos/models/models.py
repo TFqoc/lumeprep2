@@ -78,6 +78,34 @@ class pos_test(models.Model):
             order.task.change_stage(5)
 
     @api.model
+    def jsonify_customers(self, data):
+        list_data = []
+        for c in data:
+            json_data = {
+                'address':'',
+                'barcode':c.barcode,
+                'city':c.city,
+                'country_id':[c.country_id.id,c.country_id.name],
+                'email': c.email,
+                'id': c.id,
+                'lang':c.lang,
+                'loyalty_points':c.loyalty_points,
+                'mobile':c.mobile,
+                'name':c.name,
+                'phone':c.phone,
+                'property_account_position_id':[c.property_account_position_id.id,c.property_account_position_id.name] if c.property_account_position_id else False,
+                'property_product_pricelist':[c.property_product_pricelist.id,c.property_product_pricelist.name] if c.property_product_pricelist else False,
+                'state_id':[c.state_id.id,c.state_id.name],
+                'street':c.street,
+                'street2': c.street2,
+                'vat':c.vat,
+                'write_date':c.write_date,
+                'zip':c.zip,
+            }
+            list_data.append(json_data)
+        return list_data
+
+    @api.model
     def jsonify_orders(self, orders, session_id):
         list_data = []
         for order in orders:
