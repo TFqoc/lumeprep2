@@ -14,7 +14,7 @@ class Tasks(models.Model):
     _order = "date_last_stage_update, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
-    sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
+    sales_order = fields.Many2one(comodel_name="sale.order", string="Cart", readonly=True)
     order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
