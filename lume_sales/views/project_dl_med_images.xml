@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+      <!-- MEO - Add notebook tab for Driver's License and Medical card IDs -->
+      <record id="view_project_task_DL_image_inherit" model="ir.ui.view">
+        <field name="name">project.task.DL_image_tab.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+            <!--<page name="description_page" position="before">-->
+                <page string="DL/Med ID" name="DL_med_image">
+                    <field name="DL_or_med_image" widget="image" required="1"/>
+                    <field name="DL_or_med_image_adjusted" invisible="1"/>
+                </page>
+            <!--</page>-->
+            </notebook>
+        </field>
+      </record>
+      <!-- MEO - END -->
+    </data>
+</odoo>

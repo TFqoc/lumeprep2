@@ -6,3 +6,4 @@ from . import sale
 from . import project
 from . import barcode_parse
 from . import product
+from . import project_dl_med_images
