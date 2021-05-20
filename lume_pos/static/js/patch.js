@@ -1,4 +1,4 @@
-console.log("Patch dot js loaded. Test patching models.js");
+console.log("Patch dot js loaded. Test patching models.js 4");
 odoo.define('lume_pos.PatchTest', function(require) {
     'use strict';
 
@@ -134,6 +134,14 @@ odoo.define('lume_pos.PatchTest', function(require) {
     patch(models.PosModel, "No load json", {
       load_orders: function(){},
       _load_orders: function(){},
+        initialize: function(attributes){
+        var superfun = this.models[10].loaded;
+        this.models[10].loaded = function(self,configs){
+          superfun(self,configs);
+          self.pos_session.store_name = configs[0].store_name;
+        }
+        this._super(...arguments);
+        },
     });
 
     patch(PaymentScreen, "update backend SO",{

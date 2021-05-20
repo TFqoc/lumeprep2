@@ -73,8 +73,8 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                         }
                     }
                     console.log(data.update_orders);
-                    // this.env.pos.db.add_partners(data.new_customers);
-                    
+                    this.env.pos.db.add_partners(data.new_customers.new_customers);
+
                     // console.log(this.env.pos.get_order_list().length);
                     // console.log(JSON.stringify(data.new_orders));
                     this.env.pos.import_orders(JSON.stringify(data.new_orders));
