@@ -1,6 +1,7 @@
 from odoo import models, fields, api, tools
 import logging
 from PIL import Image
+
 # import dlib
 # import face_recognition
 

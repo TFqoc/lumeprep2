@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 {
+
     'name': "Lume Sales",
 
     'summary': """
