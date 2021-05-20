@@ -41,6 +41,7 @@ odoo.define('lume_pos.UpdateOrders', function(require) {
                     // Pass session_id, session object has reference to config object
                 }).then((result) => {
                     // delete the ones that are outdated
+                    console.log(this.env.pos);
                     var data = JSON.parse(result);
                     for (let order of this.env.pos.get_order_list()){
                         if (data.old_orders.includes(order.sale_order_id)){

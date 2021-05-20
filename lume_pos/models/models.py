@@ -13,7 +13,7 @@ class pos_test(models.Model):
     no_pos_update = fields.Boolean(help='Technical field to stop the pos_update field triggering')
 
     @api.model
-    def get_orders(self, ids, session_id, user_id):
+    def get_orders(self, ids, session_id, user_id, customer_ids=[]):
         config_id = self.env['pos.session'].browse(session_id).config_id
         # This filters includes anyone explicitly listed on the project, as we as anyone who has permission to see it (administrator rights on project app)
         orders = self.env['sale.order'].search([('id','not in', ids),('state','in',['sale']),('task.project_id','=',config_id.project_id.id)]) # ('task.project_id.allowed_user_ids','=',user_id)
@@ -33,6 +33,7 @@ class pos_test(models.Model):
         for order in orders:
             order.pos_update = False
         data['update_orders'] = {"unpaid_orders":self.jsonify_orders(orders, session_id)}
+        data['new_customers'] = {"new_customers":self.env['res.partner'].search([('id','not in',customer_ids)])}
         return json.dumps(data, default=str)
 
     @api.model

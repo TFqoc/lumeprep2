@@ -156,5 +156,5 @@ function update_data() {
             type: 'POST',
             contentType: 'application/json'
         });
-    },50);
+    },500);
 }
