@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    is_medical = fields.Boolean()
+    # is_medical = fields.Boolean()
     medical_id = fields.Char()
     medical_expiration = fields.Date()
     date_of_birth = fields.Date()
@@ -24,6 +24,11 @@ class Partner(models.Model):
     passport = fields.Char()
     pref_name = fields.Char()
     customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+
+    is_caregiver = fields.Boolean()
+    caregiver_license = fields.Char()
+    caregiver_id = fields.Many2one('res.partner')
+    patient_ids = fields.One2many(comodel_name="res.partner",inverse_name="caregiver_id")
 
     last_visit = fields.Datetime()
 
