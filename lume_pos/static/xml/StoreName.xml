@@ -2,7 +2,7 @@
 <templates id="templates" xml:space="preserve">
     <t t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-branding')]/img" position="after">
-            <div t-esc="store_name"></div>
+            <div t-esc="Object.keys(this)"></div>
         </xpath>
     </t>
 </templates>
