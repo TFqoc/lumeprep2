@@ -37,6 +37,7 @@
     # },
     'qweb':[
         # 'static/xml/button.xml',
+        'static/xml/StoreName.xml',
         'static/xml/update_orders.xml',
         'static/xml/ReceiptScreen.xml',
         'static/xml/ActionpadWidget.xml',
