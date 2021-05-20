@@ -49,8 +49,8 @@
         'demo/demo.xml',
     ],
 
-    'external_dependencies': {
-        'python': ['dlib', 'face_recognition'],
+    # 'external_dependencies': {
+    #    'python': ['dlib', 'face_recognition'],
 
     },
 }
