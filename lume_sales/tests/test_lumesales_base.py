@@ -191,7 +191,7 @@ class TestLumeSaleCommon(SavepointCase):
             'phone': '555-555-5555',
             'email': 'ev@example.com',
             'date_of_birth': datetime.date(1987, 2, 17),
-            'drivers_license_number': 'C3335473939576',
+            'drivers_license_number': 'C333547393957',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
 
         })
@@ -210,7 +210,7 @@ class TestLumeSaleCommon(SavepointCase):
             'date_of_birth': datetime.date(1999, 5, 14),
             'medical_id': 'CG-18-089765',
             'medical_expiration': datetime.date(2021, 9, 13),
-            'drivers_license_number': 'H1112222333344',
+            'drivers_license_number': 'H111222233334',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
 
@@ -227,7 +227,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'bf@example.com',
             'date_of_birth': datetime.date(1999, 10, 21),
             'warnings': 3,
-            'drivers_license_number': 'B4345545332311',
+            'drivers_license_number': 'B434554533231',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
 
         })
@@ -248,7 +248,7 @@ class TestLumeSaleCommon(SavepointCase):
             'medical_expiration': datetime.date(2021, 9, 13),
             'is_caregiver': True,
             'caregiver_license': 'Caregiver',
-            'drivers_license_number': 'B4345545332311',
+            'drivers_license_number': 'B434555533231',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
 
@@ -267,7 +267,7 @@ class TestLumeSaleCommon(SavepointCase):
             'medical_id': 'CG-19-089765',
             'medical_expiration': datetime.date(2021, 9, 13),
             'caregiver_id': cls.customer_care.id,
-            'drivers_license_number': 'F6725545686311',
+            'drivers_license_number': 'F672554568631',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
         
