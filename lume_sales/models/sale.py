@@ -38,7 +38,7 @@ class SaleOrder(models.Model):
                 'target': 'current',
                 'res_id': self.id,
                 'context': {'lpc_sale_order_id': self.id},
-                'domain': [('is_medical','=',show_medical)],
+                'domain': [('is_medical','=',show_medical),('type','!=','service'),('sale_ok','=',True)],
                 # 'search_view_id': (id, name),
             }
 
@@ -107,3 +107,4 @@ class SaleLine(models.Model):
     #             self.name = False
     #             self.price_unit = False
     #             return warning
+

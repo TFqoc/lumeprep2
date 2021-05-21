@@ -23,7 +23,7 @@ class Partner(models.Model):
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
     pref_name = fields.Char()
-    customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
