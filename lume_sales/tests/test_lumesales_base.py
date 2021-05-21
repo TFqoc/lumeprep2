@@ -180,7 +180,7 @@ class TestLumeSaleCommon(SavepointCase):
         state = cls.env['res.country.state'].search([("code","=", "MI")], limit=1)
 
         cls.customer_rec = Customers.create({
-            'name': 'Eve A. Love',
+            'name': 'Eve A Love',
             'is_company': False,
             'company_type': 'person',
             'street': '629 Mad Dog Lane',
@@ -197,7 +197,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_med = Customers.create({
-            'name': 'Helen N. Hywater',
+            'name': 'Helen N Hywater',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Error Place',
@@ -215,7 +215,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_banned = Customers.create({
-            'name': 'Bennie F. Factor',
+            'name': 'Bennie F Factor',
             'is_company': False,
             'company_type': 'person',
             'street': '555 Linger Longer Road',
@@ -233,7 +233,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_care = Customers.create({
-            'name': 'test',
+            'name': 'Dexter Michael Davenport',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Frying Pan Road',
@@ -253,7 +253,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         cls.customer_pat = Customers.create({
-            'name': 'Justin Thyme',
+            'name': 'Justin Nick Thyme',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Frying Pan Road',
