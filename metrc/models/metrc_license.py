@@ -84,8 +84,10 @@ class MetrcLicense(models.Model):
     thc_available = fields.Float("Available THC")
     purchase_amount = fields.Float("Purchase Amount Days")
     facility_license_id = fields.Many2one(comodel_name='metrc.license', string="Facliilty License",
-                                          domain=[('base_type', '=', 'Internal')],
+                                          domain=[('base_type', '=', 'Internal'), ('sell_to_patients', '=', True)],
                                           ondelete='set null')
+    sell_to_patients = fields.Boolean(help='Field to determine whether this facility can sell to patients or not.'
+                                           '\nAllowd to check patient quota or not.')
     
 
     _sql_constraints = [
