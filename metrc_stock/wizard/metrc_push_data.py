@@ -20,11 +20,11 @@ class MetrcPushData(models.TransientModel):
         self.ensure_one()
         account = self.metrc_account_id
         license = self.warehouse_id.license_id
-        adjust_reason = self.env['metrc.package.adjust.reason'].search([('license_id', '=', license.id), ('name', '=', 'Incorrect Quantity')])
+        adjust_reason = self.warehouse_id.default_adjust_reason_id
         if not account:
             raise UserError(_("Can not proceed with the execution. No metrc account associated to the user {}". format(self.env.user.name)))
         if not adjust_reason:
-            raise UserError(_("Metrc adjustment reason 'Incorrect Quantity' not found for license {}".format(license.license_number)))
+            raise UserError(_("Default Metrc adjustment reason warehouse {}".format(self.warehouse_id.name)))
         locations = self.env['stock.location'].search([('location_id', 'child_of', self.warehouse_id.view_location_id.id), ('usage', '=', 'internal')])
         lots_to_process = self.env['stock.production.lot'].search([('is_metric_product', '=', True), ('quant_ids.location_id', 'in', locations.ids)])
         lots_to_process = lots_to_process.filtered(lambda l: l.metrc_id == 0)

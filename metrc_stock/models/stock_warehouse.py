@@ -8,6 +8,9 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     license_id = fields.Many2one('metrc.license', string="Facility License")
+    default_adjust_reason_id = fields.Many2one(comodel_name='metrc.package.adjust.reason',
+                                               string='Adjustment Reason', 
+                                               help='Reason used automaticallu when performing package sync.')
 
     @api.constrains('license_id')
     def check_license(self):
