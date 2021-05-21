@@ -107,6 +107,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allow_timesheet_timer': True,
             'privacy_visibility': 'followers',
             'alias_name': 'project+peterson',
+            'blink_threshold': 5,
             #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
@@ -143,6 +144,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allow_timesheet_timer': True, 
             'privacy_visibility': 'followers',
             'alias_name': 'project+escanaba',
+            'blink_threshold': 5,
             #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
@@ -175,6 +177,7 @@ class TestLumeSaleCommon(SavepointCase):
         #Creating customers that already exist within the system:
 
         Customers = cls.env['res.partner'].with_context({'mail_create_nolog': True})
+        state = cls.env['res.country.state'].search([("code","=", "MI")], limit=1)
 
         cls.customer_rec = Customers.create({
             'name': 'Eve A. Love',
@@ -182,12 +185,12 @@ class TestLumeSaleCommon(SavepointCase):
             'company_type': 'person',
             'street': '629 Mad Dog Lane',
             'city': 'Detroit',
-            'state_id': cls.env['res.country.state'].search([("code","=", "MI")], limit=1).id, #Validate this is returning the correct value.
+            'state_id': state.id,
+            'country_id': state.country_id.id,
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',
             'date_of_birth': datetime.date(1987, 2, 17),
-            'is_medical': False,
             'drivers_license_number': 'C3335473939576',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
 
@@ -199,12 +202,12 @@ class TestLumeSaleCommon(SavepointCase):
             'company_type': 'person',
             'street': '404 Error Place',
             'city': 'Detroit',
-            'state_id': cls.env['res.country.state'].search([("code","=", "MI")], limit=1).id,
+            'state_id': state.id,
+            'country_id': state.country_id.id,
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
             'date_of_birth': datetime.date(1999, 5, 14),
-            'is_medical': True,
             'medical_id': 'CG-18-089765',
             'medical_expiration': datetime.date(2021, 9, 13),
             'drivers_license_number': 'H1112222333344',
@@ -217,16 +220,55 @@ class TestLumeSaleCommon(SavepointCase):
             'company_type': 'person',
             'street': '555 Linger Longer Road',
             'city': 'Detroit',
-            'state_id': cls.env['res.country.state'].search([("code","=", "MI")], limit=1).id,
+            'state_id': state.id,
+            'country_id': state.country_id.id,
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'bf@example.com',
             'date_of_birth': datetime.date(1999, 10, 21),
-            'is_medical': False,
             'warnings': 3,
             'drivers_license_number': 'B4345545332311',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
 
+        })
+
+        cls.customer_care = Customers.create({
+            'name': 'test',
+            'is_company': False,
+            'company_type': 'person',
+            'street': '404 Frying Pan Road',
+            'city': 'Detroit',
+            'state_id': state.id,
+            'country_id': state.country_id.id,
+            'zip': '48201-0001',
+            'phone': '555-555-5555',
+            'email': 'jt@example.com',
+            'date_of_birth': datetime.date(1999, 10, 21),
+            'medical_id': 'CG-21-089765',
+            'medical_expiration': datetime.date(2021, 9, 13),
+            'is_caregiver': True,
+            'caregiver_id': 'caregiver',
+            'drivers_license_number': 'B4345545332311',
+            'drivers_license_expiration': datetime.date(2021, 12, 31)
+        })
+
+        cls.customer_pat = Customers.create({
+            'name': 'Justin Thyme',
+            'is_company': False,
+            'company_type': 'person',
+            'street': '404 Frying Pan Road',
+            'city': 'Detroit',
+            'state_id': state.id,
+            'country_id': state.country_id.id,
+            'zip': '48201-0001',
+            'phone': '555-555-5555',
+            'email': 'jt@example.com',
+            'date_of_birth': datetime.date(1999, 10, 21),
+            'medical_id': 'CG-19-089765',
+            'medical_expiration': datetime.date(2021, 9, 13),
+            'caregiver_id': cls.customer_care.id,
+            'drivers_license_number': 'F6725545686311',
+            'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
         
         #Creating products as above. 
