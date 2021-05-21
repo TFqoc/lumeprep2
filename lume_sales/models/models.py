@@ -23,11 +23,11 @@ class Partner(models.Model):
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
     pref_name = fields.Char()
-    customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
-    caregiver_id = fields.Many2one('res.partner')
+    caregiver_id = fields.Many2one('res.partner',domain="[('is_caregiver','=',True)]")
     patient_ids = fields.One2many(comodel_name="res.partner",inverse_name="caregiver_id")
 
     last_visit = fields.Datetime()
@@ -83,6 +83,11 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    def unwarn(self):
+        self.warnings -= 1
+        if self.warnings < 0:
+            self.warnings = 0
+
     ###########################################################
     # Called from a button on the contact form
     # All validation checks should be done in this method
@@ -131,6 +136,12 @@ class Partner(models.Model):
         for record in self:
             record._compute_21()
             record._compute_18()
+
+    @api.model
+    def create(self, vals):
+        vals['type'] = False
+        super(Partner, self).create(vals)
+
 
 
     

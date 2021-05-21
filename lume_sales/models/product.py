@@ -81,6 +81,10 @@ class Product(models.Model):
             # if not quantity:
             #     raise ValidationError("Quantity: " + str(quantity))
             return
+        if quantity == 0 and sale_order.state not in ['done','sale','cancel']:
+            for line in sale_order.order_line:
+                if line.product_id.id == self.product_id.id:
+                    line.unlink()
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
         if sale_order.state == 'done':
@@ -89,7 +93,6 @@ class Product(models.Model):
         if wizard_product_lot:
             return wizard_product_lot
         self.lpc_quantity = quantity
-        # return sale_order.open_catalog()
         return True
 
     # Is override by lpc_stock to manage lot
