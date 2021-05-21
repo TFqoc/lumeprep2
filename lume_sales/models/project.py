@@ -57,13 +57,13 @@ class Tasks(models.Model):
             customer_id = record_exists[0].id
 
         else: #create new customer, then create task
-            state = self.env['res.country.state'].browse(data['state_id'])
+            # state = self.env['res.country.state'].browse(data['state_id'])
             new_customer = self.env['res.partner'].create({
                 'name': data['name'],
                 'street': data['street'],
                 'city': data['city'],
-                'state_id': state.id,
-                'country_id': state.country_id.id,
+                'state_id': data['state_id'].id,
+                'country_id': data['state_id'].country_id.id,
                 'zip': data['zip'],
                 'date_of_birth': data['date_of_birth'],
                 'drivers_license_expiration': data['drivers_license_expiration'],
