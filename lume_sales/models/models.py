@@ -140,7 +140,7 @@ class Partner(models.Model):
     @api.model
     def create(self, vals):
         vals['type'] = False
-        super(Partner, self).create(vals)
+        return super(Partner, self).create(vals)
 
 
 
