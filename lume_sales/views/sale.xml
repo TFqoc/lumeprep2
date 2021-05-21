@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+        <!-- Sale Order Form View -->
+        <record id="view_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <!-- Custom fields here -->
+                <field name="payment_term_id" position="after">
+                    <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}"/>
+                </field>
+                <xpath expr="//div[@class='oe_button_box']/button[@name='action_view_delivery']/field" position="attributes">
+                    <attribute name="string">Picks</attribute>
+                </xpath>
+                <field name="partner_id" position="after">
+                    <field name="order_type" readonly="1"/>
+                </field>
+                <!-- Custom Add Product Button -->
+                <field name="order_line" position="after">
+                    <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
+                    <span style="margin: 5px;"/> -->
+                    <button name="open_catalogV2" string="Add a Product" class="btn-primary oe_edit_only" type="object"/>
+                </field>
+                <xpath expr="//control" position="replace"></xpath>
+                <!-- <field name="order_line" position="attributes">
+                    <attribute name="widget">so_section_and_note</attribute>
+                  </field> -->
+            </field>
+        </record>
+    </data>
+</odoo>

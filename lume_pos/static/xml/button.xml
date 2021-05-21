@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="templates" xml:space="preserve">
+    <t t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
+        <xpath expr="//HeaderButton" position="after">
+            <CustomButton/>
+        </xpath>
+    </t>
+    <t t-name="CustomButton" owl="1">
+        <div t-on-click="onClick" t-on-change="onChangeQty">Click Me!</div>
+    </t>
+</templates>
