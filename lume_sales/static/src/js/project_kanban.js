@@ -104,7 +104,10 @@ odoo.define('lume_sales.project_kanban_custom', function (require) {
                     }
                 });
             }
-        }
+        },
+        _onAdd: function (ev) {
+            this._onAddClicked(ev);
+        },
     });
     
     return KanbanRecord;

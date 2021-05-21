@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    is_medical = fields.Boolean()
+    # is_medical = fields.Boolean()
     medical_id = fields.Char()
     medical_expiration = fields.Date()
     date_of_birth = fields.Date()
@@ -23,7 +23,12 @@ class Partner(models.Model):
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
     pref_name = fields.Char()
-    customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+
+    is_caregiver = fields.Boolean()
+    caregiver_license = fields.Char()
+    caregiver_id = fields.Many2one('res.partner',domain="[('is_caregiver','=',True)]")
+    patient_ids = fields.One2many(comodel_name="res.partner",inverse_name="caregiver_id")
 
     last_visit = fields.Datetime()
 
@@ -78,6 +83,11 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    def unwarn(self):
+        self.warnings -= 1
+        if self.warnings < 0:
+            self.warnings = 0
+
     ###########################################################
     # Called from a button on the contact form
     # All validation checks should be done in this method
@@ -87,7 +97,7 @@ class Partner(models.Model):
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
         if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
-            raise ValidationError("This customer has an expired medical licence! Please update licence information to allow customer to check in.")
+            raise ValidationError("This customer has an expired medical licence! Please update medical licence information to allow customer to check in.\nIf this is a new medical customer, please make sure to change customer type to Medical")
         if not self.medical_id and self.env.context.get('order_type') == 'medical':
             raise ValidationError("Invalid medical id!")
         if not self.drivers_license_number:
@@ -98,7 +108,7 @@ class Partner(models.Model):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
-        project = self.env['project.project'].search([('id','=',ctx.get('project_id'))], limit=1)
+        project = self.env['project.project'].browse(ctx.get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': int(ctx['partner_id']),
@@ -126,6 +136,12 @@ class Partner(models.Model):
         for record in self:
             record._compute_21()
             record._compute_18()
+
+    @api.model
+    def create(self, vals):
+        vals['type'] = False
+        return super(Partner, self).create(vals)
+
 
 
     

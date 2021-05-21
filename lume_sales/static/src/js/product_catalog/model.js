@@ -15,6 +15,7 @@ odoo.define('lume_sales.ProductKanbanModel', function (require) {
          */
          _openRecord: function () {
             if (this.modelName === 'product.product') {
+                // TODO open product details
                 return;
             }
             else{

@@ -2,6 +2,9 @@
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
@@ -45,7 +48,10 @@ class Product(models.Model):
                     }
                     if sale_line.qty_delivered_method == 'manual':
                         vals['qty_delivered'] = product.lpc_quantity
-                    sale_line.with_context(lpc_no_message_post=True).write(vals)
+                    if vals['product_uom_qty'] == 0:
+                        sale_line.unlink()
+                    else:
+                        sale_line.with_context(lpc_no_message_post=True).write(vals)
                 else:  # create new SOL
                     vals = {
                         'order_id': sale_order.id,
@@ -62,8 +68,8 @@ class Product(models.Model):
                     #     vals['task_id'] = task.id
                     # else:
                     #     vals['task_id'] = False
-
-                    sale_line = self.env['sale.order.line'].create(vals)
+                    if vals['product_uom_qty'] != 0:
+                        sale_line = self.env['sale.order.line'].create(vals)
 
     @api.model
     def _get_contextual_lpc_sale_order(self):
@@ -76,10 +82,10 @@ class Product(models.Model):
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
-            if not sale_order:
-                raise ValidationError("No sale order")
-            if not quantity:
-                raise ValidationError("Quantity: " + str(quantity))
+            # if not sale_order:
+            #     raise ValidationError("No sale order" + str(self.env.context))
+            # if not quantity:
+            #     raise ValidationError("Quantity: " + str(quantity))
             return
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
@@ -89,7 +95,6 @@ class Product(models.Model):
         if wizard_product_lot:
             return wizard_product_lot
         self.lpc_quantity = quantity
-        # return sale_order.open_catalog()
         return True
 
     # Is override by lpc_stock to manage lot

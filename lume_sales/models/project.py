@@ -11,20 +11,20 @@ class Tasks(models.Model):
     _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
     _description = 'project.task'
-    _order = "create_date, priority desc, sequence, id desc"
+    _order = "date_last_stage_update, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
-    sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
+    sales_order = fields.Many2one(comodel_name="sale.order", string="Cart", readonly=True)
     order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
-    customer_type = fields.Selection(related="partner_id.customer_type")
+    # customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
 
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
-    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
+    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     # def on_barcode_scanned(self, barcode):
     #     _logger.info("BARCODE SCANNED")
@@ -57,11 +57,13 @@ class Tasks(models.Model):
             customer_id = record_exists[0].id
 
         else: #create new customer, then create task
+            # state = self.env['res.country.state'].browse(data['state_id'])
             new_customer = self.env['res.partner'].create({
                 'name': data['name'],
                 'street': data['street'],
                 'city': data['city'],
                 'state_id': data['state_id'].id,
+                'country_id': data['state_id'].country_id.id,
                 'zip': data['zip'],
                 'date_of_birth': data['date_of_birth'],
                 'drivers_license_expiration': data['drivers_license_expiration'],
@@ -70,8 +72,6 @@ class Tasks(models.Model):
             customer_id = new_customer.id
 
         self.partner_id = customer_id
-        if self.partner_id._compute_age() or not self.partner_id.is_over_21:
-            raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',
@@ -125,7 +125,9 @@ class Tasks(models.Model):
     # This method exists only as an endpoint for js to call
     @api.model
     def generate_cart(self, id):
-        return self.browse(id).build_cart()
+        task = self.browse(id)
+        task.user_id = self.env.uid
+        return task.build_cart()
 
     def build_cart(self):
         if not self.project_id.warehouse_id:
@@ -170,9 +172,9 @@ class Tasks(models.Model):
         # target_record = self.env['project.task'].browse(ids)[0]
         target_record.unlink()
 
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
-        self.order_type = self.partner_id.customer_type
+    # @api.onchange('partner_id')
+    # def _onchange_partner(self):
+    #     self.order_type = self.partner_id.customer_type
 
     @api.onchange('stage_id')
     def capture_time(self, old_stage):
