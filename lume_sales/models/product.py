@@ -2,6 +2,9 @@
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
@@ -81,9 +84,12 @@ class Product(models.Model):
             # if not quantity:
             #     raise ValidationError("Quantity: " + str(quantity))
             return
-        if quantity == 0 and sale_order.state not in ['done','sale','cancel']:
+        if quantity <= 0 and sale_order.state not in ['done','sale','cancel']:
+            _logger.info("Quantity is 0 or less")
             for line in sale_order.order_line:
+                _logger.info("Looping lines")
                 if line.product_id.id == self.id:
+                    _logger.info("Found line. Unlinking")
                     line.unlink()
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
