@@ -85,7 +85,7 @@ class Product(models.Model):
             #     raise ValidationError("Quantity: " + str(quantity))
             return
         _logger.info("About to run checks")
-        if quantity <= 0 and sale_order.state not in ['done','sale','cancel']:
+        if quantity <= .5 and sale_order.state not in ['done','sale','cancel']:
             _logger.info("Quantity is 0 or less")
             for line in sale_order.order_line:
                 _logger.info("Looping lines")
