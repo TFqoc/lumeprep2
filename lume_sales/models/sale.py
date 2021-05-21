@@ -97,9 +97,9 @@ class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
     # product_id = fields.Many2one(domain="[('is_medical','=',order_id.order_type == 'medical'),('type','!=','service'),('sale_ok','=',True)]")
-    product_id = fields.Many2one(
-        'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('is_medical','=',order_id.order_type == 'medical'),('type','!=','service')]",
-        change_default=True, ondelete='restrict', check_company=True)
+    # product_id = fields.Many2one(
+    #     'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('is_medical','=',order_id.order_type == 'medical'),('type','!=','service')]",
+    #     change_default=True, ondelete='restrict', check_company=True)
 
     # @api.onchange('product_id')
     # def check_order_line(self):
