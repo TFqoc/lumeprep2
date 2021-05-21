@@ -247,7 +247,7 @@ class TestLumeSaleCommon(SavepointCase):
             'medical_id': 'CG-21-089765',
             'medical_expiration': datetime.date(2021, 9, 13),
             'is_caregiver': True,
-            'caregiver_id': 'caregiver',
+            'caregiver_license': 'Caregiver',
             'drivers_license_number': 'B4345545332311',
             'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
