@@ -83,6 +83,11 @@ class Partner(models.Model):
     def warn(self):
         self.warnings += 1
 
+    def unwarn(self):
+        self.warnings -= 1
+        if self.warnings < 0:
+            self.warnings = 0
+
     ###########################################################
     # Called from a button on the contact form
     # All validation checks should be done in this method

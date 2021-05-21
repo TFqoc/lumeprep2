@@ -25,7 +25,8 @@
           <field name="is_expired_dl" string="Expired DL" invisible="1" />
           <field name="drivers_license_number" string="Drivers #" />
           <field name="drivers_license_expiration" string="DL Expiration" />
-          <button name="warn" string="Issue Warning" type="object" class="btn btn-primary oe_edit_only" />
+          <button name="warn" string="Issue Warning" type="object" class="btn btn-secondary oe_edit_only" />
+          <button name="unwarn" string="Remove Warning" type="object" class="btn btn-secondary oe_edit_only" />
           <field name="is_banned" invisible="1" />
           <field name="warnings" invisible="1" />
           <div>
