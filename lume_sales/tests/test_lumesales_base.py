@@ -256,7 +256,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Justin Nick Thyme',
             'is_company': False,
             'company_type': 'person',
-            'street': '404 Frying Pan Road',
+            'street': '404 Electric Avenue',
             'city': 'Detroit',
             'state_id': state.id,
             'country_id': state.country_id.id,
