@@ -111,11 +111,11 @@ class StockProductionLot(models.Model):
         metrc_account = self.env.user.ensure_metrc_account()
         license = warehouse.license_id
         reason_note = "Go-Live Adjustments"
-        adjust_reason = self.env['metrc.package.adjust.reason'].search([('license_id', '=', license.id), ('name', '=', 'Incorrect Quantity')])
+        adjust_reason = warehouse.default_adjust_reason_id
         if not metrc_account:
             return False
         if not adjust_reason:
-            _logger.error("Metrc adjustment reason 'Incorrect Quantity' not found for license {}".format(license.license_number))
+            _logger.error("Default Metrc adjustment reason not configured on warehouse {}".format(warehouse.name))
             return False
         if automatic:
             cr = registry(self._cr.dbname).cursor()
@@ -148,7 +148,7 @@ class StockProductionLot(models.Model):
                     processed_lots |= lot
                 else:
                     try:
-                        lot._adjust_in_metrc(metrc_account, license, resp['Quantity'], reason=adjust_reason.name, note=reason_note)
+                        lot._adjust_in_metrc(metrc_account, license, resp['Quantity'], reason=adjust_reason, note=reason_note)
                         processed_lots |= lot
                     except UserError as e:
                         lot._schedule_todo_activity(message=e)
@@ -263,15 +263,18 @@ class StockProductionLot(models.Model):
             else:
                 raise UserError(_("Package {} already exists in metrc.".format(lot._get_metrc_name())))
 
-    def _adjust_in_metrc(self, account, license, package_qty, reason="Incorrect Quantity", note="", delta=False):
+    def _adjust_in_metrc(self, account, license, package_qty, reason=False, note="", delta=False):
         quantity = self.product_qty - self.product_id.to_metrc_qty(package_qty)
+        if not reason:
+            warehouse = self.env['stock.warehouse'].search([('license_id', '=', license.id)], limit=1)
+            reason = warehouse.default_adjust_reason_id
         if delta:
             quantity = self.product_id.to_metrc_qty(package_qty)
         data = [{
             "Label": self._get_metrc_name(),
             "Quantity": quantity,
             "UnitOfMeasure": self.product_uom_id.name,
-            "AdjustmentReason": reason,
+            "AdjustmentReason": reason.name,
             "AdjustmentDate": fields.Date.to_string(fields.Date.today()),
             "ReasonNote": note
         }]
@@ -397,11 +400,10 @@ class StockProductionLot(models.Model):
 
         if not warehouse.license_id:
             raise UserError(_("Warehouse {} is not configured with facility license. Please configure one to proceed.". format(warehouse.name)))
-        reason = self.env['metrc.package.adjust.reason'].search([('name', 'ilike', 'Incorrect Quantity'), ('license_id', '=', warehouse.license_id.id)], limit=1)
+        reason = warehouse.default_adjust_reason_id
         if not reason:
-            raise UserError(_('Package adjustment reason "Incorrect Quantity" not available for license {}.'
-                                '\nCreate adjustment reason "Incorrect Quantity" in Metrc and synchronize '
-                                'service for the license.'.format(warehouse.license_id.license_number)))
+            raise UserError(_('Default Package adjustment reason not configured on Warehouse {}.'
+                                '\n Please configure default adjustment reason on the above warehouse.'.format(warehouse.name)))
         company = warehouse.company_id or warehouse.license_id.company_id
         inv_adjst = self.env['stock.inventory'].create({
             'name': 'INV-ADJ: %s (Metrc Package Adjustment) ' % (self.product_id.name, ),
@@ -663,8 +665,7 @@ class StockProductionLot(models.Model):
                     cr.commit()
                 last_sync_date = new_last_sync_date
             if new_lots:
-                reason = AdjustmentReason.search(
-                        [('name', 'ilike', 'Incorrect Quantity'), ('license_id', '=', license.id)], limit=1)
+                reason = warehouse.default_adjust_reason_id
                 try:
                     inv_adjst = StockInventory.create({
                         'name': 'INITIAL INVENTORY FROM METRC[%s]' % (license.license_number),

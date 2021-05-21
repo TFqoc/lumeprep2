@@ -7,6 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="license_id" domain="[('base_type', '=', 'Internal')]" context="{'default_base_type': 'Internal'}"/>
+                <field name='default_adjust_reason_id' domain="[('license_id', '=', license_id)]" 
+                       attrs="{'required': [('license_id', '!=', False)],
+                               'invisible': [('license_id', '=', False)]}"/>
             </xpath>
         </field>
     </record>
