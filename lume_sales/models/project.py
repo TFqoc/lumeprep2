@@ -11,10 +11,10 @@ class Tasks(models.Model):
     _name = 'project.task'
     _inherit = ['project.task','barcodes.barcode_events_mixin']
     _description = 'project.task'
-    _order = "create_date, priority desc, sequence, id desc"
+    _order = "date_last_stage_update, priority desc, sequence, id desc"
 
     name = fields.Char(required=False)
-    sales_order = fields.Many2one(comodel_name="sale.order", readonly=True)
+    sales_order = fields.Many2one(comodel_name="sale.order", string="Cart", readonly=True)
     order_number = fields.Char(readonly=True)
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
@@ -70,8 +70,6 @@ class Tasks(models.Model):
             customer_id = new_customer.id
 
         self.partner_id = customer_id
-        if self.partner_id._compute_age() or not self.partner_id.is_over_21:
-            raise ValidationError("This customer is not old enough to buy drugs!")
         # Open the customer profile in windowed popup
         return {
                 'type': 'ir.actions.act_window',

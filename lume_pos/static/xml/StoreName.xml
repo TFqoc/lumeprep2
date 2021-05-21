@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="templates" xml:space="preserve">
+    <t t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-branding')]/img" position="after">
+            <StoreName/>
+        </xpath>
+    </t>
+    <t t-name="StoreName" owl="1">
+        <div class="oe_status">
+            <span style="font-size: 20px; line-height: 20px;">
+                <t t-esc="store_name"/>
+            </span>
+        </div>
+    </t>
+</templates>

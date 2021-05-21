@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # For product validation
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
+    ordered_qty = fields.Float(compute='_compute_ordered_qty')
 
     # def open_catalog(self):
     #     self.ensure_one()
@@ -54,21 +55,34 @@ class SaleOrder(models.Model):
             if record.is_delivered:
                 record.on_fulfillment()
 
+    @api.depends('order_line')
+    def _compute_ordered_qty(self):
+        for record in self:
+            qty = 0
+            for line in record.order_line:
+                qty += line.product_uom_qty
+            record.ordered_qty = qty
+
     # Onchange doesn't seem to trigger for calculated fields
     # @api.onchange('is_delivered')
     def on_fulfillment(self):
         if self.task.stage_id.name != 'Order Ready':
-            self.task.change_stage(3) 
+            self.task.change_stage(3)
 
-    @api.onchange('partner_id')
-    def check_order_lines(self):
-        for order in self.order_line:
-            if order.product_id.is_medical is not self.partner_id.is_medical:
-                warning = {
-                'warning': {'title': "Warning", 'message': "You can't set a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer here because there is at least one " + ("medical" if order.product_id.is_medical else "recreational") + " product in the order!",}
-                }
-                self.partner_id = False
-                return warning
+    # @api.onchange('partner_id')
+    # def check_order_lines(self):
+    #     for order in self.order_line:
+    #         if order.product_id.is_medical is not self.partner_id.is_medical:
+    #             warning = {
+    #             'warning': {'title': "Warning", 'message': "You can't set a " + ("medical" if self.partner_id.is_medical else "recreational") + " customer here because there is at least one " + ("medical" if order.product_id.is_medical else "recreational") + " product in the order!",}
+    #             }
+    #             self.partner_id = False
+    #             return warning
+
+    @api.model
+    def get_cart_totals(self, id):
+        record = self.browse(id)
+        return (record.amount_total, record.ordered_qty)
 
     def action_confirm(self):
         if not self.order_line:
@@ -82,14 +96,14 @@ class SaleOrder(models.Model):
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
-    @api.onchange('product_id')
-    def check_order_line(self):
-        if self.product_id and self.order_id.partner_id:
-            if self.product_id.is_medical is not self.order_id.partner_id.is_medical:
-                warning = {
-                    'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if self.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.order_id.partner_id.is_medical else "recreational") + " customer's order!",}
-                    }
-                self.product_id = False
-                self.name = False
-                self.price_unit = False
-                return warning
+    # @api.onchange('product_id')
+    # def check_order_line(self):
+    #     if self.product_id and self.order_id.partner_id:
+    #         if self.product_id.is_medical is not self.order_id.partner_id.is_medical:
+    #             warning = {
+    #                 'warning': {'title': "Warning", 'message': "You can't add a " + ("medical" if self.product_id.is_medical else "recreational") + " product to a " + ("medical" if self.order_id.partner_id.is_medical else "recreational") + " customer's order!",}
+    #                 }
+    #             self.product_id = False
+    #             self.name = False
+    #             self.price_unit = False
+    #             return warning

@@ -7,6 +7,7 @@
                 <!-- <script type="text/javascript" src="/lume_pos/static/js/button.js"></script> -->
                 <script type="text/javascript" src="/lume_pos/static/js/patch.js"></script>
                 <script type="text/javascript" src="/lume_pos/static/js/update_orders.js"></script>
+                <script type="text/javascript" src="/lume_pos/static/js/store_name.js"></script>
             </xpath>
         </template>
     </data>

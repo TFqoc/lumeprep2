@@ -36,7 +36,7 @@
                                     <div class="h-100 d-flex"
                                         style="z-index:1;align-items: center;">
                                         <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
-                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_remove_quantity">
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_remove_quantity" onclick="update_data()">
                                             <span style="font-size:1.5rem;">-</span>
                                         </button>
                                         <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
@@ -44,7 +44,7 @@
                                         <field name="lpc_quantity" widget="lpcProductQuantity"/>
     
                                         <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
-                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_add_quantity">
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_add_quantity" onclick="update_data()">
                                         <span style="font-size:1.5rem;">+</span></button>
                                         <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
                                     </div>

@@ -76,10 +76,10 @@ class Product(models.Model):
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
-            if not sale_order:
-                raise ValidationError("No sale order")
-            if not quantity:
-                raise ValidationError("Quantity: " + str(quantity))
+            # if not sale_order:
+            #     raise ValidationError("No sale order" + str(self.env.context))
+            # if not quantity:
+            #     raise ValidationError("Quantity: " + str(quantity))
             return
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
