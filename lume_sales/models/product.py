@@ -83,7 +83,7 @@ class Product(models.Model):
             return
         if quantity == 0 and sale_order.state not in ['done','sale','cancel']:
             for line in sale_order.order_line:
-                if line.product_id.id == self.product_id.id:
+                if line.product_id.id == self.id:
                     line.unlink()
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
