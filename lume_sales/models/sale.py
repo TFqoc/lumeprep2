@@ -6,7 +6,7 @@ class SaleOrder(models.Model):
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
-    order_line = fields.One2many(domain="[('product_id.is_medical','=',show_medical),('product_id.type','!=','service'),('product_id.sale_ok','=',True)]")
+    order_line = fields.One2many(domain="[('product_id.is_medical','=',order_type.raw_value),('product_id.type','!=','service'),('product_id.sale_ok','=',True)]")
     # For product validation
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
