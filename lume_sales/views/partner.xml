@@ -91,7 +91,12 @@
           <field name="is_caregiver" string="Caregiver"></field>
           <field name="caregiver_id" attrs="{'invisible':[('is_caregiver','=',True)],'domain':[('is_caregiver','=',True)]}"></field>
           <field name="caregiver_license" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}"></field>
-          <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}"></field>
+          <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}">
+            <tree create="0" delete="0" editable="bottom">
+              <field name="name"></field>
+              <field name="phone"></field>
+            </tree>
+          </field>
         </field>
       </field>
     </record>
