@@ -94,7 +94,7 @@ class MetrcLicense(models.Model):
 
     def refresh_allotments(self):
         metrc_account = self.env.user.ensure_metrc_account()
-        uri = '/patients/v1/statuses/{}'.format(self.license_number)
+        uri = '/patients/v1/status/{}'.format(self.license_number)
         params = {
             'licenseNumber': self.facility_license_id.license_number,
         }
