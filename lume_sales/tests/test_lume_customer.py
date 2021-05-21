@@ -48,6 +48,26 @@ class TestCustomerProfile(TestLumeSaleCommon):
         _logger.warning("Test Warn Status: Complete.") 
         # TODO: Remove.
 
+    def test_unwarn(self):
+        #Class is set up with the data before the test.
+
+        record_ids = [self.customer_banned.id] #Id of the record being manipulated.
+        uid = self.env.ref('base.user_admin').id #Id of the user doing the action.
+        self.env['res.partner'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).unwarn()
+
+        self.assertEqual(
+            self.customer_banned.warnings,
+            2,
+            "Error in Partner Model: Number of warnings does not decrease with current method."
+        )
+
+        _logger.warning("Test Unwarn Status: Complete.") 
+        # TODO: Remove.
+
     # def test_warn_test(self):
     #     self.assertEqual(
     #         self.customer_rec.warnings,  
