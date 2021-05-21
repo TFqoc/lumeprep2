@@ -6,7 +6,6 @@ class SaleOrder(models.Model):
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
-    order_line = fields.One2many(domain="[('product_id.is_medical','=',order_type == 'medical'),('product_id.type','!=','service'),('product_id.sale_ok','=',True)]")
     # For product validation
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
@@ -96,6 +95,8 @@ class SaleOrder(models.Model):
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
+
+    product_id = fields.Many2one(domain="[('is_medical','=',order_id.order_type == 'medical'),('type','!=','service'),('sale_ok','=',True)]")
 
     # @api.onchange('product_id')
     # def check_order_line(self):
