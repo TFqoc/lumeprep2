@@ -48,7 +48,10 @@ class Product(models.Model):
                     }
                     if sale_line.qty_delivered_method == 'manual':
                         vals['qty_delivered'] = product.lpc_quantity
-                    sale_line.with_context(lpc_no_message_post=True).write(vals)
+                    if vals['product_uom_qty'] == 0:
+                        sale_line.unlink()
+                    else:
+                        sale_line.with_context(lpc_no_message_post=True).write(vals)
                 else:  # create new SOL
                     vals = {
                         'order_id': sale_order.id,
@@ -65,8 +68,8 @@ class Product(models.Model):
                     #     vals['task_id'] = task.id
                     # else:
                     #     vals['task_id'] = False
-
-                    sale_line = self.env['sale.order.line'].create(vals)
+                    if vals['product_uom_qty'] != 0:
+                        sale_line = self.env['sale.order.line'].create(vals)
 
     @api.model
     def _get_contextual_lpc_sale_order(self):
@@ -84,14 +87,6 @@ class Product(models.Model):
             # if not quantity:
             #     raise ValidationError("Quantity: " + str(quantity))
             return
-        _logger.info("About to run checks QTY: %s STATE: %s" % (quantity,sale_order.state))
-        if quantity <= .5 and sale_order.state not in ['done','sale','cancel']:
-            _logger.info("Quantity is 0 or less")
-            for line in sale_order.order_line:
-                _logger.info("Looping lines")
-                if line.product_id.id == self.id:
-                    _logger.info("Found line. Unlinking")
-                    line.unlink()
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
         if sale_order.state == 'done':
