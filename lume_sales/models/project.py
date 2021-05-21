@@ -123,7 +123,9 @@ class Tasks(models.Model):
     # This method exists only as an endpoint for js to call
     @api.model
     def generate_cart(self, id):
-        return self.browse(id).build_cart()
+        task = self.browse(id)
+        task.user_id = self.env.uid
+        return task.build_cart()
 
     def build_cart(self):
         if not self.project_id.warehouse_id:

@@ -27,7 +27,7 @@ class Partner(models.Model):
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
-    caregiver_id = fields.Many2one('res.partner')
+    caregiver_id = fields.Many2one('res.partner',domain="[('is_caregiver','=',True)]")
     patient_ids = fields.One2many(comodel_name="res.partner",inverse_name="caregiver_id")
 
     last_visit = fields.Datetime()
@@ -131,6 +131,12 @@ class Partner(models.Model):
         for record in self:
             record._compute_21()
             record._compute_18()
+
+    @api.model
+    def create(self, vals):
+        vals['type'] = False
+        super(Partner, self).create(vals)
+
 
 
     
