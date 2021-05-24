@@ -32,5 +32,5 @@ class MetrcAccount(models.Model):
                     # 'company_id': self.env.user.company_id and self.env.user.company_id.id or False,
                     'issue_date': license_data['StartDate'],
                     'expire_date': license_data['EndDate'],
-                    'sell_to_patients': license_data['FacilityType']['CanSellToPatients'],
+                    'sell_to_patients': facility['FacilityType']['CanSellToPatients'],
                 })
