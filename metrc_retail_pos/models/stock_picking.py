@@ -23,7 +23,5 @@ class StockPicking(models.Model):
     def _compute_metrc_validation(self):
         super(StockPicking, self)._compute_metrc_validation()
         for pick in self:
-            if (pick.group_id and pick.group_id.sale_id and \
-               pick.group_id.sale_id.team_id) or \
-               (pick.picking_type_id.is_pos_operation):
+            if pick.picking_type_id.is_pos_operation:
                 pick.require_metrc_validation = False
