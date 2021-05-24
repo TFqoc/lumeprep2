@@ -81,14 +81,14 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         _logger.warning("Test Build Cart Status: Complete.")
         # TODO: Remove.
-    def test_barcode_parse(self): 
-        """Checking that the barcode parses correctly."""
-        pass #TODO: Paste runbot code.
-    def test_add_button(self):
-        pass #TODO: Paste runbot code.
-    def test_check_in_button(self):
+    # def test_barcode_parse(self): 
+    #     """Checking that the barcode parses correctly."""
+    #     pass #TODO: Paste runbot code.
+    # def test_add_button(self):
+    #     pass #TODO: Paste runbot code.
+    # def test_check_in_button(self):
         
-        pass #TODO: Paste runbot code.
+    #     pass #TODO: Paste runbot code.
 
 
     
