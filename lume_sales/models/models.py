@@ -104,7 +104,7 @@ class Partner(models.Model):
             raise ValidationError("Invalid drivers licence!")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
+        if (not self.is_over_21 and self.env.context.get('order_type') == 'adult') or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))

@@ -18,8 +18,12 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                 }).then(function(data){
                     let price = data[0];
                     let qty = data[1];
-                    let style = "flex: 100%; justify-content: space-between; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%; text-align: right; font-weight: bold; font-size: 1.3em;";
-                    self.$el.prepend(`<div style='${style}'><p id="TOTAL">Total: $${price.toFixed(2)}</p><p id="QTY">Quantity: ${qty.toFixed(1)}</p></div>`);
+                    let link = `#id=${id}&model=sale.order`;
+                    let style = "display: flex; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%;font-weight: bold; font-size: 1.3em;";
+                    let button = `<a href='${link}' class='btn btn-primary' style='align-self: center; text-align: center; color:white;'>&lt; Back</a>`;
+                    let spacer = "<div style='flex-grow: 90;'/>";
+                    let textStyle = "align-self: flex-end; text-align: right;";
+                    self.$el.prepend(`<div style='${style}'>${button}${spacer}<span style="${textStyle}"><span id="TOTAL">Total: $${price.toFixed(2)}</span><br/><span id="QTY">Quantity: ${qty.toFixed(1)}</span></span></div>`);
                      console.log(`Data: ${data}`);
                  });
             });
