@@ -302,18 +302,16 @@ class TestLumeSaleCommon(SavepointCase):
             'location_id': cls.lumehouse_one.lot_stock_id.id,
         })
 
-        med_quantity_esca = Quantity.create({
-            'product_id': cls.product_med.id,
-            'inventory_quantity': 50.0,
-            'location_id': cls.lumehouse_two.lot_stock_id.id,
-        })
-
-        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
-
         rec_quantity_pete = Quantity.create({
             'product_id': cls.product_rec.id,
             'inventory_quantity': 50.0,
             'location_id': cls.lumehouse_one.lot_stock_id.id,
+        })
+
+        med_quantity_esca = Quantity.create({
+            'product_id': cls.product_med.id,
+            'inventory_quantity': 50.0,
+            'location_id': cls.lumehouse_two.lot_stock_id.id,
         })
 
         rec_quantity_esca = Quantity.create({
@@ -321,3 +319,9 @@ class TestLumeSaleCommon(SavepointCase):
             'inventory_quantity': 50.0,
             'location_id': cls.lumehouse_two.lot_stock_id.id,
         })
+
+        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
+
+        
+
+        
