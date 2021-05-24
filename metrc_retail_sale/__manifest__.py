@@ -19,6 +19,9 @@ METRC Retail Sales Order Reporting
     'data': [
         # views
         'views/sale_order_views.xml',
+
+        #data
+        'data/metrc_retail_cron_data.xml',
     ],
     'application': True,
 }
