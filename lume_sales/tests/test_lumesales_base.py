@@ -294,33 +294,33 @@ class TestLumeSaleCommon(SavepointCase):
             'uom_po_id': cls.uom_unit.id
         })
 
-        Quantity = cls.env['stock.quant'].with_context(inventory_mode=True)
+        # Quantity = cls.env['stock.quant'].with_context(inventory_mode=True)
 
-        med_quantity_pete = Quantity.create({
-            'product_id': cls.product_med.id,
-            'inventory_quantity': 50.0,
-            'location_id': cls.lumehouse_one.lot_stock_id.id,
-        })
+        # med_quantity_pete = Quantity.create({
+        #     'product_id': cls.product_med.id,
+        #     'inventory_quantity': 50.0,
+        #     'location_id': cls.lumehouse_one.lot_stock_id.id,
+        # })
 
-        rec_quantity_pete = Quantity.create({
-            'product_id': cls.product_rec.id,
-            'inventory_quantity': 50.0,
-            'location_id': cls.lumehouse_one.lot_stock_id.id,
-        })
+        # rec_quantity_pete = Quantity.create({
+        #     'product_id': cls.product_rec.id,
+        #     'inventory_quantity': 50.0,
+        #     'location_id': cls.lumehouse_one.lot_stock_id.id,
+        # })
 
-        med_quantity_esca = Quantity.create({
-            'product_id': cls.product_med.id,
-            'inventory_quantity': 50.0,
-            'location_id': cls.lumehouse_two.lot_stock_id.id,
-        })
+        # med_quantity_esca = Quantity.create({
+        #     'product_id': cls.product_med.id,
+        #     'inventory_quantity': 50.0,
+        #     'location_id': cls.lumehouse_two.lot_stock_id.id,
+        # })
 
-        rec_quantity_esca = Quantity.create({
-            'product_id': cls.product_rec.id,
-            'inventory_quantity': 50.0,
-            'location_id': cls.lumehouse_two.lot_stock_id.id,
-        })
+        # rec_quantity_esca = Quantity.create({
+        #     'product_id': cls.product_rec.id,
+        #     'inventory_quantity': 50.0,
+        #     'location_id': cls.lumehouse_two.lot_stock_id.id,
+        # })
 
-        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
+        # _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
 
         
 
