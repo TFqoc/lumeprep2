@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 @tagged('lume')
 class TestRecLumeFlow(TestLumeSaleCommon):
-    def test_onchange(self):
+    def test_checkin_onchange(self):
         record_ids = []
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
@@ -22,7 +22,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'active_model': 'project.project',
             'allowed_company_ids': [1],
             'default_project_id': 5,
-            'default_stage_id': 5,
+            'default_stage_id': self.env.ref('lume_sales.lume_stage_0'),
             'lang': 'en_US',
             'pivot_row_groupby': ['user_id'],
             'tz': 'Europe/Brussels',
@@ -34,7 +34,22 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                 'project_id': self.lumestore_one.id, 
                 #'timesheet_product_id': False, 
                 'company_id': 1, 
-                'parent_id': False}, 'scan_text', {'scan_text': '1', 'partner_id': '1', 'fulfillment_type': '', 'order_type': '', 'project_id': '1', 'timesheet_product_id': '', 'company_id': '1', 'parent_id': '1'})
+                'parent_id': False}, 
+                'scan_text', {
+                    'scan_text': '1', 
+                    'partner_id': '1', 
+                    'fulfillment_type': '', 
+                    'order_type': '', 
+                    'project_id': '1', 
+                    'timesheet_product_id': '', 
+                    'company_id': '1', 
+                    'parent_id': '1'})
+        # TODO Assert statements.
+        assertEqual(
+            self.partner_id.id,
+            self.customer_rec.id,
+            "Error in Check In Onchange: Partner Id was %s instead of %s" % (self.partner_id, self. customer_rec.id)
+        )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
