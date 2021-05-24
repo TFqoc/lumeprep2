@@ -53,7 +53,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertEqual(
             Test_Task.partner_id.id,
             self.customer_rec.id,
-            "Error in Check In Onchange: Partner Id was %s instead of %s" % (self.partner_id, self. customer_rec.id)
+            "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id.id, self. customer_rec.id)
         )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
