@@ -11,3 +11,36 @@
         height:30px;
     }
 }
+
+:root{
+    --curve: 10px;
+}
+
+.o_search_panel .list-group-item header.active{
+    background-color: rgba(108, 193, 237, 0.3); // selected color
+    border-radius: var(--curve);
+}
+.o_search_panel .list-group-item header{
+    // background-color: rgba(108, 193, 237, 0.3);
+    background: aquamarine;
+    border-radius: var(--curve);
+}
+.o_search_panel .list-group-item header:hover{
+    // background-color: rgba(108, 193, 237, 0.3);
+    background: darkturquoise;
+    border-radius: var(--curve);
+}
+.o_search_panel .o_search_panel_category_value {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+.list-group-item-action:hover, .list-group-item-action:focus {
+    z-index: 1;
+    color: #495057;
+    text-decoration: none;
+    background-color: #f8f9fa;
+    border-radius: var(--curve);
+    // border-bottom-left-radius: 0px;
+    // border-bottom-right-radius: 0px;
+
+}

@@ -198,5 +198,28 @@
           </xpath>
         </field>
         </record> -->
+
+        <!-- Navbar Color -->
+        <record id="lume_nav_color" model="ir.ui.view">
+          <field name="name">lume.nav.color</field>
+          <!-- <field name="model">project.task</field> -->
+          <field name="inherit_id" ref="web.layout"/>
+          <field name="arch" type="xml">
+            <body>
+              <style>
+            .o_main_navbar {background-color: #d29e0f;border-bottom: 0px;}
+            .o_main_navbar .show .dropdown-toggle {background-color: #d29e0f;}
+            .o_main_navbar > ul > li > a:hover, .o_main_navbar 
+                           > ul > li > label:hover {background-color: #b98a09;}
+            .o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar 
+                           > button:hover, .o_main_navbar 
+                           > button:focus {background-color: #b98a09;color: inherit;}
+            .o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar 
+                           > button:hover, .o_main_navbar 
+                           > button:focus {background-color: #b98a09;color: inherit;}   
+          </style> 
+          </body>
+          </field>
+        </record>
   </data>
 </odoo>
