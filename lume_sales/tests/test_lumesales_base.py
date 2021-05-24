@@ -315,7 +315,7 @@ class TestLumeSaleCommon(SavepointCase):
         })
 
         rec_quantity_esca = Quantity.create({
-            'product_id': cls.product_med.id,
+            'product_id': cls.product_rec.id,
             'inventory_quantity': 50.0,
             'location_id': cls.lumehouse_two.lot_stock_id.id,
         })
