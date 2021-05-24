@@ -25,9 +25,9 @@
                     <field name="expire_date"/>
                     <field name="active"/>
                     <field name="facility_license_id"/>
-                    <field name="flower_available"/>
-                    <field name="thc_available"/>
-                    <field name="purchase_amount"/>
+                    <field name="daily_flower_available"/>
+                    <field name="daily_thc_available"/>
+                    <field name="daily_purchase_amount"/>
                     <button name="refresh_allotments" icon="fa-refresh" type="object"/>
                 </tree>
             </field>
@@ -145,20 +145,34 @@
                                 <field name="issue_date" attrs="{'required': [('base_type', '=', 'Internal')]}"/>
                                 <field name="expire_date" required="1"/>
                             </group>
-                            <group string="Allotment" attrs="{'invisible': [('base_type', '!=', 'Patient')]}">
-                                <label for="flower_available"/>
+                           
+                        </group>
+                        <group string="Allotments" attrs="{'invisible': [('base_type', '!=', 'Patient')]}">
+                            <group string="Daily" >
+                                <label for="daily_flower_available"/>
                                 <div>
-                                    <field name="flower_available" readonly="1"/> Ounce(s)
+                                    <field name="daily_flower_available" readonly="1"/> Ounce(s)
                                 </div>
-                                <label for="thc_available"/>
+                                <label for="daily_thc_available"/>
                                 <div>
-                                    <field name="thc_available" readonly="1"/> Ounce(s)
+                                    <field name="daily_thc_available" readonly="1"/> Ounce(s)
                                 </div>
-                                <field name="purchase_amount" readonly="1"/>
-                                <button name="refresh_allotments" string="Refresh" type="object"
-                                        attrs="{'invisible': [('base_type', '!=', 'Patient')]}"/>
+                                <field name="daily_purchase_amount" readonly="1"/>
+                            </group>
+                            <group string="Monthly">
+                                <label for="monthly_flower_available"/>
+                                <div>
+                                    <field name="monthly_flower_available" readonly="1"/> Ounce(s)
+                                </div>
+                                <label for="monthly_thc_available"/>
+                                <div>
+                                    <field name="monthly_thc_available" readonly="1"/> Ounce(s)
+                                </div>
+                                <field name="monthly_purchase_amount" readonly="1"/>
                             </group>
                         </group>
+                        <button name="refresh_allotments" string="Refresh" type="object"
+                                attrs="{'invisible': [('base_type', '!=', 'Patient')]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>

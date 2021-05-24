@@ -80,9 +80,12 @@ class MetrcLicense(models.Model):
                     help="Small-sized logo of the brand. It is automatically "
                     "resized as a 64x64px image, with aspect ratio preserved. "
                     "Use this field anywhere a small image is required.")
-    flower_available = fields.Float("Available Flower")
-    thc_available = fields.Float("Available THC")
-    purchase_amount = fields.Float("Purchase Amount Days")
+    daily_flower_available = fields.Float("Available Flower")
+    daily_thc_available = fields.Float("Available THC")
+    daily_purchase_amount = fields.Float("Purchase Amount Days")
+    monthly_flower_available = fields.Float("Available Flower")
+    monthly_thc_available = fields.Float("Available THC")
+    monthly_purchase_amount = fields.Float("Purchase Amount Days")
     facility_license_id = fields.Many2one(comodel_name='metrc.license', string="Facliilty License",
                                           domain=[('base_type', '=', 'Internal'), ('sell_to_patients', '=', True)],
                                           ondelete='set null')
@@ -96,28 +99,38 @@ class MetrcLicense(models.Model):
 
     def refresh_allotments(self):
         metrc_account = self.env.user.ensure_metrc_account()
-        uri = '/patients/v1/status/{}'.format(self.license_number)
+        uri = '/patients/v1/statuses/{}'.format(self.license_number)
         params = {
             'licenseNumber': self.facility_license_id.license_number,
         }
         patient_data = metrc_account.fetch('GET', uri, params=params)
-        if patient_data:
-            self.update({
-                'flower_available': patient_data['FlowerOuncesAvailable'],
-                'thc_available': patient_data['ThcOuncesAvailable'],
-                'purchase_amount': patient_data['PurchaseAmountDays'],
-            })
+        for allotment in patient_data:
+            if allotment['Active'] == False:
+                self.update({'active': False})
+                break
+            if allotment['PurchaseAmountDays'] == 1.00:
+                self.update({
+                    'daily_flower_available': allotment['FlowerOuncesAvailable'],
+                    'daily_thc_available': allotment['ThcOuncesAvailable'],
+                    'daily_purchase_amount': allotment['PurchaseAmountDays'],
+                })
+            if allotment['PurchaseAmountDays'] > 1.00:
+                self.update({
+                    'monthly_flower_available': allotment['FlowerOuncesAvailable'],
+                    'monthly_thc_available': allotment['ThcOuncesAvailable'],
+                    'monthly_purchase_amount': allotment['PurchaseAmountDays'],
+                })
 
     def toggle_active(self):
         super(MetrcLicense, self).toggle_active()
         ModelData = self.env['metrc.model.data']
-        for license in self:
+        for license in self.filtered(lambda l: l.base_type == 'Internal'):
             domain = [('metrc_license_id', '=', license.id)]
             if license.active:
                 domain += [('active', '=', False)]
             model_datas = ModelData.search(domain)
             model_datas.write({'active': license.active})
-            if license.base_type == 'Internal' and license.active and not model_datas:
+            if license.active and not model_datas:
                 license.create_license_model_datas()
 
     @api.depends('company_id')

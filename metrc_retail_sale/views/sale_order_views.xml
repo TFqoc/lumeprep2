@@ -10,7 +10,7 @@
                     <field name="metrc_retail_state"  groups="metrc_base.group_metrc_user"/>
                 </group>
             </xpath>
-            <xpath expr="//field[@name='license_id']" position="after">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="customer_type" invisible="1"/>
                 <field name="patient_license_number"
                        attrs="{'required': [('customer_type', '!=', 'Consumer')],
