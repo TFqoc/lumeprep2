@@ -44,11 +44,11 @@ class PosOrder(models.Model):
                         ('session_id.state', '=', 'closed'),
                         ('write_date', '>=', fields.Datetime.to_string(sync_start_date)),
                         ('metrc_retail_state', 'not in', ('Except', 'Outgoing', 'Reported')),
-                        ('picking_id', '!=', False),
+                        ('picking_ids', '!=', []),
                     ])
         _logger.info("metrc_retail: Total %d pos orders are filtered to be flagged for metrc reporting. It is possible that all of them would not be marked." % (len(orders)))
         for order in orders:
-            move_line_ids = order.picking_id.move_line_ids.filtered(lambda ml: ml.product_id.is_metric_product \
+            move_line_ids = order.picking_ids.mapped('move_line_ids').filtered(lambda ml: ml.product_id.is_metric_product \
                                 and ml.state == 'done' and ml.lot_id and \
                                 float_compare(ml.qty_done, ml.metrc_reported_qty,precision_rounding=ml.product_uom_id.rounding) > 0)
             order_todo = False
@@ -103,7 +103,7 @@ class PosOrder(models.Model):
             ('state', 'not in', ('draft', 'cancel')),
             ('session_id.state', '=', 'closed'),
             ('metrc_retail_state', 'in', ('Except', 'Outgoing')),
-            ('picking_id', '!=', False),
+            ('picking_ids', '!=', []),
         ]
         _logger.info('metrc.retail: starting metrc retail pos reporting')
         pos_orders = self.sudo().search(domain)
@@ -115,7 +115,7 @@ class PosOrder(models.Model):
                                 'on related operation type warehouse ' % (picking_type.name))
                 continue
             facility_license_id = picking_type.warehouse_id.license_id
-            picking_type_orders = pos_orders.filtered(lambda po: po.picking_id.picking_type_id == picking_type)
+            picking_type_orders = pos_orders.filtered(lambda po: po.picking_type_id == picking_type)
             _logger.info('metrc.retail: processing %d retail pos orders for facility %s' % (
                                         len(picking_type_orders), facility_license_id.name))
             for order_chunk in split_every(batch_size, picking_type_orders):
@@ -123,7 +123,7 @@ class PosOrder(models.Model):
                                         len(order_chunk), facility_license_id.name))
                 order_data = []
                 for order in order_chunk:
-                    move_line_ids = order.picking_id.move_line_ids.filtered(lambda ml: ml.product_id.is_metric_product \
+                    move_line_ids = order.picking_ids.mapped('move_line_ids').filtered(lambda ml: ml.product_id.is_metric_product \
                                     and ml.state == 'done' and ml.lot_id and \
                                     float_compare(ml.qty_done, ml.metrc_reported_qty,precision_rounding=ml.product_uom_id.rounding) > 0)
                     transactions = []
@@ -158,7 +158,7 @@ class PosOrder(models.Model):
                         _logger.info('metrc.retail: processing batch reported pos order for facility %s' % (
                                                 facility_license_id.name))
                         for order in order_chunk:
-                            move_line_ids = order.picking_id.move_line_ids.filtered(lambda ml: ml.product_id.is_metric_product \
+                            move_line_ids = order.picking_ids.mapped('move_line_ids').filtered(lambda ml: ml.product_id.is_metric_product \
                                     and ml.state == 'done' and ml.lot_id and \
                                     float_compare(ml.qty_done, ml.metrc_reported_qty,precision_rounding=ml.product_uom_id.rounding) > 0)
                             order_done = False

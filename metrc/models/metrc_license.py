@@ -108,12 +108,14 @@ class MetrcLicense(models.Model):
             if allotment['Active'] == False:
                 self.update({'active': False})
                 break
+            # Storing daily allotments
             if allotment['PurchaseAmountDays'] == 1.00:
                 self.update({
                     'daily_flower_available': allotment['FlowerOuncesAvailable'],
                     'daily_thc_available': allotment['ThcOuncesAvailable'],
                     'daily_purchase_amount': allotment['PurchaseAmountDays'],
                 })
+            # Storing monthly allotments
             if allotment['PurchaseAmountDays'] > 1.00:
                 self.update({
                     'monthly_flower_available': allotment['FlowerOuncesAvailable'],
