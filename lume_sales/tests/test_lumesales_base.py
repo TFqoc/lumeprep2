@@ -293,3 +293,29 @@ class TestLumeSaleCommon(SavepointCase):
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
         })
+
+        Quantity = cls.self.env['stock.quant'].with_context(inventory_mode=True)
+
+        med_quantity_pete = Quantity.create({
+            'product_id': cls.product_med.id,
+            'inventory_quantity': 50.0,
+            'location_id': cls.lumehouse_one.id,
+        })
+
+        med_quantity_esca = Quantity.create({
+            'product_id': cls.product_med.id,
+            'inventory_quantity': 50.0,
+            'location_id': cls.lumehouse_two.id,
+        })
+
+        rec_quantity_pete = Quantity.create({
+            'product_id': cls.product_rec.id,
+            'inventory_quantity': 50.0,
+            'location_id': cls.lumehouse_one.id,
+        })
+
+        rec_quantity_esca = Quantity.create({
+            'product_id': cls.product_med.id,
+            'inventory_quantity': 50.0,
+            'location_id': cls.lumehouse_two.id,
+        })
