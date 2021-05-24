@@ -49,6 +49,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                     'timesheet_product_id': '', 
                     'company_id': '1', 
                     'parent_id': '1'})
+        _logger.warning(Test_Task.scan_text)
         # TODO Assert statements.
         self.assertEqual(
             Test_Task.partner_id.id,
