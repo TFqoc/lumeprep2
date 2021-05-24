@@ -51,7 +51,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                     'parent_id': '1'})
         # TODO Assert statements.
         self.assertEqual(
-            self.partner_id.id,
+            Test_Task.partner_id.id,
             self.customer_rec.id,
             "Error in Check In Onchange: Partner Id was %s instead of %s" % (self.partner_id, self. customer_rec.id)
         )
