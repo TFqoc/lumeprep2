@@ -294,7 +294,7 @@ class TestLumeSaleCommon(SavepointCase):
             'uom_po_id': cls.uom_unit.id
         })
 
-        Quantity = cls.self.env['stock.quant'].with_context(inventory_mode=True)
+        Quantity = cls.env['stock.quant'].with_context(inventory_mode=True)
 
         med_quantity_pete = Quantity.create({
             'product_id': cls.product_med.id,
