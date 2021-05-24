@@ -12,7 +12,12 @@ _logger = logging.getLogger(__name__)
 @tagged('lume')
 class TestRecLumeFlow(TestLumeSaleCommon):
     def test_checkin_onchange(self):
-        record_ids = []
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Test_Task = Task.create({
+            'name': 'Test',
+            'project_id': self.lumestore_one.id,
+        })
+        record_ids = [Test_Task.id]
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
         uid = self.env.ref('base.user_admin').id
@@ -59,7 +64,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
-            'stage_id': self.env.ref('lume_sales.lume_stage_1').id
+            'stage_id': self.env.ref('lume_sales.lume_stage_0').id
         })
         record_ids = [Test_Task.id]
         active_id = [Test_Task.id]
