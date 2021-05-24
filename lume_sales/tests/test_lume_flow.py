@@ -32,7 +32,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                 'fulfillment_type': 'store', 
                 'order_type': 'adult', 
                 'project_id': self.lumestore_one.id, 
-                'timesheet_product_id': False, 
+                #'timesheet_product_id': False, 
                 'company_id': 1, 
                 'parent_id': False}, 'scan_text', {'scan_text': '1', 'partner_id': '1', 'fulfillment_type': '', 'order_type': '', 'project_id': '1', 'timesheet_product_id': '', 'company_id': '1', 'parent_id': '1'})
 
