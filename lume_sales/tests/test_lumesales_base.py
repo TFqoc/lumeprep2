@@ -294,6 +294,8 @@ class TestLumeSaleCommon(SavepointCase):
             'uom_po_id': cls.uom_unit.id
         })
 
+        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
+
         Quantity = cls.env['stock.quant'].with_context(inventory_mode=True)
 
         med_quantity_pete = Quantity.create({
