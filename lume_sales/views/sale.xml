@@ -77,7 +77,7 @@
                                         <br />
                                         <span>
                                             Date:
-                                            <t t-esc="record.date_order.value" />
+                                            <field name="date_order" widget="date" />
                                         </span>
                                         <br />
                                         <span>
@@ -85,10 +85,28 @@
                                             <span>Placeholder</span>
                                         </span>
                                     </div>
+                                    <div class="o_kanban_record_headings mt4">
+                                        <br />
+                                        <br />
+                                        <span>
+                                            Salesperson:
+                                            <span>Placeholder</span>
+                                        </span>
+                                        <br />
+                                        <span>
+                                            Fulfillment:
+                                            <span>Placeholder</span>
+                                        </span>
+                                        <br />
+                                        <span>
+                                            Cashier:
+                                            <span>Placeholder</span>
+                                        </span>
+                                    </div>
                                     <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success'}}" />
                                 </div>
                                 <hr style="border-top: 2px solid #bbb; flex-grow:100" />
-                                <div class="o_list_view">
+                                <div class="o_list_view" style="height: auto;">
                                     <div class="table-responsive">
                                         <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped o_section_and_note_list_view" style="table-layout: fixed;">
                                             <thead>
@@ -99,15 +117,15 @@
                                                     </th>
                                                     <th data-name="product_uom_qty" tabindex="-1" class="o_column_sortable" style="width: 95px;">
                                                         Quantity
-                                                        <span class="o_resize"></span>
+                                                        <span class="o_resize" />
                                                     </th>
                                                     <th data-name="price_unit" tabindex="-1" class="o_column_sortable " aria-sort="ascending" data-original-title="" title="" style="width: 96px;">
                                                         Unit Price
-                                                        <span class="o_resize"></span>
+                                                        <span class="o_resize" />
                                                     </th>
                                                     <th data-name="price_subtotal" class="o_monetary_cell o_column_sortable " tabindex="-1" data-original-title="" title="" style="width: 110px;">
                                                         Subtotal
-                                                        <span class="o_resize"></span>
+                                                        <span class="o_resize" />
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -121,14 +139,17 @@
                                                             <t t-esc="o.product_uom_qty" />
                                                         </td>
                                                         <td>
-                                                            <t t-esc="record.currency_id.value" />
-                                                            <t t-esc="o.price_unit" />
+                                                            <t t-set="price" t-value="window.parseFloat(o.price_unit).toFixed(2)" />
+                                                            $
+                                                            <t t-esc="price" />
                                                         </td>
                                                         <!-- <td>0</td>
                                                         <td>0</td>
                                                         <td>0</td> -->
                                                         <td>
-                                                            <t t-esc="o.amount_untaxed" />
+                                                            <t t-set="subtotal" t-value="window.parseFloat(o.price_subtotal).toFixed(2)" />
+                                                            $
+                                                            <t t-esc="subtotal" />
                                                         </td>
                                                         <!--<t t-esc="o.many2onefield[1]"/>-->
                                                     </tr>
@@ -139,14 +160,7 @@
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
-                                    <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}" on_change="1" modifiers="{'readonly':[['state','in',['done','cancel']]]}" id="order_line">
-                                        <tree create="0" delete="0" editable="bottom">
-                                            <field name="product_id"></field>
-                                            <field name="name"></field>
-                                        </tree>
-                                    </field>
-                                    <!--<span>Test: <t t-esc="record.order_line.product_id.name"></t></span>-->
-                                    <div class="oe_kanban_bottom_left">
+                                    <div class="oe_kanban_bottom_left" style="align-self: flex-end;">
                                         <strong>
                                             <span>Fulfillment Type Here</span>
                                         </strong>
@@ -154,8 +168,34 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <strong>
-                                            <field name="amount_total" widget="monetary" />
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding-right: 20px;">Untaxed Amount:</td>
+                                                        <td>
+                                                            <field name="amount_untaxed" widget="monetary" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding-right: 20px;">Tax:</td>
+                                                        <td>
+                                                            <field name="amount_tax" widget="monetary" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding-right: 20px;">Total:</td>
+                                                        <td>
+                                                            <field name="amount_total" widget="monetary" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </strong>
+                                        <!--<strong>-->
+                                        <!--    Untaxed Amount: <field name="amount_untaxed" widget="monetary"/>-->
+                                        <!--    <br/>-->
+                                        <!--    Total: <field name="amount_total" widget="monetary"/>-->
+                                        <!--</strong>-->
                                     </div>
                                 </div>
                             </div>
