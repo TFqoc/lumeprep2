@@ -26,7 +26,7 @@ class ProductTemplate(models.Model):
 
 class Product(models.Model):
     _inherit = 'product.product'
-    _order = 'is_lume, brand, list_price, default_code, name, id'
+    _order = 'is_lume desc, brand, list_price, default_code, name, id'
     
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
