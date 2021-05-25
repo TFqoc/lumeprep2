@@ -10,6 +10,7 @@
                 <field name="id"/>
                 <field name="name"/>
                 <field name="product_template_attribute_value_ids"/>
+                <field name="uom_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;">
@@ -30,6 +31,7 @@
                                         <ul>
                                             <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
+                                            <li><strong>On hand: <field name="qty_available"/> <field name="uom_id"/></strong></li>
                                         </ul>
                                     </div>
                                     <!-- CLEAN ME: buttons should be part of the field widget; style should not be inlined -->
