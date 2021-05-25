@@ -8,15 +8,25 @@ _logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
-    _order = 'brand, default_code, name, id'
+    _order = 'is_lume, brand, list_price, default_code, name, id'
 
-    brand = fields.Char(default="*Lume")
+    brand = fields.Char()
     is_medical = fields.Boolean()
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
+    is_lume = fields.Boolean(compute="_compute_lume", store=True)
+
+    @api.depends('brand')
+    def _compute_lume(self):
+        for record in self:
+            if record.brand == 'Lume': # Hardcoded value so lume brand products always appear at the top.
+                record.is_lume = True
+            else:
+                record.is_lume = False
+
 
 class Product(models.Model):
     _inherit = 'product.product'
-    _order = 'brand, default_code, name, id'
+    _order = 'is_lume, brand, list_price, default_code, name, id'
     
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
