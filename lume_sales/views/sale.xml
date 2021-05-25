@@ -77,5 +77,23 @@
                 </kanban>
             </field>
         </record>
+        <!-- Action to open order history -->
+        <record id="order_history" model="ir.actions.act_window">
+            <field name="name">Order History</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">kanban</field>
+            <!-- <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/> -->
+            <field name="view_id" ref="lume_sales.view_sale_order_history_kanban"/>
+            <field name="context">{}</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No orders have been completed for this customer!
+                </p><p>
+                    Once a sale is completed for this customer, you will be able to see details about it here!
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>
