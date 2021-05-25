@@ -4,37 +4,37 @@
         <record id="view_sale_order_form_inherit" model="ir.ui.view">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="inherit_id" ref="sale.view_order_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <!-- Custom fields here -->
                 <field name="payment_term_id" position="after">
-                    <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}"/>
+                    <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}" />
                 </field>
                 <xpath expr="//div[@class='oe_button_box']/button[@name='action_view_delivery']/field" position="attributes">
                     <attribute name="string">Picks</attribute>
                 </xpath>
                 <field name="partner_id" position="after">
-                    <field name="order_type" readonly="1"/>
+                    <field name="order_type" readonly="1" />
                 </field>
                 <xpath expr="//tree/field[@name='product_id']" position="replace">
                     <field name="order_type" invisible="1"></field>
-                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('is_medical','=',order_type == 'medical'),('type','!=','service')]" widget="product_configurator"/>
+                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('is_medical','=',order_type == 'medical'),('type','!=','service')]" widget="product_configurator" />
                 </xpath>
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
                     <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
                     <span style="margin: 5px;"/> -->
-                    <button name="open_catalogV2" string="Add a Product" class="btn-primary oe_edit_only" type="object"/>
+                    <button name="open_catalogV2" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
                 <!-- <field name="order_line" position="attributes">
                     <attribute name="widget">so_section_and_note</attribute>
                   </field> -->
-                  <field name="validity_date" position="replace">
-                      <field name="validity_date" invisible="1"></field>
-                  </field>
-                  <field name="payment_term_id" position="replace">
+                <field name="validity_date" position="replace">
+                    <field name="validity_date" invisible="1"></field>
+                </field>
+                <field name="payment_term_id" position="replace">
                     <field name="payment_term_id" invisible="1"></field>
                 </field>
             </field>
@@ -45,13 +45,13 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1" create="false" edit="false">
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="amount_total"/>
-                    <field name="date_order"/>
-                    <field name="state"/>
-                    <field name="currency_id"/>
-                    <field name="order_line"/>
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="amount_total" />
+                    <field name="date_order" />
+                    <field name="state" />
+                    <field name="currency_id" />
+                    <field name="order_line" />
                     <!-- <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/> -->
                     <templates>
@@ -59,29 +59,103 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
                                     <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong><br/>
-                                      <span>Order Ref #: <span>Placeholder</span></span><br/>
-                                      <span>Session: <span>Placeholder</span></span><br/>
-                                      <span>Date: <t t-esc="record.date_order.value"/></span><br/>
-                                      <span>Payment Method: <span>Placeholder</span></span>
+                                        <strong class="o_kanban_record_title">
+                                            <span>
+                                                <t t-esc="record.name.value" />
+                                            </span>
+                                        </strong>
+                                        <br />
+                                        <span>
+                                            Order Ref #:
+                                            <span>Placeholder</span>
+                                        </span>
+                                        <br />
+                                        <span>
+                                            Session:
+                                            <span>Placeholder</span>
+                                        </span>
+                                        <br />
+                                        <span>
+                                            Date:
+                                            <t t-esc="record.date_order.value" />
+                                        </span>
+                                        <br />
+                                        <span>
+                                            Payment Method:
+                                            <span>Placeholder</span>
+                                        </span>
                                     </div>
-                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success'}}"/>
+                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success'}}" />
                                 </div>
-                                <hr style="border-top: 2px solid #bbb; flex-grow:100"/>
+                                <hr style="border-top: 2px solid #bbb; flex-grow:100" />
+                                <div class="o_list_view">
+                                    <div class="table-responsive">
+                                        <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped o_section_and_note_list_view" style="table-layout: fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th data-name="product_id" class="o_product_configurator_cell o_column_sortable" tab-index="-1" style="width: 250px;">
+                                                        Product
+                                                        <span class="o_resize" />
+                                                    </th>
+                                                    <th data-name="product_uom_qty" tabindex="-1" class="o_column_sortable" style="width: 95px;">
+                                                        Quantity
+                                                        <span class="o_resize"></span>
+                                                    </th>
+                                                    <th data-name="price_unit" tabindex="-1" class="o_column_sortable " aria-sort="ascending" data-original-title="" title="" style="width: 96px;">
+                                                        Unit Price
+                                                        <span class="o_resize"></span>
+                                                    </th>
+                                                    <th data-name="price_subtotal" class="o_monetary_cell o_column_sortable " tabindex="-1" data-original-title="" title="" style="width: 110px;">
+                                                        Subtotal
+                                                        <span class="o_resize"></span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="record.order_line.raw_value" t-as="o">
+                                                    <tr>
+                                                        <td>
+                                                            <t t-esc="o.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="o.product_uom_qty" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="record.currency_id.value" />
+                                                            <t t-esc="o.price_unit" />
+                                                        </td>
+                                                        <!-- <td>0</td>
+                                                        <td>0</td>
+                                                        <td>0</td> -->
+                                                        <td>
+                                                            <t t-esc="o.amount_untaxed" />
+                                                        </td>
+                                                        <!--<t t-esc="o.many2onefield[1]"/>-->
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                            <!-- <tfoot></tfoot> -->
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="o_kanban_record_bottom">
-                                  <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}" on_change="1" modifiers="{'readonly':[['state','in',['done','cancel']]]}" id="order_line">
-                                    <tree create="0" delete="0" editable="bottom">
-                                      <field name="product_id"></field>
-                                      <field name="name"></field>
-                                    </tree>
+                                    <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}" on_change="1" modifiers="{'readonly':[['state','in',['done','cancel']]]}" id="order_line">
+                                        <tree create="0" delete="0" editable="bottom">
+                                            <field name="product_id"></field>
+                                            <field name="name"></field>
+                                        </tree>
                                     </field>
                                     <!--<span>Test: <t t-esc="record.order_line.product_id.name"></t></span>-->
                                     <div class="oe_kanban_bottom_left">
-                                        <strong><span>Fulfillment Type Here</span></strong>
+                                        <strong>
+                                            <span>Fulfillment Type Here</span>
+                                        </strong>
                                         <!-- <field name="activity_ids" widget="kanban_activity"/> -->
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <strong><field name="amount_total" widget="monetary"/></strong>
+                                        <strong>
+                                            <field name="amount_total" widget="monetary" />
+                                        </strong>
                                     </div>
                                 </div>
                             </div>
@@ -97,13 +171,14 @@
             <field name="res_model">sale.order</field>
             <field name="view_mode">kanban</field>
             <!-- <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/> -->
-            <field name="view_id" ref="lume_sales.view_sale_order_history_kanban"/>
+            <field name="view_id" ref="lume_sales.view_sale_order_history_kanban" />
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No orders have been completed for this customer!
-                </p><p>
+                </p>
+                <p>
                     Once a sale is completed for this customer, you will be able to see details about it here!
                 </p>
             </field>
