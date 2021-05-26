@@ -97,6 +97,17 @@ class MetrcLicense(models.Model):
         ('uniq_license_by_customer', 'unique (license_number, base_type, partner_id)', 'Customer/Company can not have duplicate license number!'),
     ]
 
+    @api.onchange('license_number')
+    def onchange_license_number(self):
+        self.write({
+            'daily_flower_available': 0.00,
+            'daily_thc_available': 0.00,
+            'daily_purchase_amount': 0.00,
+            'monthly_flower_available': 0.00,
+            'monthly_thc_available': 0.00,
+            'monthly_purchase_amount': 0.00,
+        })
+
     def refresh_allotments(self):
         metrc_account = self.env.user.ensure_metrc_account()
         uri = '/patients/v1/statuses/{}'.format(self.license_number)
@@ -104,23 +115,31 @@ class MetrcLicense(models.Model):
             'licenseNumber': self.facility_license_id.license_number,
         }
         patient_data = metrc_account.fetch('GET', uri, params=params)
-        for allotment in patient_data:
-            if allotment['Active'] == False:
+        if patient_data:
+            if patient_data[0]['Active'] == False:
                 self.update({'active': False})
-                break
-            # Storing daily allotments
-            if allotment['PurchaseAmountDays'] == 1.00:
+            if len(patient_data) == 1:
+                if patient_data[0]['PurchaseAmountDays'] and \
+                    patient_data[0]['PurchaseAmountDays'] == 1.00:
+                    self.update({
+                        'daily_flower_available': patient_data[0]['FlowerOuncesAvailable'] or 0.00,
+                        'daily_thc_available': patient_data[0]['ThcOuncesAvailable'] or 0.00,
+                        'daily_purchase_amount': patient_data[0]['PurchaseAmountDays'] or 0.00,
+                    })    
+                else:
+                    self.update({
+                        'monthly_flower_available': patient_data[0]['FlowerOuncesAvailable'] or 0.00,
+                        'monthly_thc_available': patient_data[0]['ThcOuncesAvailable'] or 0.00,
+                        'monthly_purchase_amount': patient_data[0]['PurchaseAmountDays'] or 0.00,
+                    })
+            if len(patient_data) > 1:
                 self.update({
-                    'daily_flower_available': allotment['FlowerOuncesAvailable'],
-                    'daily_thc_available': allotment['ThcOuncesAvailable'],
-                    'daily_purchase_amount': allotment['PurchaseAmountDays'],
-                })
-            # Storing monthly allotments
-            if allotment['PurchaseAmountDays'] > 1.00:
-                self.update({
-                    'monthly_flower_available': allotment['FlowerOuncesAvailable'],
-                    'monthly_thc_available': allotment['ThcOuncesAvailable'],
-                    'monthly_purchase_amount': allotment['PurchaseAmountDays'],
+                    'daily_flower_available': patient_data[0]['FlowerOuncesAvailable'] or 0.00,
+                    'daily_thc_available': patient_data[0]['ThcOuncesAvailable'] or 0.00,
+                    'daily_purchase_amount': patient_data[0]['PurchaseAmountDays'] or 0.00,
+                    'monthly_flower_available': patient_data[1]['FlowerOuncesAvailable'] or 0.00,
+                    'monthly_thc_available': patient_data[1]['ThcOuncesAvailable'] or 0.00,
+                    'monthly_purchase_amount': patient_data[1]['PurchaseAmountDays'] or 0.00,
                 })
 
     def toggle_active(self):
