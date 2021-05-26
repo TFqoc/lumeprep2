@@ -151,24 +151,24 @@
                             <group string="Daily" >
                                 <label for="daily_flower_available"/>
                                 <div>
-                                    <field name="daily_flower_available" readonly="1"/> Ounce(s)
+                                    <field name="daily_flower_available" readonly="1" force_save="1"/> Ounce(s)
                                 </div>
                                 <label for="daily_thc_available"/>
                                 <div>
-                                    <field name="daily_thc_available" readonly="1"/> Ounce(s)
+                                    <field name="daily_thc_available" readonly="1"  force_save="1"/> Ounce(s)
                                 </div>
-                                <field name="daily_purchase_amount" readonly="1"/>
+                                <field name="daily_purchase_amount" readonly="1"  force_save="1"/>
                             </group>
                             <group string="Monthly">
                                 <label for="monthly_flower_available"/>
                                 <div>
-                                    <field name="monthly_flower_available" readonly="1"/> Ounce(s)
+                                    <field name="monthly_flower_available" readonly="1"  force_save="1"/> Ounce(s)
                                 </div>
                                 <label for="monthly_thc_available"/>
                                 <div>
-                                    <field name="monthly_thc_available" readonly="1"/> Ounce(s)
+                                    <field name="monthly_thc_available" readonly="1" force_save="1"/> Ounce(s)
                                 </div>
-                                <field name="monthly_purchase_amount" readonly="1"/>
+                                <field name="monthly_purchase_amount" readonly="1" force_save="1"/>
                             </group>
                         </group>
                         <button name="refresh_allotments" string="Refresh" type="object"
