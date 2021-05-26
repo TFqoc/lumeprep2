@@ -29,7 +29,7 @@ class PosOrder(models.Model):
     metrc_notes = fields.Html(string='Metrc Retails Notes', copy=False)
 
     # @api.multi
-    def _cron_flag_retail_pos(self, force_report_date=False, automatic=True, raise_for_error=False):
+    def _cron_flag_retail_pos(self, session_ids=[], force_report_date=False, automatic=True, raise_for_error=False):
         if automatic:
             cr = registry(self._cr.dbname).cursor()
             self = self.with_env(self.env(cr=cr))
@@ -39,13 +39,17 @@ class PosOrder(models.Model):
             sync_start_date = force_report_date
         else:
             sync_start_date = dt_now - timedelta(hours=24)
-        orders = self.search([
-                        ('state', 'not in', ('draft', 'cancel')),
-                        ('session_id.state', '=', 'closed'),
-                        ('write_date', '>=', fields.Datetime.to_string(sync_start_date)),
-                        ('metrc_retail_state', 'not in', ('Except', 'Outgoing', 'Reported')),
-                        ('picking_ids', '!=', []),
-                    ])
+        domain = [
+            ('state', 'not in', ('draft', 'cancel')),
+            ('write_date', '>=', fields.Datetime.to_string(sync_start_date)),
+            ('metrc_retail_state', 'not in', ('Except', 'Outgoing', 'Reported')),
+            ('picking_ids', '!=', []),
+        ]
+        if session_ids:
+            domain.append(('session_id', 'in', session_ids))
+        else:
+            domain.append(('session_id.state', '=', 'closed'))
+        orders = self.search(domain)
         _logger.info("metrc_retail: Total %d pos orders are filtered to be flagged for metrc reporting. It is possible that all of them would not be marked." % (len(orders)))
         for order in orders:
             move_line_ids = order.picking_ids.mapped('move_line_ids').filtered(lambda ml: ml.product_id.is_metric_product \
@@ -94,17 +98,20 @@ class PosOrder(models.Model):
             cr.close()
         return True
 
-    def _cron_report_retail_pos(self, batch_size=100, automatic=True, raise_for_error=False):
+    def _cron_report_retail_pos(self, session_ids=[], batch_size=100, automatic=True, raise_for_error=False):
         metrc_account = self.env.user.ensure_metrc_account()
         if automatic:
             cr = registry(self._cr.dbname).cursor()
             self = self.with_env(self.env(cr=cr))
         domain = [
             ('state', 'not in', ('draft', 'cancel')),
-            ('session_id.state', '=', 'closed'),
             ('metrc_retail_state', 'in', ('Except', 'Outgoing')),
             ('picking_ids', '!=', []),
         ]
+        if session_ids:
+            domain.append(('session_id', 'in', session_ids))
+        else:
+            domain.append(('session_id.state', '=', 'closed'))
         _logger.info('metrc.retail: starting metrc retail pos reporting')
         pos_orders = self.sudo().search(domain)
         picking_types = pos_orders.mapped('picking_type_id')

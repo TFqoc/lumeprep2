@@ -22,6 +22,7 @@
     # any module necessary for this one to work correctly
     'depends': [
         'metrc_retail',
+        'metrc_stock',
         'point_of_sale'
     ],
 
