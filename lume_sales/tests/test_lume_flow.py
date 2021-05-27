@@ -54,10 +54,11 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertEqual(
             Test_Task.partner_id.id,
             self.customer_rec.id,
-            "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id.id, self. customer_rec.id)
+            "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id.id, self.customer_rec.id)
         )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
+        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
         Test_Task = Task.create({
