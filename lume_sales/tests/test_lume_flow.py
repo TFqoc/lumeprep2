@@ -96,7 +96,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         self.assertEqual(
             Test_Task.stage_id.sequence,
-            11, 
+            10, 
             "Error in build_cart: Task did not move to the appropriate stage."
             )
 
@@ -139,7 +139,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
     def test_barcode_parse(self): 
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
-        parsed_barcode = parse_MI(barcode)
+        parsed_barcode = parse_code(barcode)
         expected_values = {
             '[0]': '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCD',
             '[1]': '12312021',
