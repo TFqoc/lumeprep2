@@ -76,7 +76,7 @@ class pos_test(models.Model):
         order.write({
             'pos_terminal_id':data['terminal_id'],
             'session_id':data['session_id'],
-            'cashier_partner_id':data['cashier_id'],
+            'cashier_partner_id':self.env['hr.employee'].browse(data['cashier_id']).user_partner_id.id,
             'payment_method':data['payment_method'],
         })
         order.state = 'done'
