@@ -94,8 +94,9 @@ class SaleOrder(models.Model):
         if self.order_line:
             for line in self.order_line:
                 type_order = line.product_id.thc_type
-                if type_order != 'merch':
+                if type_order != 'merch' and type_order:
                     return type_order
+        return type_order
 
     @api.model
     def get_cart_totals(self, id):
