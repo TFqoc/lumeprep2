@@ -18,6 +18,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'name': 'Test',
             'project_id': self.lumestore_one.id,
         })
+        _logger.warning(Test_Task.partner_id)
         record_ids = [Test_Task.id]
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
