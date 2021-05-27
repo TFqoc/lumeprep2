@@ -96,7 +96,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         self.assertEqual(
             Test_Task.stage_id.sequence,
-            10, 
+            11, 
             "Error in build_cart: Task did not move to the appropriate stage."
             )
 

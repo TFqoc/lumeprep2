@@ -1,4 +1,3 @@
-#from lume_sales import tests
 from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
 import datetime
