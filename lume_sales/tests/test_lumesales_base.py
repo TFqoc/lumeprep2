@@ -325,10 +325,10 @@ class TestLumeSaleCommon(SavepointCase):
         
 def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
     error_list = [True]
-    if list_of_keys != False:
-        x = list_of_keys
-    else:
+    if list_of_keys:
         x = dictionary_1
+    else:
+        x = list_of_keys
     for key in x:
         if not (key in dictionary_1): #Catches a key not shared between two dictionaries.
             if error_list[0]:
