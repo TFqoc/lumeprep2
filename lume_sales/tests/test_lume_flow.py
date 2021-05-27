@@ -51,9 +51,10 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                     'company_id': '1', 
                     'parent_id': '1'})
         _logger.warning(Test_Task.scan_text)
+        _logger.warning(Test_Task.partner_id)
         # TODO Assert statements.
         self.assertEqual(
-            self.partner_id.id,
+            Test_Task.partner_id.id,
             self.customer_rec.id,
             "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id.id, self.customer_rec.id)
         )
