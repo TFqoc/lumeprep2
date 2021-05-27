@@ -143,26 +143,9 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
         _logger.warning(parsed_barcode)
-        # TODO Remove log statement.
-        expected_values = {
-            '[0]': '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCD',
-            '[1]': '12312021',
-            '[2]': 'LOVE',
-            '[3]': 'EVE A',
-            '[4]': '',
-            '[5]': '02171987',
-            '[6]': '2',
-            '[7]': '',
-            '[8]': '',
-            '[9]': '629 MAD DOG LANE',
-            '[10]': 'DETROIT',
-            '[11]': 'MI',
-            '[12]': '482010001',
-            '[13]': 'C 333 547 393 957',
-            '[14]': 'DCGUSADCHDCKDDAN'
-        }
+        key_list = ['name', 'street', 'city', 'state_id', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
-        dictionaries = compare_dictionaries(parsed_barcode, expected_values, False)[0]
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)[0]
 
         self.assertTrue(
             dictionaries[0],
