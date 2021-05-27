@@ -155,7 +155,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
             parsed_barcode['state_id'],
             'MI',
-            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode.state_id)
+            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
         )
     #     pass #TODO: Paste runbot code.
     # def test_add_button(self):
