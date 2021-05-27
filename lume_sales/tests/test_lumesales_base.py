@@ -325,7 +325,7 @@ class TestLumeSaleCommon(SavepointCase):
         
 def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
     error_list = [True]
-    if not list_of_keys:
+    if list_of_keys != False:
         x = list_of_keys
     else:
         x = dictionary_1
