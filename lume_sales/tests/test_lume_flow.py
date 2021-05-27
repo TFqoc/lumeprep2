@@ -142,7 +142,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'state_id', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
+        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
         _logger.warning(dictionaries)
@@ -150,6 +150,12 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertTrue(
             dictionaries[0],
             "List of errors: %s " % (dictionaries[1:])
+        )
+
+        self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
+            parsed_barcode.state_id,
+            'MI',
+            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode.state_id)
         )
     #     pass #TODO: Paste runbot code.
     # def test_add_button(self):
