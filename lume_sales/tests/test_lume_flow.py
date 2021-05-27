@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 @tagged('lume')
 class TestRecLumeFlow(TestLumeSaleCommon):
     def test_checkin_onchange(self):
+        _logger.warning("Product Rec's Type is %s" % self.product_rec.type)
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         Test_Task = Task.create({
             'name': 'Test',
@@ -58,7 +59,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
-        _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
+        _logger.warning("Product Rec's Type is %s" % self.product_rec.type)
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
         Test_Task = Task.create({
