@@ -11,6 +11,7 @@
                 <field name="name"/>
                 <field name="product_template_attribute_value_ids"/>
                 <field name="uom_id"/>
+                <field name="thc_type"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;">

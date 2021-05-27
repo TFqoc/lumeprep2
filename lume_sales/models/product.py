@@ -92,7 +92,8 @@ class Product(models.Model):
         return self.env['sale.order']
 
     def set_lpc_quantity(self, quantity):
-        raise Warning(self.env.context)
+        if self.env.context.get('type') != self.tch_type and self.tch_type:
+            raise ValidationError("You can't add a %s product to a cart with %s products!" % (self.thc_type,self.env.context.get('type')))
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):

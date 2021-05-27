@@ -35,6 +35,23 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                             flags: {mode: 'edit'},
                         });
                     });
+                    // Setup the parent classes
+                    let show_type = data[2];
+                    _.each(self.widgets, function (record) {
+                        let $el = record.$el;
+                        let recordData = record.state.data;
+                        let fieldName = 'thc_type';
+                         console.log(recordData);
+                        var categoryValue = recordData[fieldName] ? recordData[fieldName] : '__false';
+                        let colors = {__false: 'muted',medical: 'success',adult:'danger',merch:'warning'};
+                        _.each(colors, function (val, key) {
+                            $el.removeClass('oe_kanban_card_' + val);
+                        });
+                        if (colors[categoryValue]) {
+                            $el.addClass('oe_kanban_card_' + colors[categoryValue]);
+                            $el.addClass('o_kanban_group_show o_kanban_group_show_' + colors[show_type]);
+                        }
+                    });
                  });
             });
         },

@@ -36,13 +36,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
         # Grab the first sale order line that isn't a merch product
-        type_order = ''
-        if self.order_line:
-            for line in self.order_line:
-                type_order = line.product_id.thc_type
-                if type_order != 'merch':
-                    # Maybe Edit the domain to only show the valid products
-                    break
+        type_order = self.get_order_type()
         # show_medical = self.order_type
         return {
                 'type': 'ir.actions.act_window',
@@ -95,10 +89,18 @@ class SaleOrder(models.Model):
     #             self.partner_id = False
     #             return warning
 
+    def get_order_type(self):
+        type_order = ''
+        if self.order_line:
+            for line in self.order_line:
+                type_order = line.product_id.thc_type
+                if type_order != 'merch':
+                    return type_order
+
     @api.model
     def get_cart_totals(self, id):
         record = self.browse(id)
-        return (record.amount_total, record.ordered_qty)
+        return (record.amount_total, record.ordered_qty, record.get_order_type())
 
     def action_confirm(self):
         if not self.order_line:
