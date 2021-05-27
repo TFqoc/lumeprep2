@@ -145,7 +145,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         _logger.warning(parsed_barcode)
         key_list = ['name', 'street', 'city', 'state_id', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
-        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)[0]
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
 
         self.assertTrue(
             dictionaries[0],
