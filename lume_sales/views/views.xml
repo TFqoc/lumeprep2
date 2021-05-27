@@ -177,7 +177,7 @@
       <field name="arch" type="xml">
         <field name="barcode" position="after">
           <field name="brand" string="Brand"/>
-          <field name="is_medical" string="Is Medical Product" />
+          <field name="thc_type" string="Type" required="1" />
           <field name="effect" string="Effect"/>
         </field>
       </field>

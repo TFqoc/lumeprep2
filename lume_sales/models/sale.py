@@ -34,7 +34,16 @@ class SaleOrder(models.Model):
     #         }
     def open_catalogV2(self):
         self.ensure_one()
-        show_medical = self.order_type == 'medical'
+        domain = [('type','!=','service'),('sale_ok','=',True)]
+        # Grab the first sale order line that isn't a merch product
+        type_order = ''
+        if self.order_line:
+            for line in self.order_line:
+                type_order = line.product_id.thc_type
+                if type_order != 'merch':
+                    # Maybe Edit the domain to only show the valid products
+                    break
+        # show_medical = self.order_type
         return {
                 'type': 'ir.actions.act_window',
                 'name': 'Product Catalog',
@@ -44,8 +53,8 @@ class SaleOrder(models.Model):
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
                 'target': 'current',
                 'res_id': self.id,
-                'context': {'lpc_sale_order_id': self.id},
-                'domain': [('is_medical','=',show_medical),('type','!=','service'),('sale_ok','=',True)],
+                'context': {'lpc_sale_order_id': self.id, 'type': type_order},
+                'domain': [('type','!=','service'),('sale_ok','=',True)],
                 # 'search_view_id': (id, name),
             }
 

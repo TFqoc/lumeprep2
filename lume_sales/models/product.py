@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
     _order = 'is_lume desc, brand, list_price, default_code, name, id'
 
     brand = fields.Char()
-    is_medical = fields.Boolean()
+    thc_type = fields.Selection([('medical','Medical'),('adult','Adult'),('merch','Merchandise')])
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
     is_lume = fields.Boolean(compute="_compute_lume", store=True)
 
@@ -92,6 +92,7 @@ class Product(models.Model):
         return self.env['sale.order']
 
     def set_lpc_quantity(self, quantity):
+        raise Warning(self.env.context)
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
