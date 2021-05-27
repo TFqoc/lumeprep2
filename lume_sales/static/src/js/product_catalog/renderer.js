@@ -19,13 +19,22 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                 }).then(function(data){
                     let price = data[0];
                     let qty = data[1];
-                    let link = `#id=${id}&model=sale.order`;
+                    // let link = `#id=${id}&model=sale.order`;
                     // let style = "display: flex; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%;font-weight: bold; font-size: 1.3em;";
-                    let button = `<a href='${link}' class='btn btn-primary catalog_back_button'>&lt; Back</a>`;
+                    let button = `<button id="catalog_back_button" class='btn btn-primary catalog_back_button'>&lt; Back</button>`;
                     let spacer = "<div style='flex-grow: 90;'></div>";
                     let textStyle = "align-self: flex-end; text-align: right;";
                     self.header = `<div class='catalog_header'>${button}${spacer}<span style="${textStyle}"><span id="TOTAL">Total: $${price.toFixed(2)}</span><br/><span id="QTY">Quantity: ${qty.toFixed(1)}</span></span></div>`;
                     self.$el.prepend(self.header);
+                    $('#catalog_back_button').click(() => {
+                        self.do_action({
+                            type: 'ir.actions.act_window',
+                            views: [[false, 'form']],
+                            res_model: 'sale.order',
+                            res_id: id,
+                            flags: {mode: 'edit'},
+                        });
+                    });
                  });
             });
         },
