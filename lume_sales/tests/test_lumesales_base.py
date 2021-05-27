@@ -1,3 +1,4 @@
+from lume_sales import tests
 from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
 import datetime
@@ -323,5 +324,29 @@ class TestLumeSaleCommon(SavepointCase):
         # _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
 
         
+def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
+    error_list = [True]
+    if not list_of_keys:
+        x = list_of_keys
+    else:
+        x = dictionary_1
+    for key in x:
+        if not (key in dictionary_1): #Catches a key not shared between two dictionaries.
+            if error_list[0]:
+                error_list[0] = False
+                error_list.append("%s key was not found in %s." % (key, dictionary_1))
+            else:
+                error_list.append("%s key was not found in %s." % (key, dictionary_1))
+        if not (key in dictionary_2): #Catches a key not shared between two dictionaries.
+            if error_list[0]:
+                error_list[0] = False
+                error_list.append("%s key was not found in %s." % (key, dictionary_2))
+            else:
+                error_list.append("%s key was not found in %s." % (key, dictionary_2))
+        if dictionary_1[key] != dictionary_2[key]: #Catches if the values are not the same.
+            if error_list[0]:
+                error_list[0] = False
+                error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
+            else:
+                error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
 
-        
