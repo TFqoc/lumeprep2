@@ -7,6 +7,9 @@ odoo.define('web_one2many_kanban.web_one2many_kanban', function (require) {
 
     KanbanRecord.include( {
         _render: function () {
+            if (this.modelName !== 'sale.order') {
+                return this._super.apply(this, arguments);
+            }
             var self = this;
             var def =this._super.apply(this, arguments);
             var o2x_field_names = [];
