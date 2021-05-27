@@ -348,4 +348,5 @@ def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
                 error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
             else:
                 error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
+    return error_list
 
