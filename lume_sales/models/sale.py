@@ -10,6 +10,13 @@ class SaleOrder(models.Model):
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
 
+    # Fields for the Order History Screen
+    pos_terminal_id = fields.Many2one('pos.config')
+    session_id = fields.Many2one('pos.session')
+    fulfillment_partner_id = fields.Many2one('res.partner')
+    cashier_partner_id = fields.Many2one('res.partner')
+    payment_method = fields.Char()
+
     # def open_catalog(self):
     #     self.ensure_one()
     #     return {

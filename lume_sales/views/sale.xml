@@ -67,12 +67,12 @@
                                         <br />
                                         <span>
                                             Order Ref #:
-                                            <span>Placeholder</span>
+                                            <field name="pos_terminal_id"/>
                                         </span>
                                         <br />
                                         <span>
                                             Session:
-                                            <span>Placeholder</span>
+                                            <field name="session_id"/>
                                         </span>
                                         <br />
                                         <span>
@@ -82,7 +82,7 @@
                                         <br />
                                         <span>
                                             Payment Method:
-                                            <span>Placeholder</span>
+                                            <field name="payment_method"/>
                                         </span>
                                     </div>
                                     <div class="o_kanban_record_headings mt4">
@@ -100,7 +100,7 @@
                                         <br />
                                         <span>
                                             Cashier:
-                                            <span>Placeholder</span>
+                                            <field name="cashier_partner_id"/>
                                         </span>
                                     </div>
                                     <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success'}}" />

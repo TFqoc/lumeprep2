@@ -148,10 +148,21 @@ odoo.define('lume_pos.PatchTest', function(require) {
     patch(PaymentScreen, "update backend SO",{
       _finalizeValidation: async function(isForceValidate) {
           await this._super(...arguments);
+          let payment_method_list = [];
+          let lines = this.paymentLines();
+          for (let i=0; i<lines.length; i++){
+            payment_method_list.push(lines[i].name);
+          }
+          data = {
+            terminal_id: this.env.pos.config.id,
+            cashier_id: this.env.pos.config.current_user_id[0],
+            session_id: this.env.pos.config.current_session_id[0],
+            payment_method: payment_method_list.sort().join(', '),
+          };
           this.rpc({
             'model': 'sale.order',
             'method': 'finalize',
-            args: [this.env.pos.get_order().sale_order_id],
+            args: [this.env.pos.get_order().sale_order_id, data],
           });
       }
   });
