@@ -149,13 +149,13 @@ odoo.define('lume_pos.PatchTest', function(require) {
       _finalizeValidation: async function(isForceValidate) {
           await this._super(...arguments);
           let payment_method_list = [];
-          let lines = this.paymentLines();
+          let lines = this.paymentLines;
           for (let i=0; i<lines.length; i++){
             payment_method_list.push(lines[i].name);
           }
-          data = {
+          let data = {
             terminal_id: this.env.pos.config.id,
-            cashier_id: this.env.pos.config.current_user_id[0],
+            cashier_id: this.env.pos.attributes.cashier.id,
             session_id: this.env.pos.config.current_session_id[0],
             payment_method: payment_method_list.sort().join(', '),
           };

@@ -90,7 +90,7 @@
                                         <br />
                                         <span>
                                             Salesperson:
-                                            <span>Placeholder</span>
+                                            <field name="user_id"/>
                                         </span>
                                         <br />
                                         <span>
