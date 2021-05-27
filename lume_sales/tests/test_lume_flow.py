@@ -1,5 +1,7 @@
 import logging
+from . test_lumesales_base import compare_dictionaries
 from . test_lumesales_base import TestLumeSaleCommon
+from ..models.barcode_parse import parse_code
 from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
