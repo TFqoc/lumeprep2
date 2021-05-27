@@ -142,10 +142,10 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
-        _logger.warning(parsed_barcode)
         key_list = ['name', 'street', 'city', 'state_id', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
+        _logger.warning(dictionaries)
 
         self.assertTrue(
             dictionaries[0],
