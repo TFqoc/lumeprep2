@@ -173,18 +173,18 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         
         # TODO: Refine how the test finds this task, as this can fail too easily.
-        find_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
-        created_task = self.env['project.task'].browse(find_task.id)
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+        #created_task = self.env['project.task'].browse(find_task.id)
         
 
         _logger.warning(created_task)
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
         expected_values = {
-            'partner_id': self.customer_rec.id,
-            'project_id': self.lumestore_one.id,
+            'partner_id': self.customer_rec,
+            'project_id': self.lumestore_one, 
             'fulfillment_type': 'store',
             'order_type': 'adult',
-            'user_id': 'res.users()',
+            'user_id': False,
             'name': self.customer_rec.name
         }
 
