@@ -176,7 +176,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         _logger.warning(created_task)
 
         self.assertTrue(
-            self.lumestore_one.project.task,
+            created_task,
             "Error in Check In: Task was not Created."
         )
 
