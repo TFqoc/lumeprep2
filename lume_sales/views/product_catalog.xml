@@ -12,6 +12,7 @@
                 <field name="product_template_attribute_value_ids"/>
                 <field name="uom_id"/>
                 <field name="thc_type"/>
+                <field name="categ_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}">
@@ -33,6 +34,15 @@
                                             <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: <field name="qty_available"/> <field name="uom_id"/></strong></li>
+                                            <li><strong><field name="thc_type"/></strong></li>
+                                            <li>
+                                                <t t-if="record.categ_id.raw_value">
+                                                    Mg: <t t-esc="record.categ_id.raw_value"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="record.categ_id.raw_value"/>%
+                                                </t>
+                                            </li>
                                         </ul>
                                     </div>
                                     <!-- CLEAN ME: buttons should be part of the field widget; style should not be inlined -->

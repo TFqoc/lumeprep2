@@ -178,6 +178,7 @@
         <field name="barcode" position="after">
           <field name="brand" string="Brand"/>
           <field name="thc_type" string="Type" required="1" />
+          <field name="thc" string="THC"></field>
           <field name="effect" string="Effect"/>
         </field>
       </field>
