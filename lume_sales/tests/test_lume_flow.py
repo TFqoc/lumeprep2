@@ -171,17 +171,27 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
+        
+        # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
 
         _logger.warning(created_task)
+        key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
+        expected_values = {
+            'partner_id': self.customer_rec.id,
+            'project_id': self.lumestore_one.id,
+            'fulfillment_type': 'store',
+            'order_type': 'adult',
+            'user_id': False,
+            'name': self.customer_rec.name
+        }
 
         self.assertTrue(
             created_task,
-            "Error in Check In: Task was not Created."
+            "Error in Check In: Task was not found (Either the Customer ID was incorrectly ported, or the Task was not created)."
         )
-
-        self.assertEqual(
-            created_task['name'],
-            self.customer_rec.name,
-            "Error in Check In: Task has an incorrect name."
+        dictionaries = compare_dictionaries(created_task, expected_values, key_list)
+        self.assertTrue(
+            dictionaries[0],
+            "List of discrepencies between expected values and received values: %s " % (dictionaries[1:])
         )
