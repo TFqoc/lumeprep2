@@ -36,6 +36,8 @@ class SaleOrder(models.Model):
     def open_catalogV2(self):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
+        if not self.parter_id.can_purchase_medical:
+            domain.append(('thc_type','!=','medical'))
         # Grab the first sale order line that isn't a merch product
         # show_medical = self.order_type
         return {
@@ -48,7 +50,7 @@ class SaleOrder(models.Model):
                 'target': 'current',
                 'res_id': self.id,
                 'context': {'lpc_sale_order_id': self.id, 'type': self.order_type},
-                'domain': [('type','!=','service'),('sale_ok','=',True)],
+                'domain': domain,
                 # 'search_view_id': (id, name),
             }
 

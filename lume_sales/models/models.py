@@ -23,6 +23,7 @@ class Partner(models.Model):
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
     pref_name = fields.Char()
+    can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     is_caregiver = fields.Boolean()
@@ -79,6 +80,10 @@ class Partner(models.Model):
     def _compute_banned(self):
         for record in self:
             record.is_banned = self.warnings >= 3
+
+    def _compute_medical_purchase(self):
+        for record in self:
+            record.can_purchase_medical = record.is_expired_medical and record.medical_id
     
     def warn(self):
         self.warnings += 1
