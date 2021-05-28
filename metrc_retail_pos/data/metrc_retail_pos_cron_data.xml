@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="id_method_dl" model="patient.id.method">
+        <field name="name">Driver's License</field>
+    </record>
+    <record id="id_method_passport" model="patient.id.method">
+        <field name="name">Passport</field>
+    </record>
     <record model="ir.cron" id="cron_metrc_retail_pos_flagger">
         <field name="name">Metrc : 2.1 Retail POS Orders Flagger</field>
         <field name="model_id" ref="point_of_sale.model_pos_order"/>

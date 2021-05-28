@@ -28,7 +28,11 @@
 
     # always loaded
     'data': [
+        # Security
+        'security/ir.model.access.csv',
+        
         # views
+        'views/patient_id_method_views.xml',
         'views/pos_order_view.xml',
         'views/pos_session_view.xml',
         'views/pos_assets_common.xml',

@@ -27,6 +27,14 @@ class PosOrder(models.Model):
                                     ], string='Metrc Retail Status', default='Draft', index=True,
                                     states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     metrc_notes = fields.Html(string='Metrc Retails Notes', copy=False)
+    customer_type = fields.Selection(related='partner_id.customer_type')
+    patient_license_number = fields.Many2one(comodel_name='metrc.license',
+                                         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+                                         domain=[('base_type', '=', 'Patient')])
+    caregiver_license_number = fields.Char(string='Caregiver License',
+                                           states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    ext_patient_id_method = fields.Many2one(comodel_name='patient.id.method', string='External Patient ID Method',
+                                        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     # @api.multi
     def _cron_flag_retail_pos(self, session_ids=[], force_report_date=False, automatic=True, raise_for_error=False):
@@ -149,14 +157,24 @@ class PosOrder(models.Model):
                                     'TotalAmount': move_line.qty_done * order_lines[0].price_unit,
                                 } for move_line in lot_move_line_ids])
                     if transactions:
-                        order_data.append({
+                        receipt_data = {
                             'SalesDateTime': fields.Datetime.from_string(order.date_order).isoformat(),
-                            'SalesCustomerType': 'Consumer',
-                            # 'PatientLicenseNumber': False,
-                            # 'CaregiverLicenseNumber': False,
-                            # 'IdentificationMethod': False,
+                            'SalesCustomerType': order.customer_type or 'Patient',
                             'Transactions': transactions,
-                        })
+                        }
+                        if order.customer_type != 'Consumer':
+                            receipt_data.update({
+                                'PatientLicenseNumber': order.patient_license_number.license_number,
+                            })
+                        if order.customer_type == 'Caregiver':
+                            receipt_data.update({
+                                'CaregiverLicenseNumber': order.caregiver_license_number,
+                            })
+                        if order.customer_type == 'ExternalPatient':
+                            receipt_data.update({
+                                'IdentificationMethod': order.ext_patient_id_method.name,
+                            })
+                        order_data.append(receipt_data)
                 if order_data:
                     try:
                         uri = '{}/{}/{}'.format('/sales', metrc_account.api_version, 'receipts')
