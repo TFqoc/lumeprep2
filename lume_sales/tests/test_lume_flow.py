@@ -173,7 +173,9 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         
         # TODO: Refine how the test finds this task, as this can fail too easily.
-        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+        find_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+        created_task = self.env['project.task'].browse(find_task)
+        
 
         _logger.warning(created_task)
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
@@ -182,9 +184,14 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'project_id': self.lumestore_one.id,
             'fulfillment_type': 'store',
             'order_type': 'adult',
-            'user_id': False,
+            'user_id': res.users(),
             'name': self.customer_rec.name
         }
+
+        self.assertTrue(
+            self.lumestore_one.tasks,
+            "Task was not created upon pressing check in."
+        )
 
         self.assertTrue(
             created_task,
@@ -193,5 +200,5 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         dictionaries = compare_dictionaries(created_task, expected_values, key_list)
         self.assertTrue(
             dictionaries[0],
-            "List of discrepencies between expected values and received values: %s " % (dictionaries[1:])
+            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
         )
