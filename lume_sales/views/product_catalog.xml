@@ -33,10 +33,13 @@
                                         <ul>
                                             <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
-                                            <li><strong>On hand: <field name="qty_available"/> <field name="uom_id"/></strong></li>
+                                            <li><strong>On hand: 
+                                                <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.get('warehouse_id')]"></t>
+                                                <!-- <field name="qty_available"/>  -->
+                                                <field name="uom_id"/></strong></li>
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>
-                                                <strong>
+                                                <strong>THC: 
                                                     <t t-if="record.categ_id.value.includes('Edibles') || record.categ_id.value.includes('Topical')">
                                                         Mg: <field name="thc"/>
                                                     </t>

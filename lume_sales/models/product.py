@@ -31,6 +31,16 @@ class Product(models.Model):
     
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
+    quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
+
+    def _compute_qty_at_warehouses(self):
+        for record in self:
+            data = {}
+            for warehouse in self.env['stock.warehouse'].search([]):
+                quants = self.env['stock.quant'].search(['location_id','=',warehouse.lot_stock_id])
+                data[str(warehouse.id)] = sum(quants.available_quantity)
+            record.quantity_at_warehouses = str(data)
+
 
     @api.depends_context('lpc_sale_order_id')
     def _compute_lpc_quantity(self):
