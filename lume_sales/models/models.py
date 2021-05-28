@@ -83,7 +83,7 @@ class Partner(models.Model):
 
     def _compute_medical_purchase(self):
         for record in self:
-            record.can_purchase_medical = record.is_expired_medical and record.medical_id
+            record.can_purchase_medical = not record.is_expired_medical and record.medical_id
     
     def warn(self):
         self.warnings += 1
