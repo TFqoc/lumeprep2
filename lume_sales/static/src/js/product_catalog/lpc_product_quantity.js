@@ -151,6 +151,9 @@ function update_data() {
             success: function (data) {
                 $("#TOTAL").text(`Total: $${data.result[0].toFixed(2)}`);
                 $("#QTY").text(`Quantity: ${data.result[1].toFixed(1)}`);
+                let dataType = data.result[2];
+                $("div.o_kanban_card").removeClass("catalog_card_hide");
+                $(`div.o_kanban_card[data-type='${dataType}']`).addClass("catalog_card_hide");
             },
             dataType: 'json',
             type: 'POST',

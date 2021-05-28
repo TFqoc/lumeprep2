@@ -14,7 +14,7 @@
                 <field name="thc_type"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;">
+                        <div class="o_kanban_record d-flex o_lpc_industry_product" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.tch_type}}">
                             <div class="o_kanban_image">
                                 <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </div>
