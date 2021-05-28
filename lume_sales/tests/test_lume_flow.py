@@ -176,10 +176,12 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         _logger.warning(created_task)
 
         self.assertTrue(
-            self.lumestore_one.task,
+            self.lumestore_one.project.task,
             "Error in Check In: Task was not Created."
         )
 
         self.assertEqual(
-
+            created_task['name'],
+            self.customer_rec.name,
+            "Error in Check In: Task has an incorrect name."
         )
