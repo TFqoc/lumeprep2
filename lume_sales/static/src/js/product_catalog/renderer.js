@@ -38,25 +38,18 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         });
                     });
 
-                    // Setup the parent classes
-                    // I need to wrap the whole thing in a div with the show classes 
-                    // Jquery wrapInner method should work
-                    let show_type = data[2];
+                    // Hide cards as needed
+                    let hide_type = data[2];
                     _.each(self.widgets, function (record) {
                         let $el = record.$el;
                         let recordData = record.state.data;
                         let fieldName = 'thc_type';
                         //  console.log(recordData);
+                        // Hide if you don't have this value
                         let val = recordData[fieldName] ? recordData[fieldName] : '';
-                        // var categoryValue = recordData[fieldName] ? recordData[fieldName] : '__false';
-                        // let colors = {__false: 'muted',medical: 'success',adult:'danger',merch:'warning'};
-                        // _.each(colors, function (val, key) {
-                        //     $el.removeClass('oe_kanban_card_' + val);
-                        // });
                         $el.removeClass('catalog_card_hide');
-                        if (val != show_type) {
+                        if (val == hide_type) {
                             $el.addClass('catalog_card_hide');
-                            // $el.addClass('o_kanban_group_show o_kanban_group_show_' + colors[show_type]);
                         }
                     });
                 });

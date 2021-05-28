@@ -7,7 +7,8 @@ class SaleOrder(models.Model):
     task = fields.Many2one(comodel_name="project.task", readonly=True)
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # For product validation
-    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')])
+    # None state means they haven't selected any medical or adult products yet
+    order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver'),('none','None'),('merch','Merchandise')],compute="_compute_order_type")
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
 
     # Fields for the Order History Screen
@@ -36,7 +37,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
         # Grab the first sale order line that isn't a merch product
-        type_order = self.get_order_type()
         # show_medical = self.order_type
         return {
                 'type': 'ir.actions.act_window',
@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
                 'target': 'current',
                 'res_id': self.id,
-                'context': {'lpc_sale_order_id': self.id, 'type': type_order},
+                'context': {'lpc_sale_order_id': self.id, 'type': self.order_type},
                 'domain': [('type','!=','service'),('sale_ok','=',True)],
                 # 'search_view_id': (id, name),
             }
@@ -73,6 +73,16 @@ class SaleOrder(models.Model):
                 qty += line.product_uom_qty
             record.ordered_qty = qty
 
+    def _compute_order_type(self):
+        for record in self:
+            record.order_type = 'none'
+            if self.order_line:
+                for line in self.order_line:
+                    type_order = line.product_id.thc_type
+                    if type_order in ['medical','adult']:
+                        record.order_type = type_order
+                        break
+
     # Onchange doesn't seem to trigger for calculated fields
     # @api.onchange('is_delivered')
     def on_fulfillment(self):
@@ -89,19 +99,12 @@ class SaleOrder(models.Model):
     #             self.partner_id = False
     #             return warning
 
-    def get_order_type(self):
-        type_order = ''
-        if self.order_line:
-            for line in self.order_line:
-                type_order = line.product_id.thc_type
-                if type_order != 'merch' and type_order:
-                    return type_order
-        return type_order
-
     @api.model
     def get_cart_totals(self, id):
         record = self.browse(id)
-        return (record.amount_total, record.ordered_qty, record.get_order_type())
+        # FIXME Right now caregiver type (curently unused) will always be hidden
+        hide_type = '' if record.order_type == 'none' else 'medical' if record.order_type == 'adult' else 'adult'
+        return (record.amount_total, record.ordered_qty, hide_type)
 
     def action_confirm(self):
         if not self.order_line:
