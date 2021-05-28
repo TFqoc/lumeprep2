@@ -158,11 +158,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
         )
     def test_check_in_button(self):
-        Task = self.env['project.task'].with_context({'tracking_disable': True})
-        Test_Task = Task.create({
-            'name': 'Test',
-            'project_id': self.lumestore_one.id,
-        })
         record_ids = [self.customer_rec.id]
         uid = self.env.ref('base.user_admin').id
         self.env['res.partner'].browse(record_ids).with_context({
@@ -176,9 +171,15 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
 
+        _logger.warning(created_task)
 
-    
+        self.assertTrue(
+            self.lumestore_one.task,
+            "Error in Check In: Task was not Created."
+        )
 
+        self.assertEqual(
 
-
+        )
