@@ -37,7 +37,7 @@ class Product(models.Model):
         for record in self:
             data = {}
             for warehouse in self.env['stock.warehouse'].search([]):
-                quants = self.env['stock.quant'].search(['location_id','=',warehouse.lot_stock_id.id])
+                quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id)])
                 data[str(warehouse.id)] = sum(quants.available_quantity)
             record.quantity_at_warehouses = str(data)
 
