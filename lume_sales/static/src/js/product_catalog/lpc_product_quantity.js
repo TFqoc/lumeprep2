@@ -53,8 +53,8 @@ odoo.define('lume_sales.lpc_product_quantity', function (require) {
             this._super.apply(this, arguments);
             var $target = this.$el;
             var self = this;
-            console.log("Calling widget render.");
-            console.log(this.$el);
+            // console.log("Calling widget render.");
+            // console.log(this.$el);
             $target.prev().on("click", (function (event) { self._valueChange('lpc_quantity', -1); console.log("-"); }).bind(self));
             $target.next().on("click", (function (event) { self._valueChange('lpc_quantity', 1); console.log("+"); }).bind(self));
         },
