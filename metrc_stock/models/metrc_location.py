@@ -66,13 +66,6 @@ class MetrcLocation(models.Model):
     plant_batches = fields.Boolean(related='location_type_id.plant_batches', readonly=True)
     harvests = fields.Boolean(related='location_type_id.harvests', readonly=True)
     packages = fields.Boolean(related='location_type_id.packages', readonly=True)
-    
-    def name_get(self):
-        res = []
-        for location in self:
-            name = "%s (%s)" % (location.name, location.facility_license_id.license_number)
-            res += [(location.id, name)]
-        return res
 
     @api.model
     def create(self, vals):

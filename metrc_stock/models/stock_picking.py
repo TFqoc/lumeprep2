@@ -260,7 +260,7 @@ class StockPicking(models.Model):
                                                 'picking_id': self.id,
                                                 'message': message,
                                             })
-                action = self.env.ref('metrc.action_view_stock_transfer_wizard').read()[0]
+                action = self.env.ref('metrc_stock.action_view_stock_transfer_wizard').read()[0]
                 action.update({
                     'views': [(self.env.ref('metrc.wizard_view_stock_transfer_template_common_form').id, 'form')],
                     'res_id': wiz.id
@@ -583,9 +583,9 @@ class StockPicking(models.Model):
                                             'picking_id': self.id,
                                             'message': message,
                                         })
-            action = self.env.ref('metrc.action_view_stock_transfer_wizard').read()[0]
+            action = self.env.ref('metrc_stock.action_view_stock_transfer_wizard').read()[0]
             action.update({
-                'views': [(self.env.ref('metrc.wizard_view_stock_transfer_manifest_form').id, 'form')],
+                'views': [(self.env.ref('metrc_stock.wizard_view_stock_transfer_manifest_form').id, 'form')],
                 'res_id': wiz.id
             })
             return action
@@ -612,7 +612,7 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
                                                 'picking_id': self.id,
                                                 'message': message,
                                             })
-                action = self.env.ref('metrc.action_view_stock_transfer_wizard').read()[0]
+                action = self.env.ref('metrc_stock.action_view_stock_transfer_wizard').read()[0]
                 action.update({
                     'views': [(self.env.ref('metrc.wizard_view_stock_transfer_external_form').id, 'form')],
                     'res_id': wiz.id

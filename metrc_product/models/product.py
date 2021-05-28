@@ -184,6 +184,8 @@ class ProductTemplate(models.Model):
             update_trigger_fields.append('metrc_uom_id')
         else:
             update_trigger_fields += ['uom_id', 'uom_po_id']
+        if vals.get('uom_id') and vals['uom_id'] == self.uom_id.id:
+            vals.pop('uom_id')
         if any([f in vals.keys() for f in update_trigger_fields]) and \
                 self.metrc_item_cat_id and not self.uom_id == self.metrc_uom_id:
             multi_value_attribute_lines = self.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1)
