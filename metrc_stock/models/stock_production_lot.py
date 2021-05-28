@@ -580,7 +580,7 @@ class StockProductionLot(models.Model):
         self.write(write_vals)
 
     @api.model
-    def _cron_do_import_packages(self, force_last_sync_date=False,
+    def _cron_do_import_packages(self, metrc_license=False, force_last_sync_date=False,
                                  automatic=True, raise_for_error=False, ignore_last_modfied_filter=False):
         metrc_account = self.env.user.ensure_metrc_account()
         print("here")
@@ -590,7 +590,14 @@ class StockProductionLot(models.Model):
         StockInventory = self.env['stock.inventory']
         existing_lots = StockProductionLot.search([])
         lot_object_dict = {lot._get_metrc_name(): lot for lot in existing_lots}
-        warehouses = self.env['stock.warehouse'].search([('license_id', '!=', False)])
+        licenses = False
+        if not metrc_license:
+            licenses = self.env['metrc.license'].search([('base_type', '=', 'Internal')])
+        elif isinstance(metrc_license, int) or isinstance(metrc_license, (list, tuple)):
+            licenses = self.env['metrc.license'].browse(metrc_license)
+        elif isinstance(metrc_license, models.BaseModel):
+            licenses = metrc_license
+        warehouses = self.env['stock.warehouse'].search([('license_id', 'in', licenses.ids)])
         if automatic:
             cr = registry(self._cr.dbname).cursor()
             self = self.with_env(self.env(cr=cr))
