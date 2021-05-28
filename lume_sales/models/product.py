@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
     _order = 'is_lume desc, brand, list_price, default_code, name, id'
 
     brand = fields.Char()
-    tch = fields.Float()
+    thc = fields.Float()
     thc_type = fields.Selection([('medical','Medical'),('adult','Adult Use'),('merch','Merchandise')],default="merch",required=True)
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
     is_lume = fields.Boolean(compute="_compute_lume", store=True)
