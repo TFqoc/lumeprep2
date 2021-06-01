@@ -16,7 +16,3 @@ class ResPartner(models.Model):
         return [(type.name, type.name) for type in self.env['metrc.customer.types'].search([])]
 
     customer_type = fields.Selection(selection='_get_customer_types', default=_default_customer_type)
-
-    @api.model
-    def get_customer_types_for_pos(self):
-        return self.env['metrc.customer.types'].search([]).mapped('name')

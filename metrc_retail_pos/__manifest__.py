@@ -43,6 +43,8 @@
     # only loaded in demonstration mode
     'qweb': [
         'static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml',
+        'static/src/xml/Screens/PatientLicenseScreen/PatientLicenseScreen.xml',
+        'static/src/xml/popups/LicensePopup.xml',
     ],
     'demo': [],
     'application': True,

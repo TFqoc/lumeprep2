@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="LicensePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-license">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <div>
+                    <div class="customer-type">
+                        <label class="label">Customer Type </label>
+                        <select class="form-select form-select-lg" t-model="state.customerType">
+                            <t t-foreach="props.customer_types" t-as="ctype">
+                                <option t-att-value="ctype" t-att-selected="state.customerType ? (state.customerType == ctype ? true : false) : false">
+                                    <t t-esc="ctype"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="license-detail">
+                        <span class="label">Patient License </span>
+                        <select t-model="state.customerLicense">
+                            <t t-foreach="props.customer_licenses" t-as="license">
+                                <option t-att-value="license" t-att-selected="state.customerLicense ? (state.customerLicense == license ? true : false) : false">
+                                    <t t-esc="license"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="caregiver-license-details" t-if="state.customerType == 'Caregiver'">
+                        <span class="label">Caregiver License </span>
+                        <input class="md-3" type="text" t-model="state.caregiverLicense"/>
+                    </div>
+                    <div class="id-method-details" t-if="state.customerType == 'ExternalPatient'">
+                        <span class="label">Patient ID Method </span>
+                        <select t-model="state.customerIdMethod">
+                            <t t-foreach="props.id_methods" t-as="idm">
+                                <option t-att-value="idm"
+                                        t-att-selected="state.customerIdMethod ? (state.customerIdMethod == idm ? true : false) : false">
+                                    <t t-esc="idm"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="button confirm" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

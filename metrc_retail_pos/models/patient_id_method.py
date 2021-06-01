@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 class PatientIDMethod(models.Model):
     _name = 'patient.id.method'
     _description = 'External Patient ID Method'
+    _order = 'create_date'
 
     name = fields.Char(string='Method Name')
 
