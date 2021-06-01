@@ -34,12 +34,15 @@ class Product(models.Model):
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
 
     def _compute_qty_at_warehouses(self):
+        # Loop all warehouses
         for record in self:
             data = {}
             for warehouse in self.env['stock.warehouse'].search([]):
                 quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id)])
                 data[str(warehouse.id)] = sum(quants.available_quantity)
             record.quantity_at_warehouses = str(data)
+        # Test for context
+        _logger.info("CONTEXT: " + str(self.env.context))
 
 
     @api.depends_context('lpc_sale_order_id')
