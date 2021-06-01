@@ -40,6 +40,12 @@
                 <field name="payment_term_id" position="replace">
                     <field name="payment_term_id" invisible="1"></field>
                 </field>
+                <xpath expr="//tree/field[@name='sequence']" position="replace">
+                    <field name="sequence" invisible="1"/>
+                </xpath>
+                <xpath expr="//tree/field[@name='product_uom']" position="replace">
+                    <field name="product_uom" invisible="1"/>
+                </xpath>
             </field>
         </record>
         <!-- Sales Order History Kanban View -->
