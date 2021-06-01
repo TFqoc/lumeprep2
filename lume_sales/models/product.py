@@ -39,7 +39,7 @@ class Product(models.Model):
             data = {}
             for warehouse in self.env['stock.warehouse'].search([]):
                 quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id)])
-                data[str(warehouse.id)] = sum(quants.available_quantity)
+                data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
             record.quantity_at_warehouses = str(data)
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
