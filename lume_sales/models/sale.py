@@ -10,6 +10,7 @@ class SaleOrder(models.Model):
     # None state means they haven't selected any medical or adult products yet
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver'),('none','None'),('merch','Merchandise')],compute="_compute_order_type")
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
+    fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
 
     # Fields for the Order History Screen
     pos_terminal_id = fields.Many2one('pos.config')
@@ -60,7 +61,7 @@ class SaleOrder(models.Model):
             res = len(record.picking_ids) > 0
             for delivery in record.env['stock.picking'].search([('sale_id','=',record.id)]):
                 for line in delivery.move_ids_without_package:
-                    if delivery.state != 'done':
+                    if line.state != 'done':
                         res = False
                         break
             record.is_delivered = res
@@ -84,6 +85,11 @@ class SaleOrder(models.Model):
                     if type_order in ['medical','adult']:
                         record.order_type = type_order
                         break
+    
+    @api.onchange('fulfillment_type')
+    def change_fulfillment(self):
+        if self.task:
+            self.task.fulfillment_type = self.fulfillment_type
 
     # Onchange doesn't seem to trigger for calculated fields
     # @api.onchange('is_delivered')
