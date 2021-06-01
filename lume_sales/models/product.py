@@ -3,6 +3,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
+import json
 
 _logger = logging.getLogger(__name__)
 
@@ -41,12 +42,12 @@ class Product(models.Model):
             if not warehouse_id:
                 for warehouse in self.env['stock.warehouse'].search([]):
                     quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
-                    data[warehouse.id] = sum([q.available_quantity for q in quants])
+                    data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
             else:
                 warehouse = self.env['stock.warehouse'].browse(warehouse_id)
                 quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
-                data[warehouse.id] = sum([q.available_quantity for q in quants])
-            record.quantity_at_warehouses = str(data)
+                data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
+            record.quantity_at_warehouses = json.dumps(data)
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
 
