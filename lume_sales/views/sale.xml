@@ -46,6 +46,9 @@
                 <xpath expr="//tree/field[@name='product_uom']" position="replace">
                     <field name="product_uom" invisible="1"/>
                 </xpath>
+                <field name="state" position="before">
+                    <field name="timer_start" widget="so_timer"/>
+                </field>
             </field>
         </record>
         <!-- Sales Order History Kanban View -->

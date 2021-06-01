@@ -74,6 +74,9 @@
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
           <field name="blink_threshold"/>
+          <field name="so_threshold1"/>
+          <field name="so_threshold2"/>
+          <field name="so_threshold3"/>
         </field>
       </field>
     </record>

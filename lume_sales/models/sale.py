@@ -19,6 +19,12 @@ class SaleOrder(models.Model):
     cashier_partner_id = fields.Many2one('res.partner')
     payment_method = fields.Char()
 
+    # Fields for Timer and colors
+    timer_start = fields.Datetime(default=lambda self: fields.datetime.now())
+    threshold1 = fields.Integer(related="task.project_id.so_threshold1")
+    threshold2 = fields.Integer(related="task.project_id.so_threshold2")
+    threshold3 = fields.Integer(related="task.project_id.so_threshold3")
+
     # def open_catalog(self):
     #     self.ensure_one()
     #     return {

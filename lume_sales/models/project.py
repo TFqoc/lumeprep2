@@ -370,6 +370,9 @@ class project_inherit(models.Model):
     task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
     blink_threshold = fields.Integer(default='5')
+    so_threshold1 = fields.Integer(default='1')
+    so_threshold2 = fields.Integer(default='3')
+    so_threshold3 = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
 
 # class ProjectTaskType(models.Model):
