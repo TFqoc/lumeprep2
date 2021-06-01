@@ -9,7 +9,7 @@ odoo.define('lume_sales.so_timer', function (require) {
     
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
-            this.className = 'o_field_widget o_readonly_modifier text-success ml-auto h5 ml-4 font-weight-bold';
+            this.className = 'o_field_widget o_readonly_modifier text-success ml-auto h2 ml-4 font-weight-bold';
         },
         /**
          * @override
@@ -49,13 +49,13 @@ odoo.define('lume_sales.so_timer', function (require) {
                         this.$el.text(this.time.toString());
                         let minutes = this.time.convertToSeconds() / 60
                         if (minutes >= this.record.data.threshold1 && minutes < this.record.data.threshold2){
-                            this.$el.css('color','yellow');
+                            this.$el.attr('style', 'color: yellow !important');
                         }
                         else if (minutes >= this.record.data.threshold2 && minutes < this.record.data.threshold3){
-                            this.$el.css('color','orange');
+                            this.$el.attr('style', 'color: orange !important');
                         }
                         else if (minutes >= this.record.data.threshold3){
-                            this.$el.css('color','red');
+                            this.$el.attr('style', 'color: red !important');
                         }
                     }
                 }, 1000);

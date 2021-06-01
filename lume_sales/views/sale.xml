@@ -47,7 +47,10 @@
                     <field name="product_uom" invisible="1"/>
                 </xpath>
                 <field name="state" position="before">
-                    <field name="timer_start" widget="so_timer"/>
+                    <field name="threshold1" invisible="1"/>
+                    <field name="threshold2" invisible="1"/>
+                    <field name="threshold3" invisible="1"/>
+                    <field name="timer_start" widget="so_timer" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
                 </field>
             </field>
         </record>
