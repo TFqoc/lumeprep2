@@ -18,6 +18,10 @@ pp = pprint.PrettyPrinter(indent=4)
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
+    def _default_patient_id_method(self):
+        method = self.env['patient.id.method'].search([], limit=1)
+        return method and method.name or ''
+
     metrc_retail_state = fields.Selection(selection=[
                                         ('Draft', 'Draft'),
                                         ('Outgoing', 'Outgoing'),
@@ -28,13 +32,25 @@ class PosOrder(models.Model):
                                     states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     metrc_notes = fields.Html(string='Metrc Retails Notes', copy=False)
     customer_type = fields.Selection(related='partner_id.customer_type')
-    patient_license_number = fields.Many2one(comodel_name='metrc.license',
-                                         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-                                         domain=[('base_type', '=', 'Patient')])
+    patient_license_number = fields.Char(states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     caregiver_license_number = fields.Char(string='Caregiver License',
                                            states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    ext_patient_id_method = fields.Many2one(comodel_name='patient.id.method', string='External Patient ID Method',
-                                        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    ext_patient_id_method = fields.Selection(selection='_get_patient_id_methods', 
+                                             default=_default_patient_id_method)
+
+    
+    @api.model
+    def _get_patient_id_methods(self):
+        return [(method.name, method.name) for method in self.env['patient.id.method'].search([])]
+    
+    @api.model
+    def _order_fields(self, ui_order):
+        field_data = super(PosOrder, self)._order_fields(ui_order)
+        field_data.update({
+            'patient_license_number': ui_order['patient_license_number'],
+        })
+        print(field_data)
+        return field_data
 
     # @api.multi
     def _cron_flag_retail_pos(self, session_ids=[], force_report_date=False, automatic=True, raise_for_error=False):
@@ -164,7 +180,7 @@ class PosOrder(models.Model):
                         }
                         if order.customer_type != 'Consumer':
                             receipt_data.update({
-                                'PatientLicenseNumber': order.patient_license_number.license_number,
+                                'PatientLicenseNumber': order.patient_license_number,
                             })
                         if order.customer_type == 'Caregiver':
                             receipt_data.update({
@@ -172,7 +188,7 @@ class PosOrder(models.Model):
                             })
                         if order.customer_type == 'ExternalPatient':
                             receipt_data.update({
-                                'IdentificationMethod': order.ext_patient_id_method.name,
+                                'IdentificationMethod': order.ext_patient_id_method,
                             })
                         order_data.append(receipt_data)
                 if order_data:

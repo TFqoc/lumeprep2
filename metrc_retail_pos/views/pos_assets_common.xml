@@ -3,6 +3,8 @@
 <template id="metrc_retail_pos.assets" inherit_id="point_of_sale.assets">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/metrc_retail_pos/static/src/js/Screens/ClientListScreen/CustomClientListScreen.js"></script>
+        <script type="text/javascript" src="/metrc_retail_pos/static/src/js/Screens/ProductScreen/ProductScreen.js"></script>
+        <script type="text/javascript" src="/metrc_retail_pos/static/src/js/popups/LicensePopup.js"></script>
     </xpath>
 </template>
 </odoo>

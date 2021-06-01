@@ -5,7 +5,7 @@
             <div class="client-detail">
                 <span class="label">Type</span>
                 <select class="detail client-customer_type needsclick" name="customer_type" t-on-change="captureChange">
-                    <t t-foreach="props.customer_types" t-as="customer_type" t-key="customer_type">
+                    <t t-foreach="props.customer_types" t-as="customer_type">
                         <option t-att-value="customer_type" t-att-selected="props.partner.customer_type ? (props.partner.customer_type == customer_type ? true : false) : false">
                             <t t-esc="customer_type" />
                         </option>
