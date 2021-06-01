@@ -92,5 +92,46 @@
             </field>
         </field>
     </record>
+
+    <!-- Product search autocomplete -->
+    <!-- Copied from Studio -->
+    <record id="product_search_brand" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+          <data>
+            <xpath expr="//field[@name='product_template_attribute_value_ids']" position="after">
+              <field name="brand"/>
+            </xpath>
+          </data>
+        </field>
+        <field name="field_parent" eval="False"/>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" ref="stock.stock_product_search_form_view"/>
+        <field name="key" eval="False"/>
+        <field name="mode">extension</field>
+        <field name="model">product.product</field>
+        <field name="name">lume.product.search.brand</field>
+        <field name="priority">99</field>
+        <field name="type">search</field>
+      </record>
+      <record id="product_template_search_brand" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+          <data>
+            <xpath expr="//search[1]/field[@name='categ_id']" position="after">
+              <field name="brand"/>
+            </xpath>
+          </data>
+        </field>
+        <field name="field_parent" eval="False"/>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" ref="stock.product_template_search_form_view_stock"/>
+        <field name="key" eval="False"/>
+        <field name="mode">extension</field>
+        <field name="model">product.template</field>
+        <field name="name">lume.product.template.search.brand</field>
+        <field name="priority">99</field>
+        <field name="type">search</field>
+      </record>
     </data>
 </odoo>
