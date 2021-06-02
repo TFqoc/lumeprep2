@@ -187,7 +187,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         Test_Task.sales_order.task = Test_Task.id
         key_list = ['product_id', 'product_uom_qty']
         expected_values = {
-            'product_id': self.product_rec.id,
+            'product_id': self.product_rec,
             'product_uom_qty': 1.00
         }
         
