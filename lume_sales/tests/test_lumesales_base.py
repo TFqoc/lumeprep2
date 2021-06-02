@@ -342,11 +342,19 @@ def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
                 error_list.append("%s key was not found in %s." % (key, dictionary_2))
             else:
                 error_list.append("%s key was not found in %s." % (key, dictionary_2))
-        if dictionary_1[key] != dictionary_2[key]: #Catches if the values are not the same.
+        if dictionary_1[key] != dictionary_2[key] and type(dictionary_2[key]) != bool: #Catches if the values are not the same.
             if error_list[0]:
                 error_list[0] = False
                 error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
             else:
                 error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
+        if dictionary_1[key] != dictionary_2[key] and type(dictionary_2[key]) == bool:
+            if bool(dictionary_1[key]) != bool(dictionary_2[key]):
+                if error_list[0]:
+                    error_list[0] = False
+                    error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
+                else:
+                    error_list.append("%s key held two different values: %s and %s." % (key, dictionary_1[key], dictionary_2[key]))
+
     return error_list
 
