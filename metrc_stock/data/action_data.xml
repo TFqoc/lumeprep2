@@ -5,7 +5,17 @@
         <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
 		<field name="state">code</field>
 		<field name="code"><![CDATA[
-model.with_context({'active_ids': records.ids}).action_consolidate_lots()
+action = model.with_context({'active_ids': records.ids}).action_consolidate_lots()
+			]]>
+		</field>
+		<field name="binding_model_id" ref="metrc_stock.model_metrc_transfer"/>
+	</record>
+	<record id="action_open_wizard_receiving" model="ir.actions.server">
+        <field name="name">Receive Lots</field>
+        <field name="model_id" ref="metrc_stock.model_metrc_transfer"/>
+		<field name="state">code</field>
+		<field name="code"><![CDATA[
+action = records.action_receive_transfers()
 			]]>
 		</field>
 		<field name="binding_model_id" ref="metrc_stock.model_metrc_transfer"/>

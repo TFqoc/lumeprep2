@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timedelta
 from dateutil import parser
 
-from odoo import api, fields, models, registry
+from odoo import api, fields, models, registry, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import ValidationError
 
@@ -82,7 +82,8 @@ class MetrcTransfer(models.Model):
     package_type = fields.Char(string='Package Type')
     source_harvest_names = fields.Char(string='Source Harvest Names')
     product_name = fields.Char(string='Product Name')
-    product_id = fields.Many2one(related='move_line_id.product_id')
+    move_product_id = fields.Many2one(related='move_line_id.product_id')
+    product_id = fields.Many2one(comodel_name='product.product')
     product_category_name = fields.Char(string='Product Category Name')
     lab_testing_state = fields.Char(string='Lab Testing State')
     production_batch_number = fields.Char(string='Production Batch Number')
@@ -748,6 +749,65 @@ class MetrcTransfer(models.Model):
         action_data = self.env.ref('metrc_stock.action_open_merge_lot_wizard').read()[0]
         action_data['res_id'] = wiz.id
         return action_data
+    
 
-
-
+    def action_receive_transfers(self):
+        MPA = self.env['metrc.product.alias']
+        PP = self.env['product.product']
+        shipper_facility_license_number = self[0].shipper_facility_license_number
+        shipper_facility_name = self[0].shipper_facility_name
+        shipper_license_id = self.env['metrc.license'].search([
+            ('base_type', '=', 'External'),
+            ('license_number', '=', shipper_facility_license_number)
+        ], limit=1)
+        source_license = self.env['metrc.license'].search([
+            ('base_type', '=', 'Internal'),
+            ('license_number', '=', self[0].src_license)
+        ], limit=1)
+        warehouse = self.env['stock.warehouse'].search([
+            ('license_id', '=', source_license.id)
+        ])
+        if not warehouse:
+            raise ValidationError(_("Facility LIcense not configured on any warehouse.\n"
+                                    "Please configure one for {}.".format(source_license.license_number)))
+        if not shipper_license_id:
+            raise ValidationError(_("Shipper facility license not found in odoo for {}.\n"
+                                    "Please create one for {}.".format(shipper_facility_license_number, shipper_facility_name)))
+        for transfer in self:
+            if transfer.product_id:
+                continue
+            # attempt to match product from odoo database based on product name, category and uom.
+            product_id = PP._get_product(source_license, transfer.product_name, transfer.received_unit_of_measure_name, transfer.product_category_name)
+            if product_id:
+                transfer.product_id = product_id
+            else:
+                # attempt to find alias of the package product.
+                product_alias = MPA.search([
+                    ('alias_name', '=', transfer.product_name),
+                    '|', ('license_id', '=', shipper_license_id.id),
+                    ('license_id', '=', False)
+                ], limit=1)
+                if product_alias:
+                    transfer.product_id = product_alias.product_id
+        if all([t.product_id for t in self]):
+            transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
+                'warehouse_id': warehouse.id,
+                'operation_type_id': warehouse.in_type_id.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+                'transfer_ids': [(6, 0, self.ids)]
+            })
+            action_data = self.env.ref('metrc_stock.action_open_metrc_transfer_receive_wizard').read()[0]
+            action_data['res_id'] = transfer_wiz.id
+            return action_data
+        else:
+            transfers_without_product = self.filtered(lambda t: not t.product_id)
+            action_data = {
+                'type': 'ir.actions.act_window',
+                'name': _('Transfers Require Product'),
+                'res_model': 'metrc.transfer',
+                'view_mode': 'tree',
+                'view_id': self.env.ref('metrc_stock.view_metrc_transfer_without_product_tree').id,
+                'domain': [('id', 'in', self.ids)],
+                'context': {}
+            }
+            return action_data
