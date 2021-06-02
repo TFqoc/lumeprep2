@@ -167,6 +167,10 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
     def test_add_quantity(self):
         Task = self.env['project.task'].with_context({'tracking_disable': True})
+        record_ids = [self.product_rec.id]
+        active_id = self.lumestore_one.id
+        active_ids = [self.lumestore_one.id]
+        uid = self.env.ref('base.user_admin').id
         Test_Task = Task.create({
             'name': 'Test',
             'user_id': uid, #Change to person assigned to that task.
@@ -183,10 +187,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             })
         }) 
         
-        record_ids = [self.product_rec.id]
-        active_id = self.lumestore_one.id
-        active_ids = [self.lumestore_one.id]
-        uid = self.env.ref('base.user_admin').id
+        
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
             'active_ids': active_ids,
@@ -199,5 +200,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'uid': uid}).with_user(uid).lpc_add_quantity()
 
         self.assertEqual(
-            Test_Task.sales_order
+            Test_Task.sales_order.order_line.product_id.id,
+            self.product_rec.id,
+            "Error in Product Catologue: Wrong product was added to the sale order."
         )
