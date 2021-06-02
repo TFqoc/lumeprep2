@@ -59,7 +59,10 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Check In Onchange: Scan Text field was %s instead of False." % (Test_Task.scan_text)
         )
 
-        _logger.warning(Test_Task)
+        _logger.warning(Test_Task.partner_id)
+        _logger.warning(Test_Task.fulfillment_type)
+        _logger.warning(Test_Task.order_type)
+        _logger.warning(Test_Task.project_id)
 
         # TODO Verify what is being returned and how the data from the barcode parse is passed on to the check in screen.
 
