@@ -59,6 +59,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Check In Onchange: Scan Text field was %s instead of False." % (Test_Task.scan_text)
         )
 
+        _logger.warning(Test_Task)
+
         # TODO Verify what is being returned and how the data from the barcode parse is passed on to the check in screen.
 
         # self.assertEqual(
@@ -66,6 +68,71 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         #     self.customer_rec.id,
         #     "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id, self.customer_rec)
         # )
+
+    def test_barcode_parse(self): 
+        """Checking that the barcode parses correctly."""
+        barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        parsed_barcode = parse_code(barcode)
+        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
+
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
+        _logger.warning(dictionaries)
+
+        self.assertTrue(
+            dictionaries[0],
+            "List of errors: %s " % (dictionaries[1:])
+        )
+
+        self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
+            parsed_barcode['state_id'],
+            'MI',
+            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
+        )
+    def test_check_in_button(self):
+        record_ids = [self.customer_rec.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['res.partner'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'check_in_window': True,
+            'fulfillment_type': 'store',
+            'lang': 'en_US',
+            'order_type': 'adult',
+            'partner_id': self.customer_rec.id,
+            'project_id': self.lumestore_one.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).check_in()
+
+        
+        # TODO: Refine how the test finds this task, as this can fail too easily.
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+        #created_task = self.env['project.task'].browse(find_task.id)
+        
+
+        _logger.warning(created_task)
+        key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
+        expected_values = {
+            'partner_id': self.customer_rec,
+            'project_id': self.lumestore_one, 
+            'fulfillment_type': 'store',
+            'order_type': 'adult',
+            'user_id': False,
+            'name': self.customer_rec.name
+        }
+
+        self.assertTrue(
+            self.lumestore_one.tasks,
+            "Task was not created upon pressing check in."
+        )
+
+        self.assertTrue(
+            created_task,
+            "Error in Check In: Task was not found (Either the Customer ID was incorrectly ported, or the Task was not created)."
+        )
+        dictionaries = compare_dictionaries(created_task, expected_values, key_list)
+        self.assertTrue(
+            dictionaries[0],
+            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
+        )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
         _logger.warning("Product Rec's Type is %s" % self.product_rec.type)
@@ -133,72 +200,3 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             uid,
             "Error in build_cart: Sale Order did not have the correct user id."
             )
-
-        # TODO Assert that the view has changed to be that of the Sale Order as well as the Sale Order is already in edit mode.
-
-        _logger.warning("Test Build Cart Status: Complete.")
-        # TODO: Remove.
-    def test_barcode_parse(self): 
-        """Checking that the barcode parses correctly."""
-        barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
-        parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
-
-        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
-        _logger.warning(dictionaries)
-
-        self.assertTrue(
-            dictionaries[0],
-            "List of errors: %s " % (dictionaries[1:])
-        )
-
-        self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
-            parsed_barcode['state_id'],
-            'MI',
-            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
-        )
-    def test_check_in_button(self):
-        record_ids = [self.customer_rec.id]
-        uid = self.env.ref('base.user_admin').id
-        self.env['res.partner'].browse(record_ids).with_context({
-            'allowed_company_ids': [1],
-            'check_in_window': True,
-            'fulfillment_type': 'store',
-            'lang': 'en_US',
-            'order_type': 'adult',
-            'partner_id': self.customer_rec.id,
-            'project_id': self.lumestore_one.id,
-            'tz': 'Europe/Brussels',
-            'uid': uid}).with_user(uid).check_in()
-
-        
-        # TODO: Refine how the test finds this task, as this can fail too easily.
-        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
-        #created_task = self.env['project.task'].browse(find_task.id)
-        
-
-        _logger.warning(created_task)
-        key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
-        expected_values = {
-            'partner_id': self.customer_rec,
-            'project_id': self.lumestore_one, 
-            'fulfillment_type': 'store',
-            'order_type': 'adult',
-            'user_id': False,
-            'name': self.customer_rec.name
-        }
-
-        self.assertTrue(
-            self.lumestore_one.tasks,
-            "Task was not created upon pressing check in."
-        )
-
-        self.assertTrue(
-            created_task,
-            "Error in Check In: Task was not found (Either the Customer ID was incorrectly ported, or the Task was not created)."
-        )
-        dictionaries = compare_dictionaries(created_task, expected_values, key_list)
-        self.assertTrue(
-            dictionaries[0],
-            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
-        )
