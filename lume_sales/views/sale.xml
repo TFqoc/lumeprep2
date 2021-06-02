@@ -68,6 +68,7 @@
                     <field name="currency_id" />
                     <field name="order_line" />
                     <!-- <field name="activity_state"/>
+                        
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/> -->
                     <templates>
                         <t t-name="kanban-box">
