@@ -82,7 +82,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         Test_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         Test_Task.auto_fill()
         self.assertEqual(
-            Test_Task.partner_id, #This is not being set correctly.
+            Test_Task.partner_id.id, #This is not being set correctly.
             self.customer_rec.id,
             "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id, self.customer_rec)
         )
