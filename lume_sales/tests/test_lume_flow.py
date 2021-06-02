@@ -199,7 +199,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'allowed_company_ids': [1],
             'form_view_initial_mode': 'edit',
             'lang': 'en_US',
-            'lpc_sale_order_id': Test_Task.sale_order.id,
+            'lpc_sale_order_id': Test_Task.sales_order.id,
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).lpc_add_quantity()
 
