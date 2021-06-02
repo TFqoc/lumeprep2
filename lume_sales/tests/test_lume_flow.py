@@ -179,8 +179,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
             'sales_order': self.env['sale.order'].create({
                 'partner_id': self.customer_rec.id,
-                #'task': Test_Task.id,
-                'date_order': fields.datetime.now(),
                 'order_type': 'adult',
                 'warehouse_id':self.lumestore_one.warehouse_id.id,
                 'user_id': uid,
