@@ -22,8 +22,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         _logger.warning(Test_Task.partner_id)
         record_ids = [Test_Task.id]
-        active_id = self.lumestore_one.id
-        active_ids = [self.lumestore_one.id]
+        active_id = self.lumestore_one.Test_Task.id
+        active_ids = [self.lumestore_one.id, self.lumestore_one.Test_Task.id]
         uid = self.env.ref('base.user_admin').id
         self.env['project.task'].browse(record_ids).with_context({
             'active_id': active_id,
