@@ -72,6 +72,20 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         #     "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id, self.customer_rec)
         # )
 
+    def test_scan_text(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Test_Task = Task.create({
+            'name': 'Test',
+            'project_id': self.lumestore_one.id,
+        })
+
+        Test_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        self.assertEqual(
+            Test_Task.partner_id.id, #This is not being set correctly.
+            self.customer_rec.id,
+            "Error in Check In Onchange: Partner Id was %s instead of %s" % (Test_Task.partner_id, self.customer_rec)
+        )
+
     def test_barcode_parse(self): 
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
