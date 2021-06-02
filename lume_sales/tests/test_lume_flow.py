@@ -209,7 +209,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertEqual(
-            Test_Task.sales_order.order_line.product_uom_qt,
+            Test_Task.sales_order.order_line.product_uom_qty,
             1.00,
             "Error in Product Category: Incorrect Quantity Added."
         )
