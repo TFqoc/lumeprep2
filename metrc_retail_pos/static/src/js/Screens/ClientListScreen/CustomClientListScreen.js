@@ -45,7 +45,6 @@ odoo.define('metrc_retail_pos.CustomClientListScreen', function (require) {
             json.patient_license_number = this.patient_license_number;
             json.caregiver_license_number = this.caregiver_license_number;
             json.ext_patient_id_method = this.ext_patient_id_method;
-            console.log(json);
             return json;
         },
         export_for_printing: function() {
