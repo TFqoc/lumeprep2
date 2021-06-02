@@ -185,13 +185,13 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             }).id
         })
         Test_Task.sales_order.task = Test_Task.id
+        list_of_keys = []
+        expected_values = {
+            'product_id': self.product_rec.id,
+            'product_uom_qty': 1.00
+        }
+        
 
-        self.assertEqual(
-            Test_Task.id,
-            Test_Task.sales_order.task.id
-        )
-        
-        
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
             'active_ids': active_ids,
@@ -203,8 +203,15 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).lpc_add_quantity()
 
-        self.assertEqual(
-            Test_Task.sales_order.order_line.product_id.id,
-            self.product_rec.id,
-            "Error in Product Catologue: Wrong product was added to the sale order."
+        self.assertTrue(
+            Test_Task.sales_order.order_line,
+            "Error in Product Catologue: Line was not created."
         )
+
+        dictionaries = compare_dictionaries(Test_Task.sales_order.order_line, expected_values, key_list)
+
+        self.assertTrue(
+            dictionaries[0],
+            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
+        )
+
