@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 #     def test_so_creation(self):
 
 
-@tagged('lume')
+@tagged('lume') 
 class TestRecLumeFlow(TestLumeSaleCommon):
     def test_checkin_onchange(self):
         _logger.warning("Product Rec's Type is %s" % self.product_rec.type)
