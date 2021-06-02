@@ -777,6 +777,8 @@ class MetrcTransfer(models.Model):
             if transfer.product_id:
                 continue
             # attempt to match product from odoo database based on product name, category and uom.
+            # sending license because we want to make sure that the given product is available in 
+            # metrc for given license.
             product_id = PP._get_product(source_license, transfer.product_name, transfer.received_unit_of_measure_name, transfer.product_category_name)
             if product_id:
                 transfer.product_id = product_id
@@ -807,7 +809,7 @@ class MetrcTransfer(models.Model):
                 'res_model': 'metrc.transfer',
                 'view_mode': 'tree',
                 'view_id': self.env.ref('metrc_stock.view_metrc_transfer_without_product_tree').id,
-                'domain': [('id', 'in', self.ids)],
+                'domain': [('id', 'in', transfers_without_product.ids)],
                 'context': {}
             }
             return action_data
