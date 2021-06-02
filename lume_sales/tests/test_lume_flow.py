@@ -213,3 +213,29 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             1.00,
             "Error in Product Category: Incorrect Quantity Added."
         )
+
+    def test_confirm_cart(self):
+        uid = self.env.ref('base.user_admin').id
+        Test_Task = self.env['project.task'].with_context({'tracking_disable': True}).create({
+            'name': 'Test',
+            'user_id': uid, #Change to person assigned to that task.
+            'project_id': self.lumestore_one.id,
+            'sales_order': self.env['sale.order'].create({
+                'partner_id': self.customer_rec.id,
+                'order_type': 'adult',
+                'warehouse_id':self.lumestore_one.warehouse_id.id,
+                'user_id': uid,
+                'order_line': {
+                    'product_id': self.product_rec.id,
+                    'product_uom_qty': 1.00
+                }}).id,
+            'partner_id': self.customer_rec.id,
+            'stage_id': self.env.ref('lume_sales.lume_stage_1').id
+        })
+        record_ids = [Test_Task.id]
+        self.env['sale.order'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).action_confirm()
