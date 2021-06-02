@@ -184,8 +184,9 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                 'order_type': 'adult',
                 'warehouse_id':self.lumestore_one.warehouse_id.id,
                 'user_id': uid,
-            })
-        }) 
+            }).id
+        })
+        Test_Task.sales_order.task = Test_Task.id
 
         self.assertEqual(
             Test_Task.id,
