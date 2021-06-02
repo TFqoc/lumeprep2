@@ -164,3 +164,40 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             uid,
             "Error in build_cart: Sale Order did not have the correct user id."
             )
+
+    def test_add_quantity(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Test_Task = Task.create({
+            'name': 'Test',
+            'user_id': uid, #Change to person assigned to that task.
+            'project_id': self.lumestore_one.id,
+            'partner_id': self.customer_rec.id,
+            'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
+            'sales_order': self.env['sale.order'].create({
+                'partner_id': self.customer_rec.id,
+                'task': Test_Task.id,
+                'date_order': fields.datetime.now(),
+                'order_type': 'adult',
+                'warehouse_id':self.lumestore_one.warehouse_id.id,
+                'user_id': uid,
+            })
+        }) 
+        
+        record_ids = [self.product_rec.id]
+        active_id = self.lumestore_one.id
+        active_ids = [self.lumestore_one.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['product.product'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'sale.order',
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'lpc_sale_order_id': Test_Task.sale_order.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).lpc_add_quantity()
+
+        self.assertEqual(
+            Test_Task.sales_order
+        )
