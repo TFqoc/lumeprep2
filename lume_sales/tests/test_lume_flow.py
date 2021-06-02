@@ -185,13 +185,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             }).id
         })
         Test_Task.sales_order.task = Test_Task.id
-        key_list = ['product_id', 'product_uom_qty']
-        expected_values = {
-            'product_id': self.product_rec,
-            'product_uom_qty': 1.00
-        }
         
-
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
             'active_ids': active_ids,
@@ -208,10 +202,14 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Product Catologue: Line was not created."
         )
 
-        dictionaries = compare_dictionaries(Test_Task.sales_order.order_line, expected_values, key_list)
-
-        self.assertTrue(
-            dictionaries[0],
-            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
+        self.assertEqual(
+            Test_Task.sales_order.order_line.product_id.id,
+            self.product_rec.id,
+            "Error in Product Category: Incorrect Product Added."
         )
 
+        self.assertEqual(
+            Test_Task.sales_order.order_line.product_uom_qt,
+            1.00,
+            "Error in Product Category: Incorrect Quantity Added."
+        )
