@@ -255,7 +255,7 @@
             <!-- <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/> -->
             <field name="view_id" ref="lume_sales.view_sale_order_history_list" />
             <field name="context">{'search_default_partner_id': active_id, 'default_partner_id': active_id}</field>
-            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent'))]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No orders have been completed for this customer!
