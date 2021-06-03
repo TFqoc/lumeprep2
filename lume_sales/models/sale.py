@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from .sale import ORDER_HISTORY_DOMAIN
+from odoo.addons.lume_sales.models import ORDER_HISTORY_DOMAIN
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
