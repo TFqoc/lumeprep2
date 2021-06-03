@@ -255,7 +255,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertTrue(
-            self.stock.picking,
+            Test_Task.sales_order.picking_ids,
             "Pick Ticket was not created."
         )
 
