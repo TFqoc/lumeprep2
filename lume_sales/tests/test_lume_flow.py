@@ -254,6 +254,9 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Confirm Cart: Sales Order was not set to the state of sale."
         )
 
-        #TODO: Make assert statement for the picking order.
+        self.assertTrue(
+            self.lumehouse_one.stock.picking,
+            "Pick Ticket was not created."
+        )
 
 
