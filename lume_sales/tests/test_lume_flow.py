@@ -225,13 +225,15 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                 'order_type': 'adult',
                 'warehouse_id':self.lumestore_one.warehouse_id.id,
                 'user_id': uid,
-                'order_line': [(0, 0, {
-                    'product_id': self.product_rec.id,
-                    'product_uom_qty': 1.00
-                })]}).id,
+                }).id,
             'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lume_sales.lume_stage_1').id
         })
+        Test_Task.sales_order.Task = Test_Task.id
+        Test_Task.sales_order.order_line = [(0, 0, {
+                    'product_id': self.product_rec.id,
+                    'product_uom_qty': 1.00
+                })]
         record_ids = [Test_Task.id]
         self.env['sale.order'].browse(record_ids).with_context({
             'allowed_company_ids': [1],
