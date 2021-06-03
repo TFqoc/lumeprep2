@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from odoo.addons.lume_sales.models import ORDER_HISTORY_DOMAIN
+
+ORDER_HISTORY_DOMAIN = [('state', 'not in', ('draft', 'sent'))]
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
