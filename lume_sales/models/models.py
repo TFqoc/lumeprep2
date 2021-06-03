@@ -244,6 +244,6 @@ class Picking(models.Model):
 
     # Quick endpoint for locust testing
     def quick_validate(self):
-        ctx = {"skip_immediate":True,"skip_backorder":True}
-        self.with_context(ctx).button_validate()
+        # ctx = {"skip_immediate":True,"skip_backorder":True}
+        self.with_context(skip_immediate=True,skip_backorder=True).button_validate()
         return True
