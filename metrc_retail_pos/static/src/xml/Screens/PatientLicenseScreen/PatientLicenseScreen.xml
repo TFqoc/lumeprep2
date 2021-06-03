@@ -5,8 +5,8 @@
             <button class="button set-license" t-att-class="{'decentered': isLongName}"
                     t-on-click="trigger('click-license')" t-if="client">
                 <t t-if="!env.isMobile"><i class="fa fa-id-card" role="img" aria-label="License" title="License" /></t>
-                <t t-if="patient_license_number">
-                    <t t-esc="patient_license_number.license_number" />
+                <t t-if="license">
+                    <t t-esc="license" />
                 </t>
                 <t t-else="">
                     License

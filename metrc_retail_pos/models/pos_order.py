@@ -49,7 +49,6 @@ class PosOrder(models.Model):
         field_data.update({
             'patient_license_number': ui_order['patient_license_number'],
         })
-        print(field_data)
         return field_data
 
     # @api.multi

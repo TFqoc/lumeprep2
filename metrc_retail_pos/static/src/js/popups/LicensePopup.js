@@ -16,17 +16,6 @@ odoo.define('metrc_retail_pos.LicensePopup', function(require) {
                 caregiverLicense: current_order.caregiver_license_number,
                 customerIdMethod: current_order.ext_patient_id_method,
             });
-            this.customerTypeRef = useRef('customer_type');
-            this.inputLicenseRef = useRef('patinet_license_number');
-            this.idMethodRef = useRef('id_method');
-        }
-        captureChange() {
-            console.log(this);
-            this.render();
-        }
-        mounted() {
-            console.log(this);
-            this.customerTypeRef.el.focus();
         }
         getPayload() {
             return {
