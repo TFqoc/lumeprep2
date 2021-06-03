@@ -21,6 +21,19 @@
                 </tree>
             </field>
         </record>
+        <record id="view_metrc_transfer_without_product_tree" model="ir.ui.view">
+            <field name="name">metrc.transfer.tree.without.product</field>
+            <field name="model">metrc.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Transfers" editable="bottom" create="0">
+                    <field name="product_name" readonly="1"/>
+                    <field name="product_category_name" readonly="1"/>
+                    <field name="received_unit_of_measure_name" readonly="1"/>
+                    <field name="product_id" domain="[('uom_id.name', '=', received_unit_of_measure_name),
+                                                      ('metrc_item_cat_id.name', '=', product_category_name)]"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="view_metrc_transfer_search" model="ir.ui.view">
             <field name="name">metrc.transfer.search</field>
@@ -49,6 +62,7 @@
                     <group string='Group by...'>
                         <filter string="Source License" name="groupby_src_license" context="{'group_by':'src_license'}"/>
                         <filter string="Transfer Type" name="groupby_transfer_type" context="{'group_by':'transfer_type'}"/>
+                        <filter string="Manifest" name="groupby_manifest" context="{'group_by': 'manifest_number'}"/>
                         <filter string="Shipment Package State" name="groupby_shipment_package_state" context="{'group_by':'shipment_package_state'}"/>
                     </group>
                 </search>
@@ -159,11 +173,13 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_view_metrc_transfer">
-            <field name="name">Transfers</field>
+            <field name="name">Processed Transfers</field>
             <field name="res_model">metrc.transfer</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="domain">[('move_line_id', '!=', False)]</field>
+            <field name="context">{
+                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_manifest': 1}</field>
             <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
             <field name="help" type="html">
                 <p>
@@ -172,11 +188,59 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_metrc_unprocessed_transfer">
+            <field name="name">Unprocessed Transfers</field>
+            <field name="res_model">metrc.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('move_line_id', '=', False), ('being_processed', '=', False)]</field>
+            <field name="context">{
+                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_manifest': 1}</field>
+            <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Transfers.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_processing_transfer">
+            <field name="name">Transfers in Processing</field>
+            <field name="res_model">metrc.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('being_processed', '=', True)]</field>
+            <field name="context">{
+                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_manifest': 1}</field>
+            <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Transfers.
+                </p>
+            </field>
+        </record>
         <menuitem id="menu_action_view_metrc_transfer"
-                action="action_view_metrc_transfer"
                 name="Transfers"
                 parent="metrc.menu_metrc_inventory_item"
                 sequence="99"
+                groups="metrc_base.group_metrc_manager"/>
+        <menuitem id="menu_action_view_metrc_processed_transfer"
+                action="action_view_metrc_transfer"
+                name="Processed"
+                parent="menu_action_view_metrc_transfer"
+                sequence="3"
+                groups="metrc_base.group_metrc_manager"/>
+        <menuitem id="menu_action_view_metrc_unprocessed_transfer"
+                action="action_view_metrc_unprocessed_transfer"
+                name="Unprocessed"
+                parent="menu_action_view_metrc_transfer"
+                sequence="1"
+                groups="metrc_base.group_metrc_manager"/>
+        <menuitem id="menu_action_view_metrc_processing_transfer"
+                action="action_view_metrc_processing_transfer"
+                name="Processing"
+                parent="menu_action_view_metrc_transfer"
+                sequence="2"
                 groups="metrc_base.group_metrc_manager"/>
 
     </data>

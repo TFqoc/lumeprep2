@@ -99,6 +99,7 @@ class MetrcTransfer(models.Model):
     received_unit_of_measure_name = fields.Char(string='Received Unit Of Measure Name')
     move_line_id = fields.Many2one(comodel_name='stock.move.line', string='Associated Product Move', ondelete='set null', index=True, copy=False)
     source_package_labels = fields.Char(string='Source Packages')
+    being_processed = fields.Boolean(string="Under Processing")
 
     def _assert_transfer_param(self, license_number, transfer_type, update_date=False, transfer_date=False):
         """
@@ -777,6 +778,8 @@ class MetrcTransfer(models.Model):
             if transfer.product_id:
                 continue
             # attempt to match product from odoo database based on product name, category and uom.
+            # sending license because we want to make sure that the given product is available in 
+            # metrc for given license.
             product_id = PP._get_product(source_license, transfer.product_name, transfer.received_unit_of_measure_name, transfer.product_category_name)
             if product_id:
                 transfer.product_id = product_id
@@ -790,6 +793,9 @@ class MetrcTransfer(models.Model):
                 if product_alias:
                     transfer.product_id = product_alias.product_id
         if all([t.product_id for t in self]):
+            self.write({
+                'being_processed': True,
+            })
             transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
                 'warehouse_id': warehouse.id,
                 'operation_type_id': warehouse.in_type_id.id,
@@ -807,7 +813,7 @@ class MetrcTransfer(models.Model):
                 'res_model': 'metrc.transfer',
                 'view_mode': 'tree',
                 'view_id': self.env.ref('metrc_stock.view_metrc_transfer_without_product_tree').id,
-                'domain': [('id', 'in', self.ids)],
+                'domain': [('id', 'in', transfers_without_product.ids)],
                 'context': {}
             }
             return action_data
