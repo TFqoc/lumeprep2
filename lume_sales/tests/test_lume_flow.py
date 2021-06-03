@@ -241,3 +241,17 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'lang': 'en_US',
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).action_confirm()
+
+        self.assertEqual(
+            Test_Task.stage_id.id,
+            self.env.ref('lume_sales.lume_stage_2').id,
+            "Error in Confirm Cart: Tile did not move to the proper tile."
+        )
+
+        self.assertEqual(
+            Test_Task.sales_order.state,
+            'sale',
+            "Error in Confirm Cart: Sales Order was not set to the state of sale."
+        )
+
+        #TODO: Make assert statement for the picking order.
