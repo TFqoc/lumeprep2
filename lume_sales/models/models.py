@@ -41,11 +41,11 @@ class Partner(models.Model):
     # Override
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)] + ORDER_HISTORY_DOMAIN)
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
         sale_order_groups = self.env['sale.order'].read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
+            domain=[('partner_id', 'in', all_partners.ids)] + ORDER_HISTORY_DOMAIN,
             fields=['partner_id'], groupby=['partner_id']
         )
         partners = self.browse()
