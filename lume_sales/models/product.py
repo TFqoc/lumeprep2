@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
-    _order = 'is_lume desc, brand, list_price, default_code, name, id'
+    _order = 'is_lume desc, brand, name, list_price, default_code, id'
 
     brand = fields.Char()
     thc = fields.Float()
