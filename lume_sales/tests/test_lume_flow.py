@@ -164,8 +164,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             uid,
             "Error in build_cart: Sale Order did not have the correct user id."
             )
-
-    def test_add_quantity(self):
+ 
+    def test_add_quantity(self): #Error when ran in full test suite.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         record_ids = [self.product_rec.id]
         active_id = self.lumestore_one.id
@@ -214,7 +214,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Product Category: Incorrect Quantity Added."
         )
 
-    def test_confirm_cart(self):
+    def test_confirm_cart(self): #Error when full test suite is ran.
         uid = self.env.ref('base.user_admin').id
         Test_Task = self.env['project.task'].with_context({'tracking_disable': True}).create({
             'name': 'Test',
