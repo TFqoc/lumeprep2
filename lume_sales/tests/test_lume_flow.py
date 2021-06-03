@@ -167,7 +167,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
  
     def test_add_quantity(self): #Error when ran in full test suite.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
-        record_ids = [self.env('product.product').search([('name', '=', 'Jenny Kush 3.5G')], limit=1)]
+        record_ids = [self.env['product.product'].search([('name', '=', 'Jenny Kush 3.5G')], limit=1)]
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
         uid = self.env.ref('base.user_admin').id
@@ -177,14 +177,16 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
             'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
-            'sales_order': self.env['sale.order'].create({
-                'partner_id': self.customer_rec.id,
-                'order_type': 'adult',
-                'warehouse_id':self.lumestore_one.warehouse_id.id,
-                'user_id': uid,
-            }).id
         })
-        Test_Task.sales_order.task = Test_Task.id
+        Sales_Order = self.env['sale.order'].create({
+            'partner_id': self.customer_rec.id,
+            'order_type': 'adult',
+            'warehouse_id':self.lumestore_one.warehouse_id.id,
+            'user_id': uid,
+            'task': Test_Task.id
+        })
+        Sales_Order.task = Test_Task.id
+        Test_Task.sales_order = Sales_Order.id
         
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
@@ -216,25 +218,28 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
     def test_confirm_cart(self): #Error when full test suite is ran.
         uid = self.env.ref('base.user_admin').id
-        Test_Task = self.env['project.task'].with_context({'tracking_disable': True}).create({
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Test_Task = Task.create({
             'name': 'Test',
             'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
-            'sales_order': self.env['sale.order'].create({
-                'partner_id': self.customer_rec.id,
-                'order_type': 'adult',
-                'warehouse_id':self.lumestore_one.warehouse_id.id,
-                'user_id': uid,
-                }).id,
             'partner_id': self.customer_rec.id,
-            'stage_id': self.env.ref('lume_sales.lume_stage_1').id
+            'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
         })
-        Test_Task.sales_order.task = Test_Task.id
+        Sales_Order = self.env['sale.order'].create({
+            'partner_id': self.customer_rec.id,
+            'order_type': 'adult',
+            'warehouse_id':self.lumestore_one.warehouse_id.id,
+            'user_id': uid,
+            'task': Test_Task.id
+        })
+        Sales_Order.task = Test_Task.id
+        Test_Task.sales_order = Sales_Order.id
         Test_Task.sales_order.order_line = [(0, 0, {
                     'product_id': self.product_rec.id,
                     'product_uom_qty': 1.00
                 })]
-        record_ids = [Test_Task.sales_order.id]
+        record_ids = [Sales_Order.id]
         self.env['sale.order'].browse(record_ids).with_context({
             'allowed_company_ids': [1],
             'form_view_initial_mode': 'edit',
