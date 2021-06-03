@@ -192,7 +192,7 @@
             <field name="name">Unprocessed Transfers</field>
             <field name="res_model">metrc.transfer</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('move_line_id', '=', False)]</field>
+            <field name="domain">[('move_line_id', '=', False), ('being_processed', '=', False)]</field>
             <field name="context">{
                 'search_default_groupby_transfer_type': 1,
                 'search_default_groupby_manifest': 1}</field>
@@ -204,6 +204,21 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_metrc_processing_transfer">
+            <field name="name">Transfers in Processing</field>
+            <field name="res_model">metrc.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('being_processed', '=', True)]</field>
+            <field name="context">{
+                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_manifest': 1}</field>
+            <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Transfers.
+                </p>
+            </field>
+        </record>
         <menuitem id="menu_action_view_metrc_transfer"
                 name="Transfers"
                 parent="metrc.menu_metrc_inventory_item"
@@ -213,11 +228,17 @@
                 action="action_view_metrc_transfer"
                 name="Processed"
                 parent="menu_action_view_metrc_transfer"
-                sequence="1"
+                sequence="3"
                 groups="metrc_base.group_metrc_manager"/>
         <menuitem id="menu_action_view_metrc_unprocessed_transfer"
                 action="action_view_metrc_unprocessed_transfer"
                 name="Unprocessed"
+                parent="menu_action_view_metrc_transfer"
+                sequence="1"
+                groups="metrc_base.group_metrc_manager"/>
+        <menuitem id="menu_action_view_metrc_processing_transfer"
+                action="action_view_metrc_processing_transfer"
+                name="Processing"
                 parent="menu_action_view_metrc_transfer"
                 sequence="2"
                 groups="metrc_base.group_metrc_manager"/>

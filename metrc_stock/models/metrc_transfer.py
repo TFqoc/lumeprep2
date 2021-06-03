@@ -99,6 +99,7 @@ class MetrcTransfer(models.Model):
     received_unit_of_measure_name = fields.Char(string='Received Unit Of Measure Name')
     move_line_id = fields.Many2one(comodel_name='stock.move.line', string='Associated Product Move', ondelete='set null', index=True, copy=False)
     source_package_labels = fields.Char(string='Source Packages')
+    being_processed = fields.Boolean(string="Under Processing")
 
     def _assert_transfer_param(self, license_number, transfer_type, update_date=False, transfer_date=False):
         """
@@ -792,6 +793,9 @@ class MetrcTransfer(models.Model):
                 if product_alias:
                     transfer.product_id = product_alias.product_id
         if all([t.product_id for t in self]):
+            self.write({
+                'being_processed': True,
+            })
             transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
                 'warehouse_id': warehouse.id,
                 'operation_type_id': warehouse.in_type_id.id,
