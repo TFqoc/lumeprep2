@@ -246,3 +246,4 @@ class Picking(models.Model):
     def quick_validate(self):
         ctx = {"skip_immediate":True,"skip_backorder":True}
         self.with_context(ctx).button_validate()
+        return True
