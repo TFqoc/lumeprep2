@@ -255,3 +255,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         #TODO: Make assert statement for the picking order.
+
+        def test_picking_ticket(self):
+            pass
