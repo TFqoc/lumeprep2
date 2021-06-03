@@ -186,7 +186,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         Test_Task.sales_order.task = Test_Task.id
         
-        self.env['product.product'].browse(record_ids).with_context({
+        self.env['product.template'].browse(record_ids).with_context({
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': 'sale.order',
