@@ -54,12 +54,12 @@ class SaleOrder(models.Model):
             'name': 'Product Catalog',
             'view_type': 'kanban',
             'view_mode': 'kanban',
-            'res_model': 'product.product',
-            'view_id': self.env.ref('lume_sales.order_history').id,
+            'res_model': 'sale.order',
+            'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
             'target': 'current',
             'res_id': self.id,
             'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
-            # 'domain':[('state', 'not in', ('draft', 'sent', 'cancel'))],
+            'domain':[('state', 'not in', ('draft', 'sent', 'cancel'))],
         }
 
     @api.depends('picking_ids.move_ids_without_package.state')
