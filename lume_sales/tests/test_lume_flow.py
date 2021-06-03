@@ -234,7 +234,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
                     'product_id': self.product_rec.id,
                     'product_uom_qty': 1.00
                 })]
-        record_ids = [Test_Task.id]
+        record_ids = [Test_Task.sales_order.id]
         self.env['sale.order'].browse(record_ids).with_context({
             'allowed_company_ids': [1],
             'form_view_initial_mode': 'edit',
