@@ -14,6 +14,11 @@
                 <xpath expr="//div[@class='oe_button_box']/button[@name='action_view_delivery']/field" position="attributes">
                     <attribute name="string">Picks</attribute>
                 </xpath>
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                    <button class="oe_stat_button" type="action" name="%(lume_sales.order_history)d" icon="fa-usd" modifiers="{}" options="{}" attrs="{'invisible': [('partner_sale_order_count', '=', False)]}">
+                        <field string="Order History" name="partner_sale_order_count" widget="statinfo" modifiers="{'readonly':true}" id="sale_order_count" />
+                      </button>
+                </xpath>
                 <field name="partner_id" position="after">
                     <field name="order_type" readonly="1" />
                 </field>
@@ -28,7 +33,7 @@
                 <field name="order_line" position="after">
                     <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
                     <span style="margin: 5px;"/> -->
-                    <button name="open_catalogV2" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
+                    <button name="open_catalog" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
                 <!-- <field name="order_line" position="attributes">

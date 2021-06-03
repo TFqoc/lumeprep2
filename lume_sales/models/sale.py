@@ -19,28 +19,15 @@ class SaleOrder(models.Model):
     cashier_partner_id = fields.Many2one('res.partner')
     payment_method = fields.Char()
 
+    partner_sale_order_count = fields.Integer(related="partner_id.sale_order_count")
+
     # Fields for Timer and colors
     timer_start = fields.Datetime(default=lambda self: fields.datetime.now())
     threshold1 = fields.Integer(related="task.project_id.so_threshold1")
     threshold2 = fields.Integer(related="task.project_id.so_threshold2")
     threshold3 = fields.Integer(related="task.project_id.so_threshold3")
 
-    # def open_catalog(self):
-    #     self.ensure_one()
-    #     return {
-    #             'type': 'ir.actions.act_window',
-    #             'name': 'Product Catalog',
-    #             'view_type': 'kanban',
-    #             'view_mode': 'kanban',
-    #             'res_model': 'product.product',
-    #             'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
-    #             'target': 'new',
-    #             'res_id': self.id,
-    #             'context': {'lpc_sale_order_id': self.id},
-    #             'domain': [],
-    #             'search_view_id': ('category_grouping_search', 'Catagory Grouping'),
-    #         }
-    def open_catalogV2(self):
+    def open_catalog(self):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
         if not self.partner_id.can_purchase_medical:
