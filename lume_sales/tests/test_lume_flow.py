@@ -167,7 +167,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
  
     def test_add_quantity(self): #Error when ran in full test suite.
         Task = self.env['project.task'].with_context({'tracking_disable': True})
-        record_ids = [self.product_rec.id]
+        record_ids = [self.env('product.product').search([('name', '=', 'Jenny Kush 3.5G')], limit=1)]
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
         uid = self.env.ref('base.user_admin').id
@@ -186,7 +186,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         Test_Task.sales_order.task = Test_Task.id
         
-        self.env['product.template'].browse(record_ids).with_context({
+        self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': 'sale.order',
