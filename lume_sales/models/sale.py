@@ -48,6 +48,20 @@ class SaleOrder(models.Model):
                 # 'search_view_id': (id, name),
             }
 
+    def open_order_history(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Product Catalog',
+            'view_type': 'kanban',
+            'view_mode': 'kanban',
+            'res_model': 'product.product',
+            'view_id': self.env.ref('lume_sales.order_history').id,
+            'target': 'current',
+            'res_id': self.id,
+            'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
+            # 'domain':[('state', 'not in', ('draft', 'sent', 'cancel'))],
+        }
+
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
