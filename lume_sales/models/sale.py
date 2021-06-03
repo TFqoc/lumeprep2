@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from .sale import ORDER_HISTORY_DOMAIN
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -59,7 +60,7 @@ class SaleOrder(models.Model):
             'target': 'current',
             'res_id': self.id,
             'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
-            'domain':[('state', 'not in', ('draft', 'sent', 'cancel'))],
+            'domain': ORDER_HISTORY_DOMAIN,
         }
 
     @api.depends('picking_ids.move_ids_without_package.state')
