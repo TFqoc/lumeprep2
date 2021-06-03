@@ -255,7 +255,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertTrue(
-            self.lumehouse_one.stock.picking,
+            self.stock.picking,
             "Pick Ticket was not created."
         )
 
