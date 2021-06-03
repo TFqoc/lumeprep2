@@ -243,8 +243,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'uid': uid}).with_user(uid).action_confirm()
 
         self.assertEqual(
-            Test_Task.stage_id.id,
-            self.env.ref('lume_sales.lume_stage_2').id,
+            Test_Task.stage_id,
+            self.env.ref('lume_sales.lume_stage_2'),
             "Error in Confirm Cart: Tile did not move to the proper tile."
         )
 
