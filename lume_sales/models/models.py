@@ -138,7 +138,7 @@ class Partner(models.Model):
         project = self.env['project.project'].browse(ctx.get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
-            'partner_id': int(ctx['partner_id']),
+            'partner_id': self.id,
             'project_id': project.id,
             'fulfillment_type': ctx['fulfillment_type'],
             'order_type': ctx['order_type'],
@@ -238,3 +238,11 @@ class TimeMix(models.AbstractModel):
                 ('res_id', '=', record.id),
                 ('res_model', '=', record._name)
             ], limit=1)
+
+class Picking(models.Model):
+    _inherit = 'stock.picking'
+
+    # Quick endpoint for locust testing
+    def quick_validate(self):
+        ctx = {"skip_immediate":True,"skip_backorder":True}
+        self.with_context(ctx).button_validate()
