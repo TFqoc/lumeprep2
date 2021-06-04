@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
     payment_method = fields.Char()
 
     partner_sale_order_count = fields.Integer(related="partner_id.sale_order_count")
-    partner_image = fields.Image(related='partner_id.image_1920')
+    partner_image = fields.Image(related='partner_id.image_1920',max_width=1920, max_height=1920,store=True)
 
     # Fields for Timer and colors
     timer_start = fields.Datetime(default=lambda self: fields.datetime.now())
