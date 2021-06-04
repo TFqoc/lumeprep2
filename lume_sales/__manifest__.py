@@ -23,7 +23,8 @@
     'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban'],
 
     'qweb': [
-        "static/src/xml/lpc_quantity.xml"
+        "static/src/xml/lpc_quantity.xml",
+        "static/src/xml/qty_template.xml",
     ],
 
     # always loaded
