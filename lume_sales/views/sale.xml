@@ -57,6 +57,15 @@
                 <xpath expr="//tree/field[@name='name']" position="replace">
                     <field name="name" invisible="1"/>
                 </xpath>
+                <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
+                </xpath>
+                <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
+                    <attribute name="attrs"></attribute>
+                </xpath>
+                <xpath expr="(//header/button)[3]" position="replace">
+                </xpath>
+                <xpath expr="(//header/button)[4]" position="replace">
+                </xpath>
                 <field name="state" position="before">
                     <field name="threshold1" invisible="1"/>
                     <field name="threshold2" invisible="1"/>
