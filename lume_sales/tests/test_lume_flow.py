@@ -235,10 +235,10 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         Sales_Order.task = Test_Task.id
         Test_Task.sales_order = Sales_Order.id
-        Test_Task.sales_order.order_line = [(0, 0, {
-                    'product_id': self.product_rec.id,
-                    'product_uom_qty': 1.00
-                })]
+        Sales_Order.order_line = [(0, 0, {
+            'product_id': self.product_rec.id,
+            'product_uom_qty': 1.00
+        })]
         record_ids = [Sales_Order.id]
         self.env['sale.order'].browse(record_ids).with_context({
             'allowed_company_ids': [1],
