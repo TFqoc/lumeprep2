@@ -69,7 +69,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         
         # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
-        #created_task = self.env['project.task'].browse(find_task.id)
+
         
 
         _logger.warning(created_task)
@@ -263,5 +263,3 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             Test_Task.sales_order.picking_ids,
             "Pick Ticket was not created."
         )
-
-
