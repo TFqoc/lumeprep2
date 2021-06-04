@@ -183,6 +183,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         Sales_Order.task = Test_Task.id
         Test_Task.sales_order = Sales_Order.id
+        product_ids = [line["product_id"] for line in Test_Task.sales_order.order_line]
         
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
@@ -201,7 +202,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertEqual(
-            Test_Task.sales_order.order_line.product_id.id,
+            product_ids[0],
             self.product_rec.product_variant_ids[0].id,
             "Error in Product Category: Incorrect Product Added."
         )
