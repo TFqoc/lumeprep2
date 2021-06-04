@@ -29,6 +29,16 @@ class SaleOrder(models.Model):
     threshold2 = fields.Integer(related="task.project_id.so_threshold2")
     threshold3 = fields.Integer(related="task.project_id.so_threshold3")
 
+    # Override
+    def action_cancel(self):
+        cancel_warning = self._show_cancel_wizard()
+        if cancel_warning:
+            return super(SaleOrder, self).action_cancel()
+        else:
+            if self.task:
+                self.task.write({'active':False})
+            return super(SaleOrder, self).action_cancel()
+
     def open_catalog(self):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
