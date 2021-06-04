@@ -74,7 +74,7 @@
                 <xpath expr="(//header/button)[4]" position="replace">
                 </xpath>
                 <xpath expr="//div[@name='button_box]" position="after">
-                    <field name="partner_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_128&quot;}"/>
+                    <field name="partner_image" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                 </xpath>
                 <field name="state" position="before">
                     <field name="threshold1" invisible="1"/>
