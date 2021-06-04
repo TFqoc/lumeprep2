@@ -183,7 +183,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         })
         Sales_Order.task = Test_Task.id
         Test_Task.sales_order = Sales_Order.id
-        product_ids = [line["product_id"] for line in Test_Task.sales_order.order_line]
         
         self.env['product.product'].browse(record_ids).with_context({
             'active_id': active_id,
@@ -195,6 +194,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'lpc_sale_order_id': Test_Task.sales_order.id,
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).lpc_add_quantity()
+
+        product_ids = [line["product_id"] for line in Test_Task.sales_order.order_line]
 
         self.assertTrue(
             Test_Task.sales_order.order_line,
