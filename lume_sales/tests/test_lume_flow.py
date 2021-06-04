@@ -172,7 +172,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
-            'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
+            'stage_id': self.env.ref('lume_sales.lume_stage_1').id, 
         })
         Sales_Order = self.env['sale.order'].create({
             'partner_id': self.customer_rec.id,
