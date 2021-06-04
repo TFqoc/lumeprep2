@@ -40,7 +40,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
-        _logger.warning(dictionaries)
+
 
         self.assertTrue(
             dictionaries[0],
@@ -66,13 +66,9 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
-        
         # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
 
-        
-
-        _logger.warning(created_task)
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
         expected_values = {
             'partner_id': self.customer_rec,
@@ -99,7 +95,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
     def test_task_to_build_cart(self): #Upon pressing build cart, the tile should be moved to the Build Cart Stage.
-        _logger.warning("Product Rec's Type is %s" % self.product_rec.type)
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
         Test_Task = Task.create({
