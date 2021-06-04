@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="qty_template">
-        <button class="btn btn-secondary" style="font-size: 1.3rem;padding:0px 7px;background-color:#0000;border-color:#0000;">-</button>
-        <span class="o_target_to_set oe_inline d-inline-block text-center" t-esc="value"/>
-        <button class="btn btn-secondary" style="font-size: 1.3rem;padding:0px 7px;background-color:#0000;border-color:#0000;">+</button>
+        <button class="btn btn-secondary oe_edit_only" style="font-size: 1.3rem;padding:0px 7px;background-color:#0000;border-color:#0000;">-</button>
+        <span class="qty" t-esc="qty"/>
+        <button class="btn btn-secondary oe_edit_only" style="font-size: 1.3rem;padding:0px 7px;background-color:#0000;border-color:#0000;">+</button>
     </div>
 </templates>

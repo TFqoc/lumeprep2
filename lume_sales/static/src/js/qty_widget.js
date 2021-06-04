@@ -1,10 +1,12 @@
-console.log("QTY widget has been loaded 7");
+console.log("QTY widget has been loaded 1");
 odoo.define('lume_sales.qty_widget', function (require) {
     "use strict";
     
     var fieldRegistry = require('web.field_registry');
     var Widget = require('web.Widget');
     var FieldFloat = require('web.basic_fields').FieldFloat;
+    var core = require('web.core');
+    var qweb = core.qweb;
     
     var QTYWidget = FieldFloat.extend({
         template: 'qty_template',
@@ -15,16 +17,18 @@ odoo.define('lume_sales.qty_widget', function (require) {
         start: function(){
             // Rendering is done so bind methods to the buttons
             this.$el.children().first().click(this.subtractQty.bind(this));
+            this.$el.children().first().next().text(this.value);
             this.$el.children().last().click(this.addQty.bind(this));
-            return Promise.resolve();
+            return this._super.apply(this, arguments);;
         },
-        addQty: function(){
-            this._setValue((this.value + 1) + "", {});
+        addQty: async function(){
+            await this._setValue((this.value + 1) + "", {});
+            this.$el.children().first().next().text(this.value);
         },
-        subtractQty: function(){
-            this._setValue((this.value - 1) + "", {});
-        }
-        
+        subtractQty: async function(){
+            await this._setValue((this.value - 1) + "", {});
+            this.$el.children().first().next().text(this.value);
+        },
     });
     
     fieldRegistry.add('qty_widget', QTYWidget);
