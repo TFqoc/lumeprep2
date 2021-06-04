@@ -203,7 +203,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertEqual(
-            product_ids[0],
+            product_ids[0].id,
             self.product_rec.product_variant_ids[0].id,
             "Error in Product Category: Incorrect Product Added."
         )
