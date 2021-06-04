@@ -54,6 +54,9 @@
                 <xpath expr="//tree/field[@name='product_uom']" position="replace">
                     <field name="product_uom" invisible="1"/>
                 </xpath>
+                <xpath expr="//tree/field[@name='name']" position="replace">
+                    <field name="name" invisible="1"/>
+                </xpath>
                 <field name="state" position="before">
                     <field name="threshold1" invisible="1"/>
                     <field name="threshold2" invisible="1"/>
