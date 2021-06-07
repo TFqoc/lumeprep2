@@ -5,7 +5,7 @@ class NoteWizard(models.TransientModel):
     _description = 'A wizard for displaying notes'
 
     partner_id = fields.Many2one('res.partner', readonly=True)
-    note_ids = fields.One2many(related='partner_id.note_ids',compute='_compute_notes')
+    note_ids = fields.One2many(compute='_compute_notes')
     message = fields.Char('Message', required=True)
 
     #@api.multi
@@ -14,7 +14,7 @@ class NoteWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _compute_notes(self):
-        note_ids = self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)])
+        self.note_ids = self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)])
 
     def action_create_note(self):
         #create the note object
