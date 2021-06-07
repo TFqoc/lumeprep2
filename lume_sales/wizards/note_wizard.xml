@@ -9,14 +9,14 @@
                     <h1>
                         Customer Notes
                     </h1>
-                    <field name="partner_id" />
+                    <field name="partner_id"/>
                     <!-- <field name="note_ids">
                         <tree>
                             <field name="message" />
                             <field name="logged_partner_id" />
                         </tree>
                     </field> -->
-                    <field name="note_ids">
+                    <field name="note_ids" readonly="1">
                         <kanban>
                             <field name="create_date"/>
                             <field name="logged_partner_id"/>
@@ -25,24 +25,22 @@
                             <templates>
                                 <t t-name="kanban-box">
                                     <div class="oe_kanban_global_click" style="width: 100%;">
-                                        <div class="o_kanban_image">
-                                            <strong><field name="create_date"/></strong>
-                                        </div>
                                         <div class="oe_kanban_details">
                                             <strong class="o_left"><field name="create_date"/></strong>
-                                            <strong><field name="logged_partner_id"/></strong>
-                                            <field name="message"/>
-                                            <span class="o_right"><field name="completed" widget="boolean_favorite" nolabel="1" force_save="1"/></span>
+                                            <br/>
+                                            <strong><field name="logged_partner_id"/>: </strong><del t-if="record.completed.raw_value == true"><field name="message"/></del>
+                                            <field t-else="" name="message"/>
+                                            <span style="float: right;"><field name="completed" widget="boolean_favorite" nolabel="1" force_save="1"/></span>
                                         </div>
                                     </div>
                                 </t>
                             </templates>
                         </kanban>
                     </field>
-                    <field name="message" />
-                    <button name="action_create_note" string="Add Note" type="object" class="btn btn-primary" />
+                    <field name="message"/>
+                    <button name="action_create_note" string="Add Note" type="object" class="btn btn-primary"/>
                     <footer>
-                        <button name="action_ok" string="Ok" type="object" default_focus="1" class="oe_highlight" />
+                        <button name="action_ok" string="Ok" type="object" default_focus="1" class="oe_highlight"/>
                     </footer>
                 </form>
             </field>
