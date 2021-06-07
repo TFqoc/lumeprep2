@@ -101,6 +101,7 @@ class TestLPC(TestLumeOrderCommon):
             'active_ids': active_ids,
             'active_model': 'sale.order',
             'allowed_company_ids': [1],
+            'type': 'none',
             'form_view_initial_mode': 'edit',
             'lang': 'en_US',
             'lpc_sale_order_id': self.order_rec.id,
