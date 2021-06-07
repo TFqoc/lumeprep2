@@ -62,6 +62,11 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
         #     "This test should always fail."
         # )
         pass
+
+    def test_so_confirm(self):
+        pass
+
+    
 @tagged('lume')
 class TestLPC(TestLumeOrderCommon):
     def test_lpc_add_quantity(self):
@@ -70,3 +75,10 @@ class TestLPC(TestLumeOrderCommon):
         #     "This test should always fail."
         # )
         pass
+    
+    def test_lpc_subtract_quantity(self):
+        pass
+
+    def test_lpc_remove_line(self):
+        pass
+
