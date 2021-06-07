@@ -17,21 +17,21 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
             'name': cls.customer_rec.name,
             'project_id': cls.lumestore_one.id,
             'partner_id': cls.customer_rec.id,
-            'stage_id': cls.env.ref('lume_sales.lume_stage_1')
+            'stage_id': cls.env.ref('lume_sales.lume_stage_1').id #This needs to have .id to return an int rather than an object reference.
         })
 
         cls.task_med = Task.create({
             'name': cls.customer_med.name,
             'project_id': cls.lumestore_one.id,
             'partner_id': cls.customer_med.id,
-            'stage_id': cls.env.ref('lume_sales.lume_stage_1')
+            'stage_id': cls.env.ref('lume_sales.lume_stage_1').id
         })
 
         cls.task_care = Task.create({
             'name': cls.customer_care.name,
             'project_id': cls.lumestore_one.id,
             'partner_id': cls.customer_care.id,
-            'stage_id': cls.env.ref('lume_sales.lume_stage_1')
+            'stage_id': cls.env.ref('lume_sales.lume_stage_1').id
         })
 
         cls.order_rec = SO.create({
