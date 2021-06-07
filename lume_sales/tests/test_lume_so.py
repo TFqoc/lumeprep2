@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 @tagged('lume')
 class TestLumeOrderCommon(TestLumeSaleCommon): 
     def setUpClass(cls):
-        super(TestLumeOrderCommon, cls).setUpClass(cls)
+        super(TestLumeOrderCommon, cls).setUpClass()
         Task = cls.env['project.task'].with_context({'tracking_disable': True})
         SO = cls.env['sale.order']
 
@@ -52,12 +52,12 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
             'task': cls.task_care.id
         })
 
-@tagged('lume')
-class TestLumeSalesOrder(TestLumeOrderCommon):
-    def test_add_sales_order_line(self):
-        pass
+# @tagged('lume')
+# class TestLumeSalesOrder(TestLumeOrderCommon):
+#     def test_add_sales_order_line(self):
+#         pass
 
-@tagged('lume')
-class TestLPC(TestLumeOrderCommon):
-    def test_lpc_add_quantity(self):
-        pass
+# @tagged('lume')
+# class TestLPC(TestLumeOrderCommon):
+#     def test_lpc_add_quantity(self):
+#         pass
