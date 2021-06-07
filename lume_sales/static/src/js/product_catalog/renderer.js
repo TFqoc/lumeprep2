@@ -26,6 +26,7 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         let spacer = "<div style='flex-grow: 90;'></div>";
                         let textStyle = "align-self: flex-end; text-align: right;";
                         self.header = `<div class='catalog_header'>${button}${spacer}<span style="${textStyle}"><span id="TOTAL">Total: $${price.toFixed(2)}</span><br/><span id="QTY">Quantity: ${qty.toFixed(1)}</span></span></div>`;
+                        self.header = self.header + '<div id="coverall" style="position: fixed;width: 100%;height: 100%;background-color: rgba(0,0,0, 0.7);z-index:  100;display:none;"></div>';
                         self.$el.prepend(self.header);
                     }
                     $('#catalog_back_button').click(() => {
@@ -36,6 +37,16 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                             res_id: id,
                             flags: { mode: 'edit' },
                         });
+                    });
+                    $("#coverall").click(function(event){
+                        event.stopPropagation();
+                        $("#coverall").hide();
+                    });
+                    $('img').click(function(event){
+                        event.stopPropagation();
+                        var src = $(event.target).attr("src");
+                        $('#coverall').html(`<img src='${src}' alt='Product' style='width:100%;height:100%;object-fit:contain;'/>`);
+                        $('#coverall').show();
                     });
 
                     // Hide cards as needed
