@@ -5,7 +5,7 @@ from odoo.tests.common import tagged
 _logger = logging.getLogger(__name__)
 
 @tagged('lume')
-class TestLumeOrderCommon(TestLumeSaleCommon):
+class TestLumeOrderCommon(TestLumeSaleCommon): 
     def setUpClass(cls):
         super(TestLumeOrderCommon, cls).setUpClass(cls)
         Task = cls.env['project.task'].with_context({'tracking_disable': True})
