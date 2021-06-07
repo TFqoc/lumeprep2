@@ -66,15 +66,43 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
     def test_so_confirm(self):
         pass
 
-    
+
 @tagged('lume')
 class TestLPC(TestLumeOrderCommon):
     def test_lpc_add_quantity(self):
-        # self.assertTrue(
-        #     False,
-        #     "This test should always fail."
-        # )
-        pass
+        record_ids = [self.product_rec.product_variant_ids[0].id]
+        active_id = self.lumestore_one.id
+        active_ids = [self.lumestore_one.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['product.product'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'sale.order',
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'lpc_sale_order_id': self.order_rec.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).lpc_add_quantity()
+
+        product_ids = [line["product_id"] for line in self.order_rec.order_line]
+
+        self.assertTrue(
+            self.order_rec.order_line,
+            "Error in Product Catologue: Line was not created."
+        )
+
+        self.assertEqual(
+            product_ids[0].id,
+            self.product_rec.product_variant_ids[0].id,
+            "Error in Product Category: Incorrect Product Added."
+        )
+
+        self.assertEqual(
+            self.order_rec.order_line.product_uom_qty,
+            1.00,
+            "Error in Product Category: Incorrect Quantity Added."
+        )
     
     def test_lpc_subtract_quantity(self):
         pass
