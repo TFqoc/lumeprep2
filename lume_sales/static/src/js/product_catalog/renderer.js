@@ -42,9 +42,9 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         event.stopPropagation();
                         $("#coverall").hide();
                     });
-                    $('img').click(function(event){
+                    $('button.o_kanban_image').click(function(event){
                         event.stopPropagation();
-                        var src = $(event.target).attr("src");
+                        var src = $(event.target).children().attr("src");
                         $('#coverall').html(`<img src='${src}' alt='Product' style='width:100%;height:100%;object-fit:contain;'/>`);
                         $('#coverall').show();
                     });
