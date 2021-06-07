@@ -10,12 +10,12 @@
                         Customer Notes
                     </h1>
                     <field name="note_ids">
-                        <kanban>
+                        <!-- <kanban>
                             <field name="create_date"/>
                             <field name="logged_partner_id"/>
                             <field name="message"/>
                             <field name="completed"/>
-                        </kanban>
+                        </kanban> -->
                     </field>
                     <field name="message"/>
                     <button name="action_create_note" string="Add Note" type="Object" class="btn btn-primary"/>

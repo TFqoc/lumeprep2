@@ -6,7 +6,7 @@ class NoteWizard(models.TransientModel):
 
     partner_id = fields.Many2one('res.partner', readonly=True)
     note_ids = fields.One2many(related='partner_id.note_ids')
-    message = fields.Text('Message', required=True, readonly=True)
+    message = fields.Char('Message', required=True)
 
     #@api.multi
     def action_ok(self):
