@@ -3,20 +3,54 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
+import json
 
 _logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit='product.template'
+    _order = 'is_lume desc, brand, name, list_price, default_code, id'
 
-    is_medical = fields.Boolean()
+    brand = fields.Char()
+    thc = fields.Float()
+    thc_type = fields.Selection([('medical','Medical'),('adult','Adult Use'),('merch','Merchandise')],default="merch",required=True)
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
+    is_lume = fields.Boolean(compute="_compute_lume", store=True)
+
+    @api.depends('brand')
+    def _compute_lume(self):
+        for record in self:
+            if record.brand == 'Lume': # Hardcoded value so lume brand products always appear at the top.
+                record.is_lume = True
+            else:
+                record.is_lume = False
+
 
 class Product(models.Model):
     _inherit = 'product.product'
-
+    _order = 'is_lume desc, brand, name, list_price, default_code, id'
+    
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
-    effect = fields.Selection(related="product_tmpl_id.effect", store=True)
+    # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
+    quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
+
+    def _compute_qty_at_warehouses(self):
+        # Loop all warehouses
+        for record in self:
+            data = {}
+            warehouse_id = self.env.context.get('warehouse_id', False)
+            if not warehouse_id:
+                for warehouse in self.env['stock.warehouse'].search([]):
+                    quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
+                    data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
+            else:
+                warehouse = self.env['stock.warehouse'].browse(warehouse_id)
+                quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
+                data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
+            record.quantity_at_warehouses = json.dumps(data)
+        # Test for context
+        _logger.info("CONTEXT: " + str(self.env.context))
+
 
     @api.depends_context('lpc_sale_order_id')
     def _compute_lpc_quantity(self):
@@ -79,6 +113,8 @@ class Product(models.Model):
         return self.env['sale.order']
 
     def set_lpc_quantity(self, quantity):
+        if self.env.context.get('type') != self.thc_type and self.thc_type and self.env.context.get('type') != 'none':
+            raise ValidationError("You can't add a %s product to a cart with %s products!" % (self.thc_type,self.env.context.get('type')))
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):

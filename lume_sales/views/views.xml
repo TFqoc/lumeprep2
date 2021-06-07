@@ -74,6 +74,9 @@
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
           <field name="blink_threshold"/>
+          <field name="so_threshold1"/>
+          <field name="so_threshold2"/>
+          <field name="so_threshold3"/>
         </field>
       </field>
     </record>
@@ -100,9 +103,10 @@
         <xpath expr="//search/filter" position="before">
           <!-- <filter string="Medical Customers" name="medical" domain="[('partner_id.is_medical','=',True)]"/> -->
           <!-- <filter string="Recreational Customers" name="recreational" domain="[('partner_id.is_medical','=',False)]"/> -->
-          <filter string="Curbside" name="curb" domain="[('fulfillment_type','=','delivery')]"/>
+          <filter string="Curbside" name="curb" domain="[('fulfillment_type','=','curb')]"/>
           <filter string="In Store" name="in_store" domain="[('fulfillment_type','=','store')]"/>
           <filter string="Online Order" name="online" domain="[('fulfillment_type','=','online')]"/>
+          <filter string="Delivery" name="delivery" domain="[('fulfillment_type','=','delivery')]"/>
           <separator/>
         </xpath>
       </field>
@@ -176,7 +180,9 @@
       <field name="inherit_id" ref="product.product_template_only_form_view"/>
       <field name="arch" type="xml">
         <field name="barcode" position="after">
-          <field name="is_medical" string="Is Medical Product" />
+          <field name="brand" string="Brand"/>
+          <field name="thc_type" string="Type" required="1" />
+          <field name="thc" string="THC"></field>
           <field name="effect" string="Effect"/>
         </field>
       </field>

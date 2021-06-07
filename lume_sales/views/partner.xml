@@ -52,11 +52,21 @@
           <field name="passport" />
         </field>
         <!-- Replace fields we don't need to show -->
-        <field name="vat" position="replace" />
-        <field name="company_type" position="replace" />
-        <field name="function" position="replace" />
-        <field name="website" position="replace" />
-        <field name="title" position="replace" />
+        <field name="vat" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </field>
+        <field name="company_type" position="attributes" >
+          <attribute name="invisible">1</attribute>
+        </field>
+        <field name="function" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </field>
+        <field name="website" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </field>
+        <field name="title" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </field>
         <field name="parent_id" position="attributes">
           <attribute name="invisible">1</attribute>
         </field>
@@ -75,7 +85,7 @@
         <!-- Replace smart buttons -->
         <xpath expr="//div[@class='oe_button_box']" position="replace">
           <div class="oe_button_box" name="button_box">
-            <button class="oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" icon="fa-usd" modifiers="{}" options="{}">
+            <button class="oe_stat_button" type="action" name="%(lume_sales.order_history)d" icon="fa-usd" modifiers="{}" options="{}">
               <field string="Order History" name="sale_order_count" widget="statinfo" modifiers="{'readonly':true}" id="sale_order_count" />
             </button>
             <!-- <button class="oe_stat_button" type="action" name="%(project.project_task_action_from_partner)d"

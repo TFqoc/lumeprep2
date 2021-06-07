@@ -30,6 +30,13 @@
     color: white;
 }
 
+.catalog_card_hide{
+    // order: 3;
+    opacity: 0.5;
+    box-shadow: none;
+    pointer-events: none;
+}
+
 :root{
     --curve: 10px;
 }
