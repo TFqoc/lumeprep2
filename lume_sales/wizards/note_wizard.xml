@@ -9,7 +9,16 @@
                     <h1>
                         Customer Notes
                     </h1>
-                    <field name="note_ids">
+                    <field name="partner_id"/>
+                    <field name="comment" position="after">
+                        <field name="note_ids">
+                          <tree>
+                            <field name="message"/>
+                            <field name="logged_partner_id"/>
+                          </tree>
+                        </field>
+                      </field>
+                    <!-- <field name="note_ids">
                         <kanban>
                             <field name="create_date"/>
                             <field name="logged_partner_id"/>
@@ -30,7 +39,7 @@
                                 </t>
                             </templates>
                         </kanban>
-                    </field>
+                    </field> -->
                     <field name="message"/>
                     <button name="action_create_note" string="Add Note" type="object" class="btn btn-primary"/>
                     <footer>
