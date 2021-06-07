@@ -56,20 +56,42 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
 
 @tagged('lume')
 class TestLumeSalesOrder(TestLumeOrderCommon):
-    def test_add_sales_order_line(self):
-        # self.assertTrue(
-        #     False,
-        #     "This test should always fail."
-        # )
-        pass
+    def test_rec_add_sales_order_line(self):
+        record_ids = [self.order_rec.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['sale.order'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid
+        }).with_user(uid).write({
+            'order_line': 
+            [[0, 'virtual_1018', {
+                'sequence': 10, 
+                'display_type': False, 
+                'product_id': self.product_rec.product_variant_ids[0].id, 
+                'product_template_id': self.product_rec.id, 
+                'name': 'Jenny Kush 3.5G', 
+                'analytic_tag_ids': [[6, False, []]], 
+                'route_id': False, 
+                'product_uom_qty': 1, 
+                'qty_delivered_manual': 0, 
+                'product_uom': 1, 
+                'customer_lead': 0, 
+                'product_packaging': False, 
+                'price_unit': 45.0, 
+                'tax_id': [[6, False, []]], 
+                'discount': 0
+                }]]})
 
-    def test_so_confirm(self):
+    def test_rec_so_confirm(self):
         pass
 
 
 @tagged('lume')
 class TestLPC(TestLumeOrderCommon):
-    def test_lpc_add_quantity(self):
+    def test_lpc_add_quantity_rec(self):
         record_ids = [self.product_rec.product_variant_ids[0].id]
         active_id = self.lumestore_one.id
         active_ids = [self.lumestore_one.id]
@@ -104,9 +126,9 @@ class TestLPC(TestLumeOrderCommon):
             "Error in Product Category: Incorrect Quantity Added."
         )
     
-    def test_lpc_subtract_quantity(self):
+    def test_lpc_subtract_quantity_rec(self):
         pass
 
-    def test_lpc_remove_line(self):
+    def test_lpc_remove_line_rec(self):
         pass
 
