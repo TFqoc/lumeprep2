@@ -6,6 +6,8 @@ _logger = logging.getLogger(__name__)
 
 @tagged('lume')
 class TestLumeOrderCommon(TestLumeSaleCommon): 
+
+    @classmethod
     def setUpClass(cls):
         super(TestLumeOrderCommon, cls).setUpClass()
         Task = cls.env['project.task'].with_context({'tracking_disable': True})
