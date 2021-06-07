@@ -184,14 +184,14 @@ class Tasks(models.Model):
         _logger.info("Timer Vals: %s %s",self.user_timer_id.timer_start,self.display_timesheet_timer)
         if self.user_timer_id.timer_start or self.display_timesheet_timer:
             _logger.info("STOPPING TIMER")
-            self._origin.action_timer_auto_stop(old_stage+" > "+new_stage)
+            self._origin.action_timer_auto_stop(str(old_stage)+" > "+str(new_stage))
         if not self.stage_id.is_closed:
             self._origin.action_timer_start()
         # else:
         #     self.action_timer_pause()
         
         return {
-    'warning': {'title': "Info", 'message': old_stage+" > "+new_stage, 'type': 'notification'},
+    'warning': {'title': "Info", 'message': str(old_stage)+" > "+str(new_stage), 'type': 'notification'},
 }
     
     def save_timesheet_fragment(self, desc=None):
@@ -370,6 +370,9 @@ class project_inherit(models.Model):
     task_number = fields.Integer(default=1)# Used to generate a task name
     warehouse_id = fields.Many2one('stock.warehouse')
     blink_threshold = fields.Integer(default='5')
+    so_threshold1 = fields.Integer(default='1')
+    so_threshold2 = fields.Integer(default='3')
+    so_threshold3 = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
 
 # class ProjectTaskType(models.Model):

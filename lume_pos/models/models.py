@@ -71,8 +71,14 @@ class pos_test(models.Model):
         order.no_pos_update = False
 
     @api.model
-    def finalize(self, order_id):
+    def finalize(self, order_id, data):
         order = self.browse(order_id)
+        order.write({
+            'pos_terminal_id':data['terminal_id'],
+            'session_id':data['session_id'],
+            'cashier_partner_id':self.env['hr.employee'].browse(data['cashier_id']).user_partner_id.id,
+            'payment_method':data['payment_method'],
+        })
         order.state = 'done'
         if order.task:
             order.task.change_stage(5)

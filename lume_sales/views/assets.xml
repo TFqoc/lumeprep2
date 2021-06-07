@@ -4,9 +4,11 @@
             <!-- place this content after the last script tag -->
             <!-- <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/> -->
             <script type="text/javascript" src="lume_sales/static/src/js/formatted_char.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/qty_widget.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/kanban_refresh.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/unread_messages.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/live_timer.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/so_timer.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/so_section_and_note.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/project_kanban.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/progressbar.js"></script>

@@ -8,6 +8,8 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+ORDER_HISTORY_DOMAIN = [('state', 'not in', ('draft', 'sent'))]
+
 class Partner(models.Model):
     _inherit = 'res.partner'
 
@@ -23,6 +25,7 @@ class Partner(models.Model):
     drivers_license_expiration = fields.Date()
     passport = fields.Char()
     pref_name = fields.Char()
+    can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
     is_caregiver = fields.Boolean()
@@ -34,6 +37,26 @@ class Partner(models.Model):
 
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
+
+    # Override
+    def _compute_sale_order_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        sale_order_groups = self.env['sale.order'].read_group(
+            domain=[('partner_id', 'in', all_partners.ids)] + ORDER_HISTORY_DOMAIN,
+            fields=['partner_id'], groupby=['partner_id']
+        )
+        partners = self.browse()
+        for group in sale_order_groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.sale_order_count += group['partner_id_count']
+                    partners |= partner
+                partner = partner.parent_id
+        (self - partners).sale_order_count = 0
 
     @api.depends('medical_expiration')
     def _compute_expired_medical(self):
@@ -79,6 +102,10 @@ class Partner(models.Model):
     def _compute_banned(self):
         for record in self:
             record.is_banned = self.warnings >= 3
+
+    def _compute_medical_purchase(self):
+        for record in self:
+            record.can_purchase_medical = not record.is_expired_medical and record.medical_id
     
     def warn(self):
         self.warnings += 1
@@ -104,14 +131,14 @@ class Partner(models.Model):
             raise ValidationError("Invalid drivers licence!")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if not self.is_over_21 or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
+        if (not self.is_over_21 and self.env.context.get('order_type') == 'adult') or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
-            'partner_id': int(ctx['partner_id']),
+            'partner_id': self.id,
             'project_id': project.id,
             'fulfillment_type': ctx['fulfillment_type'],
             'order_type': ctx['order_type'],
@@ -132,10 +159,9 @@ class Partner(models.Model):
     def verify_address(self):
         pass
 
-    def _compute_expirations(self):
-        for record in self:
-            record._compute_21()
-            record._compute_18()
+    # def _compute_expirations(self):
+    #     for record in self:
+    #         record._compute_age()
 
     @api.model
     def create(self, vals):
@@ -212,3 +238,13 @@ class TimeMix(models.AbstractModel):
                 ('res_id', '=', record.id),
                 ('res_model', '=', record._name)
             ], limit=1)
+
+class Picking(models.Model):
+    _inherit = 'stock.picking'
+
+    # Quick endpoint for locust testing
+    def quick_validate(self):
+        for line in self.move_ids_without_package:
+            line.quantity_done = line.product_uom_qty
+        self.button_validate()
+        return True

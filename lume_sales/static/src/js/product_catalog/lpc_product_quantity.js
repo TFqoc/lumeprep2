@@ -53,8 +53,8 @@ odoo.define('lume_sales.lpc_product_quantity', function (require) {
             this._super.apply(this, arguments);
             var $target = this.$el;
             var self = this;
-            console.log("Calling widget render.");
-            console.log(this.$el);
+            // console.log("Calling widget render.");
+            // console.log(this.$el);
             $target.prev().on("click", (function (event) { self._valueChange('lpc_quantity', -1); console.log("-"); }).bind(self));
             $target.next().on("click", (function (event) { self._valueChange('lpc_quantity', 1); console.log("+"); }).bind(self));
         },
@@ -151,6 +151,10 @@ function update_data() {
             success: function (data) {
                 $("#TOTAL").text(`Total: $${data.result[0].toFixed(2)}`);
                 $("#QTY").text(`Quantity: ${data.result[1].toFixed(1)}`);
+                let dataType = data.result[2];
+                $("div.o_kanban_record").removeClass("catalog_card_hide");
+                $(`div.o_kanban_record[data-type='${dataType}']`).addClass("catalog_card_hide");
+                // $("div.o_kanban_record[data-qty='0']").addClass("catalog_card_hide");
             },
             dataType: 'json',
             type: 'POST',
