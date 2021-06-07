@@ -41,6 +41,9 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self).action_cancel()
 
     def open_notes(self):
+        notes = []
+        for note in self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)]):
+            notes.append((4,note.id,0))
         return {
             'type': 'ir.actions.act_window',
             'name': 'Customer Notes',
@@ -50,7 +53,7 @@ class SaleOrder(models.Model):
             'res_model': 'note.wizard',
             'target': 'new',
             # 'res_id': self.id,
-            'context': {'default_partner_id': self.partner_id.id},
+            'context': {'default_partner_id': self.partner_id.id,'default_note_ids':notes},
         }
 
     def open_catalog(self):

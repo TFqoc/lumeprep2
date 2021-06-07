@@ -13,17 +13,17 @@ class NoteWizard(models.TransientModel):
         """ close wizard"""
         return {'type': 'ir.actions.act_window_close'}
 
-    def _compute_notes(self):
-        self.note_ids = self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)])
+    # def _compute_notes(self):
+    #     self.note_ids = self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)])
 
-    @api.model
-    def create(self, vals):
-        # partner = self.env['res.partner'].browse(vals.get('partner_id'))
-        notes = self.env['lume.note'].search([('source_partner_id','=',vals.get('partner_id'))])
-        vals['note_ids'] = []
-        for note in notes:
-            vals['note_ids'].append((4,note.id,0))
-        return super(NoteWizard, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     # partner = self.env['res.partner'].browse(vals.get('partner_id'))
+    #     notes = self.env['lume.note'].search([('source_partner_id','=',vals.get('partner_id'))])
+    #     vals['note_ids'] = []
+    #     for note in notes:
+    #         vals['note_ids'].append((4,note.id,0))
+    #     return super(NoteWizard, self).create(vals)
 
     def action_create_note(self):
         #create the note object
@@ -34,6 +34,9 @@ class NoteWizard(models.TransientModel):
             'completed': False,
         })
         #respawn the wizard
+        notes = []
+        for note in self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)]):
+            notes.append((4,note.id,0))
         return {
             'type': 'ir.actions.act_window',
             'name': 'Customer Notes',
@@ -42,5 +45,5 @@ class NoteWizard(models.TransientModel):
             'views': [(False, 'form')],
             'res_model': 'note.wizard',
             'target': 'new',
-            'context': {'default_partner_id': self.partner_id.id},
+            'context': {'default_partner_id': self.partner_id.id,'default_note_ids':notes},
         }
