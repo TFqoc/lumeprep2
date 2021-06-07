@@ -113,13 +113,13 @@
             </tree>
           </field>
         </field>
-      </field>
-      <field name="comment" position="after">
-        <field name="note_ids">
-          <tree>
-            <field name="message"/>
-            <field name="logged_partner_id"/>
-          </tree>
+        <field name="comment" position="after">
+          <field name="note_ids">
+            <tree>
+              <field name="message"/>
+              <field name="logged_partner_id"/>
+            </tree>
+          </field>
         </field>
       </field>
     </record>
