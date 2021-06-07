@@ -5,7 +5,7 @@ class NoteWizard(models.TransientModel):
     _description = 'A wizard for displaying notes'
 
     partner_id = fields.Many2one('res.partner', readonly=True)
-    note_ids = fields.One2many(compute='_compute_notes')
+    note_ids = fields.One2many(comodel_name='lume.note',compute='_compute_notes')
     message = fields.Char('Message', required=True)
 
     #@api.multi
