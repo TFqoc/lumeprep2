@@ -5,7 +5,7 @@ class NoteWizard(models.TransientModel):
     _description = 'A wizard for displaying notes'
 
     partner_id = fields.Many2one('res.partner', readonly=True)
-    note_ids = fields.One2many(related='partner_id.note_ids',inverse_name='source_partner_id',store=True,copy=True)
+    note_ids = fields.One2many(related='partner_id.note_ids',inverse_name='wizard_id',store=True,copy=True)
     message = fields.Char('Message', required=True)
 
     #@api.multi

@@ -10,5 +10,6 @@ class Note(models.Model):
 
     logged_partner_id = fields.Many2one('res.partner')
     source_partner_id = fields.Many2one('res.partner')
+    wizard_id = fields.Many2one('note.wizard')
     message = fields.Char()
     completed = fields.Boolean()
