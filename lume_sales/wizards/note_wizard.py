@@ -16,7 +16,7 @@ class NoteWizard(models.TransientModel):
     def action_create_note(self):
         #create the note object
         self.env['lume.note'].create({
-            'logged_partner_id':self.env['res.user'].browse(self.env.uid).partner_id.id,
+            'logged_partner_id':self.env['res.users'].browse(self.env.uid).partner_id.id,
             'source_partner_id':self.partner_id.id,
             'message':self.message,
             'completed': False,
