@@ -10,12 +10,26 @@
                         Customer Notes
                     </h1>
                     <field name="note_ids">
-                        <!-- <kanban>
+                        <kanban>
                             <field name="create_date"/>
                             <field name="logged_partner_id"/>
                             <field name="message"/>
                             <field name="completed"/>
-                        </kanban> -->
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="o_kanban_image">
+                                            <strong><field name="create_date"/></strong>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <strong><field name="logged_partner_id"/></strong>
+                                            <field name="message"/>
+                                            <field name="completed"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                     <field name="message"/>
                     <button name="action_create_note" string="Add Note" type="Object" class="btn btn-primary"/>
