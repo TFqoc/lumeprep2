@@ -281,11 +281,11 @@
                     <filter string="Paid" name="paid" domain="[('state', '=', 'done')]"/>
                     <filter string="Canceled" name="canceled" domain="[('state', '=', 'canceled')]"/>
                     <filter string="Saved" name="saved" domain="[('state', '=', 'save')]"/>
-                    <group expand="0" name="group_by" string="Group By">
-                        <!-- <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                    <!-- <group expand="0" name="group_by" string="Group By">
+                        <!- <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
-                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/> -->
-                    </group>
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/> ->
+                    </group> -->
                 </search>
             </field>
         </record>
