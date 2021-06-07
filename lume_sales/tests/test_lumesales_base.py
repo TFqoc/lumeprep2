@@ -277,7 +277,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Bloodstar 3.5G',
             'type': 'product',
             'available_in_pos': True,
-            'is_medical': True,
+            'thc_type': 'medical',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
         })
@@ -286,7 +286,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Jenny Kush 3.5G',
             'type': 'product',
             'available_in_pos': True,
-            'is_medical': False,
+            'thc_type': 'adult',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
         })
