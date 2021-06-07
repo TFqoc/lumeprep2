@@ -29,7 +29,7 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
         'wizards/note_wizard.xml',
