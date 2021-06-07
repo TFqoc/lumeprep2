@@ -278,6 +278,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Search Order History">
+                    <field name="partner_id" operator="child_of"/>
                     <filter string="Paid" name="paid" domain="[('state', '=', 'done')]"/>
                     <filter string="Canceled" name="canceled" domain="[('state', '=', 'canceled')]"/>
                     <filter string="Saved" name="saved" domain="[('state', '=', 'save')]"/>
@@ -298,7 +299,7 @@
             <field name="search_view_id" ref="lume_sales.view_sale_order_history_filter"/>
             <field name="view_id" ref="lume_sales.view_sale_order_history_list" />
             <field name="context">{'search_default_partner_id': active_id, 'default_partner_id': active_id}</field>
-            <field name="domain">[('state', 'not in', ('draft', 'sent'))]</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent')),('partner_id','=',active_id)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No orders have been completed for this customer!
