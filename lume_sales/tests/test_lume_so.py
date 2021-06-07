@@ -52,12 +52,18 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
             'task': cls.task_care.id
         })
 
-# @tagged('lume')
-# class TestLumeSalesOrder(TestLumeOrderCommon):
-#     def test_add_sales_order_line(self):
-#         pass
+@tagged('lume')
+class TestLumeSalesOrder(TestLumeOrderCommon):
+    def test_add_sales_order_line(self):
+        self.assertTrue(
+            False,
+            "This test should always fail."
+        )
 
-# @tagged('lume')
-# class TestLPC(TestLumeOrderCommon):
-#     def test_lpc_add_quantity(self):
-#         pass
+@tagged('lume')
+class TestLPC(TestLumeOrderCommon):
+    def test_lpc_add_quantity(self):
+        self.assertTrue(
+            False,
+            "This test should always fail."
+        )
