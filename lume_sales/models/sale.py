@@ -140,7 +140,17 @@ class SaleOrder(models.Model):
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
             self.task.change_stage(2)
-        return ret
+        # return ret
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "views":[[False, "kanban"]],
+            "name": 'Tasks',
+            "target": 'main',
+            "res_id": self.task.project_id.id,
+            "domain": [('project_id', '=', self.task.project_id.id)],
+            "context": {'default_project_id': self.task.project_id.id},
+        }
         # POS will now pick up the SO because it is in 'sale' state
 
 class SaleLine(models.Model):

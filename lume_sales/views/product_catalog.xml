@@ -17,7 +17,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + ''] == 0 ? 'catalog_card_hide' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}" t-attf-data-qty="{{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']}}">
-                            <button class="o_kanban_image">
+                            <button class="o_kanban_image" style="z-index: 50;border: none;padding: 0px;background-color: transparent;">
                                 <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </button>
                             <div class="oe_kanban_details p-2 d-flex">

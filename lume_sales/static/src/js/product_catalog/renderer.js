@@ -22,11 +22,12 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         let qty = data[1];
                         // let link = `#id=${id}&model=sale.order`;
                         // let style = "display: flex; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%;font-weight: bold; font-size: 1.3em;";
-                        let button = `<button id="catalog_back_button" class='btn btn-primary catalog_back_button'>&lt; Back</button>`;
+                        let button = `<button id="catalog_back_button" class='btn btn-primary catalog_back_button'>&lt; Back</button> <button id="catalog_confirm_button" class='btn btn-primary catalog_back_button'>Confirm Order</button>`;
                         let spacer = "<div style='flex-grow: 90;'></div>";
                         let textStyle = "align-self: flex-end; text-align: right;";
                         self.header = `<div class='catalog_header'>${button}${spacer}<span style="${textStyle}"><span id="TOTAL">Total: $${price.toFixed(2)}</span><br/><span id="QTY">Quantity: ${qty.toFixed(1)}</span></span></div>`;
-                        self.header = self.header + '<div id="coverall" style="position: fixed;width: 100%;height: 100%;background-color: rgba(0,0,0, 0.7);z-index:  100;display:none;"></div>';
+                        // self.header = self.header + '<div id="coverall" style="position: fixed;width: 100%;height: 100%;background-color: rgba(0,0,0, 0.7);z-index:  100;display:none;"></div>';
+                        $('.o_view_controller').append('<div id="coverall" style="position: fixed;width: 100%;height: 100%;background-color: rgba(0,0,0, 0.7);z-index:  100;padding:3% 3% 6% 3%;display:none;"></div>');
                         self.$el.prepend(self.header);
                     }
                     $('#catalog_back_button').click(() => {
@@ -38,13 +39,24 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                             flags: { mode: 'edit' },
                         });
                     });
+                    $('#catalog_confirm_button').click(() => {
+                        self._rpc({
+                            model: 'sale.order',
+                            method: 'action_confirm',
+                            args: [],
+                        }).then(function(action){
+                            self.do_action(action);
+                        });
+                    });
                     $("#coverall").click(function(event){
                         event.stopPropagation();
                         $("#coverall").hide();
                     });
                     $('button.o_kanban_image').click(function(event){
                         event.stopPropagation();
-                        var src = $(event.target).children().attr("src");
+                        // Should only ever be one img child
+                        var src = $(event.target).attr("src");
+                        src = src.replace("image_128","image_1920");
                         $('#coverall').html(`<img src='${src}' alt='Product' style='width:100%;height:100%;object-fit:contain;'/>`);
                         $('#coverall').show();
                     });
