@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
     def open_order_history(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Product Catalog',
+            'name': 'Order History',
             'view_type': 'kanban',
             'view_mode': 'kanban',
             'res_model': 'sale.order',

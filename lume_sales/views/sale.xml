@@ -272,13 +272,30 @@
                 </tree>
             </field>
         </record>
+        <!-- Search View for order history -->
+        <record id="view_sale_order_history_filter" model="ir.ui.view">
+            <field name="name">sale.order.history.search</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Order History">
+                    <filter string="Paid" name="paid" domain="[('state', '=', 'done')]"/>
+                    <filter string="Canceled" name="canceled" domain="[('state', '=', 'canceled')]"/>
+                    <filter string="Saved" name="saved" domain="[('state', '=', 'save')]"/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <!-- <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/> -->
+                    </group>
+                </search>
+            </field>
+        </record>
         <!-- Action to open order history -->
         <record id="order_history" model="ir.actions.act_window">
             <field name="name">Order History</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_mode">tree,form</field>
-            <!-- <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/> -->
+            <field name="search_view_id" ref="lume_sales.view_sale_order_history_filter"/>
             <field name="view_id" ref="lume_sales.view_sale_order_history_list" />
             <field name="context">{'search_default_partner_id': active_id, 'default_partner_id': active_id}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent'))]</field>
