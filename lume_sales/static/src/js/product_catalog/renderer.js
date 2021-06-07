@@ -22,7 +22,7 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         let qty = data[1];
                         // let link = `#id=${id}&model=sale.order`;
                         // let style = "display: flex; padding: 5px; margin-left: 8px; margin-right: 8px; border: 1px solid #ced4da; background-color: white; width: 100%;font-weight: bold; font-size: 1.3em;";
-                        let button = `<button id="catalog_back_button" class='btn btn-primary catalog_back_button'>&lt; Back</button> <button id="catalog_confirm_button" class='btn btn-primary catalog_back_button'>Confirm Order</button>`;
+                        let button = `<button id="catalog_back_button" class='btn btn-primary catalog_back_button'>&lt; Back</button> <button id="catalog_confirm_button" class='btn btn-primary catalog_back_button' style='margin-left: 10px;'>Confirm Order</button>`;
                         let spacer = "<div style='flex-grow: 90;'></div>";
                         let textStyle = "align-self: flex-end; text-align: right;";
                         self.header = `<div class='catalog_header'>${button}${spacer}<span style="${textStyle}"><span id="TOTAL">Total: $${price.toFixed(2)}</span><br/><span id="QTY">Quantity: ${qty.toFixed(1)}</span></span></div>`;
@@ -43,7 +43,7 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         self._rpc({
                             model: 'sale.order',
                             method: 'action_confirm',
-                            args: [],
+                            args: [id],
                         }).then(function(action){
                             self.do_action(action);
                         });
