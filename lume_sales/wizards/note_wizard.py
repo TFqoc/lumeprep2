@@ -22,4 +22,13 @@ class NoteWizard(models.TransientModel):
             'completed': False,
         })
         #respawn the wizard
-        pass
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Customer Notes',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'res_model': 'note.wizard',
+            'target': 'new',
+            'context': {'default_partner_id': self.partner_id.id},
+        }
