@@ -38,6 +38,8 @@ class Partner(models.Model):
     warnings = fields.Integer()
     is_banned = fields.Boolean(compute='_compute_banned', default=False)
 
+    note_ids = fields.One2many(comodel_name='lume.note',inverse_name='source_partner_id')
+
     # Override
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
