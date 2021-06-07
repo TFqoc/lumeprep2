@@ -37,6 +37,8 @@
                     <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
                     <span style="margin: 5px;"/> -->
                     <button name="open_catalog" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
+                    <span style="margin: 5px;"/>
+                    <button name="open_notes" string="Notes" class="btn-primary oe_edit_only" type="object" />
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
                 <!-- <field name="order_line" position="attributes">

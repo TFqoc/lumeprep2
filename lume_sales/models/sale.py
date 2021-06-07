@@ -40,6 +40,19 @@ class SaleOrder(models.Model):
                 self.task.write({'active':False})
             return super(SaleOrder, self).action_cancel()
 
+    def open_notes(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Customer Notes',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'res_model': 'note.wizard',
+            'target': 'new',
+            # 'res_id': self.id,
+            'context': {'default_partner_id': self.partner_id.id},
+        }
+
     def open_catalog(self):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
