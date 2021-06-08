@@ -153,6 +153,9 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         if not self.order_line:
             raise ValidationError("You must have at least one sale order line in order to confirm this Sale Order!")
+        for line in self.order_line:
+            if self.order_type != line.thc_type and line.thc_type not in [False, 'merch']:
+                raise ValidationError("You can't confirm a cart with both Medical and Recreational products!")
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
             self.task.change_stage(2)
