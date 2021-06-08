@@ -1,19 +1,19 @@
-console.log("Checkbox widget has been loaded 1");
+console.log("Checkbox widget has been loaded 10");
 odoo.define('lume_sales.note_checkbox', function (require) {
     "use strict";
     
     var fieldRegistry = require('web.field_registry');
-    var core = require('web.core');
-
-    var {FieldBoolean} = require('web.basic_fields.deprecated');
+    var {FavoriteWidget} = require('web.basic_fields');
     
-    var NoteCheckbox = FieldBoolean.extend({
-        /**
-     * @override
-     * @returns {jQuery} the focusable checkbox input
-     */
-    getFocusableElement: function () {
-        return this.$input || $();
+    var NoteCheckbox = FavoriteWidget.extend({
+        _render: function () {
+            let checked = this.value ? 'checked' : '';
+        var template = `<a href="#"><input type="checkbox" style="transform : scale(3);margin-top: 11px;margin-right:13px;" ${checked}/></a>`;
+        this.$el.empty().append(template);
+    },
+        _setFavorite: function (event) {
+        this._super.apply(this, arguments);
+            console.log(this.$el);
     },
     });
     
