@@ -145,7 +145,7 @@
                                         <br />
                                         <span>
                                             Fulfillment:
-                                            <span>Placeholder</span>
+                                            <span><field name="fulfillment_type"/></span>
                                         </span>
                                         <br />
                                         <span>
