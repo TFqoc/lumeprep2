@@ -15,7 +15,7 @@
         <field name="name" position="after">
           <field name="partner_id"/>
           <field name="fulfillment_type"/>
-          <!-- <field name="order_type"/> -->
+          <field name="order_type" invisible="1"/>
         </field>
         <field name="name" position="replace"></field>
         <field name="user_id" position="replace"></field>
