@@ -8,6 +8,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <!-- Custom fields here -->
+                <xpath expr="//sheet/div/button[@name='preview_sale_order']" position="replace">
+                </xpath>
                 <field name="payment_term_id" position="after">
                     <field name="task" string="Task" attrs="{'invisible':[('task', '=', False)]}" />
                 </field>
