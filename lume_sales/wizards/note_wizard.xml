@@ -30,7 +30,7 @@
                                             <br/>
                                             <strong><field name="logged_partner_id"/>: </strong><del t-if="record.completed.raw_value == true"><field name="message"/></del>
                                             <field t-else="" name="message"/>
-                                            <span style="float: right;"><field name="completed" widget="boolean_favorite" nolabel="1" force_save="1"/></span>
+                                            <span style="float: right;"><field name="completed" widget="note_checkbox" nolabel="1" force_save="1"/></span>
                                         </div>
                                     </div>
                                 </t>
