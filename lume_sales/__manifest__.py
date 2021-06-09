@@ -25,6 +25,7 @@
     'qweb': [
         "static/src/xml/lpc_quantity.xml",
         "static/src/xml/qty_template.xml",
+        "static/src/xml/quick_create.xml",
     ],
 
     # always loaded
