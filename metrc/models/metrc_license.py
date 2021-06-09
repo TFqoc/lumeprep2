@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class MetrcLicense(models.Model):
@@ -202,6 +202,20 @@ class MetrcLicense(models.Model):
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         args.append(('expire_date', '>=', fields.Date.today()))
         return super(MetrcLicense, self)._name_search(name=name, args=args, limit=limit, name_get_uid=name_get_uid)
+    
+    @api.model
+    def get_license(self, license_number, base_type='Internal', raise_for_error=True):
+        # helper function that finds license based on license number and raise error if 
+        # raise_for_error attribute is set to True.
+        domain = [
+            ('base_type', '=', base_type),
+            ('license_number', '=', license_number)
+        ]
+        license_id = self.search(domain, limit=1)
+        if not license_id and raise_for_error:
+            raise ValidationError(_("License {} of type {} not found in database."
+                                    "\nPlease create one.".format(license_number, base_type)))
+        return license_id
 
     def unlink(self):
         if not self.env.context.get('force_unlink'):
