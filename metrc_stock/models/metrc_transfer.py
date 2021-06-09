@@ -9,7 +9,7 @@ from dateutil import parser
 
 from odoo import api, fields, models, registry, _
 from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -799,9 +799,12 @@ class MetrcTransfer(models.Model):
             ('license_id', '=', source_license.id)
         ])
         if not warehouse:
-            raise ValidationError(_("Facility LIcense not configured on any warehouse.\n"
+            raise ValidationError(_("Facility License not configured on any warehouse.\n"
                                     "Please configure one for {}.".format(source_license.license_number)))
+        partner_license = False
         for transfer in self:
+            if transfer.shipper_facility_license_number and not partner_license:
+                partner_license = self.env['metrc.license'].get_license(transfer.shipper_facility_license_number, base_type="External")
             if transfer.product_id:
                 continue
             product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
@@ -810,18 +813,24 @@ class MetrcTransfer(models.Model):
                                         transfer.product_category_name,
                                         transfer.received_unit_of_meassure)
         if all([t.product_id for t in self]):
-            self.write({
-                'being_processed': True,
-            })
-            transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
-                'warehouse_id': warehouse.id,
-                'operation_type_id': warehouse.in_type_id.id,
-                'location_dest_id': warehouse.lot_stock_id.id,
-                'transfer_ids': [(6, 0, self.ids)]
-            })
-            action_data = self.env.ref('metrc_stock.action_open_metrc_transfer_receive_wizard').read()[0]
-            action_data['res_id'] = transfer_wiz.id
-            return action_data
+            # TODO: handle case when picking confirmation returns something else.
+            try:
+                transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
+                    'warehouse_id': warehouse.id,
+                    'operation_type_id': warehouse.in_type_id.id,
+                    'location_dest_id': warehouse.lot_stock_id.id,
+                    'transfer_ids': [(6, 0, self.ids)],
+                    'partner_id': partner_license.partner_id.id,
+                    'partner_license_id': partner_license.id 
+                })
+                transfer_wiz.create_transfer()
+            except UserError as ue:
+                raise ue
+            except ValidationError as ve:
+                raise ve
+            except Exception as e:
+                raise e
+            return {'type': 'ir.actions.act_window_close'}
         else:
             transfers_without_product = self.filtered(lambda t: not t.product_id)
             action_data = {
