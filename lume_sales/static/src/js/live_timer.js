@@ -39,7 +39,7 @@ odoo.define('timer.live_timer', function (require) {
          */
         _startTimeCounter: async function () {
             if (this.record.data.timer_start) {
-                console.log("Time now: " + this.record.data.time_now);
+                // console.log("Time now: " + this.record.data.time_now);
                 const serverTime = this.record.data.time_now || await this._getServerTime();
                 this.time = Timer.createTimer(0, this.record.data.timer_start, serverTime);
                 this.$el.text(this.time.toString());
