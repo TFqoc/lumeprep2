@@ -398,10 +398,17 @@ class StockPicking(models.Model):
         return True
     
     def action_open_metrc_transfer(self):
-        action_data = self.env.ref('metrc_stock.action_view_metrc_transfer').read()[0]
-        action_data['domain'] = [('move_line_id', 'in', self.move_line_ids.ids)]
-        action_data['name'] = 'Processed METRC Transfers'
-        return action_data
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Processed METRC Transfers',
+            'res_model': 'metrc.transfer',
+            'view_mode': 'tree,form',
+            'domain': [('move_line_id', 'in', self.move_line_ids.ids)],
+            'search_view_id': self.env.ref('metrc_stock.view_metrc_transfer_search').id,
+            'context': {
+                'search_default_groupby_manifest': 1,
+            }
+        }
 
     def search_metrc_transfer_lot(self, lot_name, transfer_type=False, license_number=False, move_strict=True, latest_only=True):
         MetrcTransfer = self.env['metrc.transfer']

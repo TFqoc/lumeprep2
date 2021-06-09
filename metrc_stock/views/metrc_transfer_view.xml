@@ -6,17 +6,15 @@
             <field name="model">metrc.transfer</field>
             <field name="arch" type="xml">
                 <tree string="Metrc Transfers">
-                    <field name="src_license"/>
-                    <field name="transfer_type"/>
-                    <field name="move_line_id"/>
+                    <field name="src_license" invisible="1"/>
+                    <field name="transfer_type" invisible="1"/>
+                    <field name="move_line_id" invisible="1"/>
                     <field name="product_name"/>
+                    <field name="product_id" string="Odoo Product"/>
                     <field name="package_label"/>
-                    <field name="manifest_number"/>
-                    <field name="transfer_id"/>
-                    <field name="package_id"/>
-                    <field name="package_type"/>
-                    <field name="shipper_facility_license_number"/>
+                    <field name="manifest_number" invisible="1"/>
                     <field name="shipper_facility_name"/>
+                    <field name="shipper_facility_license_number"/>
                     <field name="shipment_package_state"/>
                 </tree>
             </field>
@@ -172,15 +170,31 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_metrc_transfer">
+        <record model="ir.actions.act_window" id="action_view_picking_metrc_transfer">
             <field name="name">Processed Transfers</field>
-            <field name="res_model">metrc.transfer</field>
+            <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('move_line_id', '!=', False)]</field>
+            <field name="domain">[('manifest_number', '!=', False)]</field>
             <field name="context">{
-                'search_default_groupby_transfer_type': 1,
-                'search_default_groupby_manifest': 1}</field>
-            <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
+                'search_default_groupby_manifest_number': 1,
+                }</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Transfers.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_transfer">
+            <field name="name">Accepted Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('manifest_number', '!=', False)]</field>
+            <field name="context">{
+                'search_default_groupby_manifest': 1,
+                }</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
             <field name="help" type="html">
                 <p>
                     You will be able to create and manage mutiple metrc Transfers.
@@ -189,12 +203,12 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_view_metrc_unprocessed_transfer">
-            <field name="name">Unprocessed Transfers</field>
+            <field name="name">Ready Transfers</field>
             <field name="res_model">metrc.transfer</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('move_line_id', '=', False), ('being_processed', '=', False)]</field>
+            <field name="domain">[('move_line_id', '=', False)]</field>
             <field name="context">{
-                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_src_license': 1,
                 'search_default_groupby_manifest': 1}</field>
             <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
             <field name="help" type="html">
@@ -210,7 +224,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('being_processed', '=', True)]</field>
             <field name="context">{
-                'search_default_groupby_transfer_type': 1,
+                'search_default_groupby_src_license': 1,
                 'search_default_groupby_manifest': 1}</field>
             <field name="search_view_id" ref="metrc_stock.view_metrc_transfer_search"/>
             <field name="help" type="html">
@@ -226,13 +240,13 @@
                 groups="metrc_base.group_metrc_manager"/>
         <menuitem id="menu_action_view_metrc_processed_transfer"
                 action="action_view_metrc_transfer"
-                name="Processed"
+                name="Accepted"
                 parent="menu_action_view_metrc_transfer"
                 sequence="3"
                 groups="metrc_base.group_metrc_manager"/>
         <menuitem id="menu_action_view_metrc_unprocessed_transfer"
                 action="action_view_metrc_unprocessed_transfer"
-                name="Unprocessed"
+                name="Ready"
                 parent="menu_action_view_metrc_transfer"
                 sequence="1"
                 groups="metrc_base.group_metrc_manager"/>

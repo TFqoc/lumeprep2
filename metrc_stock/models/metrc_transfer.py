@@ -143,6 +143,33 @@ class MetrcTransfer(models.Model):
             _logger.error('Error during config param "metrc.transfer.last.sync".\n%s' % (ex))
             pass
         return param_date
+    
+    def _map_metrc_product(self, src_license, shipper_license, item_name, 
+                           item_cat_name, uom_name):
+        # attempt to match product from odoo database based on product name, category and uom.
+        # sending license because we want to make sure that the given product is available in 
+        # metrc for given license.
+        PP = self.env['product.product']
+        MPA = self.env['metrc.product.alias']
+        source_license = self.env['metrc.license'].get_license(src_license)
+        shipper_license_id = self.env['metrc.license'].get_license(shipper_license, 'External', raise_for_error=False)
+        product_id = PP._get_product(source_license, item_name, uom_name, item_cat_name)
+        result = False
+        if product_id:
+            result = product_id
+        else:
+            # attempt to find alias of the package product.
+            alias_domain = [
+                ('alias_name', '=', item_name),
+            ]
+            if shipper_license_id:
+                alias_domain.append(('license_id', '=', shipper_license_id.id))
+            else:
+                alias_domain.append(('license_id', '=', False))
+            product_alias = MPA.search(alias_domain, limit=1)
+            if product_alias:
+                result = product_alias.product_id
+        return result
 
     def _map_transfer_reponse(self, transfer):
         """
@@ -285,6 +312,12 @@ class MetrcTransfer(models.Model):
         while pacakges:
             package = pacakges.pop()
             package_vals = self._map_package_reponse(package)
+            product_id = self._map_metrc_product(transfer['RecipientFacilityLicenseNumber'],
+                                                transfer['ShipperFacilityLicenseNumber'],
+                                                package['ProductName'],
+                                                package['ProductCategoryName'],
+                                                package['ReceivedUnitOfMeasureName'])
+            package_vals['product_id'] = product_id and product_id.id or False
             transfer_id = transfer['Id']
             delivery_id = transfer['DeliveryId']
             package_id = package['PackageId']
@@ -455,7 +488,13 @@ class MetrcTransfer(models.Model):
             while package_result:
                 package = package_result.pop()
                 if package.get('PackageLabel') == transfer.package_label and package.get('PackageId') == transfer.package_id:
-                    package_vals = self._map_package_reponse(package)
+                    package_vals = self._map_package_reponse(package)                    
+                    product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
+                                                         transfer.shipper_facility_license_number,
+                                                         package['ProductName'],
+                                                         package['ProductCategoryName'],
+                                                         package['ReceivedUnitOfMeasureName'])
+                    package_vals['product_id'] = product_id and product_id.id or False
                     transfer.write(package_vals)
         else:
             if skipped_transfers:
@@ -478,7 +517,7 @@ class MetrcTransfer(models.Model):
         # Check is if licensed are passed and if passed then id, list of id or object itself
         licenses = False
         if not metrc_license:
-            licenses = self.env['metrc.license'].search([])
+            licenses = self.env['metrc.license'].search([('base_type', '=', 'Internal')])
         elif isinstance(metrc_license, int) or isinstance(metrc_license, (list, tuple)):
             licenses = self.env['metrc.license'].browse(metrc_license)
         elif isinstance(metrc_license, models.BaseModel):
@@ -755,43 +794,21 @@ class MetrcTransfer(models.Model):
     def action_receive_transfers(self):
         MPA = self.env['metrc.product.alias']
         PP = self.env['product.product']
-        shipper_facility_license_number = self[0].shipper_facility_license_number
-        shipper_facility_name = self[0].shipper_facility_name
-        shipper_license_id = self.env['metrc.license'].search([
-            ('base_type', '=', 'External'),
-            ('license_number', '=', shipper_facility_license_number)
-        ], limit=1)
-        source_license = self.env['metrc.license'].search([
-            ('base_type', '=', 'Internal'),
-            ('license_number', '=', self[0].src_license)
-        ], limit=1)
+        source_license = self.env['metrc.license'].get_license(self[0].src_license)
         warehouse = self.env['stock.warehouse'].search([
             ('license_id', '=', source_license.id)
         ])
         if not warehouse:
             raise ValidationError(_("Facility LIcense not configured on any warehouse.\n"
                                     "Please configure one for {}.".format(source_license.license_number)))
-        if not shipper_license_id:
-            raise ValidationError(_("Shipper facility license not found in odoo for {}.\n"
-                                    "Please create one for {}.".format(shipper_facility_license_number, shipper_facility_name)))
         for transfer in self:
             if transfer.product_id:
                 continue
-            # attempt to match product from odoo database based on product name, category and uom.
-            # sending license because we want to make sure that the given product is available in 
-            # metrc for given license.
-            product_id = PP._get_product(source_license, transfer.product_name, transfer.received_unit_of_measure_name, transfer.product_category_name)
-            if product_id:
-                transfer.product_id = product_id
-            else:
-                # attempt to find alias of the package product.
-                product_alias = MPA.search([
-                    ('alias_name', '=', transfer.product_name),
-                    '|', ('license_id', '=', shipper_license_id.id),
-                    ('license_id', '=', False)
-                ], limit=1)
-                if product_alias:
-                    transfer.product_id = product_alias.product_id
+            product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
+                                        transfer.shipper_facility_license_number,
+                                        transfer.product_name,
+                                        transfer.product_category_name,
+                                        transfer.received_unit_of_meassure)
         if all([t.product_id for t in self]):
             self.write({
                 'being_processed': True,
