@@ -55,7 +55,6 @@ class ReceiveMetrcTransferWizard(models.TransientModel):
         pick.write({
             'move_line_ids': [(0, 0, move_line_dict) for move_line_dict in move_line_vals]
         })
-        action_data = self.env.ref('stock.action_picking_form').read()[0]
-        action_data['res_id'] = pick.id
-        action_data['context'] = {}
-        return action_data
+        pick.action_confirm()
+        pick.button_validate()
+        return pick

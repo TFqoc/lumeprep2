@@ -9,7 +9,7 @@ from dateutil import parser
 
 from odoo import api, fields, models, registry, _
 from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +39,11 @@ class MetrcTransfer(models.Model):
     # - https://api-ca.metrc.com/Documentation/#Transfers.get_transfers_v1_rejected
     transfer_id = fields.Integer(string='Transfer ID')
     manifest_number = fields.Char(string='Manifest Number')
+    manifest_status = fields.Selection(selection=[
+        ('Ready', 'Ready'),
+        ('Partial', 'Partial'),
+        ('Accepted', 'Accepted')
+    ], default='Ready')
     shipment_license_type = fields.Char(string='Shipment License Type')
     shipper_facility_license_number = fields.Char(string='Shipper Facility License Number')
     shipper_facility_name = fields.Char(string='Shipper Facility Name')
@@ -790,18 +795,58 @@ class MetrcTransfer(models.Model):
         action_data['res_id'] = wiz.id
         return action_data
     
+    def create_transfer(self, partner_id, partner_license_id, operation_type_id,
+                        location_dest_id):
+        StockPicking = self.env['stock.picking']
+        pick = StockPicking.create({
+            'partner_id': partner_id.id,
+            'partner_license_id': partner_license_id.id,
+            'picking_type_id': operation_type_id.id,
+            'location_id': partner_id.property_stock_supplier.id,
+            'location_dest_id': location_dest_id.id,
+            'move_lines': [(0, 0, {
+                'product_id': prod.id,
+                'name': prod.display_name,
+                'product_uom': prod.uom_id.id,
+                'product_uom_qty': sum(self.filtered(lambda l: l.product_id == prod).mapped('received_quantity')),
+            }) for prod in self.mapped('product_id')]
+        })
+        move_line_vals = []
+        for move in pick.move_lines:
+            for line in self.filtered(lambda l: l.product_id == move.product_id):
+                move_line_vals.append({
+                    'move_id': move.id,
+                    'location_id': move.location_id.id,
+                    'location_dest_id': move.location_dest_id.id,
+                    'product_id': move.product_id.id,
+                    'product_uom_id': move.product_uom.id,
+                    'lot_name': line.package_label,
+                    'qty_done': line.received_quantity,
+                })
+        pick.write({
+            'move_line_ids': [(0, 0, move_line_dict) for move_line_dict in move_line_vals]
+        })
+        pick.action_confirm()
+        return pick.button_validate()
 
     def action_receive_transfers(self):
         MPA = self.env['metrc.product.alias']
         PP = self.env['product.product']
-        source_license = self.env['metrc.license'].get_license(self[0].src_license)
+        ML = self.env['metrc.license']
+        source_license = ML.get_license(self[0].src_license)
         warehouse = self.env['stock.warehouse'].search([
             ('license_id', '=', source_license.id)
         ])
         if not warehouse:
-            raise ValidationError(_("Facility LIcense not configured on any warehouse.\n"
+            raise ValidationError(_("Facility License not configured on any warehouse.\n"
                                     "Please configure one for {}.".format(source_license.license_number)))
+        partner_license = False
+        manifest = set(self.mapped('manifest_number'))
+        if len(manifest) > 1:
+            raise UserError(_("Can not process more then one manifest at a time."))
         for transfer in self:
+            if transfer.shipper_facility_license_number and not partner_license:
+                partner_license = ML.get_license(transfer.shipper_facility_license_number, base_type="External")
             if transfer.product_id:
                 continue
             product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
@@ -809,19 +854,28 @@ class MetrcTransfer(models.Model):
                                         transfer.product_name,
                                         transfer.product_category_name,
                                         transfer.received_unit_of_meassure)
+        if not partner_license:
+            raise ValidationError(_("Shipper Facility License not provided on manifest: {}".format(manifest)))
         if all([t.product_id for t in self]):
-            self.write({
-                'being_processed': True,
-            })
-            transfer_wiz = self.env['metrc.transfer.receive.wizard'].create({
-                'warehouse_id': warehouse.id,
-                'operation_type_id': warehouse.in_type_id.id,
-                'location_dest_id': warehouse.lot_stock_id.id,
-                'transfer_ids': [(6, 0, self.ids)]
-            })
-            action_data = self.env.ref('metrc_stock.action_open_metrc_transfer_receive_wizard').read()[0]
-            action_data['res_id'] = transfer_wiz.id
-            return action_data
+            try:
+                pick = self.create_transfer(partner_license.partner_id,
+                                            partner_license,
+                                            warehouse.in_type_id,
+                                            warehouse.lot_stock_id)
+                if isinstance(pick, (dict)) and pick.get('type', False) == 'ir.actions.act_window':
+                    return pick
+            except UserError as ue:
+                raise ue
+            except ValidationError as ve:
+                raise ve
+            except Exception as e:
+                raise e
+            manifest_transfers = self.search([('manifest_number', '=', self[0].manifest_number)])
+            processed_transfers = manifest_transfers.filtered(lambda t: t.move_line_id)
+            if len(manifest_transfers) != len(self):
+                (manifest_transfers - self).write({'manifest_status': 'Partial'})
+            (self + processed_transfers).write({'manifest_status': 'Accepted'})
+            return {'type': 'ir.actions.act_window_close'}
         else:
             transfers_without_product = self.filtered(lambda t: not t.product_id)
             action_data = {
