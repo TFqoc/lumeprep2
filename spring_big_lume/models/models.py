@@ -74,7 +74,7 @@ class Sale(models.Model):
             "transaction_total": self.amount_total,
             "order_source": 2, #What is this
             "send_notification": False,
-            "location": self.task.warehouse_id.name,
+            "location": self.task.project_id.name,
             "url_encoded": True,
             "visit_detail_attributes": [],
         }
