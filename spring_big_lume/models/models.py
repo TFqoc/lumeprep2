@@ -70,7 +70,7 @@ class Sale(models.Model):
             "pos_id": self.id,
             "pos_user": str(self.partner_id.id),
             "pos_type": "lume-odoo",
-            "transaction_date": fields.Datetime.now(),
+            "transaction_date": fields.Datetime.now().strftime("%Y-%m-%d"),
             "transaction_total": self.amount_total,
             "order_source": 2, #What is this
             "send_notification": False,
