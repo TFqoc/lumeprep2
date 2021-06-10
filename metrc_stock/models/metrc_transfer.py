@@ -832,7 +832,8 @@ class MetrcTransfer(models.Model):
     def action_receive_transfers(self):
         MPA = self.env['metrc.product.alias']
         PP = self.env['product.product']
-        source_license = self.env['metrc.license'].get_license(self[0].src_license)
+        ML = self.env['metrc.license']
+        source_license = ML.get_license(self[0].src_license)
         warehouse = self.env['stock.warehouse'].search([
             ('license_id', '=', source_license.id)
         ])
@@ -840,9 +841,12 @@ class MetrcTransfer(models.Model):
             raise ValidationError(_("Facility License not configured on any warehouse.\n"
                                     "Please configure one for {}.".format(source_license.license_number)))
         partner_license = False
+        manifest = set(self.mapped('manifest_number'))
+        if len(manifest) > 1:
+            raise UserError(_("Can not process more then one manifest at a time."))
         for transfer in self:
             if transfer.shipper_facility_license_number and not partner_license:
-                partner_license = self.env['metrc.license'].get_license(transfer.shipper_facility_license_number, base_type="External")
+                partner_license = ML.get_license(transfer.shipper_facility_license_number, base_type="External")
             if transfer.product_id:
                 continue
             product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
@@ -850,6 +854,8 @@ class MetrcTransfer(models.Model):
                                         transfer.product_name,
                                         transfer.product_category_name,
                                         transfer.received_unit_of_meassure)
+        if not partner_license:
+            raise ValidationError(_("Shipper Facility License not provided on manifest: {}".format(manifest)))
         if all([t.product_id for t in self]):
             try:
                 pick = self.create_transfer(partner_license.partner_id,
@@ -865,9 +871,10 @@ class MetrcTransfer(models.Model):
             except Exception as e:
                 raise e
             manifest_transfers = self.search([('manifest_number', '=', self[0].manifest_number)])
+            processed_transfers = manifest_transfers.filtered(lambda t: t.move_line_id)
             if len(manifest_transfers) != len(self):
                 (manifest_transfers - self).write({'manifest_status': 'Partial'})
-            self.write({'manifest_status': 'Accepted'})
+            (self + processed_transfers).write({'manifest_status': 'Accepted'})
             return {'type': 'ir.actions.act_window_close'}
         else:
             transfers_without_product = self.filtered(lambda t: not t.product_id)
