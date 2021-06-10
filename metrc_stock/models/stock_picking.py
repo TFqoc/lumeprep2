@@ -316,7 +316,7 @@ class StockPicking(models.Model):
                     lot_label = move_line_id.lot_id._get_metrc_name()
                     existing_lot_udpates = move_line_id.lot_id._fetch_metrc_package()
                 if not lot_label:
-                    raise UserError(_('You need to supply a lot/serial number for. %s')%(move.display_name))
+                    raise UserError(_('You need to supply a lot/serial number for. %s')%(move_line_id.display_name))
                 if not self.env['stock.production.lot']._is_package_exist_on_metrc(lot_label,
                                                                 self.facility_license_id.license_number,
                                                                 raise_for_error=False) \
