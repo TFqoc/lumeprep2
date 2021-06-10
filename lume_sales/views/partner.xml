@@ -129,6 +129,9 @@
             </tree>
           </field>
         </field>
+        <field name="phone" position="attributes">
+          <attribute name="required">1</attribute>
+        </field>
       </field>
     </record>
   </data>
