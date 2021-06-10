@@ -1,4 +1,4 @@
-console.log("Live Timer has been loaded");
+console.log("Live Timer has been loaded 2");
 odoo.define('timer.live_timer', function (require) {
     "use strict";
     
@@ -39,7 +39,8 @@ odoo.define('timer.live_timer', function (require) {
          */
         _startTimeCounter: async function () {
             if (this.record.data.timer_start) {
-                const serverTime = this.record.data.timer_pause || await this._getServerTime();
+                // console.log("Time now: " + this.record.data.time_now);
+                const serverTime = this.record.data.time_now || await this._getServerTime();
                 this.time = Timer.createTimer(0, this.record.data.timer_start, serverTime);
                 this.$el.text(this.time.toString());
                 this.timer = setInterval(() => {

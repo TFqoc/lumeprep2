@@ -154,7 +154,7 @@ function update_data() {
                 let dataType = data.result[2];
                 $("div.o_kanban_record").removeClass("catalog_card_hide");
                 $(`div.o_kanban_record[data-type='${dataType}']`).addClass("catalog_card_hide");
-                // $("div.o_kanban_record[data-qty='0']").addClass("catalog_card_hide");
+                $("div.o_kanban_record[data-qty='0']").addClass("catalog_card_hide");
             },
             dataType: 'json',
             type: 'POST',

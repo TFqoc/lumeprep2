@@ -5,6 +5,7 @@
             <!-- <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/> -->
             <script type="text/javascript" src="lume_sales/static/src/js/formatted_char.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/qty_widget.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/note_checkbox.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/kanban_refresh.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/unread_messages.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/live_timer.js"></script>

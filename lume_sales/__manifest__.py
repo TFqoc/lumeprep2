@@ -25,13 +25,15 @@
     'qweb': [
         "static/src/xml/lpc_quantity.xml",
         "static/src/xml/qty_template.xml",
+        "static/src/xml/quick_create.xml",
     ],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
+        'wizards/note_wizard.xml',
         'views/assets.xml',
         'views/sale.xml',
         'views/project.xml',

@@ -40,6 +40,22 @@ class SaleOrder(models.Model):
                 self.task.write({'active':False})
             return super(SaleOrder, self).action_cancel()
 
+    def open_notes(self):
+        notes = []
+        for note in self.env['lume.note'].search([('source_partner_id','=',self.partner_id.id)]):
+            notes.append((4,note.id,0))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Customer Notes',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'res_model': 'note.wizard',
+            'target': 'new',
+            # 'res_id': self.id,
+            'context': {'default_partner_id': self.partner_id.id,'default_note_ids':notes},
+        }
+
     def open_catalog(self):
         self.ensure_one()
         domain = [('type','!=','service'),('sale_ok','=',True)]
@@ -137,6 +153,9 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         if not self.order_line:
             raise ValidationError("You must have at least one sale order line in order to confirm this Sale Order!")
+        for line in self.order_line:
+            if self.order_type != line.product_id.thc_type and line.product_id.thc_type not in [False, 'merch']:
+                raise ValidationError("You can't confirm a cart with both Medical and Recreational products!")
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
             self.task.change_stage(2)

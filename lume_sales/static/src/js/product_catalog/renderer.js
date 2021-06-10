@@ -70,9 +70,9 @@ odoo.define('lume_sales.ProductKanbanRenderer', function (require) {
                         //  console.log(recordData);
                         // Hide if you don't have this value
                         let val = recordData[fieldName] ? recordData[fieldName] : '';
-                        let qty = $el.attr('data-qty');
-                        $el.removeClass('catalog_card_hide');
-                        if (val == hide_type || qty == 0) {
+                        // let qty = $el.attr('data-qty');
+                        // $el.removeClass('catalog_card_hide');
+                        if (val == hide_type/* || qty == 0*/) {
                             $el.addClass('catalog_card_hide');
                         }
                     });
