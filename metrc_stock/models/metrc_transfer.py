@@ -851,7 +851,6 @@ class MetrcTransfer(models.Model):
                                         transfer.product_category_name,
                                         transfer.received_unit_of_meassure)
         if all([t.product_id for t in self]):
-            # TODO: handle case when picking confirmation returns something else.
             try:
                 pick = self.create_transfer(partner_license.partner_id,
                                             partner_license,
@@ -865,6 +864,10 @@ class MetrcTransfer(models.Model):
                 raise ve
             except Exception as e:
                 raise e
+            manifest_transfers = self.search([('manifest_number', '=', self[0].manifest_number)])
+            if len(manifest_transfers) != len(self):
+                (manifest_transfers - self).write({'manifest_status': 'Partial'})
+            self.write({'manifest_status': 'Accepted'})
             return {'type': 'ir.actions.act_window_close'}
         else:
             transfers_without_product = self.filtered(lambda t: not t.product_id)

@@ -170,19 +170,19 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_picking_metrc_transfer">
-            <field name="name">Processed Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('manifest_number', '!=', False)]</field>
-            <field name="context">{
-                'search_default_groupby_manifest_number': 1,
-                }</field>
-            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p>
-                    You will be able to create and manage mutiple metrc Transfers.
-                </p>
+        <record id="view_tree_metrc_stock_picking" model="ir.ui.view">
+            <field name="name">Metrc Receipts</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="manifest_number"/>
+                    <field name="name"/>
+                    <field name="state" invisible="1"/>
+                    <field name="date_done" string="Received Date"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="partner_license_id" string="Shipper"/>
+                    <field name="metrc_transfer_count" string="Processed Packages" sum="Total"/>
+                </tree>
             </field>
         </record>
 
@@ -191,9 +191,9 @@
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('manifest_number', '!=', False)]</field>
-            <field name="context">{
-                'search_default_groupby_manifest': 1,
-                }</field>
+            <field name="context">{'search_default_groupby_manifest': 1}</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_tree_metrc_stock_picking')})]"/>
             <field name="search_view_id" ref="stock.view_picking_internal_search"/>
             <field name="help" type="html">
                 <p>
@@ -219,10 +219,10 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_view_metrc_processing_transfer">
-            <field name="name">Transfers in Processing</field>
+            <field name="name">Partial Transfers</field>
             <field name="res_model">metrc.transfer</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('being_processed', '=', True)]</field>
+            <field name="domain">[('manifest_state', '=', 'Partial')]</field>
             <field name="context">{
                 'search_default_groupby_src_license': 1,
                 'search_default_groupby_manifest': 1}</field>
@@ -252,7 +252,7 @@
                 groups="metrc_base.group_metrc_manager"/>
         <menuitem id="menu_action_view_metrc_processing_transfer"
                 action="action_view_metrc_processing_transfer"
-                name="Processing"
+                name="Partial"
                 parent="menu_action_view_metrc_transfer"
                 sequence="2"
                 groups="metrc_base.group_metrc_manager"/>
