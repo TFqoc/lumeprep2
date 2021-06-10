@@ -1,6 +1,9 @@
 from odoo import models, fields, api
 import requests
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 apiKey = "3QhFhyh3Qj5t49RYrcqDn6WGItlFeQY41gBuAE8q"
@@ -16,6 +19,7 @@ class Customer(models.Model):
 
     def check_in(self):
         res = super(Customer, self).check_in()
+        logger.info("SB: Checking if customer exists")
         if not self.spring_big_registered:
             # Check if customer exists
             data = {"phone_number": self.phone}
@@ -24,6 +28,7 @@ class Customer(models.Model):
                             headers=global_headers)
             if response.status_code != 200:
                 #if not, then create customer
+                logger.info("SB: Creating customer")
                 name = self.name.split(' ')
                 creation_data = {
                     "pos_user": str(self.id),
@@ -47,9 +52,10 @@ class Customer(models.Model):
                     "allowed_email": "true"
                 }
                 # TODO What if the request fails?
-                requests.post(url + '/api/pos/v1/members',
-                            params=data,
+                result = requests.post(url + '/api/pos/v1/members',
+                            json=creation_data,
                             headers=global_headers)
+                logger.info("SB: Result of creation: %s" % result.json())
             self.spring_big_registered = True
         return res
 
@@ -88,4 +94,5 @@ class Sale(models.Model):
                             json=data,
                             headers=global_headers)
         # TODO What happens if the request fails for any reason?
+        logger.info("SB Create Visit Response: %s" % response.json())
         return res
