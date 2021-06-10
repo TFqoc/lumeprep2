@@ -189,7 +189,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'active_ids': active_ids,
             'active_model': 'sale.order',
             'allowed_company_ids': [1],
-            'type': 'none',
+            'type': Sales_Order.order_type,
             'form_view_initial_mode': 'edit',
             'lang': 'en_US',
             'lpc_sale_order_id': Test_Task.sales_order.id,
