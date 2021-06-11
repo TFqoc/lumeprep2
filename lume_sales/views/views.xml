@@ -13,7 +13,7 @@
           <!-- <field name="_barcode_scanned" string="Scan DL" widget="barcode_handler"/> -->
         </field>
         <field name="name" position="after">
-          <field name="partner_id" options="{'noOpen': true, 'noCreate': true}"/>
+          <field name="partner_id" options="{'no_open': true, 'no_create': true}"/>
           <field name="fulfillment_type"/>
           <!-- <field name="order_type" invisible="1"/> -->
         </field>
