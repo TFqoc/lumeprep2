@@ -15,7 +15,7 @@
         <field name="name" position="after">
           <field name="partner_id" options="{noOpen: true, noCreate: true}"/>
           <field name="fulfillment_type"/>
-          <field name="order_type" invisible="1"/>
+          <!-- <field name="order_type" invisible="1"/> -->
         </field>
         <field name="name" position="replace"></field>
         <field name="user_id" position="replace"></field>

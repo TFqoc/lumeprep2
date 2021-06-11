@@ -24,7 +24,7 @@ class Tasks(models.Model):
     monetary_display = fields.Char(compute='_compute_monetary_display')
 
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
-    # order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    order_type = fields.Selection(related="sales_order.order_type")
 
     # To save requests on the live timer widget
     time_now = fields.Datetime(compute='_compute_now')
