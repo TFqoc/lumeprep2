@@ -107,7 +107,7 @@ class Partner(models.Model):
 
     def _compute_medical_purchase(self):
         for record in self:
-            record.can_purchase_medical = not record.is_expired_medical and record.medical_id
+            record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.partner_id.is_over_18
     
     def warn(self):
         self.warnings += 1
@@ -125,15 +125,15 @@ class Partner(models.Model):
         # Validation checks
         if self.is_banned:
             raise ValidationError("This customer has been banned and cannot be checked in!")
-        if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
-            raise ValidationError("This customer has an expired medical licence! Please update medical licence information to allow customer to check in.\nIf this is a new medical customer, please make sure to change customer type to Medical")
-        if not self.medical_id and self.env.context.get('order_type') == 'medical':
-            raise ValidationError("Invalid medical id!")
+        # if self.is_expired_medical and self.env.context.get('order_type') == 'medical':
+        #     raise ValidationError("This customer has an expired medical licence! Please update medical licence information to allow customer to check in.\nIf this is a new medical customer, please make sure to change customer type to Medical")
+        # if not self.medical_id and self.env.context.get('order_type') == 'medical':
+        #     raise ValidationError("Invalid medical id!")
         if not self.drivers_license_number:
             raise ValidationError("Invalid drivers licence!")
         if self.is_expired_dl:
             raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        if (not self.is_over_21 and self.env.context.get('order_type') == 'adult') or (self.env.context.get('order_type') == 'medical' and not self.is_over_18):
+        if (not self.is_over_21 and not self.medical_id) or (self.medical_id and not self.is_expired_medical and not self.is_over_18):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
@@ -143,7 +143,7 @@ class Partner(models.Model):
             'partner_id': self.id,
             'project_id': project.id,
             'fulfillment_type': ctx['fulfillment_type'],
-            'order_type': ctx['order_type'],
+            # 'order_type': ctx['order_type'],
             'user_id': False,
             'name': self.pref_name or self.name,
         })
