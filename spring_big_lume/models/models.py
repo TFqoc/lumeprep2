@@ -65,20 +65,21 @@ class Sale(models.Model):
     @api.model
     def finalize(self, order_id, data):
         res = super(Sale, self).finalize(order_id, data)
+        record = self.env['sale.order'].browse(order_id)
         # Report visit to spring big
         data = {
-            "pos_id": self.id,
-            "pos_user": str(self.partner_id.id),
+            "pos_id": record.id,
+            "pos_user": str(record.partner_id.id),
             "pos_type": "lume-odoo",
             "transaction_date": fields.Datetime.now().isoformat(),
-            "transaction_total": self.amount_total,
+            "transaction_total": record.amount_total,
             "order_source": 2, #What is this
             "send_notification": False,
-            "location": self.task.project_id.name,
+            "location": record.task.project_id.name,
             "url_encoded": True,
             "visit_detail_attributes": [],
         }
-        for line in self.order_line:
+        for line in record.order_line:
             line_data = {
                 "sku": line.product_id.default_code,
                 "price": line.price_unit,
