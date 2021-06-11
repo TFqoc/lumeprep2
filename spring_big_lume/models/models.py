@@ -70,7 +70,7 @@ class Sale(models.Model):
             "pos_id": self.id,
             "pos_user": str(self.partner_id.id),
             "pos_type": "lume-odoo",
-            "transaction_date": fields.Datetime.now().strftime("%Y-%m-%d"),
+            "transaction_date": fields.Datetime.now().isoformat(),
             "transaction_total": self.amount_total,
             "order_source": 2, #What is this
             "send_notification": False,
@@ -83,7 +83,7 @@ class Sale(models.Model):
                 "sku": line.product_id.default_code,
                 "price": line.price_unit,
                 "quantity": line.product_uom_qty,
-                "category": "",
+                "category": "None",
                 "brand": line.product_id.brand,
                 "name": line.product_id.name,
                 "discount": 0,#TBD as far as where this value will come from
@@ -94,5 +94,7 @@ class Sale(models.Model):
                             json=data,
                             headers=global_headers)
         # TODO What happens if the request fails for any reason?
+        logger.info("SB Create Visit Request: %s" % data)
         logger.info("SB Create Visit Response: %s" % response.json())
+        
         return res
