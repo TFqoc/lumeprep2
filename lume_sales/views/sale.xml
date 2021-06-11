@@ -42,7 +42,7 @@
                     <span style="margin: 5px;"/>
                     <button name="open_notes" string="Notes" class="btn-primary oe_edit_only" type="object" />
                 </field>
-                <!-- <xpath expr="//control" position="replace"></xpath> -->
+                <xpath expr="//control" position="replace"></xpath>
                 <!-- <field name="order_line" position="attributes">
                     <attribute name="widget">so_section_and_note</attribute>
                   </field> -->
@@ -64,7 +64,7 @@
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
-                    <attribute name="attrs">{'invisible': [('state', 'not in', ['sale','done'])]}</attribute>
+                    <attribute name="attrs">{'invisible': [('state', 'in', ['sale','done'])]}</attribute>
                 </xpath>
                 <xpath expr="//header/button[@name='action_cancel']" position="attributes">
                     <attribute name="string">Abandon Cart</attribute>
