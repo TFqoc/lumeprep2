@@ -74,7 +74,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'partner_id': self.customer_rec,
             'project_id': self.lumestore_one, 
             'fulfillment_type': 'store',
-            'order_type': 'adult',
+            'order_type': False,
             'user_id': False,
             'name': self.customer_rec.name
         }
