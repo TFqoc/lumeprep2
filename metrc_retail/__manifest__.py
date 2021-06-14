@@ -18,8 +18,7 @@ Metrc Integration
 """,
     'depends': [
         'crm',
-        'metrc',
-        'stock',
+        'metrc_stock',
     ],
     'data': [
         # security
@@ -30,6 +29,7 @@ Metrc Integration
         'views/metrc_customer_types_views.xml',
         'views/metrc_account_view.xml',
         'views/metrc_receipt_view.xml',
+        'views/patient_id_method_views.xml',
         'views/crm_team_views.xml',
 
         # data

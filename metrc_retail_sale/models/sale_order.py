@@ -28,11 +28,12 @@ class SaleOrder(models.Model):
 
     customer_type = fields.Selection(related='partner_id.customer_type')
 
-    patient_license_number = fields.Char(string='Patient License',
+    patient_license_number = fields.Many2one(comodel_name="metrc.license", string='Patient License',
+                                         domain="[('base_type', '=', 'Patient')]",
                                          states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     caregiver_license_number = fields.Char(string='Caregiver License',
                                            states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    ext_patient_id_method = fields.Char(string='External Patient ID Method',
+    ext_patient_id_method = fields.Many2one(comodel_name='patient.id.method', string='External Patient ID Method',
                                         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     @api.depends('order_line', 'order_line.product_id', 'order_line.product_id.is_metric_product', 'warehouse_id', 'team_id')
@@ -71,6 +72,7 @@ class SaleOrder(models.Model):
             packages_to_report = ''
             try:
                 for move in order.order_line.filtered(lambda ol: ol.product_id.is_metric_product).mapped('move_ids'):
+
                     for move_line in move.move_line_ids.filtered(lambda ml:ml.state == 'done' and \
                                 float_compare(ml.qty_done, ml.metrc_reported_qty,precision_rounding=ml.product_uom_id.rounding) > 0):
                         order_todo = True
@@ -156,7 +158,7 @@ class SaleOrder(models.Model):
                         }
                         if order.customer_type != 'Consumer':
                             line_vals.update({
-                                'PatientLicenseNumber': order.patient_license_number,
+                                'PatientLicenseNumber': order.patient_license_number.license_number,
                             })
                         if order.customer_type == 'Caregiver':
                             line_vals.update({
@@ -164,7 +166,7 @@ class SaleOrder(models.Model):
                             })
                         if order.customer_type == 'ExternalPatient':
                             line_vals.update({
-                                'IdentificationMethod': order.ext_patient_id_method,
+                                'IdentificationMethod': order.ext_patient_id_method.name,
                             })
                         order_data.append(line_vals)
                 if order_data:

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
     <data noupdate="0">
+        <record id="id_method_dl" model="patient.id.method">
+            <field name="name">Driver's License</field>
+        </record>
+        <record id="id_method_passport" model="patient.id.method">
+            <field name="name">Passport</field>
+        </record>
 
         <record model="ir.cron" id="cron_metrc_update_receipt_nightly">
             <field name="name">Metrc : Do Receipts Persistent, (Nightly - For all internal licenses)</field>

@@ -19,8 +19,8 @@
                        attrs="{'required': [('customer_type', '=', 'Caregiver')],
                                'invisible': [('customer_type', '!=', 'Caregiver')]}"/>
                 <field name="ext_patient_id_method"
-                       attrs="{'required': [('customer_type', '=', 'External Patient')],
-                               'invisible': [('customer_type', '!=', 'External Patient')]}"/>
+                       attrs="{'required': [('customer_type', '=', 'ExternalPatient')],
+                               'invisible': [('customer_type', '!=', 'ExternalPatient')]}"/>
             </xpath>
         </field>
     </record>
