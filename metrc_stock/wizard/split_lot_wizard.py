@@ -328,8 +328,8 @@ class SplitLotWizard(models.TransientModel):
             else:
                 new_lot_numbers.append(wiz.new_lot_number)
             existing_lots = StockProductLot.search(
-                    ['|', '&', ('is_legacy_lot', '=', True), ('metrc_tag', 'in', new_lot_number),
-                     ('name', 'in', new_lot_number), ('product_id', '=', wiz.lot_id.product_id.id)])
+                    ['|', '&', ('is_legacy_lot', '=', True), ('metrc_tag', 'in', new_lot_numbers),
+                     ('name', 'in', new_lot_numbers), ('product_id', '=', wiz.lot_id.product_id.id)])
             to_create_lots = list(set(new_lot_numbers) - set(existing_lots.mapped('metrc_tag')))
             lots_dict = {}
             lot = False
@@ -509,7 +509,6 @@ class SplitLotWizard(models.TransientModel):
                 except ValidationError as ve:
                     raise ValidationError(ve)
                 except Exception:
-                    raise
                     lot_to_unlink = production_order.finished_move_line_ids.mapped('lot_id')
                     production_order.button_unreserve()
                     production_order.action_cancel()
