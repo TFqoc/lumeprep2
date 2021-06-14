@@ -36,7 +36,7 @@
           </div>
         </field>
         <field name="image_1920" position="before">
-          <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False)]}" />
+          <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False),('medical_id','!=',False)]}" />
           <widget name="web_ribbon" title="Drivers Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_dl','=',False)]}" />
           <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}" />
         </field>
@@ -44,10 +44,10 @@
           <attribute name="string">Customer Groups</attribute>
           <attribute name="placeholder">Groups...</attribute>
         </field>
-        <field name="category_id" position="before">
+        <!-- <field name="category_id" position="before"> -->
           <!-- <field name="caregiver"/> -->
           <!-- <field name="caregiver_number" string="Caregiver ID"/> -->
-        </field>
+        <!-- </field> -->
         <field name="category_id" position="after">
           <field name="passport" />
         </field>
@@ -121,13 +121,16 @@
             </tree>
           </field>
         </field>
-        <field name="comment" position="after">
+        <xpath expr="//notebook/page[@name='internal_notes']/*" position="before">
           <field name="note_ids">
             <tree>
               <field name="message"/>
               <field name="logged_partner_id"/>
             </tree>
           </field>
+        </xpath>
+        <field name="phone" position="attributes">
+          <attribute name="required">1</attribute>
         </field>
       </field>
     </record>

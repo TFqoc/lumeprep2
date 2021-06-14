@@ -26,7 +26,7 @@
                 </field>
                 <xpath expr="//tree/field[@name='product_id']" position="replace">
                     <field name="order_type" invisible="1"></field>
-                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('thc_type','=',order_type),('type','!=','service')]" widget="product_configurator" />
+                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True,'no_create':True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('thc_type','in',['medical','adult','merch'] if order_type == 'none' else [order_type, 'merch']),('type','!=','service')]" widget="product_configurator" />
                 </xpath>
                 <xpath expr="//tree/field[@name='product_uom_qty']" position="attributes">
                     <attribute name="widget">qty_widget</attribute>
@@ -36,16 +36,11 @@
                 </field>
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
-                    <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
-                    <span style="margin: 5px;"/> -->
                     <button name="open_catalog" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
                     <span style="margin: 5px;"/>
                     <button name="open_notes" string="Notes" class="btn-primary oe_edit_only" type="object" />
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
-                <!-- <field name="order_line" position="attributes">
-                    <attribute name="widget">so_section_and_note</attribute>
-                  </field> -->
                 <field name="validity_date" position="replace">
                     <field name="validity_date" invisible="1"></field>
                 </field>
@@ -64,10 +59,20 @@
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
-                    <attribute name="attrs"></attribute>
+                    <attribute name="attrs">{'invisible': [('state', 'in', ['sale','done'])]}</attribute>
                 </xpath>
                 <xpath expr="//header/button[@name='action_cancel']" position="attributes">
                     <attribute name="string">Abandon Cart</attribute>
+                </xpath>
+                <xpath expr="(//header/button[@name='action_quotation_send'])[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- Invoice buttons -->
+                <xpath expr="(//header/button)[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="(//header/button)[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
                 <!-- Not sure about this next one -->
                 <xpath expr="(//header/field)[2]" position="attributes">
@@ -106,7 +111,7 @@
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/> -->
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="width: 25%;">
                                 <div class="o_kanban_record_top mb16">
                                     <div class="o_kanban_record_headings mt4">
                                         <strong class="o_kanban_record_title">
@@ -212,9 +217,8 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left" style="align-self: flex-end;">
                                         <strong>
-                                            <span>Fulfillment Type Here</span>
+                                            <span><field name="fulfillment_type"/></span>
                                         </strong>
-                                        <!-- <field name="activity_ids" widget="kanban_activity"/> -->
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <strong>
@@ -241,11 +245,6 @@
                                                 </tbody>
                                             </table>
                                         </strong>
-                                        <!--<strong>-->
-                                        <!--    Untaxed Amount: <field name="amount_untaxed" widget="monetary"/>-->
-                                        <!--    <br/>-->
-                                        <!--    Total: <field name="amount_total" widget="monetary"/>-->
-                                        <!--</strong>-->
                                     </div>
                                 </div>
                             </div>
