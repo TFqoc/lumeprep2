@@ -63,6 +63,8 @@ class StockPicking(models.Model):
     to_consolidate = fields.Boolean(compute='_check_consolidation', help='Technical field to determine that'
                                                         ' picking contains moves which can be consolidated.')
     metrc_transfer_count = fields.Integer(compute="_compute_metrc_transfer_count")
+    item_count = fields.Integer(string="Items", compute='_compute_metrc_transfer_count')
+    processed_qty = fields.Float(string="Processed", compute='_compute_metrc_transfer_count')
 
     def _compute_facility_license(self):
         for pick in self:
@@ -95,9 +97,12 @@ class StockPicking(models.Model):
     def _compute_metrc_transfer_count(self):
         MetrcTransfer = self.env['metrc.transfer']
         for picking in self:
-            picking.metrc_transfer_count = MetrcTransfer.search_count([
+            picking_transfers = MetrcTransfer.search([
                 ('move_line_id', 'in', picking.move_line_ids.ids)
             ])
+            picking.item_count = len(picking_transfers.mapped('product_id'))
+            picking.metrc_transfer_count = len(picking_transfers)
+            picking.processed_qty = sum(picking_transfers.mapped('received_quantity'))
 
     def _is_in(self):
         '''
