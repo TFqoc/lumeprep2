@@ -61,6 +61,8 @@ class SaleOrder(models.Model):
         domain = [('type','!=','service'),('sale_ok','=',True)]
         if not self.partner_id.can_purchase_medical:
             domain.append(('thc_type','!=','medical'))
+        if not self.partner_id.is_over_21:
+            domain.append(('thc_type','=','adult'))
         # Grab the first sale order line that isn't a merch product
         # show_medical = self.order_type
         return {

@@ -2,7 +2,7 @@
 <templates id="templates" xml:space="preserve">
     <t t-inherit="web.KanbanView.RecordQuickCreate.buttons" t-inherit-mode="extension">
         <xpath expr="//button[2]" position="replace">
-
+           
         </xpath>
     </t>
 </templates>
