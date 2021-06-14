@@ -4,7 +4,7 @@ class CouponProgram(models.Model):
     _inherit='coupon.program'
 
     recurring = fields.Boolean()
-    recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')])
+    recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
     recurring_day = fields.Char(compute='_compute_day')
 
     @api.model
