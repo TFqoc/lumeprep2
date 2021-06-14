@@ -36,16 +36,11 @@
                 </field>
                 <!-- Custom Add Product Button -->
                 <field name="order_line" position="after">
-                    <!-- <button name="open_catalog" string="Add a Product (popup)" class="btn-primary oe_edit_only" type="object"/>
-                    <span style="margin: 5px;"/> -->
                     <button name="open_catalog" string="Add a Product" class="btn-primary oe_edit_only" type="object" />
                     <span style="margin: 5px;"/>
                     <button name="open_notes" string="Notes" class="btn-primary oe_edit_only" type="object" />
                 </field>
                 <xpath expr="//control" position="replace"></xpath>
-                <!-- <field name="order_line" position="attributes">
-                    <attribute name="widget">so_section_and_note</attribute>
-                  </field> -->
                 <field name="validity_date" position="replace">
                     <field name="validity_date" invisible="1"></field>
                 </field>
@@ -224,7 +219,6 @@
                                         <strong>
                                             <span><field name="fulfillment_type"/></span>
                                         </strong>
-                                        <!-- <field name="activity_ids" widget="kanban_activity"/> -->
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <strong>
@@ -251,11 +245,6 @@
                                                 </tbody>
                                             </table>
                                         </strong>
-                                        <!--<strong>-->
-                                        <!--    Untaxed Amount: <field name="amount_untaxed" widget="monetary"/>-->
-                                        <!--    <br/>-->
-                                        <!--    Total: <field name="amount_total" widget="monetary"/>-->
-                                        <!--</strong>-->
                                     </div>
                                 </div>
                             </div>
