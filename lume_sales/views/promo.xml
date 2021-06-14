@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="coupon_program_inherit" model="ir.ui.view">
+            <field name="name">coupon.program.inherit</field>
+            <field name="model">coupon.program</field>
+            <field name="inherit_id" ref="coupon.coupon_program_view_promo_program_form" />
+            <field name="arch" type="xml">
+                <field name="maximum_use_number" position="after">
+                    <field name="recurring"/>
+                    <field name="recurring_cycle"/>
+                    <field name="recurring_day"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

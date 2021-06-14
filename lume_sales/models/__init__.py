@@ -7,3 +7,4 @@ from . import project
 from . import barcode_parse
 from . import product
 from . import note
+from . import promo
