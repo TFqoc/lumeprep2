@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-
+import io
+import os
+import sys
+import json
+import base64
+import zipfile
 import logging
+
+from datetime import datetime
+from psycopg2 import OperationalError
+from pathlib import Path
+
+from odoo.tools.osutil import tempdir
+from odoo import api, models, fields, registry, _
+from odoo.tools import exception_to_unicode, pycompat
+
 _logger = logging.getLogger(__name__)
 
 
@@ -56,7 +69,7 @@ class IrLogging(models.Model):
                         cr.execute(query)
                     if use_new_cursor:
                         cr.commit()
-            except OperationalError:
+            except OperationalError as e:
                 _logger.info('metrc.logging.archive: Exception : %s !', exception_to_unicode(e))
                 if use_new_cursor:
                     logging_noprefetch += log_batch
