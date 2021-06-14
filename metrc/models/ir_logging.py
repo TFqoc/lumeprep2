@@ -3,12 +3,11 @@
 
 import io
 import os
-import sys
-import json
 import base64
 import zipfile
 import logging
 
+from pathlib import Path
 from datetime import datetime
 from psycopg2 import OperationalError
 

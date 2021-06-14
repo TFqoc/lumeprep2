@@ -196,8 +196,21 @@
                     <field name="date_done" string="Received Date"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="partner_license_id" string="Shipper"/>
+                    <field name="item_count"/>
+                    <field name="processed_qty"/>
                     <field name="metrc_transfer_count" string="Processed Packages" sum="Total"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="stock_picking_search_inherit_metrc_stock" model="ir.ui.view">
+            <field name="name">stock.picking.search.inherit.metrc_stock</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <filter name="expected_date" position="after"/>
+                    <filter string="Manifest" name="groupby_manifest" domain="[]" context="{'group_by': 'manifest_number'}"/>
+                </filter>
             </field>
         </record>
 

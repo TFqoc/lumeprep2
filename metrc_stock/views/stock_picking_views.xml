@@ -46,6 +46,12 @@
                     <field name="transfer_type_id" options="{'no_create': True}" attrs="{'invisible': [('require_metrc_validation', '=', False)]}"/>
                     <field name="no_metrc" groups="metrc_base.group_metrc_manager" attrs="{'invisible': [('moving_metrc_product', '=', False)]}"/>
                 </field>
+                <field name="origin" position="after">
+                    <field name="item_count" readonly="1"
+                           attrs="{'invisible': [('metrc_transfer_count', '=', 0)]}"/>
+                    <field name="processed_qty" readonly="1"
+                           attrs="{'invisible': [('metrc_transfer_count', '=', 0)]}"/>
+                </field>
                 <xpath expr="//notebook/page[@name='extra']/group[last()]" position="after">
                     <group string="Tranfer Details (Metrc)" attrs="{'invisible': [('picking_type_code', 'not in', ('incoming', 'outgoing'))]}">
                         <group>
