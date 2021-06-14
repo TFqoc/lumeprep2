@@ -644,6 +644,21 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         # if self.picking_type_id.use_existing_lots:
         #     self._check_move_consume(move_lines_todo)
         return True
+    
+    def _update_metrc_packages(self):
+        MT = self.env['metrc.transfer']
+        for move_line in self.move_line_ids.filtered(lambda ml: ml.state == 'done'
+                                            and ml.product_id.is_metric_product
+                                            and not ml.move_id._is_dropshipped()
+                                            and not ml.move_id._is_dropshipped_returned()):
+            metrc_transfer = MT.search([('move_line_id', '=', move_line.id)])
+            if move_line.lot_id and metrc_transfer:
+                move_line.lot_id.write({
+                    'thc_percent': metrc_transfer.thc_percent,
+                    'thc_mg': metrc_transfer.thc_mg,
+                    'expiration_date': metrc_transfer.expiration_date,
+                    'harvest_date': metrc_transfer.harvest_date,
+                })
 
     def button_validate(self):
         if self.require_metrc_validation and self.moving_metrc_product:
@@ -653,6 +668,8 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
             if isinstance(return_val, dict):
                 return return_val
         res = super(StockPicking, self).button_validate()
+        if self.moving_metrc_product and self.state == 'done':
+            self._update_metrc_packages()
         return res
 
     def action_recheck_availability(self):

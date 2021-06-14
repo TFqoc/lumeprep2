@@ -104,7 +104,23 @@ class MetrcTransfer(models.Model):
     received_unit_of_measure_name = fields.Char(string='Received Unit Of Measure Name')
     move_line_id = fields.Many2one(comodel_name='stock.move.line', string='Associated Product Move', ondelete='set null', index=True, copy=False)
     source_package_labels = fields.Char(string='Source Packages')
-    being_processed = fields.Boolean(string="Under Processing")
+    item_cat_id = fields.Many2one(related='product_id.metrc_item_cat_id')
+    is_flower = fields.Boolean(related='item_cat_id.is_flower')
+    is_edible = fields.Boolean(related='item_cat_id.is_edible')
+    harvest_date = fields.Date()
+    expiration_date = fields.Date()
+    thc_percent = fields.Float(string="THC(%)")
+    thc_mg = fields.Float(string="THC(mg)")
+    alias_products = fields.Many2many(comodel_name="product.product", 
+                                 compute='_compute_alias_products')
+    
+    def _compute_alias_products(self):
+        for transfer in self:
+            alias_ids = self.env['metrc.product.alias'].search([
+                ('alias_name', '=', transfer.product_name),
+                ('license_id.license_number', '=', transfer.shipper_facility_license_number or False)
+            ])
+            transfer.alias_products = alias_ids and alias_ids.mapped('product_id') or []
 
     def _assert_transfer_param(self, license_number, transfer_type, update_date=False, transfer_date=False):
         """
@@ -828,6 +844,18 @@ class MetrcTransfer(models.Model):
         })
         pick.action_confirm()
         return pick.button_validate()
+    
+    def open_transfer(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Metrc Transfer',
+            'res_model': 'metrc.transfer',
+            'view_mode': 'form',
+            'context': {},
+            'res_id': self.id,
+            'domain': [],
+            'target': 'new',
+        }
 
     def action_receive_transfers(self):
         MPA = self.env['metrc.product.alias']

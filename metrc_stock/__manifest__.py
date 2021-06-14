@@ -36,6 +36,7 @@ METRC Stock
         'views/stock_views.xml',
         'views/stock_location_views.xml',
         'views/metrc_account_views.xml',
+        'views/metrc_item_category_views.xml',
         'views/res_config_settings_views.xml',
 
         # Wizard Views
