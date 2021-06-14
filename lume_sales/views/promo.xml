@@ -5,10 +5,13 @@
             <field name="model">coupon.program</field>
             <field name="inherit_id" ref="coupon.coupon_program_view_promo_program_form" />
             <field name="arch" type="xml">
-                <field name="maximum_use_number" position="after">
-                    <field name="recurring"/>
-                    <field name="recurring_cycle"/>
-                    <field name="recurring_day"/>
+                <field name="rule_date_from" position="before">
+                    <label string="Recurring" for="recurring" class="oe_inline"/>
+                    <div>
+                        <field name="recurring"/>
+                        <field name="recurring_cycle"/>
+                        <field name="recurring_day"/>
+                    </div>
                 </field>
             </field>
         </record>

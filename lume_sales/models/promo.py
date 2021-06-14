@@ -15,6 +15,7 @@ class CouponProgram(models.Model):
         )
         return res + recurring_promos
 
+    @api.depends('rule_date_from')
     def _compute_day(self):
         for record in self:
             if record.rule_date_from:
