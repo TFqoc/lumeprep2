@@ -64,7 +64,7 @@ class Partner(models.Model):
     def _compute_expired_medical(self):
         for record in self:
             try:
-                record.is_expired_medical = record.medical_expiration < datetime.date.today() or record.drivers_license_expiration < datetime.date.today()
+                record.is_expired_medical = record.medical_expiration < datetime.date.today()
             except:
                 record.is_expired_medical = True
 
