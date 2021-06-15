@@ -14,8 +14,8 @@ class CouponProgram(models.Model):
     recurring = fields.Boolean()
     recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
     recurring_day = fields.Char(compute='_compute_day')
-    stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With')], required=True, default='not stackable')
-    stackable_with = fields.Many2many(comodel='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
+    # stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With')], required=True, default='not stackable')
+    # stackable_with = fields.Many2many(comodel='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
 
     @api.model
     def _filter_programs_from_common_rules(self, order, next_order=False):
