@@ -25,7 +25,7 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
-        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday(), 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle} for p in res]
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle} for p in res]
         logger.info("DEBUG: %s" % data)
         return res.filtered(lambda program:
             (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
