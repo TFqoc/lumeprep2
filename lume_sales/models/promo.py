@@ -19,6 +19,16 @@ class CouponProgram(models.Model):
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
     # stackable_with_reverse = fields.Many2many()
 
+    @api.onchange('stackable_with')
+    def onchange_stackables(self):
+        # Remove old links from programs we are no longer stackable with
+        for program in (self._origin.stackable_with - self.stackable_with):
+            program.stackable_with = [(3,self.id,0)]
+        # Add backwards link on all new programs we are stackable with
+        for program in (self.stackable_with - self._origin.stackable_with):
+            if not self in program.stackable_with:
+                program.stackable_with = [(4,self.id,0)]
+
     @api.model
     def _filter_programs_from_common_rules(self, order, next_order=False):
         res = super(CouponProgram, self)._filter_programs_from_common_rules(order, next_order)
