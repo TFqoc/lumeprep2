@@ -23,14 +23,16 @@ class CouponProgram(models.Model):
     def onchange_stackables(self):
         logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
+        logger.info("Self: %s" % self.id)
         for program in (self._origin.stackable_with - self.stackable_with):
             logger.info("Removing self from program id: %s" % program.id)
-            program.stackable_with = [(3,self.id,0)]
+            program.update({'stackable_with' : [(3,self.id,0)]})
         # Add backwards link on all new programs we are stackable with
         for program in self.stackable_with:
             if not self in program.stackable_with:
                 logger.info("Adding self to program id: %s" % program.id)
-                program.stackable_with = [(4,self.id,0)]
+                # Update works the same as write but works for pseudo records
+                program.update({'stackable_with' : [(4,self.id,0)]})
 
     @api.model
     def _filter_programs_from_common_rules(self, order, next_order=False):
