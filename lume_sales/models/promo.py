@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 import datetime
 from datetime import timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 def date_compare(d1, d2):
     return d1.year == d2.year and d1.month == d2.month and d1.day == d2.day
@@ -16,6 +19,8 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday(), 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle} for p in res]
+        logger.info("DEBUG: %s" % data)
         return res.filtered(lambda program:
             (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
              and 
