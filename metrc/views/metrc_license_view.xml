@@ -134,6 +134,8 @@
                                                                   'invisible': [('base_type', '=', 'Patient')]}"/>
                                 <field name="sell_to_patients" readonly="1"
                                        attrs="{'invisible': [('base_type', '!=', 'Internal')]}"/>
+                                <field name="sell_to_consumer" readonly="1"
+                                       attrs="{'invisible': [('base_type', '!=', 'Internal')]}"/>
                             </group>
                             <group>
                                 <field name="usage_type"/>
