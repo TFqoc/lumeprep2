@@ -66,7 +66,7 @@ class Partner(models.Model):
             if record.medical_expiration:
                 record.is_expired_medical = record.medical_expiration < datetime.date.today() and record.medical_id   
             else:
-                record.is_expired_medical = True
+                record.is_expired_medical = False or record.medical_id == False
 
     @api.depends('drivers_license_expiration')
     def _compute_expired_dl(self):
