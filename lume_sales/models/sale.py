@@ -178,38 +178,38 @@ class SaleOrder(models.Model):
     # Promotion methods
     ######################
     
-    # Override NO SUPER
-    def _get_applicable_programs(self):
-        """
-        This method is used to return the valid applicable programs on given order.
-        """
-        self.ensure_one()
-        programs = self.env['coupon.program'].with_context(
-            no_outdated_coupons=True,
-        ).search([
-            ('company_id', 'in', [self.company_id.id, False]),
-            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
-        ], order="id")._filter_programs_from_common_rules(self)
-        # no impact code...
-        # should be programs = programs.filtered if we really want to filter...
-        # if self.promo_code:
-        #     programs._filter_promo_programs_with_code(self)
-        return programs
+    # # Override NO SUPER
+    # def _get_applicable_programs(self):
+    #     """
+    #     This method is used to return the valid applicable programs on given order.
+    #     """
+    #     self.ensure_one()
+    #     programs = self.env['coupon.program'].with_context(
+    #         no_outdated_coupons=True,
+    #     ).search([
+    #         ('company_id', 'in', [self.company_id.id, False]),
+    #         '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+    #         '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+    #     ], order="id")._filter_programs_from_common_rules(self)
+    #     # no impact code...
+    #     # should be programs = programs.filtered if we really want to filter...
+    #     # if self.promo_code:
+    #     #     programs._filter_promo_programs_with_code(self)
+    #     return programs
 
-    # Override NO SUPER
-    def _get_applicable_no_code_promo_program(self):
-        self.ensure_one()
-        programs = self.env['coupon.program'].with_context(
-            no_outdated_coupons=True,
-            applicable_coupon=True,
-        ).search([
-            ('promo_code_usage', '=', 'no_code_needed'),
-            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
-            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
-        ])._filter_programs_from_common_rules(self)
-        return programs
+    # # Override NO SUPER
+    # def _get_applicable_no_code_promo_program(self):
+    #     self.ensure_one()
+    #     programs = self.env['coupon.program'].with_context(
+    #         no_outdated_coupons=True,
+    #         applicable_coupon=True,
+    #     ).search([
+    #         ('promo_code_usage', '=', 'no_code_needed'),
+    #         '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+    #         '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+    #         '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
+    #     ])._filter_programs_from_common_rules(self)
+    #     return programs
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
