@@ -27,12 +27,15 @@ class CouponProgram(models.Model):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
         data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle} for p in res]
         logger.info("DEBUG: %s" % data)
-        return res.filtered(lambda program:
+        res = res.filtered(lambda program:
             (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
              and 
              (program.recurring_cycle == 'every' or program.is_numbered_day(order.date_order,program.recurring_cycle)))
              or not program.recurring
         )
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle} for p in res]
+        logger.info("DEBUG: %s" % data)
+        return res
 
     @api.depends('rule_date_from')
     def _compute_day(self):
