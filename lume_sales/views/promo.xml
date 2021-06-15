@@ -6,8 +6,13 @@
             <field name="inherit_id" ref="coupon.coupon_program_view_promo_program_form" />
             <field name="arch" type="xml">
                 <field name="rule_date_from" position="before">
-                    <field name="stackability"/>
-                    <field name="stackable_with" attrs="{'invisible': [('stackability','=','not stackable')],'required': [('stackability','=','not stackable')]}"/>
+                    <field name="stackability" style="width: auto !important;"/>
+                    <field name="stackable_with" attrs="{'invisible': [('stackability','=','not stackable')],'required': [('stackability','=','not stackable')]}">
+                        <tree create="0">
+                            <field name="name"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
                     <label string="Recurring" for="recurring" class="oe_inline"/>
                     <div>
                         <field name="recurring"/>
