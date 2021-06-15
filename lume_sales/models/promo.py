@@ -15,6 +15,12 @@ class CouponProgram(models.Model):
     recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
     recurring_day = fields.Char(compute='_compute_day')
 
+    @api.model
+    def _filter_programs_from_common_rules(self, order, next_order=False):
+        res = super(CouponProgram, self)._filter_programs_from_common_rules(order, next_order)
+        res = res._filter_on_validity_dates(order)
+        return res
+
     # Override
     @api.model
     def _filter_on_validity_dates(self, order):
