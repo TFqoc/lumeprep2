@@ -21,6 +21,7 @@ class CouponProgram(models.Model):
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
+        logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
         for program in (self._origin.stackable_with - self.stackable_with):
             program.stackable_with = [(3,self.id,0)]
