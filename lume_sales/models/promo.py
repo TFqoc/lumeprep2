@@ -24,10 +24,12 @@ class CouponProgram(models.Model):
         logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
         for program in (self._origin.stackable_with - self.stackable_with):
+            logger.info("Removing self from program id: %s" % program.id)
             program.stackable_with = [(3,self.id,0)]
         # Add backwards link on all new programs we are stackable with
         for program in (self.stackable_with - self._origin.stackable_with):
             if not self in program.stackable_with:
+                logger.info("Adding self to program id: %s" % program.id)
                 program.stackable_with = [(4,self.id,0)]
 
     @api.model
