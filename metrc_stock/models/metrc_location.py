@@ -69,7 +69,7 @@ class MetrcLocation(models.Model):
 
     @api.model
     def create(self, vals):
-        self = self.with_context({'default_metrc_license_id': vals.get('facility_license_id')})
+        self = self.with_context(default_metrc_license_id=vals.get('facility_license_id'))
         location = super(MetrcLocation, self).create(vals)
         if not self.env.context.get('import_mode'):
             location._match_with_metrc(location.facility_license_id, raise_for_error=False)
@@ -99,13 +99,15 @@ class MetrcLocation(models.Model):
             if self._metrc_license_require and license:
                 params = {'licenseNumber': license.license_number}
             records = metrc_account.fetch('GET', uri, params=params)
+            metrc_fields = self._get_metrc_fields()
+            metrc_field_names = {f: False for f in metrc_fields}
+            metrc_field_details = {}
+            for col_name, col_info in self.fields_get(metrc_fields).items():
+                metrc_field_name = getattr(self._fields.get(col_name), 'metrc_field')
+                metrc_field_names[col_name] = metrc_field_name
+                metrc_field_details[col_name] = col_info
             for location in self:
-                metrc_fields = self._get_metrc_fields()
-                metrc_field_names = {f: False for f in metrc_fields}
-                for col_name, col_info in self.fields_get(metrc_fields).items():
-                    metrc_field_name = getattr(self._fields.get(col_name), 'metrc_field')
-                    metrc_field_names[col_name] = metrc_field_name
-                model_data = location.get_metrc_model_data(license=license)
+                model_data = location.get_metrc_model_data(license=license)    
                 if model_data and model_data.metrc_id > 0:
                     records_filtered = [record for record in records if (record['Id'] == model_data.metrc_id)]
                 else:
@@ -125,7 +127,10 @@ class MetrcLocation(models.Model):
                     # creating/updateing the metric model data before start processing.
                     location.with_context(ctx)._track_metrc_model_data()
                     model_data = location.get_metrc_model_data(license=license)
-                    if not all([location[f] == metrc_data[metrc_field_names[f]] for f in metrc_fields]):
+                    mapped_values = {}
+                    for col_name, col_data in metrc_field_details.items():
+                        mapped_values[col_name] = self.create_mapping_value(metrc_data[metrc_field_names[col_name]], col_data)
+                    if not all([location[f] == mapped_values[f] for f in metrc_fields]):
                         location._do_metrc_update(license, 'write', model_data, raise_for_error=raise_for_error)
                 else:
                     model_data = location.get_metrc_model_data(license=license)

@@ -64,7 +64,8 @@
                        options="{'no_open':True,'no_create':True}"/>
                 <field name="reason_note" attrs="{'readonly': [('state', '=', 'done')]}"/>
                 <field name="do_not_adjust" groups="metrc_base.group_metrc_manager"/>
-                <field name="metrc_adjust_qty" readonly="1" force_save="1"/>
+                <field name="metrc_adjust_qty" readonly="1" force_save="1"
+                       attrs="{'invisible': [('state', '!=', 'done')]}"/>
             </xpath>
             <xpath expr="//field[@name='prod_lot_id']" position="before">
                 <field name="lot_required" invisible="1"/>
@@ -136,6 +137,16 @@
             <field name="message_follower_ids" position="after">
                 <field name="activity_ids" widget="mail_activity"/>
             </field>
+            <group name="main_group" position="inside">
+                <group>
+                    <field name="is_flower" invisible="1"/>
+                    <field name="is_edible" invisible="1"/>
+                    <field name="harvest_date" attrs="{'invisible': [('is_flower', '=', False)]}" readonly="1"/>
+                    <field name="expiration_date" attrs="{'invisible': [('is_edible', '=', False)]}" readonly="1"/>
+                    <field name="thc_mg" attrs="{'invisible': [('is_edible', '=', False)]}" readonly="1"/>
+                    <field name="thc_percent" attrs="{'invisible': [('is_flower', '=', False)]}" readonly="1"/>
+                </group>
+            </group>
         </field>
     </record>
 

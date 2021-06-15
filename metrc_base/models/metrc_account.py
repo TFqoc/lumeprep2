@@ -5,6 +5,7 @@ import io
 import os
 import sys
 import json
+import time
 import base64
 import zipfile
 import logging
@@ -86,7 +87,9 @@ class MetrcAccount(models.Model):
     api_version = fields.Selection(
         selection=[('v1', 'v1')], string='API Version', required=True, default='v1')
     region = fields.Selection(
-        selection=[('CA', 'CA'), ('MI', 'MI')], string='API Region', default='CA', required=True)
+        selection=[('CA', 'CA'), ('MI', 'MI')], string='API Region',
+        default='CA', required=True, help='Select Your region.\n'
+        '"CA" for California.\n"MI for Michigan.')
     service_account = fields.Boolean(string='Service Account', copy=False)
     related_user = fields.Reference(selection=[
                                         ('res.users', 'User'),

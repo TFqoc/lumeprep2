@@ -63,6 +63,8 @@ class StockPicking(models.Model):
     to_consolidate = fields.Boolean(compute='_check_consolidation', help='Technical field to determine that'
                                                         ' picking contains moves which can be consolidated.')
     metrc_transfer_count = fields.Integer(compute="_compute_metrc_transfer_count")
+    item_count = fields.Integer(string="Items", compute='_compute_metrc_transfer_count')
+    processed_qty = fields.Float(string="Processed", compute='_compute_metrc_transfer_count')
 
     def _compute_facility_license(self):
         for pick in self:
@@ -95,9 +97,12 @@ class StockPicking(models.Model):
     def _compute_metrc_transfer_count(self):
         MetrcTransfer = self.env['metrc.transfer']
         for picking in self:
-            picking.metrc_transfer_count = MetrcTransfer.search_count([
+            picking_transfers = MetrcTransfer.search([
                 ('move_line_id', 'in', picking.move_line_ids.ids)
             ])
+            picking.item_count = len(picking_transfers.mapped('product_id'))
+            picking.metrc_transfer_count = len(picking_transfers)
+            picking.processed_qty = sum(picking_transfers.mapped('received_quantity'))
 
     def _is_in(self):
         '''
@@ -644,6 +649,21 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         # if self.picking_type_id.use_existing_lots:
         #     self._check_move_consume(move_lines_todo)
         return True
+    
+    def _update_metrc_packages(self):
+        MT = self.env['metrc.transfer']
+        for move_line in self.move_line_ids.filtered(lambda ml: ml.state == 'done'
+                                            and ml.product_id.is_metric_product
+                                            and not ml.move_id._is_dropshipped()
+                                            and not ml.move_id._is_dropshipped_returned()):
+            metrc_transfer = MT.search([('move_line_id', '=', move_line.id)])
+            if move_line.lot_id and metrc_transfer:
+                move_line.lot_id.write({
+                    'thc_percent': metrc_transfer.thc_percent,
+                    'thc_mg': metrc_transfer.thc_mg,
+                    'expiration_date': metrc_transfer.expiration_date,
+                    'harvest_date': metrc_transfer.harvest_date,
+                })
 
     def button_validate(self):
         if self.require_metrc_validation and self.moving_metrc_product:
@@ -653,6 +673,8 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
             if isinstance(return_val, dict):
                 return return_val
         res = super(StockPicking, self).button_validate()
+        if self.moving_metrc_product and self.state == 'done':
+            self._update_metrc_packages()
         return res
 
     def action_recheck_availability(self):

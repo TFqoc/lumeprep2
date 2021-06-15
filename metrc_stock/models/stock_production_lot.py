@@ -43,6 +43,12 @@ class StockProductionLot(models.Model):
     name_readonly = fields.Boolean(help="Technical field to determine lot name is editable or not.")
     batch_number = fields.Char(string='Production Batch No.')
     is_production_batch = fields.Boolean(string='Production Batch?')
+    is_edible = fields.Boolean(related="product_id.metrc_item_cat_id.is_edible")
+    is_flower = fields.Boolean(related="product_id.metrc_item_cat_id.is_flower")
+    harvest_date = fields.Date(string="Harvest Date")
+    expiration_date = fields.Date(String="Exp. Date")
+    thc_mg = fields.Float(string="THC(mg)")
+    thc_percent = fields.Float(string="THC(%)")
 
     def toggle_name_readonly(self):
         for lot in self:

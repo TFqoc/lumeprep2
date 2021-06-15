@@ -4,6 +4,7 @@
 from . import metrc_transfer_type
 from . import metrc_transfer
 from . import metrc_package_adjust_reason
+from . import metrc_item_category
 from . import metrc_account
 from . import metrc_location
 from . import res_config_settings

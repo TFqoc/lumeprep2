@@ -201,8 +201,8 @@ class StockInventory(models.Model):
 
     def _action_done(self):
         res = super(StockInventory, self)._action_done()
-        metrc_account = self.env.user.ensure_metrc_account()
-        if not self.env.context.get('bypass_adjust'):
+        if self.is_metrc_adjustment and not self.env.context.get('bypass_adjust'):
+            metrc_account = self.env.user.ensure_metrc_account()
             for inventory in self.filtered(lambda l: l.is_metrc_adjustment and l.facility_license_id
                                                      and l.facility_license_id.metrc_type == 'metrc'):
                 data = []
