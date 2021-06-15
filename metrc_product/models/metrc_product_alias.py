@@ -34,7 +34,7 @@ class MetrcProductAlias(models.Model):
         alias_id = self.search([
                             ('alias_name', '=', alias_name),
                             ('product_id', '=', product_id.id),
-                            ('license_id', '=', license_id),
+                            ('license_id', '=', license_id.id),
                         ], limit=1)
         if not alias_id:
             alias_id = self.create({
