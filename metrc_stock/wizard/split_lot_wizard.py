@@ -470,7 +470,8 @@ class SplitLotWizard(models.TransientModel):
                             'product_id': wiz.lot_id.product_id.id,
                             'company_id': production_order.company_id.id,
                             'is_production_batch': wiz.lot_id.is_production_batch,
-                            'batch_number': wiz.lot_id.batch_number
+                            'batch_number': wiz.lot_id.batch_number,
+                            'metrc_product_name': wiz.lot_id.metrc_product_name,
                         })
                 production_order.lot_producing_id = lot
                 for raw_move_line in production_order.move_raw_ids.mapped('move_line_ids'):

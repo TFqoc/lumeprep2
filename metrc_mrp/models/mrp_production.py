@@ -155,10 +155,13 @@ class MrpProduction(models.Model):
                 for raw_move in self.move_raw_ids.filtered(lambda m: m.product_id.is_metric_product):
                     msg += "\n- {} Qty required {}, Qty done {}".format(raw_move.product_id.metrc_name, raw_move.product_uom_qty, raw_move.quantity_done)
                 raise UserError(_(msg))
+            product_name = line.product_id.metrc_name
+            if product_name != line.lot_id.metrc_product_name:
+                product_name = line.lot_id.metrc_product_name
             package_data.append({
                 'Tag': lot_name,
                 'Location': metrc_location,
-                'Item': line.product_id.metrc_name,
+                'Item': product_name,
                 'Quantity': line.product_id.to_metrc_qty(line.qty_done),
                 'UnitOfMeasure': line.product_id.metrc_uom_id.name if line.product_id.diff_metrc_uom and line.product_id.metrc_uom_id else line.product_id.uom_id.name,
                 'Ingredients': ingredients,
