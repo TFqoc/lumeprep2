@@ -27,7 +27,7 @@
                 <field name="facility_license_id" domain="[('base_type', '=', 'Internal')]" 
                        readonly="1" force_save="1" context="{'default_base_type': 'Internal'}"/>
                 <field name="do_not_adjust" 
-                       group="metrc_base.group_metrc_admin,stock.group_stock_manager"/>
+                       groups="metrc_base.group_metrc_admin,stock.group_stock_manager"/>
                 <field name="reason_id" options="{'no_create': True}" 
                        domain="[('license_id', '=', facility_license_id)]" 
                        attrs="{'invisible': [('do_not_adjust', '=', True)]}"/>
@@ -108,6 +108,8 @@
                         attrs="{'invisible': [('name_readonly', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
+                <field name="metrc_product_name" readonly="1"
+                       attrs="{'invisible': [('metrc_product_name', '=', '')]}"/>
                 <field name="labtest_state" string="Labtesting State" readonly="1" 
                        attrs="{'invisible': [('is_metric_product', '=', False)]}" 
                        groups="metrc_base.group_metrc_user"/>

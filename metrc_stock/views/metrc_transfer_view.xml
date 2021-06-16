@@ -28,13 +28,13 @@
                     <field name="is_flower" invisible="1"/>
                     <field name="is_edible" invisible="1"/>
                     <field name="harvest_date" attrs="{'readonly': ['|', ('is_flower', '=', False),
-                                                        ('transfer_type', '!=', 'Incoming')]}"/>
+                                                        ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="expiration_date" attrs="{'readonly': ['|', ('is_edible', '=', False),
-                                                        ('transfer_type', '!=', 'Incoming')]}"/>
+                                                        ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="thc_percent" attrs="{'readonly': ['|', ('is_flower', '=', False),
-                                                     ('transfer_type', '!=', 'Incoming')]}"/>
+                                                     ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="thc_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
-                                                ('transfer_type', '!=', 'Incoming')]}"/>
+                                                ('transfer_type', '!=', 'incoming')]}"/>
                     <button name="open_transfer" type="object" icon="fa-external-link"/>
                 </tree>
             </field>

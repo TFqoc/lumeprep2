@@ -663,6 +663,7 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
                     'thc_mg': metrc_transfer.thc_mg,
                     'expiration_date': metrc_transfer.expiration_date,
                     'harvest_date': metrc_transfer.harvest_date,
+                    'metrc_product_name': metrc_transfer.product_name,
                 })
 
     def button_validate(self):

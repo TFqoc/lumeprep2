@@ -113,7 +113,8 @@ class MetrcTransfer(models.Model):
     thc_mg = fields.Float(string="THC(mg)")
     alias_products = fields.Many2many(comodel_name="product.product", 
                                  compute='_compute_alias_products')
-    
+    consolidated = fields.Boolean(help="Line already consolidated?")
+
     def _compute_alias_products(self):
         for transfer in self:
             alias_ids = self.env['metrc.product.alias'].search([
@@ -771,6 +772,13 @@ class MetrcTransfer(models.Model):
         MergeLotWizard = self.env['lot.merge.wizard']
         ProductProduct = self.env['product.product']
         metrc_transfers = self.browse(self.env.context.get('active_ids'))
+        already_consolidated = metrc_transfers.filtered(lambda t: t.consolidated)
+        if already_consolidated:
+            msg = '''Following metrc packages are already consolidated."
+                     \nCan not perform Consolidation again.'''
+            for tr in already_consolidated:
+                msg += '\n{}'.format(tr.package_label)
+            raise ValidationError(_(msg))
         transfer_move_lines = metrc_transfers.mapped('move_line_id')
         picking_id = metrc_transfers.mapped('move_line_id').mapped('picking_id')
         warehouse_id = picking_id[0].picking_type_id.warehouse_id
@@ -877,11 +885,6 @@ class MetrcTransfer(models.Model):
                 partner_license = ML.get_license(transfer.shipper_facility_license_number, base_type="External")
             if transfer.product_id:
                 continue
-            product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
-                                        transfer.shipper_facility_license_number,
-                                        transfer.product_name,
-                                        transfer.product_category_name,
-                                        transfer.received_unit_of_meassure)
         if not partner_license:
             raise ValidationError(_("Shipper Facility License not provided on manifest: {}".format(manifest)))
         if all([t.product_id for t in self]):

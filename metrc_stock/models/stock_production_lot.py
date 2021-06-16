@@ -48,7 +48,8 @@ class StockProductionLot(models.Model):
     harvest_date = fields.Date(string="Harvest Date")
     expiration_date = fields.Date(String="Exp. Date")
     thc_mg = fields.Float(string="THC(mg)")
-    thc_percent = fields.Float(string="THC(%)")
+    thc_percent = fields.Float(string="THC(%)") 
+    metrc_product_name = fields.Char(string="Metrc Product")
 
     def toggle_name_readonly(self):
         for lot in self:
