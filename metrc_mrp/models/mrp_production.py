@@ -156,7 +156,7 @@ class MrpProduction(models.Model):
                     msg += "\n- {} Qty required {}, Qty done {}".format(raw_move.product_id.metrc_name, raw_move.product_uom_qty, raw_move.quantity_done)
                 raise UserError(_(msg))
             product_name = line.product_id.metrc_name
-            if product_name != line.lot_id.metrc_product_name:
+            if line.lot_id.metrc_product_name and product_name != line.lot_id.metrc_product_name:
                 product_name = line.lot_id.metrc_product_name
             package_data.append({
                 'Tag': lot_name,
