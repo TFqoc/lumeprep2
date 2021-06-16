@@ -20,7 +20,7 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban'],
+    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban','sale_coupon'],
 
     'qweb': [
         "static/src/xml/lpc_quantity.xml",
@@ -38,6 +38,7 @@
         'views/sale.xml',
         'views/project.xml',
         'views/product_catalog.xml',
+        # 'views/promo.xml',
         'views/actions.xml',
         'views/partner.xml',
         'views/views.xml',
