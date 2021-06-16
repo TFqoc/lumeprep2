@@ -36,7 +36,14 @@ class StockPackageWizard(models.TransientModel):
     @api.depends('wh_qty_available', 'metrc_qty')
     def _compute_adjustment_required(self):
         for wiz in self:
-            wiz.adjustment_required = True if wiz.metrc_qty and ((wiz.wh_qty_available - wiz.metrc_qty) != 0.00) else False
+            adjustment_required = False
+            if wiz.metrc_id:
+                if wiz.metrc_qty:
+                    delta = wiz.virtual_available - wiz.metrc_qty
+                    adjustment_required = True if delta != 0.00 else False
+                else:
+                    adjustment_required = True
+            wiz.adjustment_required = adjustment_required
 
     @api.onchange('warehouse_id')
     def onchange_warehouse_id(self):
@@ -46,6 +53,7 @@ class StockPackageWizard(models.TransientModel):
             self.location_id = self.warehouse_id.lot_stock_id or False
             product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
             self.virtual_available = product.virtual_available
+            self.wh_qty_available = product.qty_available
 
     @api.onchange('location_id')
     def onchange_location_id(self):
@@ -68,7 +76,8 @@ class StockPackageWizard(models.TransientModel):
         product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
         if resp:
             if 'Quantity' in resp:
-                if resp['Item']['Name'] == product.metrc_name:
+                if (resp['Item']['Name'] == product.metrc_name) or \
+                   (resp['Item']['Name'] == self.lot_id.metrc_product_name):
                     self.lot_id.write({
                         'metrc_qty': resp['Quantity'],
                         'metrc_id': resp['Id'],
@@ -89,7 +98,7 @@ class StockPackageWizard(models.TransientModel):
                 else:
                     wizard_vals.update({
                         'message': '<p><div><h3>Package found in METRC but with different product: <b>%s.</b><br/>'
-                                   'Can not sync with <b>%s</b>.</h3></div></p>' % (resp['Item']['ProductName'],
+                                   'Can not sync with <b>%s</b>.</h3></div></p>' % (resp['Item']['Name'],
                                                                                     product.metrc_name),
                         'virtual_available': product.virtual_available,
                         'wh_qty_available': product.qty_available,

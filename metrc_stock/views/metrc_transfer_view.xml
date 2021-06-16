@@ -5,7 +5,9 @@
             <field name="name">metrc.transfer.tree</field>
             <field name="model">metrc.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Metrc Transfers" editable="bottom">
+                <tree string="Metrc Transfers" create="0" 
+                      edit="1" editable="bottom"
+                      decoration-warning="product_id == False">
                     <field name="src_license" invisible="1"/>
                     <field name="transfer_type" invisible="1"/>
                     <field name="move_line_id" invisible="1"/>
@@ -14,11 +16,14 @@
                     <field name="package_label" readonly="1"/>
                     <field name="alias_products" invisible="1"/>
                     <field name="shipment_package_state" invisible="1"/>
+                    <field name="manifest_status" invisible="1"/>
                     <field name="product_id" string="Odoo Product" 
                            domain="['|', ('id', 'in', alias_products),
                                     ('uom_id.name', '=', received_unit_of_measure_name),
                                     ('metrc_item_cat_id.name', '=', product_category_name)]"
-                           attrs="{'readonly': [('shipment_package_state', '!=', 'Accepted')]}"/>
+                           attrs="{'readonly': ['|', ('shipment_package_state', '!=', 'Accepted'),
+                                  '|', ('transfer_type', '!=', 'incoming'),
+                                  ('manifest_status', '=', 'Accepted')]}"/>
                     <field name="manifest_number" invisible="1"/>
                     <field name="received_quantity" string="Total Received" readonly="1"/>
                     <field name="received_unit_of_measure_name" string="Received UOM" readonly="1"/>
@@ -26,24 +31,15 @@
                     <field name="shipper_facility_license_number" string="Shipper License" readonly="1"/>
                     <field name="is_flower" invisible="1"/>
                     <field name="is_edible" invisible="1"/>
-                    <field name="harvest_date" attrs="{'readonly': [('is_flower', '=', False)]}"/>
-                    <field name="expiration_date" attrs="{'readonly': [('is_edible', '=', False)]}"/>
-                    <field name="thc_percent" attrs="{'readonly': [('is_flower', '=', False)]}"/>
-                    <field name="thc_mg" attrs="{'readonly': [('is_edible', '=', False)]}"/>
+                    <field name="harvest_date" attrs="{'readonly': ['|', ('is_flower', '=', False),
+                                                        ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="expiration_date" attrs="{'readonly': ['|', ('is_edible', '=', False),
+                                                        ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="thc_percent" attrs="{'readonly': ['|', ('is_flower', '=', False),
+                                                     ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="thc_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
+                                                ('transfer_type', '!=', 'incoming')]}"/>
                     <button name="open_transfer" type="object" icon="fa-external-link"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_metrc_transfer_without_product_tree" model="ir.ui.view">
-            <field name="name">metrc.transfer.tree.without.product</field>
-            <field name="model">metrc.transfer</field>
-            <field name="arch" type="xml">
-                <tree string="Metrc Transfers" editable="bottom" create="0">
-                    <field name="product_name" readonly="1"/>
-                    <field name="product_category_name" readonly="1"/>
-                    <field name="received_unit_of_measure_name" readonly="1"/>
-                    <field name="product_id" domain="[('uom_id.name', '=', received_unit_of_measure_name),
-                                                      ('metrc_item_cat_id.name', '=', product_category_name)]"/>
                 </tree>
             </field>
         </record>

@@ -91,6 +91,7 @@ class MetrcLicense(models.Model):
                                           ondelete='set null')
     sell_to_patients = fields.Boolean(help='Field to determine whether this facility can sell to patients or not.'
                                            '\nAllowd to check patient quota or not.')
+    sell_to_consumer = fields.Boolean(help='Field to determine whether this facility can sell to Recreational Customer or not.')
     
 
     _sql_constraints = [
