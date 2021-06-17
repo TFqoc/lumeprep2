@@ -243,4 +243,9 @@ class TestLPC(TestLumeOrderCommon):
             self.order_rec.order_line,
             "Sales Order line should have been deleted."
         )
-
+    
+    def test_test(self):
+        self.assertTrue(
+            False,
+            "This Should Fail."
+        )
