@@ -52,8 +52,8 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
-        # data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
-        # logger.info("DEBUG: %s" % data)
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
+        logger.info("DEBUG: %s" % data)
         res = res.filtered(lambda program:
             (program.recurring and order.date_order.weekday() in program.recurring_days.day_list()
             # (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
@@ -61,8 +61,8 @@ class CouponProgram(models.Model):
              (program.recurring_cycle == 'every' or program.is_numbered_day(order.date_order,program.recurring_days.day_list())))
              or not program.recurring
         )
-        # data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
-        # logger.info("DEBUG: %s" % data)
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
+        logger.info("DEBUG: %s" % data)
         return res
 
     @api.depends('rule_date_from')
