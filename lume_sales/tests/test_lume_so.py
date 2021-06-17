@@ -48,11 +48,15 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
             'task': cls.task_med.id
         })
 
-        cls.order_rec = SO.create({
+        cls.order_care = SO.create({
             'partner_id': cls.customer_care.id,
             'order_type': 'medical', #We don't know what this is going to be yet.
             'task': cls.task_care.id
         })
+
+        cls.task_rec.sales_order = cls.order_rec.id
+        cls.task_med.sales_order = cls.order_med.id
+        cls.task_care.sales_order = cls.order_care.id
 
 @tagged('lume')
 class TestLumeSalesOrder(TestLumeOrderCommon):
@@ -86,6 +90,38 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
                 }]]})
 
     def test_rec_so_confirm(self):
+        uid = self.env.ref('base.user_admin').id
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        self.order_rec.order_line = [(0, 0, {
+            'product_id': self.product_rec.product_variant_ids[0].id,
+            'product_uom_qty': 1.00
+        })]
+        record_ids = [self.order_rec.id]
+        self.env['sale.order'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).action_confirm()
+
+        self.assertEqual(
+            self.task_rec.stage_id.sequence,
+            20,
+            "Error in Confirm Cart: Tile did not move to the proper tile."
+        )
+
+        self.assertEqual(
+            self.order_rec.state,
+            'sale',
+            "Error in Confirm Cart: Sales Order was not set to the state of sale."
+        )
+
+        self.assertTrue(
+            self.order_rec.state.picking_ids,
+            "Pick Ticket was not created."
+        )
+
+    def test_rec_abandon_cart(self):
         pass
 
 
