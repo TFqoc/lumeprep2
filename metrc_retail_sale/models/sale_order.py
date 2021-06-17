@@ -66,6 +66,8 @@ class SaleOrder(models.Model):
                         ('team_id.metrc_retail_reporting', '=', True),
                         ('write_date', '>=', fields.Datetime.to_string(sync_start_date)),
                         ('metrc_retail_state', 'not in', ('Except', 'Outgoing')),
+                        '|', ('facility_license_id.sell_to_patients', '=', True),
+                        ('facility_license_id.sell_to_consumer', '=', True)
                     ])
         for order in orders:
             order_todo = False
@@ -110,8 +112,9 @@ class SaleOrder(models.Model):
         domain = [
             ('state', 'in', ('sale', 'done')),
             ('team_id.metrc_retail_reporting', '=', True),
-            ('metrc_retail_state', '=', 'Outgoing'),
-            ('facility_license_id', '!=', False),
+            ('metrc_retail_state', '=', ('Except', 'Outgoing')),
+            '|', ('facility_license_id.sell_to_patients', '=', True),
+            ('facility_license_id.sell_to_consumer', '=', True),
         ]
         orders_by_facility = self.read_group(domain, ['id', 'facility_license_id'], ['facility_license_id'])
         _logger.info('metrc.retail: starting metrc retail sale reporting')
