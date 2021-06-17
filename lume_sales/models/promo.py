@@ -55,9 +55,10 @@ class CouponProgram(models.Model):
         # data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
         # logger.info("DEBUG: %s" % data)
         res = res.filtered(lambda program:
-            (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
+            (program.recurring and order.date_order.weekday() in program.recurring_days.day_list()
+            # (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
              and 
-             (program.recurring_cycle == 'every' or program.is_numbered_day(order.date_order,program.recurring_cycle)))
+             (program.recurring_cycle == 'every' or program.is_numbered_day(order.date_order,program.recurring_days.day_list())))
              or not program.recurring
         )
         # data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.rule_date_from.weekday() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
@@ -72,23 +73,27 @@ class CouponProgram(models.Model):
             else:
                 record.recurring_day = ""
 
-    def is_numbered_day(self, date_order, number):
-        try:
-            number = int(number)
-            # Do more stuff here
-            # Since we know the weekday is right, just check each "Friday" and intcrement a counter until date is today. Then we know if we are 3rd Friday or whatver
-            wday = self.rule_date_from.weekday()
-            # today = datetime.date.today()
-            date = datetime.date(date_order.year,date_order.month,1)
-            while date.weekday() != wday:
-                date += timedelta(days=1)
-            counter = 1
-            while not date_compare(date, date_order):
-                date += timedelta(days=7)
-                counter += 1
-            return counter == number
-        except ValueError as v:
-            return False
+    def is_numbered_day(self, date_order, numbers):
+        if type(numbers) != list:
+            numbers = [numbers]
+        for number in numbers:
+            try:
+                number = int(number)
+                # Do more stuff here
+                # Since we know the weekday is right, just check each "weekday" and intcrement a counter until date is today. Then we know if we are 3rd Friday or whatver
+                wday = self.date_order.weekday()
+                # today = datetime.date.today()
+                date = datetime.date(date_order.year,date_order.month,1)
+                # This loop should get the first occurance of weekday in the month
+                while date.weekday() != wday:
+                    date += timedelta(days=1)
+                counter = 1
+                while not date_compare(date, date_order):
+                    date += timedelta(days=7)
+                    counter += 1
+                return counter == number
+            except ValueError as v:
+                return False
 
     # Override
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):

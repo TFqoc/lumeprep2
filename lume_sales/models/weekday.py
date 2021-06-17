@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Weekday(models.Model):
     _name = 'lume.weekday'
@@ -10,4 +13,5 @@ class Weekday(models.Model):
         l = []
         for record in self:
             l.append(record.int_day)
+        logger.info("DAY LIST: %s" % l)
         return l
