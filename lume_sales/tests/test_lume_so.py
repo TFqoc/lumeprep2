@@ -182,10 +182,9 @@ class TestLPC(TestLumeOrderCommon):
             'form_view_initial_mode': 'edit',
             'lang': 'en_US',
             'lpc_sale_order_id': self.order_rec.id,
+            'type': 'adult',
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).lpc_remove_quantity()
-
-        product_ids = [line["product_id"] for line in self.order_rec.order_line]
         
         self.assertTrue(
             self.order_rec.order_line,
