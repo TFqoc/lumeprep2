@@ -8,8 +8,12 @@ logger = logging.getLogger(__name__)
 def date_compare(d1, d2):
     return d1.year == d2.year and d1.month == d2.month and d1.day == d2.day
 def id_from_string(id):
-    id = str(id) # ensure that id is a string
-    id = int(id[len(id) - 1])
+    if type(id) == int:
+        return id
+    index = str(id).find('_')
+    if index == -1:
+        return index
+    id = int(id[index+1:])
     return id
 
 class CouponProgram(models.Model):
