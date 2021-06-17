@@ -18,6 +18,7 @@
                         <field name="recurring"/>
                         <field name="recurring_cycle" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}" style="width: auto !important;"/>
                         <field name="recurring_day" attrs="{'invisible': [('recurring', '=', False)]}" style="padding-left:10px;"/>
+                        <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes" options="{'no_create_edit':'1'}"/>
                     </div>
                 </field>
             </field>

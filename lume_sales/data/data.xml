@@ -38,5 +38,35 @@
             <field name="name">Lume Store Template</field>
             <field name="type_ids" eval="[(4, ref('lume_stage_0')), (4, ref('lume_stage_1')), (4, ref('lume_stage_2')), (4, ref('lume_stage_3')),(4, ref('lume_stage_4')),(4, ref('lume_stage_500'))]"/>
         </record>
+
+        <!-- Weekdays -->
+        <record id="lume_weekday_monday" model="lume.weekday">
+            <field name="name">Monday</field>
+            <field name="int_day">0</field>
+        </record>
+        <record id="lume_weekday_tuesday" model="lume.weekday">
+            <field name="name">Tuesday</field>
+            <field name="int_day">1</field>
+        </record>
+        <record id="lume_weekday_wednesday" model="lume.weekday">
+            <field name="name">Wednesday</field>
+            <field name="int_day">2</field>
+        </record>
+        <record id="lume_weekday_thursday" model="lume.weekday">
+            <field name="name">Thursday</field>
+            <field name="int_day">3</field>
+        </record>
+        <record id="lume_weekday_friday" model="lume.weekday">
+            <field name="name">Friday</field>
+            <field name="int_day">4</field>
+        </record>
+        <record id="lume_weekday_saturday" model="lume.weekday">
+            <field name="name">Saturday</field>
+            <field name="int_day">5</field>
+        </record>
+        <record id="lume_weekday_sunday" model="lume.weekday">
+            <field name="name">Sunday</field>
+            <field name="int_day">6</field>
+        </record>
     </data>
 </odoo>

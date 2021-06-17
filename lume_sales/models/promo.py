@@ -18,6 +18,7 @@ class CouponProgram(models.Model):
     recurring = fields.Boolean()
     recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
     recurring_day = fields.Char(compute='_compute_day')
+    recurring_days = fields.Many2many('lume.weekday')
     stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With')], required=True, default='not stackable')
     
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
@@ -25,18 +26,18 @@ class CouponProgram(models.Model):
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
-        logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
+        # logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
-        logger.info("Self: %s" % self.id) # Prints as "NewId_4"
+        # logger.info("Self: %s" % self.id) # Prints as "NewId_4"
         selfid = id_from_string(self.id)
         for program in (self._origin.stackable_with - self.stackable_with):
-            logger.info("Removing self from program id: %s" % program.id)
+            # logger.info("Removing self from program id: %s" % program.id)
             # program.update({'stackable_with' : [(3,self.id,0)]})
             self.env['coupon.program'].browse(id_from_string(program.id)).stackable_with = [(3,selfid,0)]
         # Add backwards link on all new programs we are stackable with
         for program in self.stackable_with:
             if not self in program.stackable_with:
-                logger.info("Adding self to program id: %s" % program.id)
+                # logger.info("Adding self to program id: %s" % program.id)
                 # Update works the same as write but works for pseudo records
                 # program.update({'stackable_with' : [(4,self.id,0)]})
                 self.env['coupon.program'].browse(id_from_string(program.id)).stackable_with = [(4,selfid,0)]
