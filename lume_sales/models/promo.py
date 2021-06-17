@@ -7,10 +7,12 @@ logger = logging.getLogger(__name__)
 
 def date_compare(d1, d2):
     return d1.year == d2.year and d1.month == d2.month and d1.day == d2.day
+# Gets the integer value from a string like NewId_###
 def id_from_string(id):
     if type(id) == int:
         return id
-    index = str(id).find('_')
+    id = str(id)
+    index = id.find('_')
     if index == -1:
         return index
     id = int(id[index+1:])
