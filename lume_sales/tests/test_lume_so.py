@@ -130,6 +130,17 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
             'lang': 'en_US',
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).action_cancel()
+        
+        self.assertFalse(
+            self.task_rec.active,
+            "Related task was not archived."
+        )
+
+        self.assertEqual(
+            self.order_rec.state,
+            'cancel',
+            "Order was not canceled."
+        )
 
 
 @tagged('lume')
