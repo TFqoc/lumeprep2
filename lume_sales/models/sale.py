@@ -214,6 +214,7 @@ class SaleOrder(models.Model):
     #     ])._filter_programs_from_common_rules(self)
     #     return programs
 
+    # Override
     def _create_new_no_code_promo_reward_lines(self):
         '''Apply new programs that are applicable'''
         self.ensure_one()
@@ -234,8 +235,10 @@ class SaleOrder(models.Model):
             else:
                 logger.info("Program Error Message: %s" % error_status.get("error"))
 
+    # Override
     def _is_global_discount_already_applied(self):
-        # We want these to stack
+        # Saying that a global discount is never applied allows us to stack as many as we want.
+        # Stacking rules are applied elsewhere
         return False
 
 class SaleLine(models.Model):
