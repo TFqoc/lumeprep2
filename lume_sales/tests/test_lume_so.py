@@ -163,8 +163,41 @@ class TestLPC(TestLumeOrderCommon):
             "Error in Product Category: Incorrect Quantity Added."
         )
     
-    def test_lpc_subtract_quantity_rec(self):
-        pass
+    def test_lpc_remove_quantity_rec(self):
+        self.order_rec.order_line = [(0, 0, {
+            'product_id': self.product_rec.product_variant_ids[0].id,
+            'product_uom_qty': 2.00
+        })]
+        record_ids = [self.product_rec.product_variant_ids[0].id]
+        # TODO: Check or Find active_id link (external id or otherwise)
+        active_id = self.lumestore_one.id
+        # TODO: Check or Find active_ids link (external id or otherwise)
+        active_ids = [self.lumestore_one.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['product.product'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'sale.order',
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'lpc_sale_order_id': self.order_rec.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).lpc_remove_quantity()
+
+        product_ids = [line["product_id"] for line in self.order_rec.order_line]
+        
+        self.assertTrue(
+            self.order_rec.order_line,
+            "Sales Order line should not have been deleted."
+        )
+
+        self.assertEqual(
+            self.order_rec.order_line.product_uom_qty,
+            1.00,
+            "Error in Product Category: Incorrect Quantity Subtracted."
+        )
+
 
     def test_lpc_remove_line_rec(self):
         pass
