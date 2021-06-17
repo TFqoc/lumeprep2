@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 import datetime
 from datetime import timedelta
+import itertools
 import logging
 
 logger = logging.getLogger(__name__)
@@ -102,7 +103,20 @@ class CouponProgram(models.Model):
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
         # Probably don't want this super call down the road
         # return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
-        lst = [p for p in self]
-        cst = list(self)
-        logger.info("List Comprehension: %s List Casting: %s" % (lst, cst))
+        possibilities = []
+        for p in self:
+            d = [p]
+            if not p.stackability == 'not stackable':
+                for program in self:
+                    if p != program and p in program.stackable_with and program.stackability == 'stackable':
+                        d.append(program)
+            possibilities.append(d)
+        logger.info("Total possibilities: %s" % possibilities)
+        # Pick best combo here
+        combos = []
+        for index, promos in enumerate(possibilities):
+            discount_total = sum([promo.discount_percentage for promo in promos])
+            combos.append((index, discount_total))
+        combos.sort(key=lambda p: p[1])
+        logger.info("Combos in order: %s" % combos)
         return self
