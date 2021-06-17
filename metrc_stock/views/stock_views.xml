@@ -42,8 +42,7 @@
         <field name="arch" type="xml">
             <field name="lot_id" position="after">
                 <field name="lot_qty" readonly="1"
-                       attrs="{'column_invisible': ['|', ('parent.picking_type_code', '=', 'incoming'), 
-                                            ('parent.state', 'in', ['done','cancel'])]}"/>
+                       attrs="{'column_invisible': [('parent.state', 'in', ['done','cancel'])]}"/>
                 <field name="move_id" invisible="1"/>
                 <field name="split_needed" invisible="1"/>
                 <button name="split_quantity" type="object" 
