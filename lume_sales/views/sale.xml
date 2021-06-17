@@ -59,7 +59,7 @@
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
-                    <attribute name="attrs">{'invisible': [('state', 'in', ['sale','done'])]}</attribute>
+                    <attribute name="attrs">{'invisible': [('state', 'in', ['sale','done','cancel'])]}</attribute>
                 </xpath>
                 <xpath expr="//header/button[@name='action_cancel']" position="attributes">
                     <attribute name="string">Abandon Cart</attribute>
