@@ -102,4 +102,7 @@ class CouponProgram(models.Model):
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
         # Probably don't want this super call down the road
         # return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
+        lst = [p for p in self]
+        cst = list(self)
+        logger.info("List Comprehension: %s List Casting: %s" % (lst, cst))
         return self
