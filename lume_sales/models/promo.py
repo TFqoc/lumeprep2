@@ -17,7 +17,7 @@ class CouponProgram(models.Model):
 
     recurring = fields.Boolean()
     recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
-    recurring_day = fields.Char(compute='_compute_day')
+    # recurring_day = fields.Char(compute='_compute_day')
     recurring_days = fields.Many2many('lume.weekday')
     stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With')], required=True, default='not stackable')
     
@@ -65,13 +65,13 @@ class CouponProgram(models.Model):
         logger.info("DEBUG: %s" % data)
         return res
 
-    @api.depends('rule_date_from')
-    def _compute_day(self):
-        for record in self:
-            if record.rule_date_from:
-                record.recurring_day = record.rule_date_from.strftime("%A")
-            else:
-                record.recurring_day = ""
+    # @api.depends('rule_date_from')
+    # def _compute_day(self):
+    #     for record in self:
+    #         if record.rule_date_from:
+    #             record.recurring_day = record.rule_date_from.strftime("%A")
+    #         else:
+    #             record.recurring_day = ""
 
     def is_numbered_day(self, date_order, number):
         try:
@@ -95,4 +95,5 @@ class CouponProgram(models.Model):
     # Override
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
         # Probably don't want this super call down the road
-        return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
+        # return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
+        return self
