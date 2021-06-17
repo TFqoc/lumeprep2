@@ -33,6 +33,9 @@ class CouponProgram(models.Model):
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
+        return
+        # Causes issues when creating a new promotion
+
         # logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
         # logger.info("Self: %s" % self.id) # Prints as "NewId_4"
@@ -119,4 +122,5 @@ class CouponProgram(models.Model):
             combos.append((index, discount_total))
         combos.sort(key=lambda p: p[1])
         logger.info("Combos in order: %s" % combos)
+        # Add up single recordsets with |= to make a full recordset to return
         return self
