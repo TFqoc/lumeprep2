@@ -128,9 +128,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in build_cart: Task did not move to the appropriate stage."
             )
 
-        #Validating Sale_Order
-        # TODO: Assert that the Order Type is carried over to the Sale Order.
-
         self.assertTrue(
             Test_Task.sales_order,
             "Error in build_cart: Sale Order was not created."
@@ -201,6 +198,12 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertTrue(
             Test_Task.sales_order.order_line,
             "Error in Product Catologue: Line was not created."
+        )
+
+        self.assertEqual(
+            Test_Task.order_type,
+            'adult', #TODO Find correct value that goes here.
+            "Error in selecting product: Order type was %s instead of %s" % (Test_Task.order_type, 'adult')
         )
 
         self.assertEqual(
