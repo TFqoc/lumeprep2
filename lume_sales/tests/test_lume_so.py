@@ -122,7 +122,14 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
         )
 
     def test_rec_abandon_cart(self):
-        pass
+        # TODO: Check or Find record_ids link (external id or otherwise)
+        record_ids = [self.order_rec.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['sale.order'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).action_cancel()
 
 
 @tagged('lume')
