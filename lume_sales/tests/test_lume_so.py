@@ -117,7 +117,7 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
         )
 
         self.assertTrue(
-            self.order_rec.state.picking_ids,
+            self.order_rec.picking_ids,
             "Pick Ticket was not created."
         )
 
