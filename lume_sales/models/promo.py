@@ -81,7 +81,7 @@ class CouponProgram(models.Model):
                 number = int(number)
                 # Do more stuff here
                 # Since we know the weekday is right, just check each "weekday" and intcrement a counter until date is today. Then we know if we are 3rd Friday or whatver
-                wday = self.date_order.weekday()
+                wday = date_order.weekday()
                 # today = datetime.date.today()
                 date = datetime.date(date_order.year,date_order.month,1)
                 # This loop should get the first occurance of weekday in the month
