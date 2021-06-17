@@ -201,7 +201,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         )
 
         self.assertEqual(
-            Test_Task.order_type,
+            Test_Task.sales_order.order_type,
             'adult', #TODO Find correct value that goes here.
             "Error in selecting product: Order type was %s instead of %s" % (Test_Task.order_type, 'adult')
         )
