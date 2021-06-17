@@ -234,6 +234,10 @@ class SaleOrder(models.Model):
             else:
                 logger.info("Program Error Message: %s" % error_status.get("error"))
 
+    def _is_global_discount_already_applied(self):
+        # We want these to stack
+        return False
+
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
