@@ -26,7 +26,7 @@ class CouponProgram(models.Model):
     recurring_cycle = fields.Selection([('every','Every'),('1','Every First'),('2','Every Second'),('3','Every Third'),('4','Every Fourth'),('5','Every Fifth')], default="every")
     # recurring_day = fields.Char(compute='_compute_day')
     recurring_days = fields.Many2many('lume.weekday')
-    stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With')], required=True, default='not stackable')
+    stackability = fields.Selection([('not stackable','Non Stackable'),('stackable','Stackable With'),('stackable all','Stackable with All')], required=True, default='not stackable')
     
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
     # stackable_with_reverse = fields.Many2many()
@@ -133,6 +133,12 @@ class CouponProgram(models.Model):
                                 break
                         if stackable:
                             d |= program
+                    elif program.stackability == 'stackable all' and program not in d:
+                        d |= program
+            elif p.stackability == 'stackable all':
+                for program in self:
+                    if program not in d and program.stackability != 'not stackable':
+                        d |= program
             possibilities.append(d)
         logger.info("Total possibilities: %s" % possibilities)
         # Pick best combo here

@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <field name="rule_date_from" position="before">
                     <field name="stackability" style="width: auto !important;"/>
-                    <field name="stackable_with" attrs="{'invisible': [('stackability','=','not stackable')],'required': [('stackability','=','not stackable')]}">
+                    <field name="stackable_with" attrs="{'invisible': [('stackability','in',['not stackable','stackable all'])],'required': [('stackability','in',['not stackable','stackable all'])]}">
                         <tree create="0">
                             <field name="name"/>
                             <field name="active"/>
@@ -18,11 +18,11 @@
                         <field name="recurring"/>
                         <field name="recurring_cycle" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}" style="width: auto !important;"/>
                         <!-- <field name="recurring_day" attrs="{'invisible': [('recurring', '=', False)]}" style="padding-left:10px;"/> -->
-                        <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes" options="{'no_create_edit':'1'}"/>
+                        <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes"/>
                     </div>
                 </field>
                 <field name="rule_products_domain" position="after">
-                    <field name="store_ids" widget="many2many_tags"/>
+                    <field name="store_ids" string="Based on Store" widget="many2many_tags" options="{'no_create':'1','no_edit':'1'}"/>
                 </field>
             </field>
         </record>
