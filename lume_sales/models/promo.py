@@ -33,13 +33,18 @@ class CouponProgram(models.Model):
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
-        return
         # Causes issues when creating a new promotion
 
         # logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
         # logger.info("Self: %s" % self.id) # Prints as "NewId_4"
-        selfid = id_from_string(self.id)
+        try:
+            selfid = id_from_string(self.id)
+        except ValueError as v:
+            # If we get a value error then this is being called at a point when there is
+            # undefined behavior, such as during a record's creation
+            # So we should just do nothing in this case
+            return
         for program in (self._origin.stackable_with - self.stackable_with):
             # logger.info("Removing self from program id: %s" % program.id)
             # program.update({'stackable_with' : [(3,self.id,0)]})
@@ -131,4 +136,3 @@ class CouponProgram(models.Model):
                 return_set |= program
         # Add up single recordsets with |= to make a full recordset to return
         return return_set
-        # return self
