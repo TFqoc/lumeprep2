@@ -59,7 +59,7 @@ class StockWarehouse(models.Model):
                     'name': _('Batch Split'),
                     'sequence_id': batch_split_seq.id,
                     'wh_field': 'metrc_manu_type_id',
-                }
+                },
                 {
                     'name': _('Consolidation'),
                     'sequence_id': consolidation_seq.id,
@@ -76,7 +76,8 @@ class StockWarehouse(models.Model):
                     'default_location_src_id': wh_stock_loc.id,
                     'default_location_dest_id': wh_stock_loc.id,
                     'sequence_code': max_sequence,
-                    'color': color}
+                    'color': color
+                }
                 values.extend(picking_type_val)
                 manu_type = picking_type_obj.create(values)
                 warehouse.write({wh_field: manu_type.id})
