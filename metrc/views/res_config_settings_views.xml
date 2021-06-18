@@ -48,25 +48,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_service_account">
-                            <div class="o_setting_left_pane">
-                                <field name="service_account"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label string="Service Account" for="service_account"/>
-                                <div class="text-muted">
-                                    Makes account service account which will be this account to be used for matitnance and backgroud data sunchronization authetication
-                                </div> -->
-<!--                                TODO: FIx why open account logs action is not working on res.config settings -->
-<!--                                <div class="content-group" attrs="{'invisible': [('service_account', '=', False)]}">-->
-<!--                                    <div class="mt16">-->
-<!--                                        <div>-->
-<!--                                            <button string="View Account Logs" type="object" name="open_account_logs" icon="fa-external-link-square" class="oe_link"/>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-                            <!-- </div>
-                        </div> -->
                         <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_debug">
                             <div class="o_setting_left_pane">
                                 <field name="debug_logging"/>
@@ -82,7 +63,7 @@
                             <div class="o_setting_right_pane">
                                 <label string="Related User" for="related_user"/>
                                 <div class="text-muted">
-                                    Related system user for given credentails
+                                    Related system user for selected service account
                                 </div>
                                 <div class="mt8">
                                     <field name="related_user"/>
@@ -105,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_licenses">
+                        <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_licenses">
                             <div class="o_setting_right_pane">
                                 <button string="Labtest Types" type="action" name="%(metrc.action_open_metrc_labtest_type)s" class="oe_link"/>
                                 <div class="text-muted">
@@ -119,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </xpath>
@@ -135,6 +116,10 @@
         <field name="context">{'module' : 'metrc'}</field>
     </record>
 
-    <menuitem name="Settings" id="menu_action_metrc_configuration" action="action_metrc_configuration" parent="metrc_base.menu_metrc_config" groups="base.group_system,metrc_base.group_metrc_manager" sequence="1"/>
+    <menuitem id="menu_action_metrc_configuration" 
+              action="action_metrc_configuration" 
+              parent="metrc_base.menu_metrc_config" 
+              groups="base.group_system,metrc_base.group_metrc_manager" 
+              sequence="1" name="Settings"/>
 
 </odoo>
