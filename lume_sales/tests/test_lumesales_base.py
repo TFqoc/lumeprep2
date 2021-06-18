@@ -1,6 +1,7 @@
 from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
-import datetime
+from datetime import datetime
+from datetime import timedelta
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -187,9 +188,9 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',
-            'date_of_birth': datetime.date(1987, 2, 17),
+            'date_of_birth': datetime.now() - timedelta(days = 365*23),
             'drivers_license_number': 'C333547393957',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.now() + timedelta(days = 365*1)
 
         })
 
@@ -204,11 +205,11 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
-            'date_of_birth': datetime.date(1979, 5, 14),
+            'date_of_birth': datetime.now() - timedelta(days = 365*24),
             'medical_id': 'CG-18-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.now() + timedelta(days = 365*2),
             'drivers_license_number': 'H111222233334',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.now() + timedelta(days = 365*2)
         })
 
         cls.customer_banned = Customers.create({
@@ -222,10 +223,10 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'bf@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.now() - timedelta(days = 365*24),
             'warnings': 3,
             'drivers_license_number': 'B434554533231',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.now() + timedelta(days = 365*3)
 
         })
 
@@ -240,13 +241,13 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'jt@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.now() - timedelta(days = 365*25),
             'medical_id': 'CG-21-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.now() + timedelta(days = 365*2),
             'is_caregiver': True,
             'caregiver_license': 'Caregiver',
             'drivers_license_number': 'B434555533231',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.now() + timedelta(days = 365*4)
         })
 
         state = cls.env['res.country.state'].search([("code","=", "WI")], limit=1)
@@ -261,12 +262,12 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '53590-0001',
             'phone': '555-555-5555',
             'email': 'jt@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.now() - timedelta(days = 365*26),
             'medical_id': 'CG-19-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.now() + timedelta(days = 365*3),
             'caregiver_id': cls.customer_care.id,
             'drivers_license_number': 'F672554568631',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.now() + timedelta(days = 365*5)
         })
         
         #Creating products as above. 

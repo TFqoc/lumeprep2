@@ -2,6 +2,8 @@ import logging
 from . test_lumesales_base import compare_dictionaries
 from . test_lumesales_base import TestLumeSaleCommon
 from ..models.barcode_parse import parse_code
+from datetime import datetime
+from datetime import timedelta
 from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
@@ -51,6 +53,12 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             parsed_barcode['state_id'],
             'MI',
             "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
+        )
+
+        self.assertEqual(
+            parsed_barcode['date_of_birth'],
+            datetime.now() - timedelta(days = 365*23),
+            "Error in MI Barcode Parse: The date of birth was %s instead of %s." % (parsed_barcode['date_of_birth'], datetime.now() - timedelta(days = 365*23))
         )
     def test_check_in_button(self):
         record_ids = [self.customer_rec.id]

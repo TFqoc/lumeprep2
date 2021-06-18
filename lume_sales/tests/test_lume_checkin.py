@@ -1,8 +1,11 @@
 import logging
+from datetime import datetime
+from datetime import timedelta
 from . test_lumesales_base import TestLumeSaleCommon
 from odoo.tests.common import tagged
 from ..models.barcode_parse import parse_code
 from . test_lumesales_base import compare_dictionaries
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -93,7 +96,7 @@ class TestCheckIn(TestLumeSaleCommon):
         )
 
     def test_med_under_21_checkin(self):
-        self.customer_med.date_of_birth = datetime.date(2002, 1, 1)
+        self.customer_med.date_of_birth = datetime.now() - timedelta(days=365*19)
         record_ids = [self.customer_med.id]
         uid = self.env.ref('base.user_admin').id
         self.env['res.partner'].browse(record_ids).with_context({
@@ -138,19 +141,85 @@ class TestCheckIn(TestLumeSaleCommon):
 
 
     def test_expired_dl(self):
-        self.assertTrue(False, "Do this test.")
+        self.customer_rec.drivers_license_expiration = datetime.now() - timedelta(days = 365)
+        with self.assertRaises(UserError):
+            record_ids = [self.customer_rec.id]
+            uid = self.env.ref('base.user_admin').id
+            self.env['res.partner'].browse(record_ids).with_context({
+                'allowed_company_ids': [1],
+                'check_in_window': True,
+                'fulfillment_type': 'store',
+                'lang': 'en_US',
+                'order_type': 'adult',
+                'partner_id': self.customer_rec.id,
+                'project_id': self.lumestore_one.id,
+                'tz': 'Europe/Brussels',
+                'uid': uid}).with_user(uid).check_in()
+        
 
     def test_expired_med_id(self):
-        self.assertTrue(False, "Do this test.")
+        self.customer_med.medical_expiration = self.customer_rec.drivers_license_expiration = datetime.now() - timedelta(days = 365)
+        with self.assertRaises(UserError):
+            record_ids = [self.customer_med.id]
+            uid = self.env.ref('base.user_admin').id
+            self.env['res.partner'].browse(record_ids).with_context({
+                'allowed_company_ids': [1],
+                'check_in_window': True,
+                'fulfillment_type': 'store',
+                'lang': 'en_US',
+                'order_type': 'adult',
+                'partner_id': self.customer_med.id,
+                'project_id': self.lumestore_one.id,
+                'tz': 'Europe/Brussels',
+                'uid': uid}).with_user(uid).check_in()
 
     def test_banned_checkin(self):
-        self.assertTrue(False, "Do this test.")
+        with self.assertRaises(UserError):
+            record_ids = [self.customer_banned.id]
+            uid = self.env.ref('base.user_admin').id
+            self.env['res.partner'].browse(record_ids).with_context({
+                'allowed_company_ids': [1],
+                'check_in_window': True,
+                'fulfillment_type': 'store',
+                'lang': 'en_US',
+                'order_type': 'adult',
+                'partner_id': self.customer_banned.id,
+                'project_id': self.lumestore_one.id,
+                'tz': 'Europe/Brussels',
+                'uid': uid}).with_user(uid).check_in()
+
 
     def test_under_eighteen_checkin(self):
-        self.assertTrue(False, "Do this test.")
+        self.customer_rec.date_of_birth = datetime.now() - timedelta(days = 365)
+        with self.assertRaises(UserError):
+            record_ids = [self.customer_rec.id]
+            uid = self.env.ref('base.user_admin').id
+            self.env['res.partner'].browse(record_ids).with_context({
+                'allowed_company_ids': [1],
+                'check_in_window': True,
+                'fulfillment_type': 'store',
+                'lang': 'en_US',
+                'order_type': 'adult',
+                'partner_id': self.customer_rec.id,
+                'project_id': self.lumestore_one.id,
+                'tz': 'Europe/Brussels',
+                'uid': uid}).with_user(uid).check_in()
 
     def test_under_21_checkin(self):
-        self.assertTrue(False, "Do this test.")
+        self.customer_rec.date_of_birth = datetime.now() - timedelta(days = 365*19)
+        with self.assertRaises(UserError):
+            record_ids = [self.customer_rec.id]
+            uid = self.env.ref('base.user_admin').id
+            self.env['res.partner'].browse(record_ids).with_context({
+                'allowed_company_ids': [1],
+                'check_in_window': True,
+                'fulfillment_type': 'store',
+                'lang': 'en_US',
+                'order_type': 'adult',
+                'partner_id': self.customer_rec.id,
+                'project_id': self.lumestore_one.id,
+                'tz': 'Europe/Brussels',
+                'uid': uid}).with_user(uid).check_in()
 
     
 
@@ -160,7 +229,7 @@ class TestBarcodeParse(TestLumeSaleCommon):
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
+        key_list = ['name', 'street', 'city', 'zip', 'drivers_license_expiration', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
 
@@ -173,13 +242,19 @@ class TestBarcodeParse(TestLumeSaleCommon):
         self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
             parsed_barcode['state_id'],
             'MI',
-            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
+            "Error in MI Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
+        )
+
+        self.assertEqual(
+            parsed_barcode['date_of_birth'],
+            datetime.now() - timedelta(days = 365*23),
+            "Error in MI Barcode Parse: The date of birth was %s instead of %s." % (parsed_barcode['date_of_birth'], datetime.now() - timedelta(days = 365*23))
         )
 
     def test_wi_barcode_parse(self):
         barcode = '@ANSI 636031080102DL0041W03070017DLDCADDCBNONEDCDNONEDBA12312021DCSTHYMEDACJUSTINDADNICKDBD05052001DBB10211999DBC1DAYHAZDAU072 INDAG404 ELECTRIC AVENUEDAIMADISONDAJWIDAK535900001DAQF672554568631DCFNDCGUSADDENDDFNDDGNDCKNDDAFDDB06182021ZWZWA13255171875'
         parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
+        key_list = ['name', 'street', 'city', 'zip', 'drivers_license_expiration', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_pat, key_list)
 
@@ -192,4 +267,10 @@ class TestBarcodeParse(TestLumeSaleCommon):
             parsed_barcode['state_id'],
             'WI',
             "Error in Barcode Parse: the state id was %s instead of WI." % (parsed_barcode['state_id'])
+        )
+
+        self.assertEqual(
+            parsed_barcode['date_of_birth'],
+            datetime.now() - timedelta(days = 365*26),
+            "Error in MI Barcode Parse: The date of birth was %s instead of %s." % (parsed_barcode['date_of_birth'], datetime.now() - timedelta(days = 365*23))
         )
