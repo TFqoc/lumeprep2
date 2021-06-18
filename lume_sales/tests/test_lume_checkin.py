@@ -8,8 +8,31 @@ _logger = logging.getLogger(__name__)
 
 @tagged('lume')
 class TestCheckIn(TestLumeSaleCommon):
-    def shut_up_pylance(self):
-        pass
+    def test_rec_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_med_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_med_under_21_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_expired_dl(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_expired_med_id(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_banned_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_under_eighteen_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    def test_under_21_checkin(self):
+        self.assertTrue(False, "Do this test.")
+
+    
 
 @tagged('lume')
 class TestBarcodeParse(TestLumeSaleCommon):
