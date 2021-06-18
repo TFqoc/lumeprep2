@@ -96,7 +96,7 @@ class MetrcAccount(models.Model):
         comodel_name='ir.logging', inverse_name='account_id', string='Loggins')
 
     _sql_constraints = [
-        ('metrc_account_unique_apikey', 'unique (software_api_key, user_api_key, api_version)', 'The Metrc API keys pair (Vendor API Key and ) must be unique !'),
+        ('metrc_account_unique_apikey', 'unique (user_api_key)', 'The Metrc User Api key must be unique !'),
     ]
 
     def _compute_api_version(self):
