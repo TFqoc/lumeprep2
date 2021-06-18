@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 import datetime
 from datetime import timedelta
-import itertools
+import math
 import logging
 
 logger = logging.getLogger(__name__)
@@ -104,12 +104,11 @@ class CouponProgram(models.Model):
 
     # Override
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
-        # Probably don't want this super call down the road
-        # return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
+        # TODO This loop creates redundant results. Could make this more efficient in the future
         possibilities = []
         for p in self:
             d = [p]
-            if not p.stackability == 'not stackable':
+            if p.stackability == 'stackable':
                 for program in self:
                     if p != program and p in program.stackable_with and program.stackability == 'stackable':
                         d.append(program)
@@ -118,9 +117,18 @@ class CouponProgram(models.Model):
         # Pick best combo here
         combos = []
         for index, promos in enumerate(possibilities):
-            discount_total = sum([promo.discount_percentage for promo in promos])
+            discount_total = math.prod([1-(promo.discount_percentage/100) for promo in promos])
             combos.append((index, discount_total))
-        combos.sort(key=lambda p: p[1])
+        combos.sort(key=lambda p: p[1],reverse=False)
         logger.info("Combos in order: %s" % combos)
+        # Combo[0] is the best one
+        index = combos[0][0]
+        return_set = False
+        for program in possibilities:
+            if not return_set:
+                return_set = program
+            else:
+                return_set |= program
         # Add up single recordsets with |= to make a full recordset to return
-        return self
+        return return_set
+        # return self
