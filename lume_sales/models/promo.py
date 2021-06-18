@@ -114,11 +114,12 @@ class CouponProgram(models.Model):
         logger.info("TYPE OF RECORDSET: %s" % type(self))
         possibilities = []
         for p in self:
-            d = [p]
+            d = p
             if p.stackability == 'stackable':
                 for program in self:
-                    if p != program and p in program.stackable_with and program.stackability == 'stackable':
-                        d.append(program)
+                    if program not in d and program in d.stackable_with and program.stackability == 'stackable':
+                        d |= program
+                        logger.info("D Recordset: %s" % d)
             possibilities.append(d)
         logger.info("Total possibilities: %s" % possibilities)
         # Pick best combo here
@@ -130,11 +131,12 @@ class CouponProgram(models.Model):
         logger.info("Combos in order: %s" % combos)
         # Combo[0] is the best one
         index = combos[0][0]
-        return_set = False
-        for program in possibilities[index]:
-            if not return_set:
-                return_set = program
-            else:
-                return_set |= program
-        # Add up single recordsets with |= to make a full recordset to return
-        return return_set
+        return possibilities[index]
+        # return_set = False
+        # for program in possibilities[index]:
+        #     if not return_set:
+        #         return_set = program
+        #     else:
+        #         return_set |= program
+        # # Add up single recordsets with |= to make a full recordset to return
+        # return return_set
