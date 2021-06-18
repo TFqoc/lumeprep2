@@ -204,7 +204,7 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
-            'date_of_birth': datetime.date(1999, 5, 14),
+            'date_of_birth': datetime.date(1979, 5, 14),
             'medical_id': 'CG-18-089765',
             'medical_expiration': datetime.date(2021, 9, 13),
             'drivers_license_number': 'H111222233334',
