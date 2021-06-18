@@ -78,6 +78,6 @@ class StockWarehouse(models.Model):
                     'sequence_code': max_sequence,
                     'color': color
                 }
-                values.extend(picking_type_val)
+                values.update(picking_type_val)
                 manu_type = picking_type_obj.create(values)
                 warehouse.write({wh_field: manu_type.id})
