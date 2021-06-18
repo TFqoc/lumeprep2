@@ -74,7 +74,7 @@ class TestCheckIn(TestLumeSaleCommon):
             'fulfillment_type': 'store',
             'order_type': False,
             'user_id': False,
-            'name': self.customer_med.id.name
+            'name': self.customer_med.name
         }
 
         self.assertTrue(
