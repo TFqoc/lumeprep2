@@ -59,8 +59,8 @@ class TestCheckIn(TestLumeSaleCommon):
             'fulfillment_type': 'store',
             'lang': 'en_US',
             'order_type': 'adult',
-            'partner_id': self.customer_med.id.id,
-            'project_id': self.customer_med.id.id,
+            'partner_id': self.customer_med.id,
+            'project_id': self.customer_med.id,
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
