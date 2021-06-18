@@ -44,6 +44,7 @@ class CouponProgram(models.Model):
             # If we get a value error then this is being called at a point when there is
             # undefined behavior, such as during a record's creation
             # So we should just do nothing in this case
+            logger.info("Value Error in promo: %s" % v)
             return
         for program in (self._origin.stackable_with - self.stackable_with):
             # logger.info("Removing self from program id: %s" % program.id)
