@@ -21,6 +21,9 @@
                         <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes" options="{'no_create_edit':'1'}"/>
                     </div>
                 </field>
+                <field name="rule_products_domain" position="after">
+                    <field name="store_ids" widget="many2many_tags"/>
+                </field>
             </field>
         </record>
     </data>
