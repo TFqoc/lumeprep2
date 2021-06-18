@@ -29,7 +29,6 @@ Metrc Integration
         'views/metrc_model_data_view.xml',
         'views/labtest_views.xml',
         'views/res_partner_view.xml',
-        'views/metrc_account_views.xml',
         'views/res_config_settings_views.xml',
         'report/flower_package_lables.xml',
 

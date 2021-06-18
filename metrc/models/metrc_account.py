@@ -7,9 +7,6 @@ from odoo import api, fields, models, _
 class MetrcAccount(models.Model):
     _inherit = ['metrc.account']
 
-    import_licenses = fields.Boolean(string='Import Licenses', help='Import license for each facilities')
-    import_labtest_types = fields.Boolean(string='Import Labtest Types', help='Import Labtest Types from Metrc')
-
     def do_import_labtest_types(self):
         self.ensure_one()
         self.env['metrc.labtest.type'].do_model_import(self)

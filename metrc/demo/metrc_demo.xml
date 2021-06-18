@@ -2,13 +2,20 @@
 <odoo>
     <data>
 
-        <record id="metrc_account_caliva" model="metrc.account">
-        	<field name="name">Caliva Metrc Account</field>
+        <record id="metrc_account_ca_sandbox" model="metrc.account">
+        	<field name="name">Odoo CA Metrc Account</field>
             <field name="active" eval="True"/>
             <field name="service_account" eval="True"/>
             <field name="prod_environment" eval="False"/>
-            <field name="software_api_key">NVnKWYXvy48xz9hM14LJvapNkg5nYVOvJEuTwqLFc3IDsIpv</field>
-            <field name="user_api_key">1Wp6gGnFgKZUTgxJBYliM0YQP0sem9CTHJeZZf7csegfibky</field>
+            <field name="user_api_key">FusVbe4Yv6W1DGNuxKNhByXU6RO6jSUPcbRCoRDD98VNXc4D</field>
+        </record>
+
+        <record id="metrc_account_mi_sandbox" model="metrc.account">
+        	<field name="name">Odoo MI Metrc Account</field>
+            <field name="active" eval="True"/>
+            <field name="service_account" eval="True"/>
+            <field name="prod_environment" eval="False"/>
+            <field name="user_api_key">piNo4VXHYPqlQFIZQKclMgQKigJsnx7zSQ9fq3iOtlpLvE0o</field>
         </record>
 
         <!-- Metrc License Issuer Data -->

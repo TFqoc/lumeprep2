@@ -50,13 +50,6 @@
                                     <span class="text-success" attrs="{'invisible': [('prod_environment', '=', False)]}">Production Mode</span>
                                     <span class="text-danger" attrs="{'invisible': [('prod_environment', '=', True)]}">Test Mode</span>
                             </button>
-                            <button name="toggle_service_account"
-                                    class="oe_stat_button"
-                                    icon="fa-wrench"
-                                    type="object" groups="metrc_base.group_metrc_manager">
-                                    <span class="text-success" attrs="{'invisible': [('service_account', '=', False)]}">Service Account</span>
-                                    <span class="text-danger" attrs="{'invisible': [('service_account', '=', True)]}">Non-Service Account</span>
-                            </button>
                         </div>
                         <widget name="web_ribbon" title="Sandbox" bg_color="bg-warning" attrs="{'invisible': ['|', ('prod_environment', '=', True), ('active', '!=', True)]}"/>
                         <widget name="web_ribbon" title="Production" bg_color="bg-success" attrs="{'invisible': ['|', ('prod_environment', '=', False), ('active', '!=', True)]}"/>
@@ -71,12 +64,11 @@
                         <div class="row mt16 o_settings_container" id="inventory_location">
                             <div class="col-12 col-lg-6 o_setting_box" title="Metrc account credentials, Vendor and User API Key .">
                                 <div class="o_setting_right_pane">
-                                    <label for="software_api_key" string="Metrc Credentials"/>
+                                    <label for="user_api_key" string="Metrc Credentials"/>
                                     <div class="text-muted">
-                                        Metrc account credentials, Vendor and User API Key
+                                        Metrc account credentials, User API Key
                                     </div>
                                     <div class="content-group mt16">
-                                        <field name="software_api_key" password="1" placeholder="Vendor API Key"/><br/>
                                         <field name="user_api_key" password="1" placeholder="User API Key"/>
                                     </div>
                                 </div>
@@ -88,8 +80,7 @@
                                         Metrc API Version and related system user from your users list
                                     </div>
                                     <div>
-                                        <field name="api_version"/><br/>
-                                        <field name="region"/><br/>
+                                        <field name="api_version" readonly="1"/><br/>
                                         <field name="related_user" readonly="1"/>
                                     </div>
                                 </div>
@@ -98,7 +89,6 @@
                         <group groups="metrc_base.group_metrc_manager">
                             <field name="prod_environment" invisible="1"/>
                             <field name="debug_logging" invisible="1"/>
-                            <field name="service_account" invisible="1"/>
                             <field name="active" invisible="1"/>
                         </group>
                         <notebook>
@@ -106,10 +96,6 @@
                                 <button string="Open Logs For Searching" type="object" name="open_account_logs"
                                             class="oe_link oe_right" icon="fa-external-link" groups="metrc_base.group_metrc_manager"/>
                                 <field name="logging_ids" readonly="1"/>
-                            </page>
-                            <page name="imports" string="Imports" attrs="{'inv1isible': [('service_account', '=', False)]}"  groups="base.group_no_one">
-                                <div class="row mt16 o_settings_container" id="div_import_models"  attrs="{'invisible': [('service_account', '=', False)]}">
-                                </div>
                             </page>
                         </notebook>
                     </sheet>
@@ -138,12 +124,11 @@
                         <div class="row mt16 o_settings_container" id="inventory_location">
                             <div class="col-12 col-lg-6 o_setting_box" title="Metrc account credentials, Vendor and User API Key .">
                                 <div class="o_setting_right_pane">
-                                    <label for="software_api_key" string="Metrc Credentials"/>
+                                    <label for="user_api_key" string="Metrc Credentials"/>
                                     <div class="text-muted">
                                         Metrc account credentials, Vendor and User's API Key
                                     </div>
                                     <div class="content-group mt16">
-                                        <field name="software_api_key" password="1" placeholder="Vendor API Key"/><br/>
                                         <field name="user_api_key" password="1" placeholder="User API Key"/>
                                     </div>
                                 </div>

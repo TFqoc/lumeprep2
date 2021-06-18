@@ -8,10 +8,6 @@ from odoo import api, fields, models, _
 class MetrcAccount(models.Model):
     _inherit = 'metrc.account'
 
-    import_package_adjust_reasons = fields.Boolean(string='Import Package Adjust Reasons')
-    import_packages = fields.Boolean(string='Import Packages', help='Import active packages from Metrc.')
-    import_transfer_types = fields.Boolean(string='Import Transfer Types', help='Import Transfer Types from metrc.')
-
     def do_import_transfer_types(self):
         self.ensure_one()
         MetrcTransferType = self.env['metrc.transfer.type']

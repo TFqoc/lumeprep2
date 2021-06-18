@@ -7,5 +7,5 @@ from odoo import api, fields, models, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    def do_import_category(self):
-        self.metrc_account_id.do_import_category()
+    def do_import_customer_types(self):
+        self.metrc_account_id.do_import_customer_types()
