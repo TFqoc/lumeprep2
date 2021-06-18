@@ -69,7 +69,7 @@ class TestCheckIn(TestLumeSaleCommon):
 
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
         expected_values = {
-            'partner_id': self.customer_med.id,
+            'partner_id': self.customer_med,
             'project_id': self.lumestore_one, 
             'fulfillment_type': 'store',
             'order_type': False,
