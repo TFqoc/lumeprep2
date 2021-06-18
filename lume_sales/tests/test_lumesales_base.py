@@ -249,15 +249,16 @@ class TestLumeSaleCommon(SavepointCase):
             'drivers_license_expiration': datetime.date(2021, 12, 31)
         })
 
+        state = cls.env['res.country.state'].search([("code","=", "WI")], limit=1)
         cls.customer_pat = Customers.create({
             'name': 'Justin Nick Thyme',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Electric Avenue',
-            'city': 'Detroit',
+            'city': 'Madison',
             'state_id': state.id,
             'country_id': state.country_id.id,
-            'zip': '48201-0001',
+            'zip': '53590-0001',
             'phone': '555-555-5555',
             'email': 'jt@example.com',
             'date_of_birth': datetime.date(1999, 10, 21),

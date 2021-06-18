@@ -1,108 +1,52 @@
 import logging
 from . test_lumesales_base import TestLumeSaleCommon
 from odoo.tests.common import tagged
+from ..models.barcode_parse import parse_code
+from . test_lumesales_base import compare_dictionaries
 
 _logger = logging.getLogger(__name__)
 
 @tagged('lume')
 class TestCheckIn(TestLumeSaleCommon):
+    def shut_up_pylance(self):
+        pass
 
 @tagged('lume')
 class TestBarcodeParse(TestLumeSaleCommon):
-    def setUp(self):
-        super().setUp()    
+    def test_mi_barcode_parse(self):
+        """Checking that the barcode parses correctly."""
+        barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        parsed_barcode = parse_code(barcode)
+        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
-    #This will be changed next patch.
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
 
-    # def test_scan_barcode_onchange(self):
-    #     record_ids = [self.customer_rec.id]
-    #     # TODO: Check or Find active_id link (external id or otherwise)
-    #     active_id = 7
-    #     # TODO: Check or Find active_ids link (external id or otherwise)
-    #     active_ids = [7, ]
-    #     uid = self.env.ref('base.user_admin').id
-    #     self.env['project.task'].browse(record_ids).with_context({
-    #         'active_id': active_id,
-    #         'active_ids': active_ids,
-    #         'active_model': 'project.project',
-    #         'allowed_company_ids': [1],
-    #         'default_project_id': 7,
-    #         'default_stage_id': 5,
-    #         'lang': 'en_US',
-    #         'pivot_row_groupby': ['user_id'],
-    #         'tz': 'Europe/Brussels',
-    #         'uid': uid}).with_user(uid).onchange({
-    #             'scan_text': '@ANSI 636031080102DL00410263ZW03040017DLDCADDCBJDCDNONEDBA12022021DCSCOUCHDACJACOBDADMICHAELDBD12012020DBB07152001DBC1DAYHAZDAU064 INDAG874 BARBARA STDAISUN PRAIRIEDAJWIDAK535901570  DAQC2004330125505DCFOTA6R2020120113424863DCGUSADDENDDFNDDGNDCK0130600043003565DDAFDDB09012015ZWZWA19252171875', 
-    #             'partner_id': False, 
-    #             'order_type': 'store', 
-    #             'user_id': 2, 
-    #             'project_id': 7, 
-    #             'timesheet_product_id': False, 
-    #             'company_id': 1, 
-    #             'parent_id': False}, 
-    #         'scan_text', {
-    #             'scan_text': '1', 
-    #             'partner_id': '1', 
-    #             'order_type': '', 
-    #             'user_id': '', 
-    #             'project_id': '1', 
-    #             'timesheet_product_id': '', 
-    #             'company_id': '1', 
-    #             'parent_id': '1'})
-                
-    #             # TODO: Check or Find active_id link (external id or otherwise)
-    #             active_id = 7
-    #             # TODO: Check or Find active_ids link (external id or otherwise)
-    #             active_ids = [7, ]
-    #             uid = self.env.ref('base.user_admin').id
-    #             record = self.env['project.task'].with_context({
-    #                 'active_id': active_id,
-    #                 'active_ids': active_ids,
-    #                 'active_model': 'project.project',
-    #                 'allowed_company_ids': [1],
-    #                 'default_project_id': 7,
-    #                 'default_stage_id': 5,
-    #                 'lang': 'en_US',
-    #                 'pivot_row_groupby': ['user_id'],
-    #                 'tz': 'Europe/Brussels',
-    #                 'uid': uid}).with_user(uid).create({
-    #                     'scan_text': False, 
-    #                     'partner_id': 45, 
-    #                     'order_type': 'store', 
-    #                     'user_id': self.env.ref('base.user_admin').id, 
-    #                     'project_id': 7, 
-    #                     'timesheet_product_id': False, 
-    #                     'company_id': self.env.ref('base.main_company').id, 
-    #                     'parent_id': False})
 
-    #                 self.env['ir.model.data'].create({
-    #                     'model': 'project.task',
-    #                     'module': 'project',
-    #                     'name': 'luminarytestcaseclass_project_task_24',
-    #                     'res_id': record.id})
-        
+        self.assertTrue(
+            dictionaries[0],
+            "List of errors: %s " % (dictionaries[1:])
+        )
 
-        # # TODO: Check or Find active_id link (external id or otherwise)
-        # active_id = 8
-        # # TODO: Check or Find active_ids link (external id or otherwise)
-        # active_ids = [8, ]
-        # uid = self.env.ref('base.user_admin').id
-        # record = self.env['project.task'].with_context({
-        #     'active_id': active_id,
-        #     'active_ids': active_ids,
-        #     'active_model': 'project.project',
-        #     'allowed_company_ids': [1],
-        #     'default_project_id': 8,
-        #     'default_stage_id': 5,
-        #     'lang': 'en_US',
-        #     'pivot_row_groupby': ['user_id'],
-        #     'tz': 'Europe/Brussels',
-        #     'uid': uid}).with_user(uid).create({'scan_text': False, 'partner_id': 46, 'order_type': 'store', 'user_id': self.env.ref('base.user_admin').id, 'project_id': 8, 'timesheet_product_id': False, 'company_id': self.env.ref('base.main_company').id, 'parent_id': False})
-        # self.env['ir.model.data'].create({
-        #     'model': 'project.task',
-        #     'module': 'project',
-        #     'name': 'checkinbarcodetest_project_task_37',
-        #     'res_id': record.id})
+        self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
+            parsed_barcode['state_id'],
+            'MI',
+            "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
+        )
 
-    def test_manditory_fields(self)
-    
+    def test_wi_barcode_parse(self):
+        barcode = '@ANSI 636031080102DL0041W03070017DLDCADDCBNONEDCDNONEDBA123121DCSTHYMEDACJUSTINDADNICKDBD05052001DBB10211999DBC1DAYHAZDAU072 INDAG404 ELECTRIC AVENUEDAIMADISONDAJWIDAK535900001DAQF672554568631DCFNDCGUSADDENDDFNDDGNDCKNDDAFDDB06182021ZWZWA13255171875'
+        parsed_barcode = parse_code(barcode)
+        key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
+
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_pat, key_list)
+
+        self.assertTrue(
+            dictionaries[0],
+            "List of errors: %s " % (dictionaries[1:])
+        )
+
+        self.assertEqual(                  #As the State Field is not yet transfered to an ID, it should be MI.
+            parsed_barcode['state_id'],
+            'WI',
+            "Error in Barcode Parse: the state id was %s instead of WI." % (parsed_barcode['state_id'])
+        )
