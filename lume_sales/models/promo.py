@@ -111,6 +111,7 @@ class CouponProgram(models.Model):
     # Override
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
         # TODO This loop creates redundant results. Could make this more efficient in the future
+        logger.info("TYPE OF RECORDSET: %s" % type(self))
         possibilities = []
         for p in self:
             d = [p]
