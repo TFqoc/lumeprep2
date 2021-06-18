@@ -65,7 +65,7 @@ class TestCheckIn(TestLumeSaleCommon):
             'uid': uid}).with_user(uid).check_in()
 
         # TODO: Refine how the test finds this task, as this can fail too easily.
-        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_med.id.id)])
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_med.id)])
 
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
         expected_values = {
