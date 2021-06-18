@@ -118,8 +118,14 @@ class CouponProgram(models.Model):
             if p.stackability == 'stackable':
                 for program in self:
                     logger.info("D Recordset: %s, D Stackables: %s " % (d,d.stackable_with))
-                    if program not in d and program in d.stackable_with and program.stackability == 'stackable':
-                        d |= program
+                    if program not in d and program.stackability == 'stackable':
+                        stackable = True
+                        for r in d:
+                            if program not in r.stackable_with:
+                                stackable = False
+                                break
+                        if stackable:
+                            d |= program
             possibilities.append(d)
         logger.info("Total possibilities: %s" % possibilities)
         # Pick best combo here
