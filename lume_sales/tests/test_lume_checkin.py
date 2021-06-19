@@ -158,7 +158,7 @@ class TestCheckIn(TestLumeSaleCommon):
         
 
     def test_expired_med_id(self):
-        self.customer_med.medical_expiration = self.customer_rec.drivers_license_expiration = datetime.now() - timedelta(days = 365)
+        self.customer_med.medical_expiration = self.customer_med.drivers_license_expiration = datetime.now() - timedelta(days = 365)
         with self.assertRaises(UserError):
             record_ids = [self.customer_med.id]
             uid = self.env.ref('base.user_admin').id
