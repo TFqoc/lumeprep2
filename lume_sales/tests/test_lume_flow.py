@@ -2,6 +2,8 @@ import logging
 from . test_lumesales_base import compare_dictionaries
 from . test_lumesales_base import TestLumeSaleCommon
 from ..models.barcode_parse import parse_code
+from datetime import datetime
+from datetime import timedelta
 from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'project_id': self.lumestore_one.id,
         })
 
-        Test_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        Test_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         Test_Task.auto_fill()
         self.assertEqual(
             Test_Task.partner_id.id, #This is not being set correctly.
@@ -35,7 +37,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
     def test_barcode_parse(self): 
         """Checking that the barcode parses correctly."""
-        barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA12312021DCSLOVEDCTEVE ADBDDBB02171987DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
         key_list = ['name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
@@ -52,6 +54,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'MI',
             "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
         )
+
+    
     def test_check_in_button(self):
         record_ids = [self.customer_rec.id]
         uid = self.env.ref('base.user_admin').id
@@ -74,7 +78,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'partner_id': self.customer_rec,
             'project_id': self.lumestore_one, 
             'fulfillment_type': 'store',
-            'order_type': 'adult',
+            'order_type': False,
             'user_id': False,
             'name': self.customer_rec.name
         }
@@ -128,9 +132,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in build_cart: Task did not move to the appropriate stage."
             )
 
-        #Validating Sale_Order
-        # TODO: Assert that the Order Type is carried over to the Sale Order.
-
         self.assertTrue(
             Test_Task.sales_order,
             "Error in build_cart: Sale Order was not created."
@@ -172,7 +173,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
             'partner_id': self.customer_rec.id,
-            'stage_id': self.env.ref('lume_sales.lume_stage_0').id,
+            'stage_id': self.env.ref('lume_sales.lume_stage_1').id, 
         })
         Sales_Order = self.env['sale.order'].create({
             'partner_id': self.customer_rec.id,
@@ -189,6 +190,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'active_ids': active_ids,
             'active_model': 'sale.order',
             'allowed_company_ids': [1],
+            'type': Sales_Order.order_type,
             'form_view_initial_mode': 'edit',
             'lang': 'en_US',
             'lpc_sale_order_id': Test_Task.sales_order.id,
@@ -200,6 +202,12 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         self.assertTrue(
             Test_Task.sales_order.order_line,
             "Error in Product Catologue: Line was not created."
+        )
+
+        self.assertEqual(
+            Test_Task.sales_order.order_type,
+            'adult', #TODO Find correct value that goes here.
+            "Error in selecting product: Order type was %s instead of %s" % (Test_Task.order_type, 'adult')
         )
 
         self.assertEqual(

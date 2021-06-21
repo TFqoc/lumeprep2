@@ -114,6 +114,7 @@ class SaleOrder(models.Model):
                 qty += line.product_uom_qty
             record.ordered_qty = qty
 
+    @api.depends('order_line')
     def _compute_order_type(self):
         for record in self:
             record.order_type = 'none'

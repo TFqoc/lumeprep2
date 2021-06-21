@@ -1,6 +1,7 @@
 from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
 import datetime
+from datetime import timedelta
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -187,9 +188,9 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'ev@example.com',
-            'date_of_birth': datetime.date(1987, 2, 17),
+            'date_of_birth': datetime.date(1950, 1, 13),
             'drivers_license_number': 'C333547393957',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.date(5000, 1, 13)
 
         })
 
@@ -204,11 +205,11 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'hh@example.com',
-            'date_of_birth': datetime.date(1999, 5, 14),
+            'date_of_birth': datetime.date(1940, 2, 24),
             'medical_id': 'CG-18-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.date(5000, 2, 24),
             'drivers_license_number': 'H111222233334',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.date(5000, 2, 24)
         })
 
         cls.customer_banned = Customers.create({
@@ -222,10 +223,10 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'bf@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.date(1960, 3, 15),
             'warnings': 3,
             'drivers_license_number': 'B434554533231',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.date(5000, 3, 15)
 
         })
 
@@ -240,32 +241,33 @@ class TestLumeSaleCommon(SavepointCase):
             'zip': '48201-0001',
             'phone': '555-555-5555',
             'email': 'jt@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.date(1970, 4, 16),
             'medical_id': 'CG-21-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.date(5000, 4, 16),
             'is_caregiver': True,
             'caregiver_license': 'Caregiver',
             'drivers_license_number': 'B434555533231',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.date(5000, 4, 16)
         })
 
+        state = cls.env['res.country.state'].search([("code","=", "WI")], limit=1)
         cls.customer_pat = Customers.create({
             'name': 'Justin Nick Thyme',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Electric Avenue',
-            'city': 'Detroit',
+            'city': 'Madison',
             'state_id': state.id,
             'country_id': state.country_id.id,
-            'zip': '48201-0001',
+            'zip': '53590-0001',
             'phone': '555-555-5555',
             'email': 'jt@example.com',
-            'date_of_birth': datetime.date(1999, 10, 21),
+            'date_of_birth': datetime.date(1980, 5, 17),
             'medical_id': 'CG-19-089765',
-            'medical_expiration': datetime.date(2021, 9, 13),
+            'medical_expiration': datetime.date(5000, 5, 17),
             'caregiver_id': cls.customer_care.id,
             'drivers_license_number': 'F672554568631',
-            'drivers_license_expiration': datetime.date(2021, 12, 31)
+            'drivers_license_expiration': datetime.date(5000, 5, 17)
         })
         
         #Creating products as above. 
@@ -277,7 +279,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Bloodstar 3.5G',
             'type': 'product',
             'available_in_pos': True,
-            'is_medical': True,
+            'thc_type': 'medical',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
         })
@@ -286,7 +288,7 @@ class TestLumeSaleCommon(SavepointCase):
             'name': 'Jenny Kush 3.5G',
             'type': 'product',
             'available_in_pos': True,
-            'is_medical': True,
+            'thc_type': 'adult',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id
         })

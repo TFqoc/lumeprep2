@@ -65,6 +65,11 @@ class TestCustomerProfile(TestLumeSaleCommon):
             "Error in Partner Model: Number of warnings does not decrease with current method."
         )
 
+        self.assertFalse(
+            self.customer_banned.is_banned,
+            "Customer should no longer be banned."
+        )
+
         _logger.warning("Test Unwarn Status: Complete.") 
         # TODO: Remove.
 

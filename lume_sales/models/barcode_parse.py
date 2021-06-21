@@ -24,13 +24,13 @@ def parse_code(code):
     street = ""
     for w in words:
         street = " ".join([street,w.capitalize()])
-    data['street'] = street
+    data['street'] = street[1:]
 
     words = dlstring[11].split(' ')
     city = ""
     for w in words:
         city = " ".join([city,w.capitalize()])
-    data['city'] = city
+    data['city'] = city[1:]
 
     data['state_id'] = dlstring[12]
 
