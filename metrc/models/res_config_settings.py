@@ -33,6 +33,12 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': False,
         }
+    
+    def test_metrc_connection(self):
+        return self.metrc_account_id.test_metrc_connection()
+    
+    def open_account_logs(self):
+        return self.metrc_account_id.open_account_logs()
 
     def do_import_labtest_types(self):
         self.metrc_account_id.do_import_labtest_types()

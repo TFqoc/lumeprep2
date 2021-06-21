@@ -18,8 +18,9 @@
                                 </div>
                                 <label string="Service Account" for="metrc_account_id"/>
                                 <div class="mt8">
-                                    <field name="metrc_account_id" required="1"/>
+                                    <field name="metrc_account_id" required="1" options="{'no_open': 1}"/>
                                 </div>
+                                <button name="test_metrc_connection" type="object" string="Test Connection" icon="fa-television"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" id="metrc_accont">
@@ -35,8 +36,9 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Metrc Credentails &amp; User Settings</h2>
-                    <div class="row mt16 o_settings_container" id="metrc_credentails_setting">
+                    <h2 attrs="{'invisible': [('metrc_account_id', '=', False)]}">Service Account Settings</h2>
+                    <div class="row mt16 o_settings_container" id="metrc_credentails_setting" 
+                         attrs="{'invisible': [('metrc_account_id', '=', False)]}">
                         <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_toggle_env">
                             <div class="o_setting_left_pane">
                                 <field name="prod_environment"/>
@@ -57,6 +59,15 @@
                                 <div class="text-muted">
                                     Enabled API debugging on this account, where system will record all API call requests/reponses in database logging
                                 </div>
+                               <div class="content-group" attrs="{'invisible': [('debug_logging', '=', False)]}">
+                                   <div class="mt16">
+                                       <div>
+                                           <button string="View Account Logs" type="object" 
+                                                   name="open_account_logs" icon="fa-external-link-square" 
+                                                   class="oe_link"/>
+                                       </div>
+                                   </div>
+                               </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_account_user">
@@ -71,8 +82,9 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Documents Synchronization Settings</h2>
-                    <div class="row mt16 o_settings_container" id="metrc_import_model_setting">
+                    <h2 attrs="{'invisible': [('metrc_account_id', '=', False)]}">Documents Synchronization Settings</h2>
+                    <div class="row mt16 o_settings_container" id="metrc_import_model_setting" 
+                         attrs="{'invisible': [('metrc_account_id', '=', False)]}">
                         <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_licenses">
                             <div class="o_setting_right_pane">
                                 <button string="Facility Licenses" type="action" name="%(metrc.action_view_metrc_license)s" class="oe_link"/>
