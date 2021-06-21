@@ -383,7 +383,8 @@ class project_inherit(models.Model):
 
     # Params: data = json string
     @api.model
-    def ecom_order(self, data):
+    def ecom_order(self, data, args):
+        _logger.info("Self: %s, Data: %s, Args: %s", (self, data, args))
         # Create task
         # Activate build cart
         # Add so lines
