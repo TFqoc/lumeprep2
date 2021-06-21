@@ -381,31 +381,37 @@ class project_inherit(models.Model):
     so_threshold3 = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
 
+    # Params: data = json string
     @api.model
-    def ecom_order(self, store_id, customer_id, fulfillment_type, order_lines_json):
+    def ecom_order(self, data):
         # Create task
         # Activate build cart
         # Add so lines
         # Apply promos
         # Confirm SO
         # Return cart total (JSON format?)
-        customer = self.env['res.partner'].browse(customer_id)
+        data = json.loads(data)
+        # JSON Data format
+        # {
+        #     "store_id":0,
+        #     "customer_id":0,
+        #     "fulfillment_type":'',
+        #     "order_lines":{
+        #         "product_id":0,
+        #         "product_uom_qty":0,
+        #     }
+        # }
+        customer = self.env['res.partner'].browse(data['customer_id'])
         task = self.env['project.task'].create({
             'partner_id': customer.id,
-            'project_id': store_id,
-            'fulfillment_type': fulfillment_type,
+            'project_id': data['customer_id'],
+            'fulfillment_type': data['fulfillment_type'],
             'user_id': False,
             'name': customer.pref_name or customer.name,
         })
         task.build_cart()
-
-        # JSON Data format
-        # [
-        #     {"product_id":0,
-        #      "product_uom_qty":0,
-        #     }
-        # ]
-        line_data = json.loads(order_lines_json)
+        
+        line_data = data['order_lines']
         ids = []
         for line in line_data:
             line.update({'order_id': task.sales_order.id})
