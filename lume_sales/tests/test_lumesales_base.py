@@ -1,6 +1,6 @@
 from odoo.tests.common import SavepointCase, tagged
 from odoo.exceptions import UserError
-from datetime import datetime
+import datetime
 from datetime import timedelta
 import logging
 
