@@ -8,7 +8,7 @@ odoo.define('lume_sales.link_many2one', function(require){
     var LinkM2O = FieldMany2One.extend({
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
-            this.m2o_value = this.record.data.display_name;
+            // this.m2o_value = this.record.data.display_name;
         }
 
     });
