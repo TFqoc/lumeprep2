@@ -28,7 +28,7 @@
           <xpath expr="//div[@class='o_kanban_record_headings']/br" position="replace"/>
           <xpath expr="//div[@class='o_kanban_record_headings']/*[3]" position="replace">
             <span style="font-weight: bold;">
-                <field name="partner_id" widget="res_partner_many2one"/>
+                <field name="partner_id" widget="link_many2one"/>
             </span>
             <strong><field name="monetary_display"/></strong>
           </xpath>
