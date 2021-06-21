@@ -157,6 +157,14 @@ class Partner(models.Model):
             "domain": [('project_id', '=', project.id)],
             "context": {'default_project_id': project.id},
         }
+    
+    # Override
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.pref_name or record.name
+            res.append((record.id, name))
+        return res
 
     def verify_address(self):
         pass
