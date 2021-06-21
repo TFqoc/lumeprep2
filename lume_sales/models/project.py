@@ -383,8 +383,8 @@ class project_inherit(models.Model):
 
     # Params: data = json string
     @api.model
-    def ecom_order(self, data, args):
-        _logger.info("Self: %s, Data: %s, Args: %s", (self, data, args))
+    def ecom_order(self, data):
+        _logger.info("Self: %s, Data: %s", (self, data))
         # Create task
         # Activate build cart
         # Add so lines
@@ -405,7 +405,7 @@ class project_inherit(models.Model):
         customer = self.env['res.partner'].browse(data['customer_id'])
         task = self.env['project.task'].create({
             'partner_id': customer.id,
-            'project_id': data['customer_id'],
+            'project_id': data['store_id'],
             'fulfillment_type': data['fulfillment_type'],
             'user_id': False,
             'name': customer.pref_name or customer.name,
