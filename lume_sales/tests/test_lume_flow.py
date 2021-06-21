@@ -55,11 +55,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             "Error in Barcode Parse: the state id was %s instead of MI." % (parsed_barcode['state_id'])
         )
 
-        self.assertEqual(
-            parsed_barcode['date_of_birth'],
-            datetime.now() - timedelta(days = 365*23),
-            "Error in MI Barcode Parse: The date of birth was %s instead of %s." % (parsed_barcode['date_of_birth'], datetime.now() - timedelta(days = 365*23))
-        )
+    
     def test_check_in_button(self):
         record_ids = [self.customer_rec.id]
         uid = self.env.ref('base.user_admin').id
