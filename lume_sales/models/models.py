@@ -169,6 +169,7 @@ class Partner(models.Model):
     @api.onchange('pref_name')
     def _change_pref_name(self):
         self.update({'name': self.name + ' '})
+        self.update({'name': self.name[:len(self.name)-1]})
 
     def verify_address(self):
         pass
