@@ -31,6 +31,8 @@ class CouponProgram(models.Model):
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
     # stackable_with_reverse = fields.Many2many()
     store_ids = fields.Many2many(comodel_name='project.project')
+    daily_start_time = fields.Float(digits=(12, 2), copy=False)
+    daily_end_time = fields.Float(digits=(12, 2), copy=False)
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
