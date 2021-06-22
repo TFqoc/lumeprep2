@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_production_form_inherit_metrc" model="ir.ui.view">
+		<field name="name">mrp.production.form.inherit.metrc</field>
+		<field name="model">mrp.production</field>
+		<field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+		<field name="arch" type="xml">
+			<field name="bom_id" position="attributes">
+				<attribute name="required">0</attribute>
+			</field>
+			<button name="button_scrap" position="before">
+			    <field name="is_metric_product" invisible="1" readonly="1"/>
+			    <field name="reporting_successful" invisible="1"/>
+			    <button name="reattempt_metrc_reporting" string="Reattempt Metrc Reporting" type="object" attrs="{'invisible': [('reporting_successful', '=', True)]}"/>
+			</button>
+			<button name="button_scrap" position="attributes">
+                <!--TODO: CIC confirm the behavior for the previous domain ('availability', '=', 'none')
+                          Now changed to ('reservation_state', '=', 'waiting') as none is removed and field renamed-->
+			    <attribute name="attrs">{'invisible': ['|', ('is_metric_product', '=', True), '|', '|', ('reservation_state', '=', 'waiting'), ('state', 'in', ('cancel')), ('is_locked', '=', False)]}</attribute>
+			</button>
+			<xpath expr="//header//button[@name='action_toggle_is_locked'][1]" position="attributes">
+				<attribute name="attrs">{'invisible': ['|', '|', ('state', 'in', ['done','cancel']), ('id', '=', False), ('is_locked', '=', False)]}</attribute>
+			</xpath>
+<!--			TODO: Find different place to put bypass metrc reporting buttons.-->
+<!--			<xpath expr="//field[@name='finished_move_line_ids']//tree//field[@name='qty_done']" position="after">-->
+<!--				<field name="bypass_metrc_reporting" invisible="1"/>-->
+<!--				<button name="toggle_bypass_metrc_reporting" string="Toggle Report to Metrc" type="object" icon="fa-toggle-on" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('bypass_metrc_reporting', '=', True)]}" groups="metrc_base.group_metrc_manager"/>-->
+<!--				<button name="toggle_bypass_metrc_reporting" string="Toggle Report to Metrc" type="object" icon="fa-toggle-off" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('bypass_metrc_reporting', '=', False)]}" groups="metrc_base.group_metrc_manager"/>-->
+<!--			</xpath>-->
+		</field>
+	</record>
+    <report
+        id="action_report_package_labels"
+        model="mrp.production"
+        string="Flower Label"
+        report_type="qweb-pdf"
+        name="metrc.report_flower_package_labels"
+        file="metrc.report_flower_package_labels"
+    />
+</odoo>

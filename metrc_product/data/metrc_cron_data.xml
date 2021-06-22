@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record model="ir.cron" id="cron_metrc_import_only_models">
+        <field name="name">Metrc: Synchronize Import Models</field>
+        <field name="model_id" ref="metrc.model_metrc_license"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+#----------------------------------------------------------------------------------------------------------------------
+# 1) _cron_do_model_import(self, metrc_account, metrc_notrack=False, license=False, automatic=True, raise_for_error=True):
+#    Method to import strains/package adjust reason/metrc item category, labtest types from all/specific metrc license(s).
+#    This method can be called with any object that inherits metrc.meta class.
+#       @param metrc_account  <recordset>: Takes the metrc.account recordset.
+#                                  This account credentionals will be used in metrc communication within this function.
+#       @param metrc_notrack <bool>: to determine that fetched record will trigger metrc meta change or not.
+#       @param license <recordset>: Takes the recordset of type metrc.license.
+#                           Strains will be fetched from metrc for this license only.
+#       @param automatic <bool>: To determine that system should commit changes after each iteration or not.
+#                        Rescue mechanism to update maximum from metrc in odoo.
+#       @param raise_for_error <bool>: Flag to raise the errors function is throwing or not.
+#                              If true all UserErrors/ValidationErrors will be raised. Should be False due to cron.
+#   Returns <bool> after fetching all the metrc data.
+#
+#2) do_import_transfer_types()
+#    Method is used to import transfer types for each metrc internal license.
+#    Can directly be called by metrc.account object.
+#    eg. account.do_import_transfer_types()
+#-----------------------------------------------------------------------------------------------------------------------
+account = env.user.metrc_account_id
+if not account:
+    raise Warning("Metrc account not associated with {}.\nPlease configure one.".format(env.user.name))
+for sync_model in ['metrc.product.category', 'metrc.labtest.type']:
+    env[sync_model]._cron_do_model_import(account)
+account.do_import_transfer_types()
+]]></field>
+        <field name="interval_number">1</field>
+        <field name="is_metrc">True</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+    </record>
+    <record model="ir.cron" id="cron_metrc_import_strains">
+        <field name="name">Metrc: Import Strains</field>
+        <field name="model_id" ref="metrc.model_metrc_license"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+#----------------------------------------------------------------------------------------------------------------------
+# _cron_do_model_import(self, metrc_account, metrc_notrack=False, license=False, automatic=True, raise_for_error=True):
+#    Method to import strains/package adjust reason/metrc item category, labtest types from all/specific metrc license(s).
+#    This method can be called with any object that inherits metrc.meta class.
+#       @param metrc_account  <recordset>: Takes the metrc.account recordset.
+#                                  This account credentionals will be used in metrc communication within this function.
+#       @param metrc_notrack <bool>: to determine that fetched record will trigger metrc meta change or not.
+#       @param license <recordset>: Takes the recordset of type metrc.license.
+#                           Strains will be fetched from metrc for this license only.
+#       @param automatic <bool>: To determine that system should commit changes after each iteration or not.
+#                        Rescue mechanism to update maximum from metrc in odoo.
+#       @param raise_for_error <bool>: Flag to raise the errors function is throwing or not.
+#                              If true all UserErrors/ValidationErrors will be raised. Should be False due to cron.
+# Returns <bool> after fetching all the metrc data.
+#-----------------------------------------------------------------------------------------------------------------------
+account = env.user.metrc_account_id
+if not account:
+    raise Warning("Metrc account not associated with {}.\nPlease configure one.".format(env.user.name))
+for license in env['metrc.meta'].get_internal_licenses():
+    env['metrc.strains']._cron_do_model_import(account, license=license)
+]]></field>
+        <field name="interval_number">24</field>
+        <field name="is_metrc">True</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+    </record>
+    <record model="ir.cron" id="cron_metrc_import_products">
+        <field name="name">Metrc: Import Product</field>
+        <field name="model_id" ref="metrc.model_metrc_license"/>
+        <field name="active">False</field>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+#----------------------------------------------------------------------------------------------------------------------
+# _cron_do_model_import(self, metrc_account, metrc_notrack=False, license=False, automatic=True, raise_for_error=True):
+#    Method to import strains/package adjust reason/metrc item category/products, labtest types from all/specific metrc license(s).
+#    This method can be called with any object that inherits metrc.meta class.
+#       @param metrc_account  <recordset>: Takes the metrc.account recordset.
+#                                  This account credentionals will be used in metrc communication within this function.
+#       @param metrc_notrack <bool>: to determine that fetched record will trigger metrc meta change or not.
+#       @param license <recordset>: Takes the recordset of type metrc.license.
+#                           Strains will be fetched from metrc for this license only.
+#       @param automatic <bool>: To determine that system should commit changes after each iteration or not.
+#                        Rescue mechanism to update maximum from metrc in odoo.
+#       @param raise_for_error <bool>: Flag to raise the errors function is throwing or not.
+#                              If true all UserErrors/ValidationErrors will be raised. Should be False due to cron.
+# Returns <bool> after fetching all the metrc data.
+#-----------------------------------------------------------------------------------------------------------------------
+account = env.user.metrc_account_id
+if not account:
+    raise Warning("Metrc account not associated with {}.\nPlease configure one.".format(env.user.name))
+for license in env['metrc.meta'].get_internal_licenses():
+    env['product.product']._cron_do_model_import(account, license=license)
+]]></field>
+        <field name="interval_number">24</field>
+        <field name="is_metrc">True</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+    </record>
+    <record model="ir.cron" id="cron_metrc_push_products_to_metrc">
+        <field name="name">Metrc : Golive - Push product to Metrc</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Enter the licence number you want to push data to.
+LICENSE_NUMBER = ''
+if LICENSE_NUMBER:
+    license = env['metrc.license'].search([('license_number', '=', LICENSE_NUMBER)])
+    model._cron_go_live_push_products(license, raise_for_error=False)
+]]></field>
+        <field name="interval_number">100</field>
+        <field name="interval_type">days</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">0</field>
+    </record>
+    <record model="ir.cron" id="cron_metrc_push_all_products_to_metrc">
+        <field name="name">Metrc : Golive - Push all product to Metrc</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+for licence in env['metrc.license'].search([('base_type', '=', 'Internal')]):
+    model._cron_go_live_push_products(license, all_products=True, raise_for_error=False)
+]]></field>
+        <field name="interval_number">100</field>
+        <field name="interval_type">days</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">0</field>
+    </record>
+</odoo>

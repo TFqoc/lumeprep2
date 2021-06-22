@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_flower_package_labels">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-foreach="doc.finished_move_line_ids.mapped('lot_id')" t-as="lot">
+                    <t t-if="lot.product_uom_id == env.ref('uom.product_uom_unit')">
+                        <t t-foreach="lot.get_count(doc.finished_move_line_ids)" t-as="cnt">
+                            <div class="article o_report_layout_standard main">
+                                <t t-call="metrc.package_flower_label"/>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="article o_report_layout_standard main">
+                            <t t-call="metrc.package_flower_label"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="package_flower_label">
+        <t>
+            <style>
+      .page {
+        padding-top: 2.5mm;
+        padding-left: 2mm;
+        overflow: hidden;
+        font-size: .93rem;
+        width: 75mm;
+        height: 43mm;
+        position: relative;
+        margin-left: -1.7 em;
+      }
+      
+      .link {
+        text-align: center;
+        width: 100px;
+        margin: 0 auto;
+      }
+      
+      .tests div {
+        display: inline-block;
+      }
+      
+      .tests div:nth-child(2) {
+        margin-left: 1em;
+      }
+      
+      .wrapper {
+        position: relative;
+      }
+      
+      .left-content {
+        display: inline-block;
+        // position: absolute;
+        padding: .5em .5em .5em .5em;
+        top: 0;
+        left: 0;
+      }
+      
+      .right-content {
+        display: inline-block;
+        vertical-align:top;
+        // position: absolute;
+        padding: .5em .5em .5em .5em;
+        top: 0;
+        right: 0;
+      }
+      
+      .barcode-section {
+        //position: absolute;
+        padding: 0em 0em 0em 0em;
+        margin: 0;
+        bottom: 0;
+        height: 4.5em;
+        overflow: hidden;
+      }
+      
+      .barcode {
+        display: inline-block;
+        width: 33em;
+        height: 100%;
+        margin-left: -2.3em;
+        // overflow: hidden;
+      }
+      
+      .barcode .bottom {
+        font-size: 1rem;
+        overflow: hidden;
+      }
+      
+      .barcode img {
+        margin-top: 0;
+        width: 100%;
+        length: 100%;
+        object-fit: fill;
+      }
+      
+      .CA-Warning {
+        width: 4em;
+        height: 4em;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      
+      .CA-Warning img{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        vertical-align: bottom;
+      }
+      .name {
+                width: 73mm;
+                height: 1.1rem;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+      }
+    </style>
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="wrapper">
+                    <div class="left-content">
+                        <div class="name">
+                            <strong>
+                                <span t-field="lot.product_id.name"/>
+                            <span t-if="lot.product_id.x_strain or lot.product_id.x_formulation or lot.x_strain_override">(</span><span t-if="lot.x_strain_override" t-field="lot.x_strain_override"/><span t-elif="lot.product_id.x_strain" t-field="lot.product_id.x_strain"/><span t-elif="lot.product_id.x_formulation" t-field="lot.product_id.x_formulation"/><span t-if="lot.product_id.x_weight">, </span><span t-if="lot.product_id.x_weight" t-field="lot.product_id.x_weight"/><span t-if="lot.product_id.x_color">, </span><span t-if="lot.product_id.x_color" t-field="lot.product_id.x_color"/><span t-if="lot.product_id.x_strain or lot.product_id.x_weight or lot.product_id.x_formulation or lot.product_id.x_color">)</span>
+                            </strong>
+                        </div>
+                        <strong>
+                            <span t-if="lot.product_id.categ_id" t-field="lot.product_id.categ_id.parent_id.name"/>
+                            <span t-if="lot.product_id.x_barcode_weight" t-field="lot.product_id.x_barcode_weight"/>
+                            <!--<span t-if="lot.product_id.x_strain or lot.product_id.x_formulation">(</span>-->
+                            <!--<span t-if="lot.product_id.x_strain" t-field="lot.product_id.x_strain"/>-->
+                            <!--<span t-elif="lot.product_id.x_formulation" t-field="lot.product_id.x_formulation"/>-->
+                            <!--<span t-if="lot.product_id.x_weight">, </span>-->
+                            <!--<span t-if="lot.product_id.x_weight" t-field="lot.product_id.x_weight"/>-->
+                            <!--<span t-if="lot.product_id.x_strain or lot.product_id.x_weight or lot.product_id.x_formulation">)</span>-->
+                        </strong>
+                        <br/>
+                        <div class="tests">
+                            <t t-if="lot.x_thc_percent_float">
+                                <div>
+                                    <strong>
+                                        <span t-field="lot.x_thc_percent_float"/>%
+                    
+                                        
+                                        <span> THC</span>
+                                    </strong>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div>
+                                    <strong>
+                                        <span>N/A</span>
+                                        <span> THC</span>
+                                    </strong>
+                                </div>
+                            </t>
+                            <span>/</span>
+                            <t t-if="lot.x_cbd_percent_float">
+                                <div>
+                                    <strong>
+                                        <span t-field="lot.x_cbd_percent_float"/>%
+                    
+                                        
+                                        <span> CBD </span>
+                                    </strong>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div>
+                                    <strong>
+                                        <span>N/A</span>
+                                        <span> CBD </span>
+                                    </strong>
+                                </div>
+                            </t>
+                            <br/>
+                            <span> LOT </span> #
+                            
+                            <span t-field="lot.name"/>
+                            <br/>
+                            <t t-if="lot.x_coa_batch_lot">
+                                <span> COA </span> #
+                                
+                                <span t-field="lot.x_coa_batch_lot" class="bottom"/>
+                            </t>
+                            <t t-else="">
+                                <span> COA </span> #
+                                
+                                <span t-field="lot.name" class="bottom"/>
+                            </t>
+                            <br/>
+                            <!-- Change div below to t-if as the cultivation may not exist-->
+                            <br/>
+                            <div>
+                                <span> Packaged </span>
+                                <span t-field="lot.create_date"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="right-content">-->
+                    <!--<span> MFR: </span>-->
+                    <!--<span t-field="lot.create_date"/>-->
+                    <!--<br/>-->
+                    <!--<span> EXP: </span>-->
+                    <!--<span t-field="lot.x_exp_date"/>-->
+                    <!--</div>-->
+                    <br/>
+                </div>
+                <div class="barcode-section">
+                    <div class="barcode">
+                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;' % ('Code128', lot.name)"/>
+                    </div>
+                </div>
+                <div class="link">
+          caliva.com
+        </div>
+            </div>
+        </t>
+    </template>
+</odoo>

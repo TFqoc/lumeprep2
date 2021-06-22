@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_model_data_tree" model="ir.ui.view">
+            <field name="name">metrc.model.data.tree</field>
+            <field name="model">metrc.model.data</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Accounts">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="metrc_license_id"/>
+                    <field name="metrc_id"/>
+                    <field name="reference"/>
+                    <field name="date_init"/>
+                    <field name="date_update"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_model_data_search" model="ir.ui.view">
+            <field name="name">metrc.model.data.search</field>
+            <field name="model">metrc.model.data</field>
+            <field name="arch" type="xml">
+                <search string="Metrc Account">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Model" name="groupby_res_model" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_model_data_form" model="ir.ui.view">
+            <field name="name">metrc.model.data.form</field>
+            <field name="model">metrc.model.data</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Account">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                        </div>
+                        <div class="oe_title" name="title">
+                            <label for="name" string="Record Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="metrc_account_id" required="1"/>
+                                <field name="metrc_license_id" required="1" context="{'default_base_type': 'Internal'}"/>
+                                <field name="metrc_id"/>
+                            </group>
+                            <group>
+                                <field name="reference" widget="reference" string="Record"/>
+                                <field name="need_sync"/>
+                                <field name="is_used"/>
+                                <field name="date_init"/>
+                                <field name="date_update"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Raw Data">
+                                <field name="raw_data"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_model_data">
+            <field name="name">Sync Model Data</field>
+            <field name="res_model">metrc.model.data</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_groupby_res_model': True}</field>
+            <field name="search_view_id" ref="metrc.view_metrc_model_data_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc Sync Model Data.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_action_view_metrc_model_data"
+                action="action_view_metrc_model_data"
+                name="Sync Model Data"
+                parent="metrc_base.submenu_metrc_data"
+                sequence="1"
+                groups="metrc_base.group_metrc_manager"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="wizard_view_stock_package_wizard_form" model="ir.ui.view">
+            <field name="name">view.stock.package.wizard.form</field>
+            <field name="model">stock.package.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Transfer Manifest">
+                    <group>
+                        <field name="lot_id" readonly="1" class="oe_no_button"/>
+                        <field name="product_id" readonly="1" class="oe_no_button"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="warehouse_id" required="1"
+                                    options="{'no_open': True,'no_create': True}"/>
+                            <field name="location_id" invisible="1"/>
+                            <label for="wh_qty_available"/>
+                            <div>
+                                <field name="wh_qty_available" readonly="1" class="oe_inline" forcesave="1"/>
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
+                            </div>
+                            <label for="virtual_available"/>
+                            <div>
+                                <field name="virtual_available" readonly="1" class="oe_inline" forcesave="1"/>
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="license_id" readonly="1" class="oe_no_button"/>
+                            <field name="metrc_id" readonly="1"/>
+                            <field name="adjustment_required" invisible="1"/>
+                            <label for="metrc_qty"/>
+                            <div>
+                                <field name="metrc_qty" readonly="1" class="oe_inline" forcesave="1"/>
+                                <field name="metrc_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
+                            </div>
+                        </group>
+                    </group>
+                    <field name='message' readonly="1" groups="metrc_base.group_metrc_manager"/>
+                    <footer>
+                        <button name="get_package_qty" string="Get Package Quanity" type="object" class="btn-primary" attrs="{'invisible': [('metrc_qty', '&gt;', 0)]}"/>
+                        <button name="udpate_package_qty" string="Update Quanity in Metrc" type="object" class="btn-primary" attrs="{'invisible': [('adjustment_required', '=', False)]}"/>
+                        <button name="sync_package_qty" string="Synchronize " type="object" class="btn-primary" attrs="{'invisible': [('adjustment_required', '=', False)]}" groups="metrc_base.group_metrc_manager"/>
+                        <button string="Cancel" special="cancel" class="btn-default" attrs="{'invisible': [('adjustment_required', '=', False)]}"/>
+                        <button string="Close" special="cancel" class="btn-default" attrs="{'invisible': [('adjustment_required', '=', True)]}"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_stock_package_wizard" model="ir.actions.act_window">
+            <field name="name">Package Synchronization Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.package.wizard</field>
+
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="groups_id" eval="[(4,ref('metrc_base.group_metrc_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

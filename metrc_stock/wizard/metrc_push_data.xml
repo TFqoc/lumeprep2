@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="metrc_push_data_view_form" model="ir.ui.view">
+		<field name="name">metrc.push.data.view.form</field>
+		<field name="model">metrc.push.data</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="metrc_account_id" required="1"/>
+							<field name="warehouse_id" help="Select the warehouse(license) for which you want to push data to metrc" domain="[('license_id', '!=', False)]" required="1"/>
+							<field name="sync_start_date" required="1"/>
+						</group>
+						<div>
+							<p class="text-muted">If there is no warehouse available to select in dropdown then please check your warehouse configuration that your warehouses are configured with valid metrc license or not.</p>
+						</div>
+					</group>
+					<div>
+						<p class="text-muted"><strong>NOTE: The cron to push packages to metrc will scheduled to be executed after 5 minutes if there is no issue found with the metrc packages after clicking 'Start pushing'.</strong></p>
+					</div>
+				</sheet>
+				<footer>
+					<button name="launch" type="object" string="Start pushing" class="btn btn-sm btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+    <record id="action_open_metrc_push_data_wizard" model="ir.actions.act_window">
+        <field name="name">Metrc Push Data</field>
+        <field name="res_model">metrc.push.data</field>
+
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_metrc_push_data"
+        name="Push Data"
+        parent="metrc_base.menu_metrc_config"
+        action="action_open_metrc_push_data_wizard"
+        sequence="3" groups="metrc_base.group_metrc_manager"/>
+</odoo>

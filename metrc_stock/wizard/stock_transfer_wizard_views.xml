@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="wizard_view_stock_transfer_template_common_form" model="ir.ui.view">
+            <field name="name">view.stock.transfer.wizard.common.form</field>
+            <field name="model">stock.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Transfer Wizard">
+                    <field name='message' readonly="1"/>
+                    <group name="common_fields">
+                        <field name="picking_id" invisible="1"/>
+                    </group>
+                    <group name='addinfo'>
+                    </group>
+                    <footer>
+                        <button name="action_message_ok" string="Ok" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="wizard_view_stock_transfer_external_form" model="ir.ui.view">
+            <field name="name">view.stock.transfer.wizard.external.form</field>
+            <field name="model">stock.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create External Incoming">
+                    <field name='message' readonly="1"/>
+                    <group>
+                        <field name="picking_id" invisible="1"/>
+                        <field name="create_extin" widget="radio"/>
+                    </group>
+                    <group string='Transfer Details' attrs="{'invisible': [('create_extin', '!=', 'Yes')]}">
+                        <group>
+                            <field name="transfer_type_id" attrs="{'required': [('create_extin', '=', 'Yes')]}"
+                                        options="{'no_open': True,'no_create': True}"/>
+                            <field name="transporter_license_id" attrs="{'required': [('create_extin', '=', 'Yes')]}"
+                                        options="{'no_open': True,'no_create': True}"
+                                        domain="[('permit_type', 'in', ('Distributor', 'Transportation'))]"/>
+                            <field name="vehicle_id" attrs="{'required': [('create_extin', '=', 'Yes')]}"
+                                        options="{'no_open': True,'no_create': True}"/>
+                            <field name="driver_id" attrs="{'required': [('create_extin', '=', 'Yes')]}"
+                                        options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="driver_license_number" attrs="{'required': [('create_extin', '=', 'Yes')]}"/>
+                            <field name="route" attrs="{'required': [('create_extin', '=', 'Yes')]}"/>
+                            <field name="has_layover"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_create_valiate" string="Validate with Metrc" type="object" class="btn-primary"
+                                confirm="Are you sure you want to create external incoming and Validate the transfer ?"
+                                attrs="{'invisible': [('create_extin', '!=', 'Yes')]}"/>
+                        <button string="Wait" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="wizard_view_stock_transfer_manifest_form" model="ir.ui.view">
+            <field name="name">view.stock.transfer.wizard.manifest.form</field>
+            <field name="model">stock.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Transfer Manifest">
+                    <field name='message' readonly="1"/>
+                    <group>
+                        <field name="picking_id" invisible="1"/>
+                    </group>
+                    <group string='Transfer Details'>
+                        <group>
+                            <field name="transfer_type_id" required="1"
+                                        options="{'no_open': True,'no_create': True}"/>
+                            <field name="transporter_license_id" required="1"
+                                        options="{'no_open': True,'no_create': True}"
+                                        domain="[('permit_type', 'in', ('Distributor', 'Transportation'))]"/>
+                            <field name="vehicle_id" required="1"
+                                        options="{'no_open': True,'no_create': True}"/>
+                            <field name="driver_id" required="1"
+                                        options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="driver_license_number" required="1"/>
+                            <field name="route" required="1"/>
+                            <field name="has_layover"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_create_transfer_manifest" string="Create Transfer Manifest" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_stock_transfer_wizard" model="ir.actions.act_window">
+            <field name="name">Transfer Action Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.transfer.wizard</field>
+            <!-- "Invalid field 'view_type' on model 'ir.actions.act_window'" -->
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="groups_id" eval="[(4,ref('metrc_base.group_metrc_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="split_lot_wizard_form" model="ir.ui.view">
+        <field name="name">split.lot.wizard.form</field>
+        <field name="model">lot.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lot Split Wizard">
+                <sheet>
+                    <group>
+                        <field name="split_type" widget="radio"/>
+                        <field name="lot_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="product_packages" invisible="1"/>
+                        <field name="warehouse_id" readonly="1"/>
+                        <field name="facility_license_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="location_id" domain="[('usage', '=', 'internal')]" required="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="lot_qty"/>
+                            <div>
+                                <field name="lot_qty" class="oe_inline"/> 
+                                <field name="uom_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+                            </div>
+                            <label for="product_qty"
+                                attrs="{'invisible': [('split_type', '=', 'Multiple')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('split_type', '=', 'Multiple')]}">
+                                <field name="product_qty" readonly="not context.get('custom_qty')" required="1"/> 
+                                <field name="uom_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+                            </div>
+                            <field name="new_lot_number"
+                                attrs="{'required': [('split_type', '=', 'Single')], 'invisible': [('split_type', '=', 'Multiple')]}"/>
+                            <field name="packaging_id" attrs="{'invisible': ['|', ('split_type', '=', 'Single'), ('product_packages', '=', [])]}"  domain="[('product_id', '=', product_id)]"/>
+                            <label for="case_size"
+                                attrs="{'invisible': ['|', ('split_type', '=', 'Single'), ('product_packages', '!=', [])]}"/>
+                            <div class="o_row" attrs="{'invisible': ['|', ('split_type', '=', 'Single'), ('product_packages', '!=', [])]}">
+                                <field name="case_size" attrs="{'required': [('split_type', '=', 'Multiple')], 'readonly': [('packaging_id', '!=', False)], 'invisible': [('split_type', '=', 'Single')]}" force_save="1"/>
+                                <field name="uom_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="warehouse_lot_qty"/>
+                            <div>
+                                <field name="warehouse_lot_qty"  class="oe_inline"/> 
+                                <field name="uom_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+                            </div>
+                            <label for="new_lot_quantity" help="New Lot will be created for this quantity"/>
+                            <div>
+                                <field name="new_lot_quantity" class="oe_inline"/> 
+                                <field name="uom_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+                            </div>
+                        </group>
+                        <group string="Metrc Tag Sequence" attrs="{'invisible': [('split_type', '=', 'Single')]}">
+                            <field name="metrc_tag_start" attrs="{'required': [('split_type', '=', 'Multiple')]}"/>
+                            <field name="metrc_tag_end" attrs="{'required': [('split_type', '=', 'Multiple')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="confirm_split" type="object" string="Populate Lots"
+                        attrs="{'invisible': [('split_type', '=', 'Single')]}" class="btn btn-sm btn-primary"/>
+                    <button name="create_lot" type="object" string="Create Lot" class="btn btn-sm btn-primary"
+                        attrs="{'invisible': [('split_type', '=', 'Multiple')]}"/>
+                    <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="multiple_lot_split_wizard_form" model="ir.ui.view">
+        <field name="name">multiple.lot.split.wizard.form</field>
+        <field name="model">lot.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lot Split Wizard">
+                <sheet>
+                    <group>
+                        <field name="split_lot_lines" nolabel="1">
+                            <tree editable="bottom" create="0" delete="0">
+                                <field name="metrc_tag" readonly="1"/>
+                                <field name="product_qty" string="Case Qty"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="metrc_tags_count" string="Metrc tags used"/>
+                        </group>
+                        <group>
+                            <field name="total_quantity" string="# of cases created"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Perform Batch Splits" type="object" name="create_lot_multi"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Close" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="split_lot_confirmation" model="ir.ui.view">
+        <field name="name">split.lot.wizard.confirmation</field>
+        <field name="model">lot.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Split confirmation">
+                <sheet>
+                    <group>
+                        <field name="reserved_objects" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Ok" type="object" name="populate_lots"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Modify" type="object" name="modify_split"
+                        class="btn btn-sm btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="split_lot_reserved_message_form" model="ir.ui.view">
+        <field name="name">split.lot.wizard.form</field>
+        <field name="model">lot.split.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lot Split Wizard">
+                <sheet>
+                    <group>
+                        <field name="reserved_objects" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Close" special="cancel" class="btn btn-sm btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

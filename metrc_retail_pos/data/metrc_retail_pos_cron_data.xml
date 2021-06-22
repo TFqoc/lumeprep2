@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.cron" id="cron_metrc_retail_pos_flagger">
+        <field name="name">Metrc : 2.1 Retail POS Orders Flagger</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void record-set
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+#--------------------------------------------------------------------------------------------------------
+# Metrc Method definition signature for pos order(Point of sale order) only:
+#
+#   _cron_flag_retail_pos(self, force_report_date=False, automatic=True, raise_for_error=False):
+#       Function to flag the pos orders to be reported to metrc.
+#
+#       @param force_report_date  <datetime>: pass the datetime from when you want to flag the pos orders.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#
+#   Example method call, you can use :
+#
+#   1) Do retail pos order flagging to be reported to metrc since last 24 hours.
+#       - model._cron_flag_retail_pos()
+#
+#   2) Do retail pos order flagging for last 30 days
+#       - model._cron_flag_retail_pos(force_report_date=datetime.datetime.utcnow()-datetime.timedelta(days=30))
+#
+#   4) Do retail pos order flagging for last 10 days
+#       - model._cron_flag_retail_pos(force_report_date=datetime.datetime.utcnow()-datetime.timedelta(days=10))
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+model._cron_flag_retail_pos()
+
+    ]]>        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record model="ir.cron" id="cron_metrc_retail_pos_repoter">
+        <field name="name">Metrc : 2.2 Retail POS Orders Reporter</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void record-set
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+#--------------------------------------------------------------------------------------------------------
+# Metrc Method definition signature for pos order(Point of sale order) only:
+#
+#   _cron_report_retail_pos(self, batch_size=100, automatic=True, raise_for_error=False):
+#       Function to report flagged metrc pos orders to metrc.
+#
+#       @param batch_size <number>: pass how many number of orders you want to report in one iteration.
+#                                    This is to achieve maximum number of order gets reported.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#
+#   Example method call, you can use :
+#
+#   1) Do retail pos order reporting for 100 orders.
+#       - model._cron_report_retail_pos()
+#
+#   2) Do retail pos order reporting for 10 orders.
+#       - model._cron_report_retail_pos(batch_size=10)
+#
+#   4) Do retail pos order reporting for 1 order.
+#       - model._cron_report_retail_pos(batch_size=1)
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+model._cron_report_retail_pos(batch_size=1)
+    ]]>        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="is_metrc">True</field>
+        <field name="numbercall">-1</field>
+    </record>
+</odoo>

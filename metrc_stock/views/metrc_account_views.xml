@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_stock_account_form_inherit_metrc" model="ir.ui.view">
+            <field name="name">metrc_stock.account.form.inherit.metrc</field>
+            <field name="model">metrc.account</field>
+            <field name="inherit_id" ref="metrc_base.view_metrc_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='div_import_models']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box" id="div_import_model_2">
+                        <div class="o_setting_left_pane">
+                            <field name="import_transfer_types"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="import_transfer_types"/>
+                            <div class="text-muted">
+                                Import Metrc Transfer types for all active facility licenses
+                            </div>
+                            <div class="content-group">
+                                <div class="mt8" attrs="{'invisible': [('import_transfer_types', '=', False)]}">
+                                    <button string="Import Transfer Types" type="object" name="do_import_transfer_types"
+                                            icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                                <div>
+                                    <button string="Open Trasnfer Types" type="action" name="%(metrc_stock.action_open_metrc_transfer_type)s"
+                                            icon="fa-external-link" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="div_import_model_4">
+                        <div class="o_setting_left_pane">
+                            <field name="import_package_adjust_reasons"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="import_package_adjust_reasons"/>
+                            <div class="text-muted">
+                                Import Metrc packages adjust reasons all active facility licenses
+                            </div>
+                            <div class="content-group">
+                                <div class="mt8" attrs="{'invisible': [('import_package_adjust_reasons', '=', False)]}">
+                                    <button string="Import Package Adjust Reasons" type="object" name="do_import_package_adjust_reasons"
+                                            icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                                <div>
+                                    <button string="Open Package Adjust Reasons" type="action" name="%(metrc_stock.action_open_package_adjust_reasons)s"
+                                            icon="fa-external-link"  class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="div_import_model_6">
+                        <div class="o_setting_left_pane">
+                            <field name="import_packages"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="import_packages"/>
+                            <div class="text-muted">
+                                Import Metrc packages all active warehouse that is configured with facility licenses
+                            </div>
+                            <div class="content-group">
+                                <div class="mt8" attrs="{'invisible': [('import_packages', '=', False)]}">
+                                    <button string="Import Packages" type="object" name="do_import_packages"
+                                            icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                                <div>
+                                    <button string="Open Packages" type="action" name="%(metrc_stock.action_production_lot_form_packages)s"
+                                            icon="fa-external-link" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

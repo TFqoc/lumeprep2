@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="ir_cron_view_form_inherit_metrc" model="ir.ui.view">
+		<field name="name">ir.cron.view.form.inherit.metrc</field>
+		<field name="model">ir.cron</field>
+		<field name="inherit_id" ref="base.ir_cron_view_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='user_id']" position="after">
+				<field name="is_metrc" readonly="True" force_save="1"/>
+			</xpath>
+		</field>
+	</record>
+	<record id="metrc_ir_cron_action" model="ir.actions.act_window">
+        <field name="name">Metrc Scheduled Actions</field>
+        <field name="res_model">ir.cron</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_all': 1, 'default_is_metrc': True}</field>
+        <field name="domain">[('is_metrc', '=', True)]</field>
+        <field name="view_id" ref="base.ir_cron_view_tree"/>
+    </record>
+    <menuitem id="menu_metrc_ir_cron_act" sequence="4" action="metrc_ir_cron_action" parent="metrc_base.menu_metrc_config" groups="metrc_base.group_metrc_manager"/>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="metrc_location_type_view_tree" model="ir.ui.view">
+        <field name="name">metrc.location.type.tree</field>
+        <field name="model">metrc.location.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="plant_batches"/>
+                <field name="plants"/>
+                <field name="harvests"/>
+                <field name="packages"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="metrc_location_view_tree" model="ir.ui.view">
+        <field name="name">metrc.location.tree</field>
+        <field name="model">metrc.location</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="location_type_id"/>
+                <field name="plant_batches"/>
+                <field name="plants"/>
+                <field name="harvests"/>
+                <field name="packages"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="metrc_location_view_form" model="ir.ui.view">
+        <field name="name">metrc.location.form</field>
+        <field name="model">metrc.location</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="facility_license_id"
+                                   domain="[('base_type', '=', 'Internal')]"/>
+                        </group>
+                        <group>
+                            <field name="location_type_id"/>
+                            <field name="plant_batches"/>
+                            <field name="plants"/>
+                            <field name="harvests"/>
+                            <field name="packages"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_metrc_location_types" model="ir.actions.act_window">
+        <field name="name">Metrc Location Types</field>
+        <field name="res_model">metrc.location.type</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <record id="action_open_metrc_locations" model="ir.actions.act_window">
+        <field name="name">Metrc Location</field>
+        <field name="res_model">metrc.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <menuitem id="menu_metrc_location_types"
+        action="action_open_metrc_location_types"
+        name="Location Types"
+        parent="metrc_base.submenu_metrc_data"
+        sequence="99"
+        groups="metrc_base.group_metrc_manager"/>
+    
+    <menuitem id="menu_metrc_locations"
+        name="Locations"
+        parent="metrc.menu_metrc_inventory_item"
+        action="action_open_metrc_locations"
+        sequence="1" groups="metrc_base.group_metrc_admin"/>
+
+</odoo>

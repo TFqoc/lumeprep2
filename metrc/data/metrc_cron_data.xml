@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="param_transfer_last_synced" model="ir.config_parameter">
+            <field name="key">metrc.transfer_last_synced</field>
+            <field name="value" eval="datetime.strftime(datetime.now(), '%Y-%m-01 00:00:00')"/>
+        </record>
+        <record id="param_skip_metrc_transactions" model="ir.config_parameter">
+            <field name="key">metrc.skip_transactions</field>
+            <field name="value">False</field>
+        </record>
+    </data>
+</odoo>
