@@ -79,9 +79,9 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
-        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.recurring_days.day_list() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
-        logger.info("DEBUG: %s" % data)
         float_time = time2float(order.date_order)
+        data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.recurring_days.day_list() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle,'start':p.daily_start_time,'end':p.daily_end_time,'now':float_time, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
+        logger.info("DEBUG: %s" % data)
         res = res.filtered(lambda program:
             (program.recurring and order.date_order.weekday() in program.recurring_days.day_list()
             # (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
@@ -125,7 +125,8 @@ class CouponProgram(models.Model):
     # Override
     def _keep_only_most_interesting_auto_applied_global_discount_program(self):
         # TODO This loop creates redundant results. Could make this more efficient in the future
-        logger.info("TYPE OF RECORDSET: %s" % type(self))
+        if len(self) <= 1:
+            return self
         possibilities = []
         for p in self:
             d = p
