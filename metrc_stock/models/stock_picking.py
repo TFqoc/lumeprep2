@@ -68,12 +68,10 @@ class StockPicking(models.Model):
 
     def _compute_facility_license(self):
         for pick in self:
-            if pick.picking_type_code in ['incoming', 'outgoing']:
-                pick.facility_license_id = pick.picking_type_id.warehouse_id.license_id
-            elif pick._is_in():
-                pick.facility_license_id = pick.location_dest_id.get_warehouse() and pick.location_dest_id.get_warehouse().license_id
+            if pick._is_in():
+                pick.facility_license_id = pick.location_dest_id.facility_license_id
             elif pick._is_out():
-                pick.facility_license_id = pick.location_id.get_warehouse() and pick.location_id.get_warehouse().license_id
+                pick.facility_license_id = pick.location_id.facility_license_id
             else:
                 pick.facility_license_id = False
 

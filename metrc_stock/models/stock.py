@@ -133,6 +133,12 @@ class StockInventory(models.Model):
     banner_message = fields.Html(compute="_compute_banner_message")
     downstream = fields.Boolean(help="Adjustment from METRC -> ODOO")
     do_not_adjust = fields.Boolean(string="Don't report to METRC", help="Check this field to bypass metrc reporting.")
+    
+    @api.onchange('location_ids')
+    def onchange_location(self):
+        licenses = self.location_ids.mapped('facility_license_id')
+        if len(licenses) > 1:
+            raise ValidationError(_('Can not perform adjustments for multiple metrc licenses.'))
 
     @api.depends('product_ids', 'line_ids')
     def _compute_is_metrc_adjustment(self):
@@ -168,8 +174,8 @@ class StockInventory(models.Model):
     @api.depends('location_ids')
     def _compute_facility_license_id(self):
         for inventory in self.filtered(lambda i: i.location_ids):
-            warehouse = inventory.location_ids[0].get_warehouse()
-            inventory.facility_license_id = warehouse and warehouse.license_id or False
+            license = inventory.location_ids.mapped('facility_license_id')
+            inventory.facility_license_id = license if len(license) == 1 else False
 
     def action_start(self):
         result = super(StockInventory, self).action_start()
@@ -189,7 +195,6 @@ class StockInventory(models.Model):
         return values
 
     def action_check(self):
-        print("called")
         if not self.env.context.get('bypass_check'):
             for inventory in self.filtered(lambda x: x.state not in ('done', 'cancel') and x.facility_license_id and x.facility_license_id.metrc_type == 'metrc'):
                 if any([line.lot_required and not line.prod_lot_id for line in inventory.line_ids]):

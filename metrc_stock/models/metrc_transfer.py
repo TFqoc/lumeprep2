@@ -870,12 +870,26 @@ class MetrcTransfer(models.Model):
         PP = self.env['product.product']
         ML = self.env['metrc.license']
         source_license = ML.get_license(self[0].src_license)
-        warehouse = self.env['stock.warehouse'].search([
-            ('license_id', '=', source_license.id)
-        ])
-        if not warehouse:
-            raise ValidationError(_("Facility License not configured on any warehouse.\n"
+        # warehouse = self.env['stock.warehouse'].search([
+        #     ('license_id', '=', source_license.id)
+        # ])
+        location = self.env['stock.location'].search([
+            ('facility_license_id', '=', source_license.id),
+            ('usage', '=', 'internal'),
+        ], limit=1)
+        # if not warehouse:
+        #     raise ValidationError(_("Facility License not configured on any warehouse.\n"
+        #                             "Please configure one for {}.".format(source_license.license_number)))
+        if not location:
+            raise ValidationError(_("Facility License not configured on any Internal Location.\n"
                                     "Please configure one for {}.".format(source_license.license_number)))
+        picking_type = self.env['stock.picking.type'].search([
+            ('default_location_dest_id', '=', location.id),
+            ('code', '=', 'incoming')
+        ], limit=1)
+        if not picking_type:
+            raise ValidationError(_("Operation type with default destination location {} is not found."
+                                    "\nPlease create one.".format(location.display_name)))
         partner_license = False
         manifest = set(self.mapped('manifest_number'))
         if len(manifest) > 1:
@@ -891,8 +905,8 @@ class MetrcTransfer(models.Model):
             try:
                 pick = self.create_transfer(partner_license.partner_id,
                                             partner_license,
-                                            warehouse.in_type_id,
-                                            warehouse.lot_stock_id)
+                                            picking_type,
+                                            location)
                 if isinstance(pick, (dict)) and pick.get('type', False) == 'ir.actions.act_window':
                     return pick
             except UserError as ue:

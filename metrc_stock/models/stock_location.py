@@ -9,3 +9,5 @@ class StockLocation(models.Model):
 
     metrc_location_id = fields.Many2one(comodel_name='metrc.location',
                                         string='Metrc Location')
+    facility_license_id = fields.Many2one(comodel_name='metrc.license',
+                                        domain=[('base_type', '=', 'Internal')])
