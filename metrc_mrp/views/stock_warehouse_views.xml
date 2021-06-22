@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <field name="manu_type_id" position="after">
                 <field name="metrc_manu_type_id" string="Batch split MFG Type" domain="[('code', '=', 'mrp_operation')]"/>
+                <field name="metrc_merge_type_id" string="Consolidation MFG Type" domain="[('code', '=', 'mrp_operation')]"/>
             </field>
         </field>
     </record>

@@ -79,18 +79,12 @@ class MetrcAccount(models.Model):
 
     name = fields.Char(string='Name', required=True, index=True)
     active = fields.Boolean(string='Active', default=True)
-    software_api_key = fields.Char(string='Vendor\'s API Key', required=True, copy=False)
     user_api_key = fields.Char(string='User\'s API Key', required=True, copy=False)
     prod_environment = fields.Boolean(string='Mode',
                               help='Set to production mode if account api key\'s are certified '
                                     'for running in production, else use test mode for testing and demo.')
     api_version = fields.Selection(
-        selection=[('v1', 'v1')], string='API Version', required=True, default='v1')
-    region = fields.Selection(
-        selection=[('CA', 'CA'), ('MI', 'MI')], string='API Region',
-        default='CA', required=True, help='Select Your region.\n'
-        '"CA" for California.\n"MI for Michigan.')
-    service_account = fields.Boolean(string='Service Account', copy=False)
+        selection=[('v1', 'v1')], string='API Version', compute='_compute_api_version')
     related_user = fields.Reference(selection=[
                                         ('res.users', 'User'),
                                         ('res.partner', 'Contact'),
@@ -102,17 +96,17 @@ class MetrcAccount(models.Model):
         comodel_name='ir.logging', inverse_name='account_id', string='Loggins')
 
     _sql_constraints = [
-        ('metrc_account_unique_apikey', 'unique (software_api_key, user_api_key, api_version)', 'The Metrc API keys pair (Vendor API Key and ) must be unique !'),
+        ('metrc_account_unique_apikey', 'unique (user_api_key)', 'The Metrc User Api key must be unique !'),
     ]
+
+    def _compute_api_version(self):
+        self.api_version = self.env['ir.config_parameter'].sudo().get_param('metrc.METRC_API_VERSION')
+
 
     def _compute_related_user(self):
         for account in self:
             user = self.env['res.users'].search([('metrc_account_id', '=', account.id)], limit=1)
             account.related_user = ('res.users,%d' % (user.id)) if user else False
-
-    def toggle_service_account(self):
-        for macc in self:
-            macc.service_account = not macc.service_account
 
     def toggle_prod_environment(self):
         for macc in self:
@@ -124,7 +118,8 @@ class MetrcAccount(models.Model):
 
     def _get_auth_header(self):
         self.ensure_one()
-        return HTTPBasicAuth(self.software_api_key, self.user_api_key)
+        software_api_key = self.env['ir.config_parameter'].sudo().get_param('metrc.VENDOR_API_KEY')
+        return HTTPBasicAuth(software_api_key, self.user_api_key)
 
     def open_account_logs(self):
         action = self.env.ref('base.ir_logging_all_act').read()[0]
@@ -165,7 +160,7 @@ class MetrcAccount(models.Model):
 
     def test_metrc_connection(self):
         self.ensure_one()
-        resp = self.fetch('get', '/unitsofmeasure/v1/active')
+        resp = self.fetch('get', '/unitsofmeasure/{}/active'.format(self.api_version))
         if resp:
             raise UserError(_('Connection Test Succeeded! Everything seems properly set up !'))
         else:
@@ -173,6 +168,7 @@ class MetrcAccount(models.Model):
 
     def fetch(self, http_method, service_endpoint, header=None, params=None, data=None, raise_for_error=True, timeout=180):
         retries = 0
+        region = self.env['ir.config_parameter'].sudo().get_param('metrc.METRC_API_REGION')
         while True:
             if params is None:
                 params = {}
@@ -183,9 +179,9 @@ class MetrcAccount(models.Model):
             if header is None:
                 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             if self.prod_environment:
-                base_url = _region_url_mapping[self.region]['production']
+                base_url = _region_url_mapping[region]['production']
             else:
-                base_url = _region_url_mapping[self.region]['sandbox']
+                base_url = _region_url_mapping[region]['sandbox']
 
             service_url = '{}{}'.format(base_url, service_endpoint)
             func = '{}:{}'.format(http_method, service_endpoint)

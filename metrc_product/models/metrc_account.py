@@ -7,8 +7,6 @@ from odoo import api, fields, models, _
 class MetrcAccount(models.Model):
     _inherit = 'metrc.account'
 
-    import_category = fields.Boolean(string='Import Categories')
-
     def do_import_category(self):
         self.ensure_one()
         self.env['metrc.product.category'].do_model_import(self)

@@ -27,10 +27,10 @@ Metrc Integration
         # views
         'views/res_partner_views.xml',
         'views/metrc_customer_types_views.xml',
-        'views/metrc_account_view.xml',
         'views/metrc_receipt_view.xml',
         'views/patient_id_method_views.xml',
         'views/crm_team_views.xml',
+        'views/res_config_settings_views.xml',
 
         # data
         'data/metrc_retail_cron_data.xml',
