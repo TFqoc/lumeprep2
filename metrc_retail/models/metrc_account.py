@@ -20,8 +20,6 @@ class MetrcAccount(models.Model):
 
     _inherit = 'metrc.account'
 
-    import_customer_types = fields.Boolean(string='Import Customer Types', help='Import Customer Types from metrc.')
-
     def do_import_customer_types(self):
         self.ensure_one()
         self.env['metrc.customer.types']._import_metrc_customer_types(self)
