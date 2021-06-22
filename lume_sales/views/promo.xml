@@ -17,8 +17,8 @@
                     <div>
                         <field name="recurring"/>
                         <field name="recurring_cycle" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}" style="width: auto !important;"/>
-                        <field name="daily_start_time" string="Start Time" widget="timepicker" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}"/>
-                        <field name="daily_end_time" string="End Time" widget="timepicker" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}"/>
+                        <field name="daily_start_time" string="Start Time" widget="float_time_24" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}"/>
+                        <field name="daily_end_time" string="End Time" widget="float_time_24" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}"/>
                         <!-- <field name="recurring_day" attrs="{'invisible': [('recurring', '=', False)]}" style="padding-left:10px;"/> -->
                         <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes"/>
                     </div>

@@ -20,7 +20,7 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban','sale_coupon','web_widget_timepicker'],
+    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban','sale_coupon'],
 
     'qweb': [
         "static/src/xml/lpc_quantity.xml",
