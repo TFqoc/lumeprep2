@@ -321,11 +321,11 @@ class TestLumeSaleCommon(SavepointCase):
 
         # _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
 
-    def test_test(self):
-        self.assertTrue(
-            False,
-            "Tests are being run."
-        )
+    # def test_test(self):
+    #     self.assertTrue(
+    #         False,
+    #         "Tests are being run."
+    #     )
 
         
 def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
