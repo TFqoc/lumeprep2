@@ -319,9 +319,9 @@ class TestLumeSaleCommon(SavepointCase):
         #     'location_id': cls.lumehouse_two.lot_stock_id.id,
         # })
 
-        # _logger.warning("Product Rec's Type is %s" % cls.product_rec.type)
-
-        
+        # _logger.warning("Product Rec's Type is %s" % cls.product_rec.type) test
+   
+         
 def compare_dictionaries(dictionary_1, dictionary_2, list_of_keys):
     error_list = [True]
     if list_of_keys != False:
