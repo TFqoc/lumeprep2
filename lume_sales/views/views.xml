@@ -1,0 +1,231 @@
+<odoo>
+  <data>
+    <!-- Quick Create task menu -->
+    <record id="view_project_kanban_quick_create_inherit" model="ir.ui.view">
+      <field name="name">project.task.quick_create.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.quick_create_task_form"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="name" position="before">
+          <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
+          <field name="scan_text" string="Scan DL"/>
+          <!-- <field name="_barcode_scanned" string="Scan DL" widget="barcode_handler"/> -->
+        </field>
+        <field name="name" position="after">
+          <field name="partner_id" options="{'no_open': true, 'no_create': true}"/>
+          <field name="fulfillment_type"/>
+          <!-- <field name="order_type" invisible="1"/> -->
+        </field>
+        <field name="name" position="replace"></field>
+        <field name="user_id" position="replace"></field>
+      </field>
+    </record>
+
+    <!-- Task Form View -->
+    <record id="view_task_form_inherit" model="ir.ui.view">
+      <field name="name">task.form.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_form2"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <xpath expr="//header/button" position="after">
+          <!-- <field name="sales_order" invisible="1"/> -->
+          <button name="build_cart" type="object" string="Build Cart" class="btn-primary" attrs="{'invisible':[('sales_order','!=',False)]}"/>
+        </xpath>
+        <xpath expr="//header/field[@name='stage_id']" position="attributes">
+          <attribute name="options">{'fold_field': 'fold'}</attribute>
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        
+        <!-- Move customer to left hand side -->
+        <xpath expr="//group/group" position="inside">
+          <field name="partner_id" position="move"/>
+        </xpath>
+        <!-- Move other stuff to right hand side -->
+        <xpath expr="//field[@name='active']" position="before">
+          <field name="project_id" position="move"/>
+          <field name="user_id" position="move"/>
+          <field name="parent_id" position="move"/>
+          <field name="date_deadline" position="move"/>
+          <field name="recurring_task" position="move"/>
+          <field name="tag_ids" position="move"/>
+        </xpath>
+       
+        <field name="partner_id" position="after">
+          <field name="sales_order" string="Sales Order" attrs="{'invisible':[('sales_order', '=', False)]}"/>
+          <field name="dummy_field" invisible="1"/>
+          <field name="fulfillment_type"/>
+          <!-- <field name="message_unread_counter" />
+          <field name="message_unread"/>
+          <field name="message_channel_ids"/>
+          <field name="fulfillment_type"/> -->
+        </field>
+      </field>
+    </record>
+
+    <!-- Project Form View -->
+    <record id="view_project_form_inherit" model="ir.ui.view">
+      <field name="name">project.form.inherit</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.edit_project"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="partner_id" position="after">
+          <field name="warehouse_id"/>
+          <field name="blink_threshold"/>
+          <field name="so_threshold1"/>
+          <field name="so_threshold2"/>
+          <field name="so_threshold3"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Project Search View -->
+    <!-- <record id="view_project_search_inherit" model="ir.ui.view">
+      <field name="name">project.search.inherit</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.view_project_project_filter"/>
+      <!- <field name="type">search</field> ->
+      <field name="arch" type="xml">
+        <xpath expr="//search/filter" position="before">
+          <filter string="My Store" name="my_store_projects" domain="[('store.user_ids.id','=',uid)]"/>
+        </xpath>
+      </field>
+    </record> -->
+
+    <!-- Task Search View -->
+    <record id="view_project_task_search_inherit" model="ir.ui.view">
+      <field name="name">project.task.search.inherit</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_search_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//search/filter" position="before">
+          <!-- <filter string="Medical Customers" name="medical" domain="[('partner_id.is_medical','=',True)]"/> -->
+          <!-- <filter string="Recreational Customers" name="recreational" domain="[('partner_id.is_medical','=',False)]"/> -->
+          <filter string="Curbside" name="curb" domain="[('fulfillment_type','=','curb')]"/>
+          <filter string="In Store" name="in_store" domain="[('fulfillment_type','=','store')]"/>
+          <filter string="Online Order" name="online" domain="[('fulfillment_type','=','online')]"/>
+          <filter string="Delivery" name="delivery" domain="[('fulfillment_type','=','delivery')]"/>
+          <separator/>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Store View -->
+    <!-- <record id="view_store_form" model="ir.ui.view">
+      <field name="name">store.form</field>
+      <field name="model">lume.store</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Store">
+          <header>
+          </header>
+          <sheet>
+            <group>
+              <h1>
+                <field name="name" string="Store Name" class="o_field_char o_field_widget o_required_modifier"/>
+              </h1>
+              <field name="user_ids" string="Users" readonly="1"/>
+            </group>
+            <group>
+
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_store_tree" model="ir.ui.view">
+      <field name="name">store.tree</field>
+      <field name="model">lume.store</field>
+      <field name="arch" type="xml">
+          <tree string="Store">
+              <field name="name"/>
+          </tree>
+      </field>
+    </record> -->
+
+    <!-- Your Action Window Definition -->
+    <!-- <record id="store_window_action" model="ir.actions.act_window">
+        <field name="name">Store</field>
+        <field name="res_model">lume.store</field>
+        <!- <field name="view_type">form</field> ->
+        <field name="view_mode">list,form</field>
+    </record> -->
+
+    <!-- App icon on front page -->
+    <!-- <menuitem id="store_root" name="Store" sequence="10" action="store_window_action"/> -->
+
+
+    <!-- User Form View -->
+    <!-- <record id="view_res_users_form_inherit" model="ir.ui.view">
+      <field name="name">res.users.inherit</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="hr.res_users_view_form_simple_modif"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="work_location" position="after">
+          <field name="store" widget="many2many_tags"/>
+        </field>
+      </field>
+    </record> -->
+
+    
+
+    <!-- Product Additions -->
+    <record id="product_template_inherit" model="ir.ui.view">
+      <field name="name">product.template.product.form</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_only_form_view"/>
+      <field name="arch" type="xml">
+        <field name="barcode" position="after">
+          <field name="brand" string="Brand"/>
+          <field name="thc_type" string="Type" required="1" />
+          <field name="thc" string="THC"></field>
+          <field name="effect" string="Effect"/>
+        </field>
+      </field>
+    </record>
+
+      <!-- Adds filter domain for Project window -->
+      <!-- <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field>
+        <field name="context">{"search_default_my_store_projects":1}</field> <!- Puts the filter on by default ->
+      </record> -->
+
+      <!-- <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form/group/field" position="after">
+            <field name="store"/>
+          </xpath>
+        </field>
+        </record> -->
+
+        <!-- Navbar Color -->
+        <record id="lume_nav_color" model="ir.ui.view">
+          <field name="name">lume.nav.color</field>
+          <!-- <field name="model">project.task</field> -->
+          <field name="inherit_id" ref="web.layout"/>
+          <field name="arch" type="xml">
+            <body>
+              <style>
+            .o_main_navbar {background-color: #d29e0f;border-bottom: 0px;}
+            .o_main_navbar .show .dropdown-toggle {background-color: #d29e0f;}
+            .o_main_navbar > ul > li > a:hover, .o_main_navbar 
+                           > ul > li > label:hover {background-color: #b98a09;}
+            .o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar 
+                           > button:hover, .o_main_navbar 
+                           > button:focus {background-color: #b98a09;color: inherit;}
+            .o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar 
+                           > button:hover, .o_main_navbar 
+                           > button:focus {background-color: #b98a09;color: inherit;}   
+          </style> 
+          </body>
+          </field>
+        </record>
+  </data>
+</odoo>

@@ -1,0 +1,137 @@
+<odoo>
+    <data>
+    <!-- Material kanban -->
+    <record id="product_product_kanban_catalog" model="ir.ui.view">
+        <field name="name">product.template.kanban.catalog</field>
+        <field name="model">product.product</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <kanban edit="0" create="0" class="o_kanban_mobile o_fsm_material_kanban" js_class="lpc_product_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="product_template_attribute_value_ids"/>
+                <field name="uom_id"/>
+                <field name="thc_type"/>
+                <field name="categ_id"/>
+                <field name="quantity_at_warehouses"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + ''] == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}" t-attf-data-qty="{{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']}}">
+                            <button class="o_kanban_image" style="z-index: 50;border: none;padding: 0px;background-color: transparent;">
+                                <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
+                            </button>
+                            <div class="oe_kanban_details p-2 d-flex">
+                                <div class="o_kanban_record_top w-100 " style="justify-content: space-between;">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <div>
+                                                <strong><span t-esc="record.name.value"/></strong>
+                                            </div>
+                                        </strong>
+                                        <div class="o_kanban_tags_section">
+                                            <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
+                                        </div>
+                                        <ul>
+                                            <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <field name="currency_id" invisible="True"/>
+                                            <li><strong>On hand: 
+                                                <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']"/>
+                                                <!-- <field name="qty_available"/>  -->
+                                                <field name="uom_id"/></strong></li>
+                                            <li><strong><field name="thc_type"/></strong></li>
+                                            <li>
+                                                <strong>THC: 
+                                                    <t t-if="record.categ_id.value.includes('Edibles') || record.categ_id.value.includes('Topical')">
+                                                        Mg: <field name="thc"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <field name="thc"/>%
+                                                    </t>
+                                                </strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- CLEAN ME: buttons should be part of the field widget; style should not be inlined -->
+                                    <div class="h-100 d-flex"
+                                        style="z-index:1;align-items: center;">
+                                        <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_remove_quantity" onclick="update_data()">
+                                            <span style="font-size:1.5rem;">-</span>
+                                        </button>
+                                        <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
+    
+                                        <field name="lpc_quantity" widget="lpcProductQuantity"/>
+    
+                                        <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_add_quantity" onclick="update_data()">
+                                        <span style="font-size:1.5rem;">+</span></button>
+                                        <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="object" class="col-12 h-100 w-100 o_button_invisible" name="lpc_add_quantity" onclick="update_data()" invisible="context.get('hide_qty_buttons')"/>
+                        </div>
+                    </t>
+                </templates>
+                <button string="Done" special="cancel"/>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="category_grouping_search" model="ir.ui.view">
+        <field name="name">Catagory Grouping</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <searchpanel>
+                    <field name="categ_id"/>
+                    <field name="effect"/>
+                    <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
+                </searchpanel>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product search autocomplete -->
+    <!-- Copied from Studio -->
+    <record id="product_search_brand" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+          <data>
+            <xpath expr="//field[@name='product_template_attribute_value_ids']" position="after">
+              <field name="brand"/>
+            </xpath>
+          </data>
+        </field>
+        <field name="field_parent" eval="False"/>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" ref="stock.stock_product_search_form_view"/>
+        <field name="key" eval="False"/>
+        <field name="mode">extension</field>
+        <field name="model">product.product</field>
+        <field name="name">lume.product.search.brand</field>
+        <field name="priority">99</field>
+        <field name="type">search</field>
+      </record>
+      <record id="product_template_search_brand" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+          <data>
+            <xpath expr="//search[1]/field[@name='categ_id']" position="after">
+              <field name="brand"/>
+            </xpath>
+          </data>
+        </field>
+        <field name="field_parent" eval="False"/>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" ref="stock.product_template_search_form_view_stock"/>
+        <field name="key" eval="False"/>
+        <field name="mode">extension</field>
+        <field name="model">product.template</field>
+        <field name="name">lume.product.template.search.brand</field>
+        <field name="priority">99</field>
+        <field name="type">search</field>
+      </record>
+    </data>
+</odoo>
