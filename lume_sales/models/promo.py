@@ -31,13 +31,11 @@ class CouponProgram(models.Model):
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
     # stackable_with_reverse = fields.Many2many()
     store_ids = fields.Many2many(comodel_name='project.project')
-    daily_start_time = fields.Float(digits=(12, 2), copy=False,default=0.01)
+    daily_start_time = fields.Float(digits=(12, 2), copy=False,default=0)
     daily_end_time = fields.Float(digits=(12, 2), copy=False,default=23.99)
 
     @api.onchange('stackable_with')
     def onchange_stackables(self):
-        # Causes issues when creating a new promotion
-
         # logger.info('Old: %s New: %s' % (len(self._origin.stackable_with), len(self.stackable_with)))
         # Remove old links from programs we are no longer stackable with
         # logger.info("Self: %s" % self.id) # Prints as "NewId_4"
