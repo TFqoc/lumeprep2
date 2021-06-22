@@ -49,6 +49,10 @@ odoo.define('web_widget_timepicker', function (require) {
                 }
             }
         },
+        _setValueFromUi: function () {
+            var value = this.$input.val() || '00:00';
+            this.setValue(this._parseClient(value));
+        },
     });
 
     var FieldTimePicker = FieldDate.extend({
