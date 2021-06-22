@@ -8,11 +8,13 @@ odoo.define('lume_sales.float_time_24', function(require){
         _setValue: function (value, options) {
             console.log("Value: " + value);
             console.log("Type: " + typeof(value));
-            if (value >= 24){
-                value = 23.99;
+            let timePair = value.split(':');
+            let hours = parseInt(timePair[0]);
+            if (hours >= 24){
+                value = '23.59';
             }
-            else if (value < 0){
-                value = 0;
+            else if (hours < 0){
+                value = '00:' + timePair[1];
             }
             return this._super(value, options);
         },

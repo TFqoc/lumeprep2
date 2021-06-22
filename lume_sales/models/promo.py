@@ -18,6 +18,8 @@ def id_from_string(id):
         return index
     id = int(id[index+1:])
     return id
+def time2float(date):
+    return round(date.hour + (date.minute/60),2)
 
 class CouponProgram(models.Model):
     _inherit='coupon.program'
@@ -31,6 +33,8 @@ class CouponProgram(models.Model):
     stackable_with = fields.Many2many(comodel_name='coupon.program',relation='coupon_program_stackable_rel',column1='promo1',column2='promo2')
     # stackable_with_reverse = fields.Many2many()
     store_ids = fields.Many2many(comodel_name='project.project')
+
+    check_time = fields.Boolean()
     daily_start_time = fields.Float(digits=(12, 2), copy=False,default=0)
     daily_end_time = fields.Float(digits=(12, 2), copy=False,default=23.99)
 
@@ -77,11 +81,14 @@ class CouponProgram(models.Model):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
         data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.recurring_days.day_list() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
         logger.info("DEBUG: %s" % data)
+        float_time = time2float(order.date_order)
         res = res.filtered(lambda program:
             (program.recurring and order.date_order.weekday() in program.recurring_days.day_list()
             # (program.recurring and program.rule_date_from.weekday() == order.date_order.weekday()
              and 
              (program.recurring_cycle == 'every' or program.is_numbered_day(order.date_order,program.recurring_cycle)))
+             and
+             ((program.check_time and program.daily_start_time <= float_time and float_time <= program.daily_end_time) or not program.check_time)
              or not program.recurring
         )
         data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.recurring_days.day_list() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
