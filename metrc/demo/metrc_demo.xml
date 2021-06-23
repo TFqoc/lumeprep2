@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="metrc_account_ca_sandbox" model="metrc.account">
+        	<field name="name">Odoo CA Metrc Account</field>
+            <field name="active" eval="True"/>
+            <field name="prod_environment" eval="False"/>
+            <field name="user_api_key">FusVbe4Yv6W1DGNuxKNhByXU6RO6jSUPcbRCoRDD98VNXc4D</field>
+        </record>
+
+        <record id="metrc_account_mi_sandbox" model="metrc.account">
+        	<field name="name">Odoo MI Metrc Account</field>
+            <field name="active" eval="True"/>
+            <field name="prod_environment" eval="False"/>
+            <field name="user_api_key">piNo4VXHYPqlQFIZQKclMgQKigJsnx7zSQ9fq3iOtlpLvE0o</field>
+        </record>
+
+        <!-- Metrc License Issuer Data -->
+        <record id="metrc_license_issuer_0" model="metrc.license.issuer">
+            <field name="name">Bureau of Cannabis Control</field>
+        </record>
+        <record id="metrc_license_issuer_1" model="metrc.license.issuer">
+            <field name="name">Department of Food and Agriculture</field>
+        </record>
+        <record id="metrc_license_issuer_2" model="metrc.license.issuer">
+            <field name="name">Department of Public Health</field>
+        </record>
+    </data>
+</odoo>

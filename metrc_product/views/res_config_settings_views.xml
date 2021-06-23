@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="metrc_product_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">metrc.res.config.settings.view.form.inherit.metrc_product</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='metrc_import_model_setting']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_category">
+                    <div class="o_setting_right_pane">
+                        <button string="Product/Item Categories" type="action" name="%(metrc_product.action_view_metrc_product_category)s" class="oe_link"/>
+                        <div class="text-muted">
+                            Enable importing products/items categories for this users allowed license
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <div>
+                                    <button string=" Import Product/Item Categories" type="object" name="do_import_category" icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

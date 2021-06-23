@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('set-customer')]" position="after">
+            <button class="button set-license" t-att-class="{'decentered': isLongName}"
+                    t-on-click="trigger('click-license')" t-if="client">
+                <t t-if="!env.isMobile"><i class="fa fa-id-card" role="img" aria-label="License" title="License" /></t>
+                <t t-if="license">
+                    <t t-esc="license" />
+                </t>
+                <t t-else="">
+                    License
+                </t>
+            </button>
+        </xpath>
+    </t>
+</templates>

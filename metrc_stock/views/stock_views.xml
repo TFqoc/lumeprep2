@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warehouse_form_inherit_metrc" model="ir.ui.view">
+        <field name="name">stock.warehouse.form.inherit.metrc</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="license_id" domain="[('base_type', '=', 'Internal')]" context="{'default_base_type': 'Internal'}"/>
+                <field name='default_adjust_reason_id' domain="[('license_id', '=', license_id)]" 
+                       attrs="{'required': [('license_id', '!=', False)],
+                               'invisible': [('license_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="inventory_adjustment_form_inherit_metrc" model="ir.ui.view">
+        <field name="name">inventory.adjustment.form.inherit.metrc</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="banner_message"/>
+                <field name="is_metrc_adjustment" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='prefill_counted_quantity']" position="after">
+                <field name="warehouse_id" invisible="1"/>
+                <field name="facility_license_id" domain="[('base_type', '=', 'Internal')]" 
+                       readonly="1" force_save="1" context="{'default_base_type': 'Internal'}"/>
+                <field name="do_not_adjust" 
+                       groups="metrc_base.group_metrc_admin,stock.group_stock_manager"/>
+                <field name="reason_id" options="{'no_create': True}" 
+                       domain="[('license_id', '=', facility_license_id)]" 
+                       attrs="{'invisible': [('do_not_adjust', '=', True)]}"/>
+                <field name="reason_note" attrs="{'invisible': [('do_not_adjust', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_move_line_tree_inherit_metrc" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.inherit.metrc</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="lot_qty" readonly="1"
+                       attrs="{'column_invisible': [('parent.state', 'in', ['done','cancel'])]}"/>
+                <field name="move_id" invisible="1"/>
+                <field name="split_needed" invisible="1"/>
+                <button name="split_quantity" type="object" 
+                        icon="fa-files-o" class="btn-link" 
+                        attrs="{'invisible': ['|', ('split_needed', '=', False), 
+                        ('state', 'in', ['done', 'cancel'])]}"/>
+            </field>
+        </field>
+    </record>
+    <record id="stock_inventory_line_tree_inherit_metrc" model="ir.ui.view">
+        <field name="name">inventory.line.tree.inherit.metrc</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='prod_lot_id']" position="after">
+                <field name="is_metric_product" invisible="1" readonly="1" force_save="1"/>
+                <field name="reason_id" attrs="{'readonly': [('state', '=', 'done')]}"
+                       options="{'no_open':True,'no_create':True}"/>
+                <field name="reason_note" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                <field name="do_not_adjust" groups="metrc_base.group_metrc_manager"/>
+                <field name="metrc_adjust_qty" readonly="1" force_save="1"
+                       attrs="{'invisible': [('state', '!=', 'done')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='prod_lot_id']" position="before">
+                <field name="lot_required" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='prod_lot_id']" position="attributes">
+                <attribute name="attrs">{'required': [('lot_required', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-bf">is_editable or is_metric_product == True and do_not_adjust == False</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_production_lot_form_inherit_metrc" model="ir.ui.view">
+        <field name="name">stock.production.lot.form.metrc</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="name_readonly" invisible="1"/>
+                <field name="is_legacy_lot" invisible="1"/>
+                <field name="metrc_id" invisible="1"/>
+                <img src="/metrc/static/description/icon.png" class="oe_inline" alt="A METRC product" attrs="{'invisible': [('metrc_id', '=', 0)]}" style="height: 30px; width: 30px;"/>
+            </field>
+            <field name="product_id" position="before">
+                <field name="is_legacy_lot"/>
+                <field name="metrc_tag" attrs="{'invisible': [('is_legacy_lot', '=', False)], 'required': [('is_legacy_lot', '=', True)], 'readonly': [('name_readonly', '=', True)]}"/>
+            </field>
+            <field name="name" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_legacy_lot', '=', True), ('name_readonly', '=', True)]}</attribute>
+            </field>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <field name="is_metric_product" invisible="1" readonly="1"/>
+                    <button name="split_lot_quantity" type="object" string="Split Package" class="btn btn-primary" attrs="{'invisible': [('is_metric_product', '=', False)]}" groups="metrc_base.group_metrc_user"/>
+                    <button name="sync_package" type="object" string="Sync" class="btn btn-primary" attrs="{'invisible': [('is_metric_product', '=', False)]}" groups="metrc_base.group_metrc_user"/>
+                </header>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="after">
+                <widget name="web_ribbon" title="Not Editable" bg_color="bg-danger" 
+                        attrs="{'invisible': [('name_readonly', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="metrc_product_name" readonly="1"
+                       attrs="{'invisible': [('metrc_product_name', '=', '')]}"/>
+                <field name="labtest_state" string="Labtesting State" readonly="1" 
+                       attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                       groups="metrc_base.group_metrc_user"/>
+                <field name="testing_state_date" string="Labtesting State Date" 
+                       readonly="1" attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                       groups="metrc_base.group_metrc_user"/>
+                <field name="is_production_batch" readonly="1"
+                       attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                       groups="metrc_base.group_metrc_user"/>
+                <field name="batch_number" readonly="1"
+                       attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                       groups="metrc_base.group_metrc_user"/>
+                <label for="metrc_qty" attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                       groups="metrc_base.group_metrc_user"/>
+                <div class="o_row" attrs="{'invisible': [('is_metric_product', '=', False)]}" 
+                     groups="metrc_base.group_metrc_user">
+                    <field name="metrc_qty" readonly="1" force_save="1"/>
+                    <field name="metrc_uom_id" readonly="1"/>
+                    <button name="get_metrc_package_qty" type="object" 
+                            string="=> Get Item Quantity from Metrc" class="oe_link" 
+                            groups="metrc_base.group_metrc_manager"/>
+                </div>
+            </xpath>
+            <field name="ref" position="after">
+                <field name="metrc_id" readonly="1" groups="base.group_no_one,metrc_base.group_metrc_user"/>
+            </field>
+            <field name="message_follower_ids" position="after">
+                <field name="activity_ids" widget="mail_activity"/>
+            </field>
+            <group name="main_group" position="inside">
+                <group>
+                    <field name="is_flower" invisible="1"/>
+                    <field name="is_edible" invisible="1"/>
+                    <field name="harvest_date" attrs="{'invisible': [('is_flower', '=', False)]}" readonly="1"/>
+                    <field name="expiration_date" attrs="{'invisible': [('is_edible', '=', False)]}" readonly="1"/>
+                    <field name="thc_mg" attrs="{'invisible': [('is_edible', '=', False)]}" readonly="1"/>
+                    <field name="thc_percent" attrs="{'invisible': [('is_flower', '=', False)]}" readonly="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="stock_search_product_lot_filter_inehrit_metrc" model="ir.ui.view">
+        <field name="name">stock.search.product.lot.filter.inehrit.metrc</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="name" position="replace">
+                    <field name="name" string="Product Lots" filter_domain="['|','|',('name', 'ilike', self),('ref', 'ilike', self),('metrc_tag', 'ilike', self)]"/>
+                </field>
+                <xpath expr="//filter[@name='group_by_product']" position="after">
+                    <filter name="synced_lots" string="Synced" domain="[('metrc_id', '>', 0)]"/>
+                    <filter name="synce_pending_lots" string="Pending Sync" domain="[('metrc_id', '=', 0)]"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_production_lot_form_packages" model="ir.actions.act_window">
+        <field name="name">Metrc Packages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.production.lot</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('stock.view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('stock.view_production_lot_form')})]"/>
+        <field name="search_view_id" ref="stock.search_product_lot_filter"/>
+        <field name="context">{'search_default_synced_lots': 1, 'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Click to add a lot/serial number.
+          </p><p>
+            This is the list of all the production lots you recorded. When
+            you select a lot, you can get the traceability of the products contained in lot.
+          </p>
+        </field>
+        <field name="domain">[('is_metric_product', '=', True)]</field>
+    </record>
+    <menuitem id="menu_metrc_packages"
+        name="Packages"
+        parent="metrc.menu_metrc_inventory_item"
+        action="metrc_stock.action_production_lot_form_packages"
+        sequence="1" groups="metrc_base.group_metrc_user"/>
+</odoo>

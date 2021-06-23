@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="metrc_view_product_uom_form_inherit" model="ir.ui.view">
+            <field name="name">metrc.uom.uom.form.inherit</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='rounding']" position="after">
+                        <field name="metrc_uom"/>
+                        <field name="abbrv_name" attrs="{'invisible': [('metrc_uom', '=', False)], 'required': [('metrc_uom', '=', True)]}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

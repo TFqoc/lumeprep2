@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_warehouse_form_inherit_metrc_mrp" model="ir.ui.view">
+        <field name="name">stock.warehouse.form.inherit.metrc_mrp</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <field name="manu_type_id" position="after">
+                <field name="metrc_manu_type_id" string="Batch split MFG Type" domain="[('code', '=', 'mrp_operation')]"/>
+                <field name="metrc_merge_type_id" string="Consolidation MFG Type" domain="[('code', '=', 'mrp_operation')]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

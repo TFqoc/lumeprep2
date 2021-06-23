@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_receipts_tree" model="ir.ui.view">
+            <field name="name">metrc.receipts.tree</field>
+            <field name="model">metrc.receipts</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Receipts">
+                    <field name="receipt_id"/>
+                    <field name="receipt_number"/>
+                    <field name="sales_date_time"/>
+                    <field name="product_name"/>
+                    <field name="package_label"/>
+                    <field name="quantity_sold"/>
+                    <field name="unit_of_measure_name"/>
+                    <field name="total_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_receipts_search" model="ir.ui.view">
+            <field name="name">metrc.receipts.search</field>
+            <field name="model">metrc.receipts</field>
+            <field name="arch" type="xml">
+                <search string="Metrc Receipts">
+                    <field name="src_license"/>
+                    <field name="package_label"/>
+                    <field name="product_name"/>
+                    <field name="receipt_number"/>
+                    <separator/>
+                    <group string='Group by...'>
+                        <filter string="Source License" name="groupby_src_license" context="{'group_by':'src_license'}"/>
+<!--                        <filter string="Receipts Type" name="groupby_Receipts_type" context="{'group_by':'receipts_type'}"/>-->
+<!--                        <filter string="Shipment Package State" name="groupby_shipment_package_state" context="{'group_by':'shipment_package_state'}"/>-->
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_receipts_form" model="ir.ui.view">
+            <field name="name">metrc.receipts.form</field>
+            <field name="model">metrc.receipts</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Receipts">
+                    <header>
+                    </header>
+                    <sheet>
+                        <div class="oe_title" name="title">
+                            <h1>
+                                <field name="receipt_id"/> - <field name="src_license"/>
+                            </h1>
+                        </div>
+                        <group>
+                        </group>
+                        <group name='grp_receipt'>
+                            <group>
+                                <field name="receipt_number"/>
+                                <field name="sales_date_time"/>
+                                <field name="sales_customer_type"/>
+                                <field name="patient_license_number"/>
+                                <field name="caregiver_license_number"/>
+                                <field name="identification_method"/>
+                                <field name="total_packages"/>
+                                <field name="total_price"/>
+                            </group>
+                            <group>
+                                <field name="is_final"/>
+                                <field name="archived_date"/>
+                                <field name="recorded_date_time"/>
+                                <field name="recorded_by_user_name"/>
+                                <field name="last_modified"/>
+                            </group>
+                        </group>
+                        <group name='grp_trans' string='Transactions Details'>
+                            <group>
+                                <field name="package_id"/>
+                                <field name="package_label"/>
+                                <field name="product_name"/>
+                                <field name="product_category_name"/>
+                                <field name="quantity_sold"/>
+                                <field name="unit_of_measure_name"/>
+                                <field name="unit_of_measure_abbreviation"/>
+                                <field name="total_price"/>
+                                <field name="sales_delivery_state"/>
+                                <field name="archived_date"/>
+                                <field name="recorded_date_time"/>
+                                <field name="recorded_by_user_name"/>
+                                <field name="last_modified"/>
+                            </group>
+                            <group>
+                                <field name="item_strain_name"/>
+                                <field name="item_unit_cbd_percent"/>
+                                <field name="item_unit_cbd_content"/>
+                                <field name="item_unit_cbd_content_unit_of_measure_name"/>
+                                <field name="item_unit_thc_percent"/>
+                                <field name="item_unit_thc_content"/>
+                                <field name="item_unit_thc_content_unit_of_measure_name"/>
+                                <field name="item_unit_volume"/>
+                                <field name="item_unit_volume_unit_of_measure_name"/>
+                                <field name="item_unit_weight"/>
+                                <field name="item_unit_weight_unit_of_measure_name"/>
+                                <field name="item_serving_size"/>
+                                <field name="item_supply_duration_days"/>
+                                <field name="item_unit_quantity"/>
+                                <field name="item_unit_quantity_unit_of_measure_name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_receipts">
+            <field name="name">Receipts</field>
+            <field name="res_model">metrc.receipts</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="metrc_retail.view_metrc_receipts_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc account receipts.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_metrc_retail"
+                  parent="metrc_base.menu_root_metrc"
+                  name="Retails" sequence="25"
+                  groups="metrc_base.group_metrc_user"/>
+
+        <menuitem id="menu_action_view_metrc_receipts"
+                action="action_view_metrc_receipts"
+                name="Receipts"
+                parent="menu_metrc_retail"
+                sequence="99"
+                groups="metrc_base.group_metrc_manager"/>
+
+
+    </data>
+</odoo>

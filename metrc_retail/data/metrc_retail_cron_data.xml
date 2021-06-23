@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <data noupdate="0">
+        <record id="id_method_dl" model="patient.id.method">
+            <field name="name">Driver's License</field>
+        </record>
+        <record id="id_method_passport" model="patient.id.method">
+            <field name="name">Passport</field>
+        </record>
+
+        <record model="ir.cron" id="cron_metrc_update_receipt_nightly">
+            <field name="name">Metrc : Do Receipts Persistent, (Nightly - For all internal licenses)</field>
+            <field name="model_id" ref="metrc_retail.model_metrc_receipts"/>
+            <field name="state">code</field>
+            <field name="code"><![CDATA[
+model._cron_do_import_receipts()
+
+    ]]></field>
+            <field name="interval_number">24</field>
+            <field name="interval_type">hours</field>
+            <field name="is_metrc">True</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <record model="ir.cron" id="cron_metrc_update_receipt_atwill">
+            <field name="name">Metrc : Do Receipts Persistent (At will- For all internal licenses for last 120 days)</field>
+            <field name="model_id" ref="metrc_retail.model_metrc_receipts"/>
+            <field name="state">code</field>
+            <field name="code"><![CDATA[
+# Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void record-set
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+#--------------------------------------------------------------------------------------------------------
+# Metrc Method definition signature for metrc_receipt model only:
+#
+#   _cron_do_import_receipts(self, metrc_license=False, force_last_sync_date=False, automatic=True, raise_for_error=False):
+#       Function to sync the Metrc Receipts with the database persistent model
+#       it will perform table sync for given licenses if metrc_license
+#       is passed else it will do for all active facility license.
+#
+#       @param metrc_license  <list>|<recorset metrc.license>: pass list of facility license database ids (i.e.[1,2,3,...]) or
+#                                                              browse desire record and pass recordset of  metrc.license
+#       @param force_last_sync_date <datetime>: if passed it will start the receipts check from give date else it will look in last 24 hours.
+#                                               also this takes datetime object only.
+#       @param automatic <bool>: help in concurrency, granted new database cursor, should be True always.
+#       @param raise_for_error <bool>: If true then it will raise error in UI as code runs, else it will log error in logging model.
+#
+#   Example method call, you can use :
+#
+#   1) Do receipts sync for all license for give licenses for last 24 hours
+#       - model._cron_do_import_receipts()
+#
+#   2) Do receipts sync for license 1 and 2 for given for last 24 hours
+#       - model._cron_do_import_receipts(metrc_license=[1,2])
+#
+#   3) Do receipts sync for all license for last 30 days
+#       - model._cron_do_import_receipts(force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=30))
+#
+#   4) Do receipts sync for given license for last 10 days
+#       - model._cron_do_import_receipts([2], force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=10))
+#
+# This action can be copied and can be also schedule this at internal different configuration on method
+#--------------------------------------------------------------------------------------------------------
+
+model._cron_do_import_receipts(force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=120))
+
+    ]]></field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="is_metrc">True</field>
+            <field name="active">False</field>
+            <field name="numbercall">1</field>
+        </record>
+
+    </data>
+</odoo>

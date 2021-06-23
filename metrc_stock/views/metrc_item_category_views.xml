@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="metrc_item_category_inherit_metrc_stock" model="ir.ui.view">
+        <field name="name">metrc.product.category.inherit.metrc_stock</field>
+        <field name="model">metrc.product.category</field>
+        <field name="inherit_id" ref="metrc_product.view_metrc_product_category_form"/>
+        <field name="arch" type="xml">
+            <field name="testing_state" position="after">
+                <field name="is_flower"/>
+                <field name="is_edible"/>
+            </field>
+        </field>
+    </record>
+</odoo>

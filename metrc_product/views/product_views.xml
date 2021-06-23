@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="metrc_product_template_action" model="ir.actions.act_window">
+        <field name="name">Items</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="product.product_template_kanban_view"/>
+        <field name="context">{"default_filter_to_sell":1}</field>
+        <field name="domain">[('metrc_item_cat_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new product.
+            </p><p>
+                You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to customers.
+            </p><p>
+                The product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_action_view_metrc_items"
+        action="metrc_product_template_action"
+        name="Items"
+        parent="menu_metrc_catelog_item"
+        sequence="5"
+        groups="metrc_base.group_metrc_user"/>
+
+    <record id="product_template_form_view_inherit_metrc" model="ir.ui.view">
+        <field name="name">metrc.product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <field name="is_metric_product" invisible="1"/>
+            </xpath>
+            <page name='general_information' position="after">
+                <page name="metrc_info" string="Metrc">
+                    <group>
+                        <field name="metrc_item_cat_id" options="{'no_create': True}"/>
+                        <field name="diff_metrc_uom" invisible="1"/>
+                        <field name="metrc_uom_id" options="{'no_create': True}"
+                            attrs="{'invisible': [('diff_metrc_uom', '=', False)], 'required': [('diff_metrc_uom', '=', True)]}"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+    <record id="product_template_only_form_inherit_metrc" model="ir.ui.view">
+        <field name="name">product.template.only.form.metrc</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <img src="/metrc/static/description/icon.png" class="oe_inline" alt="A METRC product"
+                     attrs="{'invisible': [('is_metric_product', '=', False)]}"
+                     style="height: 30px; width: 30px; margin-right: 5px;"/>
+            </xpath>
+            <xpath expr="//button[@name='%(product.product_variant_action)d']" position="attributes">
+                <attribute name="attrs">{'invisible': [('product_variant_count', '&lt;', 1)]}</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="metrc_sync_status" invisible="1"/>
+                <button name="configre_metrc_fields" string="CONFIGURE METRC PROPERTIES" class="btn btn-primary pull-right" type="object" attrs="{'invisible': [('req_metrc_fields', '=', False)]}"/>
+                <button name="sync_with_metrc" class="btn btn-primary pull-right" type="object" string="SYNC WITH METRC" attrs="{'invisible': ['|', ('is_metric_product', '=', False), ('metrc_sync_status', '=', 'synced')]}"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="o_panel" attrs="{'invisible': [('is_metric_product', '=', False)]}">
+                    <field name="banner_message" readonly="True"/>
+                    <field name="req_metrc_fields" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_normal_form_view_inherit_metrc" model="ir.ui.view">
+        <field name="name">product.normal.form.view.inherit.metrc</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <img src="/metrc/static/description/icon.png" class="oe_inline" alt="A METRC product"
+                     attrs="{'invisible': [('is_metric_product', '=', False)]}"
+                     style="height: 30px; width: 30px; margin-right: 5px;"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="sync_status" invisible="1"/>
+                <button name="sync_with_metrc" type="object" string="SYNC WITH METRC" attrs="{'invisible': ['|', ('is_metric_product', '=', False), ('sync_status', '=', 'synced')]}"/>
+            </xpath>
+            <page name="metrc_info" position="replace">
+                <page string='Metrc'>
+                    <field name="require_strain" invisible="1"/>
+                    <field name="require_itembrand" invisible="1"/>
+                    <field name="require_administrationmethod" invisible="1"/>
+                    <field name="require_cbdpercent" invisible="1"/>
+                    <field name="require_cbdcontent" invisible="1"/>
+                    <field name="require_thcpercent" invisible="1"/>
+                    <field name="require_thccontent" invisible="1"/>
+                    <field name="require_unitvolume" invisible="1"/>
+                    <field name="require_unitweight" invisible="1"/>
+                    <field name="require_servingsize" invisible="1"/>
+                    <field name="require_supplydurationdays" invisible="1"/>
+                    <field name="require_ingredients" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="sync_status" readonly="1" force_save="1" attrs="{'invisible': [('is_metric_product', '=', False)]}"/>
+                            <field name="metrc_item_cat_id" force_save="1"/>
+                            <field name="strain_id" attrs="{'required': [('require_strain', '=', True)], 'invisible': [('require_strain', '!=', True)]}"/>
+                            <field name="item_brand" attrs="{'required': [('require_itembrand', '=', True)], 'invisible': [('require_itembrand', '!=', True)]}"/>
+                            <field name="administration_method" attrs="{'required': [('require_administrationmethod', '=', True)], 'invisible': [('require_administrationmethod', '!=', True)]}"/>
+                            <field name="unit_cbd_percent" attrs="{'required': [('require_cbdpercent', '=', True)], 'invisible': [('require_cbdpercent', '!=', True)]}"/>
+                            <field name="unit_cbd_content" attrs="{'required': [('require_cbdcontent', '=', True)], 'invisible': [('require_cbdcontent', '!=', True)]}"/>
+                            <field name="unit_cbd_content_uom" attrs="{'required': [('require_cbdcontent', '=', True)], 'invisible': [('require_cbdcontent', '!=', True)]}"/>
+                            <field name="approval_status" readonly="True"/>
+                            <field name="supply_duration_days" attrs="{'required': [('require_supplydurationdays', '=', True)], 'invisible': [('require_supplydurationdays', '!=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="unit_thc_percent" attrs="{'required': [('require_thcpercent', '=', True)], 'invisible': [('require_thcpercent', '!=', True)]}"/>
+                            <field name="unit_thc_content" attrs="{'required': [('require_thccontent', '=', True)], 'invisible': [('require_thccontent', '!=', True)]}"/>
+                            <field name="unit_thc_content_uom" attrs="{'required': [('require_thccontent', '=', True)], 'invisible': [('require_thccontent', '!=', True)]}"/>
+                            <label for="metrc_weight" attrs="{'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="metrc_weight" attrs="{'required': [('require_unitweight', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                                <field name="unit_weight_uom" attrs="{'required': [('require_unitweight', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            </div>
+                            <label for="metrc_volume" attrs="{'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="metrc_volume" attrs="{'required': [('require_unitvolume', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                                <field name="unit_volume_uom" attrs="{'required': [('require_unitvolume', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            </div>
+                            <field name="serving_size" attrs="{'required': [('require_servingsize', '=', True)], 'invisible': [('require_servingsize', '!=', True)]}"/>
+                            <field name="ingredients" attrs="{'required': [('require_ingredients', '=', True)], 'invisible': [('require_ingredients', '!=', True)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+    <record id="prodct_product_metrc_properties_view_tree" model="ir.ui.view">
+        <field name="name">prodct.product.metrc.properties.view.tree</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Product Metrc Properties" create="false" editable="bottom">
+                <field name="metrc_name" readonly="1" force_save="1"/>
+                <field name="strain_id" invisible="not context.get('strain_id')" required="context.get('strain_id')" options="{'no_create': True}"/>
+                <field name="metrc_weight" invisible="not context.get('metrc_weight')" required="context.get('metrc_weight')"/>
+                <field name="unit_weight_uom" invisible="not context.get('unit_weight_uom')" required="context.get('unit_weight_uom')" string="Unit Weight UOM"/>
+                <field name="metrc_volume" invisible="not context.get('metrc_volume')" required="context.get('metrc_volume')"/>
+                <field name="unit_volume_uom" invisible="not context.get('unit_volume_uom')" required="context.get('unit_volume_uom')" string="Unit Volume UOM"/>
+                <field name="unit_cbd_percent" invisible="not context.get('unit_cbd_percent')" required="context.get('unit_cbd_percent')"/>
+                <field name="unit_cbd_content" invisible="not context.get('unit_cbd_content')" required="context.get('unit_cbd_content')"/>
+                <field name="unit_cbd_content_uom" invisible="not context.get('unit_cbd_content_uom')" required="context.get('unit_cbd_content_uom')"/>
+                <field name="unit_thc_percent" invisible="not context.get('unit_thc_percent')" required="context.get('unit_thc_percent')"/>
+                <field name="unit_thc_content" invisible="not context.get('unit_thc_content')" required="context.get('unit_thc_content')"/>
+                <field name="unit_thc_content_uom" invisible="not context.get('unit_thc_content_uom')" required="context.get('unit_thc_content_uom')"/>
+                <field name="serving_size" invisible="not context.get('serving_size')" required="context.get('serving_size')"/>
+                <field name="supply_duration_days" invisible="not context.get('supply_duration_days')" required="context.get('supply_duration_days')"/>
+                <field name="ingredients" invisible="not context.get('ingredients')" required="context.get('ingredients')"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_product_metrc_properties" model="ir.actions.act_window">
+        <field name="name">Product Metrc Properties</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" eval="prodct_product_metrc_properties_view_tree"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <record id="product_variant_easy_edit_form_metrc" model="ir.ui.view">
+        <field name="name">product.variant.easy.edit.form.metrc</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <img src="/metrc/static/description/icon.png" class="oe_inline" alt="A METRC product" attrs="{'invisible': [('is_metric_product', '=', False)]}" style="height: 30px; width: 30px;"/>
+            </xpath>
+            <xpath expr="//field[@name='name']/../.." position="after">
+                <group>
+                    <field name="sync_status" readonly="1" force_save="1" attrs="{'invisible': [('is_metric_product', '=', False)]}"/>
+                    <field name="is_metric_product" invisible="1"/>
+                </group>
+            </xpath>
+<!--            TODO: move it to form. Header is not availalbe until stock module is installed.-->
+<!--            <xpath expr="//header" position="inside">-->
+<!--                <field name="sync_status" invisible="1"/>-->
+<!--                <button name="sync_with_metrc" type="object" string="SYNC WITH METRC" attrs="{'invisible': ['|', ('is_metric_product', '=', False), ('sync_status', '=', 'synced')]}"/>-->
+<!--            </xpath>-->
+            <xpath expr="//group[@name='pricing']/.." position="after">
+                <group name="metrc" string="Metrc Data" attrs="{'invisible': [('is_metric_product', '=', False)]}">
+                    <field name="require_strain" invisible="1"/>
+                    <field name="require_itembrand" invisible="1"/>
+                    <field name="require_administrationmethod" invisible="1"/>
+                    <field name="require_cbdpercent" invisible="1"/>
+                    <field name="require_cbdcontent" invisible="1"/>
+                    <field name="require_thcpercent" invisible="1"/>
+                    <field name="require_thccontent" invisible="1"/>
+                    <field name="require_unitvolume" invisible="1"/>
+                    <field name="require_unitweight" invisible="1"/>
+                    <field name="require_servingsize" invisible="1"/>
+                    <field name="require_supplydurationdays" invisible="1"/>
+                    <field name="require_ingredients" invisible="1"/>
+                    <group>
+                        <field name="metrc_item_cat_id" readonly="1" force_save="1"/>
+                        <field name="strain_id" attrs="{'required': [('require_strain', '=', True)], 'invisible': [('require_strain', '!=', True)]}"/>
+                        <field name="item_brand" attrs="{'required': [('require_itembrand', '=', True)], 'invisible': [('require_itembrand', '!=', True)]}"/>
+                        <field name="administration_method" attrs="{'required': [('require_administrationmethod', '=', True)], 'invisible': [('require_administrationmethod', '!=', True)]}"/>
+                        <field name="unit_cbd_percent" attrs="{'required': [('require_cbdpercent', '=', True)], 'invisible': [('require_cbdpercent', '!=', True)]}"/>
+                        <field name="unit_cbd_content" attrs="{'required': [('require_cbdcontent', '=', True)], 'invisible': [('require_cbdcontent', '!=', True)]}"/>
+                        <field name="unit_cbd_content_uom" attrs="{'required': [('require_cbdcontent', '=', True)], 'invisible': [('require_cbdcontent', '!=', True)]}"/>
+                        <field name="approval_status" readonly="True"/>
+                        <field name="supply_duration_days" attrs="{'required': [('require_supplydurationdays', '=', True)], 'invisible': [('require_supplydurationdays', '!=', True)]}"/>
+                    </group>
+                    <group>
+                        <field name="unit_thc_percent" attrs="{'required': [('require_thcpercent', '=', True)], 'invisible': [('require_thcpercent', '!=', True)]}"/>
+                        <field name="unit_thc_content" attrs="{'required': [('require_thccontent', '=', True)], 'invisible': [('require_thccontent', '!=', True)]}"/>
+                        <field name="unit_thc_content_uom" attrs="{'required': [('require_thccontent', '=', True)], 'invisible': [('require_thccontent', '!=', True)]}"/>
+                        <label for="metrc_weight" attrs="{'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                        <div class="o_row">
+                            <field name="metrc_weight" attrs="{'required': [('require_unitweight', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            <field name="unit_weight_uom" attrs="{'required': [('require_unitweight', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                        </div>
+                        <label for="metrc_volume" attrs="{'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                        <div class="o_row">
+                            <field name="metrc_volume" attrs="{'required': [('require_unitvolume', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                            <field name="unit_volume_uom" attrs="{'required': [('require_unitvolume', '=', True)], 'invisible': [('metrc_item_cat_id', '=', False)]}"/>
+                        </div>
+                        <field name="serving_size" attrs="{'required': [('require_servingsize', '=', True)], 'invisible': [('require_servingsize', '!=', True)]}"/>
+                        <field name="ingredients" attrs="{'required': [('require_ingredients', '=', True)], 'invisible': [('require_ingredients', '!=', True)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

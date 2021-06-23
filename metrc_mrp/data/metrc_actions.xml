@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="action_create_batch_split_operation_and_seq" model="ir.actions.server">
+		<field name="name">Create batch split operation and sequence</field>
+		<field name="model_id" ref="stock.model_stock_warehouse"/>
+		<field name="state">code</field>
+		<field name="code"><![CDATA[
+records._create_batch_split_picking_type()
+			]]>
+		</field>
+		<field name="binding_model_id" ref="stock.model_stock_warehouse"/>
+	</record>
+</odoo>

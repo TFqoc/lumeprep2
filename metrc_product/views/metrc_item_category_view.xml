@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_product_category_tree" model="ir.ui.view">
+            <field name="name">metrc.product.category.tree</field>
+            <field name="model">metrc.product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Categories" create="false" edit="false">
+                    <field name="name"/>
+                    <field name="category_type"/>
+                    <field name="quantity_type"/>
+                    <field name="testing_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_product_category_form" model="ir.ui.view">
+            <field name="name">metrc.product.category.form</field>
+            <field name="model">metrc.product.category</field>
+            <field name="arch" type="xml">
+                <form string="Category" create="false" delete="false">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_title" name="title">
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="category_type"/>
+                                <field name="quantity_type"/>
+                                <field name="testing_state"/>
+                            </group>
+                            <group>
+                                <field name="diff_metrc_uom"/>
+                                <field name="coeff_field_id"
+                                        attrs="{'invisible': [('diff_metrc_uom', '=', False)], 'required': [('diff_metrc_uom', '=', True)]}"
+                                        options="{'no_create': True, 'no_open': True}"/>
+                                <field name="coeff_related_fields_ids" widget="many2many_tags"
+                                        options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="approval"/>
+                                <field name="strain"/>
+                                <field name="item_brand"/>
+                                <field name="administration_method"/>
+                                <field name="servingsize"/>
+                                <field name="supplydurationdays"/>
+                                <field name="qty_uom_name"/>
+                                <field name="qty_multiplier"/>
+                                <field name="ingredients"/>
+                            </group>
+                            <group>
+                                <field name="cbdpercent"/>
+                                <field name="cbdcontent"/>
+                                <field name="thcpercent"/>
+                                <field name="thccontent"/>
+                                <field name="unitvolume"/>
+                                <field name="unitweight"/>
+                                <field name="productphoto"/>
+                                <field name="cancontainseeds"/>
+                                <field name="canberemediated"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_product_category">
+            <field name="name">Item Categories</field>
+            <field name="res_model">metrc.product.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id"></field>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage mutiple metrc product categories.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_action_view_metrc_product_category"
+                action="action_view_metrc_product_category"
+                name="Item Categories"
+                parent="menu_metrc_catelog_item"
+                sequence="50"
+                groups="metrc_base.group_metrc_user"/>
+
+
+    </data>
+</odoo>

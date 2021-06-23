@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_account_tree" model="ir.ui.view">
+            <field name="name">metrc.account.tree</field>
+            <field name="model">metrc.account</field>
+            <field name="arch" type="xml">
+                <tree string="Metrc Accounts">
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="prod_environment"/>
+                    <field name="api_version"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_account_search" model="ir.ui.view">
+            <field name="name">metrc.account.search</field>
+            <field name="model">metrc.account</field>
+            <field name="arch" type="xml">
+                <search string="Metrc Account">
+                    <field name="name" string="Account" />
+                    <field name="api_version"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_account_form" model="ir.ui.view">
+            <field name="name">metrc.account.form</field>
+            <field name="model">metrc.account</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Account">
+                    <header>
+                        <button name="test_metrc_connection" type="object" string="Test Connection" icon="fa-television"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button name="toggle_debug"
+                                    class="oe_stat_button"
+                                    icon="fa-code"
+                                    type="object" groups="metrc_base.group_metrc_manager">
+                                    <span class="text-success" attrs="{'invisible': [('debug_logging', '=', True)]}">Enable Debug</span>
+                                    <span class="text-danger" attrs="{'invisible': [('debug_logging', '=', False)]}">Disable Debug</span>
+                            </button>
+                            <button name="toggle_prod_environment"
+                                    class="oe_stat_button"
+                                    icon="fa-check-square"
+                                    type="object" groups="metrc_base.group_metrc_manager">
+                                    <span class="text-success" attrs="{'invisible': [('prod_environment', '=', False)]}">Production Mode</span>
+                                    <span class="text-danger" attrs="{'invisible': [('prod_environment', '=', True)]}">Test Mode</span>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Sandbox" bg_color="bg-warning" attrs="{'invisible': ['|', ('prod_environment', '=', True), ('active', '!=', True)]}"/>
+                        <widget name="web_ribbon" title="Production" bg_color="bg-success" attrs="{'invisible': ['|', ('prod_environment', '=', False), ('active', '!=', True)]}"/>
+                        <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('active', '!=', False)]}"/>
+                        <div class="oe_title" name="title" id="title">
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Acme Inc"/>
+                            </h1>
+                        </div>
+                        <h4 name="main_login_api">Account Credentials &amp; API </h4>
+                        <div class="row mt16 o_settings_container" id="inventory_location">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Metrc account credentials, Vendor and User API Key .">
+                                <div class="o_setting_right_pane">
+                                    <label for="user_api_key" string="Metrc Credentials"/>
+                                    <div class="text-muted">
+                                        Metrc account credentials, User API Key
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="user_api_key" password="1" placeholder="User API Key"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" groups="metrc_base.group_metrc_manager">
+                                <div class="o_setting_right_pane">
+                                    <label for="api_version" string="API Version and Related User"/>
+                                    <div class="text-muted">
+                                        Metrc API Version and related system user from your users list
+                                    </div>
+                                    <div>
+                                        <field name="api_version" readonly="1"/><br/>
+                                        <field name="related_user" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <group groups="metrc_base.group_metrc_manager">
+                            <field name="prod_environment" invisible="1"/>
+                            <field name="debug_logging" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page name='page_account_logs' string="Loggings" groups="metrc_base.group_metrc_manager, base.group_no_one">
+                                <button string="Open Logs For Searching" type="object" name="open_account_logs"
+                                            class="oe_link oe_right" icon="fa-external-link" groups="metrc_base.group_metrc_manager"/>
+                                <field name="logging_ids" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_metrc_account_form_simple" model="ir.ui.view">
+            <field name="name">view.metrc.account.form.simple</field>
+            <field name="model">metrc.account</field>
+            <field name="arch" type="xml">
+                <form string="Metrc Account">
+                    <header>
+                        <button name="test_metrc_connection" type="object" string="Test Connection" icon="fa-television"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title" name="title" id="title">
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Acme Inc"/>
+                            </h1>
+                        </div>
+                        <h4 name="main_login_api">Account Credentials &amp; API </h4>
+                        <div class="row mt16 o_settings_container" id="inventory_location">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Metrc account credentials, Vendor and User API Key .">
+                                <div class="o_setting_right_pane">
+                                    <label for="user_api_key" string="Metrc Credentials"/>
+                                    <div class="text-muted">
+                                        Metrc account credentials, Vendor and User's API Key
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="user_api_key" password="1" placeholder="User API Key"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label for="api_version" string="API Version and Related User"/>
+                                    <div class="text-muted">
+                                        Metrc API Version and related system user from your users list
+                                    </div>
+                                    <div>
+                                        <field name="api_version"/>
+                                        <field name="related_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_view_metrc_account">
+            <field name="name">User Accounts</field>
+            <field name="res_model">metrc.account</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="metrc_base.view_metrc_account_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage Metrc User Accounts.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_action_view_metrc_account"
+                action="action_view_metrc_account"
+                name="Accounts"
+                parent="menu_metrc_config"
+                sequence="1"
+                groups="metrc_base.group_metrc_manager"/>
+
+
+    </data>
+</odoo>

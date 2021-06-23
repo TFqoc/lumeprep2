@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_metrc_package_receive_wizard" model="ir.ui.view">
+        <field name="name">metrc.package.receive.wizard.form</field>
+        <field name="model">metrc.package.receive</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="warehouse_id" domain="[('license_id', '!=', False)]"/>
+                        <field name="vendor_id"/>
+                        <field name="vendor_license_ids" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="facility_license_id" readonly="1" force_save="1"/>
+                        <field name="vendor_license_id" domain="[('id', 'in', vendor_license_ids)]"/>
+                    </group>
+                </group>
+                <field name="receive_line" invisible="context.get('hide_receive')">
+                    <tree editable="bottom" create="0">
+                        <field name="receive_id" invisible="1"/>
+                        <field name="stock_move_id" invisible="1"/>
+                        <field name="picking_id" options="{'no_open': True}"/>
+                        <field name="product_id" readonly="1" force_save="1" options="{'no_open': True}"/>
+                        <field name="product_uom_qty" readonly="1" force_save="1"/>
+                        <field name="product_uom" readonly="1" force_save="1" options="{'no_open': True}"/>
+                        <field name="metrc_packages" widget="text"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="generate_moves_to_receive" string="GENERATE" type="object"  invisible="not context.get('hide_receive')"/>
+                    <button name="receive" string="Receive" class="btn-primary" type="object" invisible="context.get('hide_receive')"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_metrc_package_receive_wizard" model="ir.actions.act_window">
+        <field name="name">Receive Metrc Packages</field>
+        <field name="res_model">metrc.package.receive</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_metrc_package_receive_wizard')})]"/>
+        <field name="context">{'hide_receive': True}</field>
+        <field name="domain">[]</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_metrc_package_receive"
+        name="Receive Packages"
+        parent="metrc.menu_metrc_inventory_item"
+        action="metrc.action_open_metrc_package_receive_wizard"
+        sequence="3" groups="metrc_base.group_metrc_manager"/>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_session_form_inherit_metrc_retail_pos" model="ir.ui.view">
+        <field name="name">pos.session.form.inherit.metrc_retail_pos</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_pos_session_validate']" position="after">
+                <field name="session_reported" invisible="1"/>
+                <field name="need_to_report" invisible="1"/>
+                <button name="action_report_session" string="Report to METRC" type="object" attrs="{'invisible': ['|', ('need_to_report', '=', False), ('session_reported', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

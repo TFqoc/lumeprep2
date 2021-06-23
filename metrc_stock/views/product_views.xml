@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_template_only_form_inherit_metrc_stock" model="ir.ui.view">
+        <field name="name">product.template.only.form.metrc</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header//button[@name='action_update_quantity_on_hand']" position="before">
+                <field name="is_metric_product" invisible="1"/>
+            </xpath>
+            <xpath expr="//header//button[@name='action_update_quantity_on_hand']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type', '!=', 'product'), ('is_metric_product', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_normal_form_view_inherit_metrc_stock" model="ir.ui.view">
+        <field name="name">product.normal.form.view.inherit.metrc</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_update_quantity_on_hand']" position="before">
+                <field name="is_metric_product" invisible="True"/>
+            </xpath>
+            <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type', '!=', 'product'), ('is_metric_product', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_variant_easy_edit_form_metrc_stock" model="ir.ui.view">
+        <field name="name">product.variant.easy.edit.form.metrc</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_update_quantity_on_hand']" position="before">
+                <field name="is_metric_product" invisible="True"/>
+            </xpath>
+            <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type', '!=', 'product'), ('is_metric_product', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

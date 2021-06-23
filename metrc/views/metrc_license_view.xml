@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_metrc_license_tree" model="ir.ui.view">
+            <field name="name">metrc.license.tree</field>
+            <field name="model">metrc.license</field>
+            <field name="arch" type="xml">
+                <tree string="Licenses" decoration-danger="expire_date == False or  expire_date &lt; current_date" decoration-success="expire_date &gt;= current_date" decoration-bf="expire_date &gt;= current_date">
+                    <field name="name"/>
+                    <field name="base_type"/>
+                    <field name="permit_type"/>
+                    <field name="issue_date"/>
+                    <field name="expire_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_metrc_patient_license_tree" model="ir.ui.view">
+            <field name="name">metrc.license.tree</field>
+            <field name="model">metrc.license</field>
+            <field name="arch" type="xml">
+                <tree string="Patient Licenses" decoration-danger="expire_date == False or  expire_date &lt; current_date" decoration-success="expire_date &gt;= current_date" decoration-bf="expire_date &gt;= current_date">
+                    <field name="name"/>
+                    <field name="issue_date"/>
+                    <field name="expire_date"/>
+                    <field name="active"/>
+                    <field name="facility_license_id"/>
+                    <field name="daily_flower_available"/>
+                    <field name="daily_thc_available"/>
+                    <field name="daily_purchase_amount"/>
+                    <button name="refresh_allotments" icon="fa-refresh" type="object"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_metrc_license_kanban" model="ir.ui.view">
+            <field name="name">metrc.license.kanban</field>
+            <field name="model">metrc.license</field>
+            <field name="arch" type="xml">
+                <kanban class="o_event_kanban_view">
+                    <field name="name"/>
+                    <field name="id"/>
+                    <field name="image_small"/>
+                    <field name="license_number"/>
+                    <field name="partner_id"/>
+                    <field name="base_type"/>
+                    <field name="permit_type"/>
+                    <field name="issue_date"/>
+                    <field name="expire_date"/>
+                    <field name="metrc_type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <t t-if="record.image_small.raw_value">
+                                        <img t-att-src="kanban_image('metrc.license', 'image_small', record.id.raw_value)" alt="Metrc License" class="o_image_64_contain"/>
+                                    </t>
+                                    <t t-else="!record.image_small.raw_value">
+                                        <img t-att-src="_s + &quot;/metrc/static/description/bank-card.png&quot;" alt="Metrc License" class="o_image_64_contain"/>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4 class="o_kanban_record_title"><field name="partner_id"/></h4>
+                                    <h4 class="o_kanban_record_title">
+                                        <em><span class="text-muted">#</span><field name="license_number"/></em>
+                                    </h4>
+                                    <div>
+                                        <i class="fa fa-clock-o"/>
+                                        <b>Issue  : </b> <t t-esc="moment(record.issue_date.raw_value).format('ll')"/><br/>
+                                        <b>Expire : </b> <t t-esc="moment(record.expire_date.raw_value).format('ll')"/>
+                                    </div>
+                                    <div class="oe_kanban_partner_links">
+                                        <span class="badge" t-if="record.metrc_type.raw_value === 'metrc'"><i class="fa fa-fw fa-leaf fa-lg"/></span>
+                                        <span class="badge" t-if="record.metrc_type.raw_value !== 'metrc'" style="color: grey; border-color: grey;"><i class="fa fa-fw fa-leaf fa-lg"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_metrc_license_search" model="ir.ui.view">
+            <field name="name">metrc.license.search</field>
+            <field name="model">metrc.license</field>
+            <field name="arch" type="xml">
+                <search string="License">
+                    <field name="name" string="License"/>
+                    <field name="base_type"/>
+                    <field name="permit_type"/>
+                    <field name="partner_id"/>
+                    <field name="issuer_id"/>
+                    <separator/>
+                    <filter string="Valid Licenses" name="valid_licenses" domain="[('expire_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Expired" name="expired_licenses" domain="[('expire_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Archived" name="archieved_licenses" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="All Licenses" name="archieved_licenses" domain="['|', ('active', '=', False), ('active', '!=', False)]"/>
+                    <separator/>
+                    <group string='Group By...'>
+                        <filter string="Customer/Vendors" name="groupby_partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Type" name="groupby_base_type" domain="[]" context="{'group_by':'base_type'}"/>
+                        <filter string="Permit Type" name="groupby_permit_type" domain="[]" context="{'group_by':'permit_type'}"/>
+                        <filter string="Metrc Status" name="groupby_metrc_type" domain="[]" context="{'group_by':'metrc_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_metrc_license_form" model="ir.ui.view">
+            <field name="name">metrc.license.form</field>
+            <field name="model">metrc.license</field>
+            <field name="arch" type="xml">
+                <form string="License">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}" readonly="1"/>
+                        <div class="oe_title" name="title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="metrc_type"  widget="radio" options="{'horizontal': true}" />
+                                <field name="base_type" widget="radio" options="{'horizontal': true}" invisible="1"/>
+                                <field name="license_number"/>
+                                <field name="company_id" attrs="{'invisible': [('base_type', 'in', ('External', 'Patient'))], 'required': [('base_type', '=', 'Internal')]}"/>
+                                <field name="partner_id" force_save="1" attrs="{'readonly': [('base_type', '=', 'Internal')], 'required': [('base_type', '=', 'External')]}"/>
+                                <field name="permit_type" attrs="{'required': [('base_type', '=', 'Internal')],
+                                                                  'invisible': [('base_type', '=', 'Patient')]}"/>
+                                <field name="sell_to_patients" readonly="1"
+                                       attrs="{'invisible': [('base_type', '!=', 'Internal')]}"/>
+                                <field name="sell_to_consumer" readonly="1"
+                                       attrs="{'invisible': [('base_type', '!=', 'Internal')]}"/>
+                            </group>
+                            <group>
+                                <field name="usage_type"/>
+                                <field name="facility_license_id" options="{'no_create': True}" groups="metrc_base.group_metrc_admin"
+                                       attrs="{'invisible': [('base_type', '!=', 'Patient')], 'required': [('base_type', '=', 'Patient')]}"/>
+                                <field name="issuer_id" context="{'default_license_vendor': True, 'default_customer': False, 'default_supplier': False}"/>
+                                <field name="metrc_account_id" attrs="{'required': [('base_type', '=', 'Internal')], 'invisible': [('base_type', '!=', 'Internal')]}"
+                                            options="{'no_create': true}"/>
+                                <field name="issue_date" attrs="{'required': [('base_type', '=', 'Internal')]}"/>
+                                <field name="expire_date" required="1"/>
+                            </group>
+                           
+                        </group>
+                        <group string="Allotments" attrs="{'invisible': [('base_type', '!=', 'Patient')]}">
+                            <group string="Daily" >
+                                <label for="daily_flower_available"/>
+                                <div>
+                                    <field name="daily_flower_available" readonly="1" force_save="1"/> Ounce(s)
+                                </div>
+                                <label for="daily_thc_available"/>
+                                <div>
+                                    <field name="daily_thc_available" readonly="1"  force_save="1"/> Ounce(s)
+                                </div>
+                                <field name="daily_purchase_amount" readonly="1"  force_save="1"/>
+                            </group>
+                            <group string="Monthly">
+                                <label for="monthly_flower_available"/>
+                                <div>
+                                    <field name="monthly_flower_available" readonly="1"  force_save="1"/> Ounce(s)
+                                </div>
+                                <label for="monthly_thc_available"/>
+                                <div>
+                                    <field name="monthly_thc_available" readonly="1" force_save="1"/> Ounce(s)
+                                </div>
+                                <field name="monthly_purchase_amount" readonly="1" force_save="1"/>
+                            </group>
+                        </group>
+                        <button name="refresh_allotments" string="Refresh" type="object"
+                                attrs="{'invisible': [('base_type', '!=', 'Patient')]}"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_license">
+            <field name="name">Facility Licenses</field>
+            <field name="res_model">metrc.license</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('base_type', '=', 'Internal')]</field>
+            <field name="context">{'default_base_type': 'Internal'}</field>
+            <field name="search_view_id" ref="metrc.view_metrc_license_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc licenses.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_customer_license">
+            <field name="name">Customer Licenses</field>
+            <field name="res_model">metrc.license</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('base_type', '=', 'External')]</field>
+            <field name="context">{'default_base_type': 'External'}</field>
+            <field name="search_view_id" ref="metrc.view_metrc_license_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc licenses.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_all_metrc_license">
+            <field name="name">Customer's Licenses</field>
+            <field name="res_model">metrc.license</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'default_base_type': 'External'}</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="metrc.view_metrc_license_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc licenses.
+                </p>
+            </field>
+        </record>
+
+        <record id="res_company_view_form_inherit_metrc" model="ir.ui.view">
+            <field name="name">res.company.view.form.inherit.metrc</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="metrc" string="Metrc Licenses">
+                        <field name="license_ids" context="{'default_company_id': active_id, 'default_base_type': 'Internal'}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_metrc_patient_license">
+            <field name="name">Patient Licenses</field>
+            <field name="res_model">metrc.license</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_metrc_patient_license_tree')})]"/>
+            <field name="domain">[('base_type', '=', 'Patient')]</field>
+            <field name="context">{'default_base_type': 'Patient'}</field>
+            <field name="search_view_id" ref="metrc.view_metrc_license_search"/>
+            <field name="help" type="html">
+                <p>
+                    You will be able to create and manage multiple metrc licenses.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_action_view_metrc_license"
+                action="action_view_metrc_license"
+                name="Facility Licenses"
+                parent="metrc_base.menu_metrc_customers"
+                sequence="1"
+                groups="metrc_base.group_metrc_user"/>
+
+        <menuitem id="menu_action_view_metrc_customer_license"
+                action="action_view_metrc_customer_license"
+                name="Customer Licenses"
+                parent="metrc_base.menu_metrc_customers"
+                sequence="1"
+                groups="metrc_base.group_metrc_user"/>
+
+        <menuitem id="menu_action_view_metrc_patient_license"
+                action="action_view_metrc_patient_license"
+                name="Patient Licenses"
+                parent="metrc_base.menu_metrc_customers"
+                sequence="1"
+                groups="metrc_base.group_metrc_user"/>
+
+        <menuitem id="menu_action_view_metrc_customer_license_contacts"
+                action="action_view_metrc_customer_license"
+                name="Customer Licenses"
+                parent="contacts.menu_contacts"
+                sequence="10"
+                groups="base.group_user"/>
+
+
+    </data>
+</odoo>
