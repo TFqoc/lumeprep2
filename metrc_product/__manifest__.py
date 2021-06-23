@@ -26,7 +26,6 @@ METRC Product:
         'views/metrc_item_category_view.xml',
         'views/metrc_product_alias_view.xml',
         'views/metrc_strains_view.xml',
-        'views/metrc_account_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
 

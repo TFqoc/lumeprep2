@@ -174,7 +174,7 @@ class SaleOrder(models.Model):
             "context": {'default_project_id': self.task.project_id.id},
         }
         # POS will now pick up the SO because it is in 'sale' state
-
+ 
     ######################
     # Promotion methods
     ######################
