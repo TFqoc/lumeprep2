@@ -8,7 +8,7 @@ import math
 
 def get_percent_index(l, percent):
     index = math.floor(len(l) * (percent/100))
-    return index
+    return min((index, len(l)-1))
 
 _logger = logging.getLogger(__name__)
 
@@ -78,6 +78,7 @@ class Product(models.Model):
             tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
             tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
             tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1]}
+            _logger.info("TIERS: %s" % tiers)
             for record in self:
                 record.tier = 'none'
                 for key, value in tiers:
