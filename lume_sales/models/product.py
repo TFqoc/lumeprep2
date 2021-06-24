@@ -85,7 +85,7 @@ class Product(models.Model):
             for record in self:
                 record.tier = 'none'
                 for key, value in tiers.items():
-                    if record.thc_value <= value['max'] and record.thc >= value['min']:
+                    if record.thc <= value['max'] and record.thc >= value['min']:
                         record.tier = key
                         break
 
