@@ -13,6 +13,8 @@
             <script type="text/javascript" src="lume_sales/static/src/js/so_section_and_note.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/project_kanban.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/progressbar.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/link_many2one.js"></script>
+            <script type="text/javascript" src="lume_sales/static/src/js/float_time_24.js"></script>
 
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/lpc_product_quantity.js"></script>
             <script type="text/javascript" src="lume_sales/static/src/js/product_catalog/model.js"></script>

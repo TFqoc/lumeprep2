@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from .barcode_parse import parse_code
 import logging
+import json
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -380,8 +381,52 @@ class project_inherit(models.Model):
     so_threshold3 = fields.Integer(default='5')
     # store = fields.Many2one(comodel_name='lume.store')
 
-# class ProjectTaskType(models.Model):
-#     _inherit = 'project.task.type'
+    # Params: data = json string
+    @api.model
+    def ecom_order(self, data):
+        _logger.info("Self: %s, Data: %s", (self, data))
+        # Create task
+        # Activate build cart
+        # Add so lines
+        # Apply promos
+        # Confirm SO
+        # Return cart total (JSON format?)
+        data = json.loads(data)
+        # JSON Data format
+        # {
+        #     "store_id":0,
+        #     "customer_id":0,
+        #     "fulfillment_type":'',
+        #     "order_lines":{
+        #         "product_id":0,
+        #         "product_uom_qty":0,
+        #     }
+        # }
+        customer = self.env['res.partner'].browse(data['customer_id'])
+        task = self.env['project.task'].create({
+            'partner_id': customer.id,
+            'project_id': data['store_id'],
+            'fulfillment_type': data['fulfillment_type'],
+            'user_id': False,
+            'name': customer.pref_name or customer.name,
+        })
+        task.build_cart()
+        
+        line_data = data['order_lines']
+        ids = []
+        for line in line_data:
+            line.update({'order_id': task.sales_order.id})
+            ids.append((0,0,line))
+
+        task.sales_order.order_line = ids
+
+        # TODO Apply promos here
+
+        # Confirm sale order to generate demand
+        task.sales_order.action_confirm()
+
+        # Return total for ecom's benefit
+        return {"order_total":task.sales_order.amount_total}
 
 
 

@@ -1,5 +1,8 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+
+logger = logging.getLogger(__name__)
 
 ORDER_HISTORY_DOMAIN = [('state', 'not in', ('draft', 'sent'))]
 
@@ -211,6 +214,33 @@ class SaleOrder(models.Model):
     #         '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
     #     ])._filter_programs_from_common_rules(self)
     #     return programs
+
+    # Override
+    def _create_new_no_code_promo_reward_lines(self):
+        '''Apply new programs that are applicable'''
+        self.ensure_one()
+        order = self
+        programs = order._get_applicable_no_code_promo_program()
+        programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
+        for program in programs:
+            # VFE REF in master _get_applicable_no_code_programs already filters programs
+            # why do we need to reapply this bunch of checks in _check_promo_code ????
+            # We should only apply a little part of the checks in _check_promo_code...
+            error_status = program._check_promo_code(order, False)
+            if not error_status.get('error'):
+                if program.promo_applicability == 'on_next_order':
+                    order._create_reward_coupon(program)
+                elif program.discount_line_product_id.id not in self.order_line.mapped('product_id').ids:
+                    self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
+                order.no_code_promo_program_ids |= program
+            else:
+                logger.info("Program Error Message: %s" % error_status.get("error"))
+
+    # Override
+    def _is_global_discount_already_applied(self):
+        # Saying that a global discount is never applied allows us to stack as many as we want.
+        # Stacking rules are applied elsewhere
+        return False
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'

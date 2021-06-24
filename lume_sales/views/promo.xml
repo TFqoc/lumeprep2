@@ -1,4 +1,4 @@
-<!-- <odoo>
+<odoo>
     <data>
         <record id="coupon_program_inherit" model="ir.ui.view">
             <field name="name">coupon.program.inherit</field>
@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <field name="rule_date_from" position="before">
                     <field name="stackability" style="width: auto !important;"/>
-                    <field name="stackable_with" attrs="{'invisible': [('stackability','=','not stackable')],'required': [('stackability','=','not stackable')]}">
+                    <field name="stackable_with" attrs="{'invisible': [('stackability','in',['not stackable','stackable all'])],'required': [('stackability','in',['not stackable','stackable all'])]}">
                         <tree create="0">
                             <field name="name"/>
                             <field name="active"/>
@@ -17,10 +17,19 @@
                     <div>
                         <field name="recurring"/>
                         <field name="recurring_cycle" attrs="{'invisible': [('recurring', '=', False)], 'required':[('recurring','=',True)]}" style="width: auto !important;"/>
-                        <field name="recurring_day" attrs="{'invisible': [('recurring', '=', False)]}" style="padding-left:10px;"/>
+                        <!-- <field name="recurring_day" attrs="{'invisible': [('recurring', '=', False)]}" style="padding-left:10px;"/> -->
+                        <field name="recurring_days" attrs="{'invisible': [('recurring', '=', False)]}" widget="many2many_checkboxes"/>
                     </div>
+                </field>
+                <field name="rule_date_to" position="after">
+                    <field name="check_time" string="Partial Day"/>
+                    <field name="daily_start_time" string="Start Time" widget="float_time_24" attrs="{'invisible': [('check_time', '=', False)], 'required':[('check_time','=',True)]}"/>
+                    <field name="daily_end_time" string="End Time" widget="float_time_24" attrs="{'invisible': [('check_time', '=', False)], 'required':[('check_time','=',True)]}"/>
+                </field>
+                <field name="rule_products_domain" position="after">
+                    <field name="store_ids" string="Based on Store" widget="many2many_tags" options="{'no_create':'1','no_edit':'1'}"/>
                 </field>
             </field>
         </record>
     </data>
-</odoo> -->
+</odoo>
