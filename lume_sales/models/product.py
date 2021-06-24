@@ -64,11 +64,11 @@ class Product(models.Model):
         for record in self:
             warehouse_id = self.env.context.get('warehouse_id', False)
             if not warehouse_id:
-                record.qty_at_store = 0
+                record.quantity_at_store = 0
             else:
                 warehouse = self.env['stock.warehouse'].browse(warehouse_id)
                 quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
-                record.qty_at_store = sum([q.available_quantity for q in quants])
+                record.quantity_at_store = sum([q.available_quantity for q in quants])
 
     def _compute_tier(self):
         store_id = self.env.context.get('store_id', False)
