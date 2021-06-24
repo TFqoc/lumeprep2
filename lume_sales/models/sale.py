@@ -61,7 +61,8 @@ class SaleOrder(models.Model):
 
     def open_catalog(self):
         self.ensure_one()
-        domain = [('type','!=','service'),('sale_ok','=',True)]
+        domain = ["&","&",("type","!=","service"),("sale_ok","=",True),"|",("is_product_variant","=",False),"&",("is_product_variant","=",True),("qty_at_store",">",0)]
+        domain += [('type','!=','service'),('sale_ok','=',True)]
         if not self.partner_id.can_purchase_medical:
             domain.append(('thc_type','!=','medical'))
         if not self.partner_id.is_over_21:

@@ -39,6 +39,7 @@ class Product(models.Model):
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
+    quantity_at_store = fields.float(compute="_compute_qty_at_store")
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
     thc = fields.Float()
 
@@ -58,6 +59,16 @@ class Product(models.Model):
             record.quantity_at_warehouses = json.dumps(data)
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
+
+    def _compute_qty_at_store(self):
+        for record in self:
+            warehouse_id = self.env.context.get('warehouse_id', False)
+            if not warehouse_id:
+                record.qty_at_store = 0
+            else:
+                warehouse = self.env['stock.warehouse'].browse(warehouse_id)
+                quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
+                record.qty_at_store = sum([q.available_quantity for q in quants])
 
     def _compute_tier(self):
         store_id = self.env.context.get('store_id', False)
