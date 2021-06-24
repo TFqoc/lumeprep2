@@ -186,12 +186,23 @@
         <field name="barcode" position="after">
           <field name="brand" string="Brand"/>
           <field name="thc_type" string="Type" required="1" />
-          <field name="thc" string="THC"></field>
+          <!-- <field name="thc" string="THC"></field> -->
           <field name="effect" string="Effect"/>
         </field>
       </field>
     </record>
 
+    <!-- Product Product Additions -->
+    <record id="product_product_easy_inherit" model="ir.ui.view">
+      <field name="name">product.product.form</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+      <field name="arch" type="xml">
+        <field name="barcode" position="after">
+          <field name="thc" string="THC"/>
+        </field>
+      </field>
+    </record>
       <!-- Adds filter domain for Project window -->
       <!-- <record id="project.open_view_project_all" model="ir.actions.act_window">
         <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field>

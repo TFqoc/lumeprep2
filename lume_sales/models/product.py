@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
     _order = 'is_lume desc, brand, name, list_price, default_code, id'
 
     brand = fields.Char()
-    thc = fields.Float()
+    # thc = fields.Float()
     thc_type = fields.Selection([('medical','Medical'),('adult','Adult Use'),('merch','Merchandise')],default="merch",required=True)
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
     is_lume = fields.Boolean(compute="_compute_lume", store=True)
@@ -40,6 +40,7 @@ class Product(models.Model):
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
+    thc = fields.Float()
 
     def _compute_qty_at_warehouses(self):
         # Loop all warehouses
@@ -84,8 +85,7 @@ class Product(models.Model):
             for record in self:
                 record.tier = 'none'
                 for key, value in tiers.items():
-                    thc = float(record.product_template_attribute_value_ids.name.split('%')[0])
-                    if thc <= value['max'] and record.thc >= value['min']:
+                    if record.thc_value <= value['max'] and record.thc >= value['min']:
                         record.tier = key
                         break
 
