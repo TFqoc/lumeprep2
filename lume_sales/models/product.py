@@ -74,6 +74,7 @@ class Product(models.Model):
                     percent = float(attr.name.split('%')[0])
                     values.add(percent)
             values = sorted(values, reverse=True)
+            _logger.info("Values: %s" % values)
             tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0]}
             tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
             tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
