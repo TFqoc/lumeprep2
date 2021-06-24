@@ -39,7 +39,7 @@ class Product(models.Model):
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
-    quantity_at_store = fields.Float(compute="_compute_qty_at_store")
+    quantity_at_store = fields.Float(compute="_compute_qty_at_store",store=True)
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
     thc = fields.Float()
 
