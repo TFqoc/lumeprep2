@@ -38,6 +38,7 @@
                                                 <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']"/>
                                                 <!-- <field name="qty_available"/>  -->
                                                 <field name="uom_id"/></strong></li>
+                                            <li><field name="tier"></field></li>
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>
                                                 <strong>THC: 

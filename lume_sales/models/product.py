@@ -4,6 +4,11 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
 import json
+import math
+
+def get_percent_index(l, percent):
+    index = math.floor(len(l) * (percent/100))
+    return index
 
 _logger = logging.getLogger(__name__)
 
@@ -16,6 +21,7 @@ class ProductTemplate(models.Model):
     thc_type = fields.Selection([('medical','Medical'),('adult','Adult Use'),('merch','Merchandise')],default="merch",required=True)
     effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')])
     is_lume = fields.Boolean(compute="_compute_lume", store=True)
+    is_tiered = fields.Boolean()
 
     @api.depends('brand')
     def _compute_lume(self):
@@ -33,6 +39,7 @@ class Product(models.Model):
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
+    tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
 
     def _compute_qty_at_warehouses(self):
         # Loop all warehouses
@@ -50,6 +57,33 @@ class Product(models.Model):
             record.quantity_at_warehouses = json.dumps(data)
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
+
+    def _compute_tier(self):
+        store_id = self.env.context.get('store_id', False)
+        if (store_id):
+            # Calcualte tier cutoffs for this store, Then loop through records
+            store_id = self.env['project.project'].browse(store_id)
+            # Get all quants regardless of product. (Change as needed when we find out lume's process)
+            quants = self.env['stock.quant'].search([('is_tiered','=',True),('location_id','=',store_id.warehouse_id.lot_stock_id.id)])
+            # Dict of name value pairs
+            tiers = {}
+            # {'name':{'min':0,'max':0}}
+            values = set()
+            for q in quants:
+                for attr in q.product_id.product_template_attribute_value_ids:
+                    percent = float(attr.name.split('%')[0])
+                    values.add(percent)
+            values = sorted(values, reverse=True)
+            tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0]}
+            tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
+            tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
+            tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1]}
+            for record in self:
+                record.tier = 'none'
+                for key, value in tiers:
+                    if record.thc <= value['max'] and record.thc >= value['min']:
+                        record.tier = key
+                        break
 
 
     @api.depends_context('lpc_sale_order_id')

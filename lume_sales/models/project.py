@@ -379,7 +379,11 @@ class project_inherit(models.Model):
     so_threshold1 = fields.Integer(default='1')
     so_threshold2 = fields.Integer(default='3')
     so_threshold3 = fields.Integer(default='5')
-    # store = fields.Many2one(comodel_name='lume.store')
+    
+    top_tier = fields.Float()
+    mid_tier = fields.Float()
+    value_tier = fields.Float()
+    cut_tier = fields.Float()
 
     # Params: data = json string
     @api.model

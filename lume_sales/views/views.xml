@@ -77,6 +77,10 @@
           <field name="so_threshold1"/>
           <field name="so_threshold2"/>
           <field name="so_threshold3"/>
+          <field name="top_tier"/>
+          <field name="mid_tier"/>
+          <field name="value_tier"/>
+          <field name="cut_tier"/>
         </field>
       </field>
     </record>
