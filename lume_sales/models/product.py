@@ -73,16 +73,17 @@ class Product(models.Model):
                 for attr in q.product_id.product_template_attribute_value_ids:
                     percent = float(attr.name.split('%')[0])
                     values.add(percent)
-            values = sorted(values, reverse=True)
-            _logger.info("Values: %s" % values)
-            tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0]}
-            tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
-            tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
-            tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1]}
+            if len(values) != 0:
+                values = sorted(values, reverse=True)
+                _logger.info("Values: %s" % values)
+                tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0]}
+                tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
+                tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
+                tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1]}
             _logger.info("TIERS: %s" % tiers)
             for record in self:
                 record.tier = 'none'
-                for key, value in tiers:
+                for key, value in tiers.items():
                     if record.thc <= value['max'] and record.thc >= value['min']:
                         record.tier = key
                         break
