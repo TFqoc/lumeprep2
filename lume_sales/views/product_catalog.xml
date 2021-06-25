@@ -33,7 +33,7 @@
                                             <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                                         </div>
                                         <ul>
-                                            <li><strong>Price: <field t-if="record.is_tiered.raw_value" name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field><field t-if="!record.is_tiered.raw_value" name="tier_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <li><strong>Price: <field t-if="!record.is_tiered.raw_value" name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field><field t-if="record.is_tiered.raw_value" name="tier_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: 
                                                 <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']"/>
