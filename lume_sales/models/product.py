@@ -103,7 +103,7 @@ class Product(models.Model):
                 try:
                     thc = record.product_template_attribute_value_ids.filtered(lambda r: r.attribute_id.name == "THC").name
                     thc = float(thc.split('%')[0])
-                except ValueError as v:
+                except AttributeError as v:
                     pass
                 for key, value in tiers.items():
                     if thc <= value['max'] and thc >= value['min']:
