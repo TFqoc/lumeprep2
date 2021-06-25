@@ -38,27 +38,30 @@ class Product(models.Model):
     
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
-    quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
-    quantity_at_store = fields.Float(compute="_compute_qty_at_store",store=True)
+    quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses",store=True)
+    quantity_at_store = fields.Float(compute="_compute_qty_at_store")
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
     tier_price = fields.Float(compute="_compute_tier")
     thc = fields.Float()
     # Override
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant',store=True)
 
+    @api.depends('stock_quant_ids')
     def _compute_qty_at_warehouses(self):
         # Loop all warehouses
         for record in self:
             data = {}
             warehouse_id = self.env.context.get('warehouse_id', False)
-            if not warehouse_id:
+            if not warehouse_id or True: # Testing condition. Should just always run
                 for warehouse in self.env['stock.warehouse'].search([]):
                     quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
-                    data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
-            else:
-                warehouse = self.env['stock.warehouse'].browse(warehouse_id)
-                quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
-                data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
+                    qty = sum([q.available_quantity for q in quants])
+                    if qty > 0:
+                        data[str(warehouse.name)] = qty
+            # else:
+            #     warehouse = self.env['stock.warehouse'].browse(warehouse_id)
+            #     quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
+            #     data[str(warehouse.id)] = sum([q.available_quantity for q in quants])
             record.quantity_at_warehouses = json.dumps(data)
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
