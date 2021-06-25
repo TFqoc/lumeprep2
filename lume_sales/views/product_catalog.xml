@@ -14,6 +14,7 @@
                 <field name="thc_type"/>
                 <field name="categ_id"/>
                 <field name="quantity_at_warehouses"/>
+                <field name="is_tiered"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + ''] == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}" t-attf-data-qty="{{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']}}">
@@ -32,7 +33,7 @@
                                             <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                                         </div>
                                         <ul>
-                                            <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <li><strong>Price: <field t-if="record.is_tiered.raw_value" name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field><field t-if="!record.is_tiered.raw_value" name="tier_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: 
                                                 <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']"/>

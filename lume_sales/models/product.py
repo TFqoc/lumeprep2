@@ -41,6 +41,7 @@ class Product(models.Model):
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses")
     quantity_at_store = fields.Float(compute="_compute_qty_at_store",store=True)
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
+    tier_price = fields.Float(compute="_compute_tier")
     thc = fields.Float()
 
     def _compute_qty_at_warehouses(self):
@@ -79,7 +80,7 @@ class Product(models.Model):
             quants = self.env['stock.quant'].search([('is_tiered','=',True),('location_id','=',store_id.warehouse_id.lot_stock_id.id)])
             # Dict of name value pairs
             tiers = {}
-            # {'name':{'min':0,'max':0}}
+            # {'name':{'min':0,'max':0,'price':0}}
             values = set()
             for q in quants:
                 for attr in q.product_id.product_template_attribute_value_ids:
@@ -88,16 +89,18 @@ class Product(models.Model):
             if len(values) != 0:
                 values = sorted(values, reverse=True)
                 _logger.info("Values: %s" % values)
-                tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0]}
-                tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1]}
-                tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1]}
-                tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1]}
+                tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0],'price':store_id.top_tier_price}
+                tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1],'price':store_id.mid_tier_price}
+                tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1],'price':store_id.value_tier_price}
+                tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1],'price':store_id.cut_tier_price}
             _logger.info("TIERS: %s" % tiers)
             for record in self:
                 record.tier = 'none'
+                record.tier_price = record.list_price
                 for key, value in tiers.items():
                     if record.thc <= value['max'] and record.thc >= value['min']:
                         record.tier = key
+                        record.tier_price = value['price']
                         break
 
 

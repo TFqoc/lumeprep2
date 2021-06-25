@@ -385,6 +385,11 @@ class project_inherit(models.Model):
     value_tier = fields.Float()
     cut_tier = fields.Float()
 
+    top_tier_price = fields.Float()
+    mid_tier_price = fields.Float()
+    value_tier_price = fields.Float()
+    cut_tier_price = fields.Float()
+
     # Params: data = json string
     @api.model
     def ecom_order(self, data):
