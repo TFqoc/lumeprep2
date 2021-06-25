@@ -84,8 +84,11 @@ class Product(models.Model):
             values = set()
             for q in quants:
                 for attr in q.product_id.product_template_attribute_value_ids:
-                    percent = float(attr.name.split('%')[0])
-                    values.add(percent)
+                    try:
+                        percent = float(attr.name.split('%')[0])
+                        values.add(percent)
+                    except ValueError as v:
+                        pass
             if len(values) != 0:
                 values = sorted(values, reverse=True)
                 _logger.info("Values: %s" % values)
