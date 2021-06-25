@@ -100,8 +100,11 @@ class Product(models.Model):
             for record in self:
                 record.tier = 'none'
                 record.tier_price = record.list_price
-                thc = record.product_template_attribute_value_ids.filtered(lambda r: r.attribute_id.name == "THC").name
-                thc = float(thc.split('%')[0])
+                try:
+                    thc = record.product_template_attribute_value_ids.filtered(lambda r: r.attribute_id.name == "THC").name
+                    thc = float(thc.split('%')[0])
+                except ValueError as v:
+                    pass
                 for key, value in tiers.items():
                     if thc <= value['max'] and thc >= value['min']:
                         record.tier = key
