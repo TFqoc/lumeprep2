@@ -47,7 +47,7 @@ class Product(models.Model):
     # Override
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant',store=True)
 
-    @api.context_depends('pricelist_id','partner_id')
+    @api.depends_context('pricelist_id','partner_id')
     def _compute_pricelist_price(self):
         pricelist = self.env.context.get('pricelist_id', False)
         partner_id = self.env.context.get('partner_id', False)
