@@ -145,7 +145,7 @@ class Tasks(models.Model):
             'task':self.id,
             'date_order': fields.datetime.now(),
             # 'picking_policy':'direct',
-            # 'pricelist_id':'idk',
+            'pricelist_id':self.project_id.store_pricelist.id,
             # 'order_type': self.order_type,
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
@@ -389,6 +389,8 @@ class project_inherit(models.Model):
     mid_tier_price = fields.Float()
     value_tier_price = fields.Float()
     cut_tier_price = fields.Float()
+
+    store_pricelist = fields.Many2one('product.pricelist', required=True)
 
     # Params: data = json string
     @api.model
