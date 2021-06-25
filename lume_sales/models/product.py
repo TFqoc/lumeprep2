@@ -63,6 +63,7 @@ class Product(models.Model):
         # Test for context
         _logger.info("CONTEXT: " + str(self.env.context))
 
+    @api.depends_context('warehouse_id')
     def _compute_qty_at_store(self):
         for record in self:
             warehouse_id = self.env.context.get('warehouse_id', False)
