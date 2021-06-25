@@ -78,7 +78,7 @@ class SaleOrder(models.Model):
                 'view_id': self.env.ref('lume_sales.product_product_kanban_catalog').id,
                 'target': 'current',
                 'res_id': self.id,
-                'context': {'lpc_sale_order_id': self.id, 'type': self.order_type, 'warehouse_id':self.warehouse_id.id,'store_id':self.task.project_id.id},
+                'context': {'lpc_sale_order_id': self.id, 'type': self.order_type, 'warehouse_id':self.warehouse_id.id,'store_id':self.task.project_id.id,'pricelist_id':self.pricelist_id.id,'partner_id':self.partner_id.id},
                 'domain': domain,
                 # 'search_view_id': (id, name),
             }

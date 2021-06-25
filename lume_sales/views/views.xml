@@ -73,6 +73,7 @@
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
+          <field name="store_pricelist"/>
           <field name="blink_threshold"/>
           <field name="so_threshold1"/>
           <field name="so_threshold2"/>

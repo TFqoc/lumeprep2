@@ -42,9 +42,23 @@ class Product(models.Model):
     quantity_at_store = fields.Float(compute="_compute_qty_at_store")
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
     tier_price = fields.Float(compute="_compute_tier")
+    pricelist_price = fields.Float(compute="_compute_pricelist_price")
     thc = fields.Float()
     # Override
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant',store=True)
+
+    @api.context_depends('pricelist_id','partner_id')
+    def _compute_pricelist_price(self):
+        pricelist = self.env.context.get('pricelist_id', False)
+        partner_id = self.env.context.get('partner_id', False)
+        if pricelist and partner_id:
+            pricelist = self.env['product.pricelist'].browse(pricelist)
+            partner_id = self.env['res.partner'].browse(partner_id)
+            for record in self:
+                record.pricelist_price = pricelist.get_product_price(record, 1, partner_id)
+        else:
+            self.pricelist_price = self.list_price
+        
 
     @api.depends('stock_quant_ids')
     def _compute_qty_at_warehouses(self):

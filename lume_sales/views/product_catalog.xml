@@ -33,13 +33,13 @@
                                             <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                                         </div>
                                         <ul>
-                                            <li><strong>Price: <field t-if="!record.is_tiered.raw_value" name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field><field t-if="record.is_tiered.raw_value" name="tier_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <li><strong>Price: <field t-if="!record.is_tiered.raw_value" name="pricelist_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field><field t-if="record.is_tiered.raw_value" name="tier_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: 
                                                 <t t-esc="record.quantity_at_store.raw_value"/>
                                                 <!-- <field name="qty_available"/>  -->
                                                 <field name="uom_id"/></strong></li>
-                                            <li><field name="tier"></field></li>
+                                            <li t-if="record.is_tiered.raw_value"><strong>Tier: </strong><field name="tier"></field></li>
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>
                                                 <strong>THC: 
