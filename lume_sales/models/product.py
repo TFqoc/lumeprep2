@@ -43,6 +43,8 @@ class Product(models.Model):
     tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
     tier_price = fields.Float(compute="_compute_tier")
     thc = fields.Float()
+    # Override
+    is_product_variant = fields.Boolean(compute='_compute_is_product_variant',store=True)
 
     def _compute_qty_at_warehouses(self):
         # Loop all warehouses
@@ -70,7 +72,13 @@ class Product(models.Model):
                 warehouse = self.env['stock.warehouse'].browse(warehouse_id)
                 quants = self.env['stock.quant'].search([('location_id','=',warehouse.lot_stock_id.id),('product_id','=',record.id)])
                 record.quantity_at_store = sum([q.available_quantity for q in quants])
+    
+    @api.depends('product_tmpl_id.product_variant_ids')
+    def _compute_is_product_variant(self):
+        for record in self:
+            record.is_product_variant = len(record.product_tmpl_id.product_variant_ids) > 1
 
+    @api.depends_context('store_id')
     def _compute_tier(self):
         store_id = self.env.context.get('store_id', False)
         if (store_id):
