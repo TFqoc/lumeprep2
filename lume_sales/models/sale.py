@@ -247,6 +247,7 @@ class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
     order_type = fields.Selection(related="order_id.order_type")
+    lot_id = fields.Many2one('stock.production.lot')
 
     @api.onchange('product_uom_qty')
     def ensure_valid_quantity(self):

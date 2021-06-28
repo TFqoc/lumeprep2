@@ -56,6 +56,9 @@
                 <xpath expr="//tree/field[@name='name']" position="replace">
                     <field name="name" invisible="1"/>
                 </xpath>
+                <xpath expr="//tree/field[@name='tax_id']" position="before">
+                    <field name="lot_id"/>
+                </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">

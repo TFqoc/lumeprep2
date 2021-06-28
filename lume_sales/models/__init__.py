@@ -10,3 +10,4 @@ from . import note
 from . import promo
 from . import weekday
 from . import stock_quant
+from . import stock_move
