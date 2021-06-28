@@ -10,6 +10,8 @@ class StockLot(models.Model):
     currency_id = fields.Many2one(related='product_id.currency_id')
     uom_id = fields.Many2one(related='product_id.uom_id')
     thc_type = fields.Selection(related='product_id.thc_type')
+    # Temp fields for testing that will be added by Keyur in metrc
+    tier = fields.Selection([('test','Test')], default="test")
 
     def _compute_price(self):
         for record in self:
