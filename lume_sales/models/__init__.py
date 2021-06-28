@@ -11,3 +11,4 @@ from . import promo
 from . import weekday
 from . import stock_quant
 from . import stock_move
+from . import stock_lot
