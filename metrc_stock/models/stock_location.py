@@ -11,3 +11,6 @@ class StockLocation(models.Model):
                                         string='Metrc Location')
     facility_license_id = fields.Many2one(comodel_name='metrc.license',
                                         domain=[('base_type', '=', 'Internal')])
+    default_adjust_reason_id = fields.Many2one(comodel_name='metrc.package.adjust.reason',
+                                               string='Adjustment Reason', 
+                                               help='Reason used automaticallu when performing package sync.')

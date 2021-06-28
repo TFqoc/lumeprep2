@@ -13,17 +13,23 @@
                     </group>
                     <group>
                         <group>
-                            <field name="warehouse_id" required="1"
+                            <field name="warehouse_id" readonly="1"
                                     options="{'no_open': True,'no_create': True}"/>
-                            <field name="location_id" invisible="1"/>
-                            <label for="wh_qty_available"/>
+                            <field name="location_id" domain="[('facility_license_id', '!=', False)]"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <label for="wh_qty_available" string="Warehouse Available Qty"/>
                             <div>
-                                <field name="wh_qty_available" readonly="1" class="oe_inline" forcesave="1"/>
+                                <field name="wh_qty_available" readonly="1" class="oe_inline" force_save="1"/>
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
+                            </div>
+                            <label for="qty_available" string="Location Available Qty"/>
+                            <div>
+                                <field name="qty_available" readonly="1" class="oe_inline" force_save="1"/>
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
                             </div>
                             <label for="virtual_available"/>
                             <div>
-                                <field name="virtual_available" readonly="1" class="oe_inline" forcesave="1"/>
+                                <field name="virtual_available" readonly="1" class="oe_inline" force_save="1"/>
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom" class="oe_inline oe_no_button"/>
                             </div>
                         </group>

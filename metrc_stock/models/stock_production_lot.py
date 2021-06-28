@@ -253,6 +253,7 @@ class StockProductionLot(models.Model):
                 if lot.product_qty == 0.0:
                     raise UserError(_("Package with 0.0 quantity can not be created in metrc."))
                 warehouse = lot.get_all_warehouse()
+                locations = self.quant_ids.mapped('location_id').filtered(lambda l: l.usage == 'internal')
                 if not warehouse:
                     raise UserError(_("Not able to find the warehouse where this lot is."))
                 if len(warehouse) > 1:
@@ -260,7 +261,7 @@ class StockProductionLot(models.Model):
                     for quant in lot.quant_ids.filtered(lambda q: q.location_id.usage == 'internal'):
                         msg += '\n- {}, Quantity-{} {}'.format(quant.location_id.display_name, quant.quantity, quant.product_uom_id.name)
                     raise UserError(_(msg))
-                license = warehouse and warehouse.license_id or False
+                license = locations and locations.mapped('facility_license_id') or False
                 if license:
                     lot._create_package_on_metrc(lot._get_metrc_name(), license.license_number, lot.product_id, quantity=lot.product_qty)
                     lot._update_metrc_id()
@@ -273,8 +274,8 @@ class StockProductionLot(models.Model):
     def _adjust_in_metrc(self, account, license, package_qty, reason=False, note="", delta=False):
         quantity = self.product_qty - self.product_id.to_metrc_qty(package_qty)
         if not reason:
-            warehouse = self.env['stock.warehouse'].search([('license_id', '=', license.id)], limit=1)
-            reason = warehouse.default_adjust_reason_id
+            location = self.env['stock.location'].search([('facility_license_id', '=', license.id)], limit=1)
+            reason = location.default_adjust_reason_id
         if delta:
             quantity = self.product_id.to_metrc_qty(package_qty)
         data = [{
@@ -407,10 +408,10 @@ class StockProductionLot(models.Model):
 
         if not warehouse.license_id:
             raise UserError(_("Warehouse {} is not configured with facility license. Please configure one to proceed.". format(warehouse.name)))
-        reason = warehouse.default_adjust_reason_id
+        reason = location_id.default_adjust_reason_id
         if not reason:
-            raise UserError(_('Default Package adjustment reason not configured on Warehouse {}.'
-                                '\n Please configure default adjustment reason on the above warehouse.'.format(warehouse.name)))
+            raise UserError(_('Default Package adjustment reason not configured on Location {}.'
+                                '\n Please configure default adjustment reason on the above Location.'.format(location_id.display_name)))
         company = warehouse.company_id or warehouse.license_id.company_id
         inv_adjst = self.env['stock.inventory'].create({
             'name': 'INV-ADJ: %s (Metrc Package Adjustment) ' % (self.product_id.name, ),
@@ -590,7 +591,6 @@ class StockProductionLot(models.Model):
     def _cron_do_import_packages(self, metrc_license=False, force_last_sync_date=False,
                                  automatic=True, raise_for_error=False, ignore_last_modfied_filter=False):
         metrc_account = self.env.user.ensure_metrc_account()
-        print("here")
         StockProductionLot = self.env['stock.production.lot']
         ProductProduct = self.env['product.product']
         AdjustmentReason = self.env['metrc.package.adjust.reason']
@@ -604,7 +604,7 @@ class StockProductionLot(models.Model):
             licenses = self.env['metrc.license'].browse(metrc_license)
         elif isinstance(metrc_license, models.BaseModel):
             licenses = metrc_license
-        warehouses = self.env['stock.warehouse'].search([('license_id', 'in', licenses.ids)])
+        locations = self.env['stock.location'].search([('facility_license_id', 'in', licenses.ids)])
         if automatic:
             cr = registry(self._cr.dbname).cursor()
             self = self.with_env(self.env(cr=cr))
@@ -612,8 +612,9 @@ class StockProductionLot(models.Model):
         # Not every inventory user's metrc account will be associated with metrc license.
         # IT Will fix the issue of just being able to validate the outgoing pickings but other users are not.
         # licenses = licenses.filtered(lambda lic: lic.metrc_account_id == self.env.user.metrc_account_id)
-        for warehouse in warehouses:
-            license = warehouse.license_id
+        for location in locations:
+            warehouse = location.get_warehouse()
+            license = location.facility_license_id
             dt_now = datetime.now()
             new_lots = StockProductionLot
             lot_qtys = {}
@@ -679,11 +680,11 @@ class StockProductionLot(models.Model):
                     cr.commit()
                 last_sync_date = new_last_sync_date
             if new_lots:
-                reason = warehouse.default_adjust_reason_id
+                reason = location.default_adjust_reason_id
                 try:
                     inv_adjst = StockInventory.create({
                         'name': 'INITIAL INVENTORY FROM METRC[%s]' % (license.license_number),
-                        'location_ids': [(4, warehouse.lot_stock_id.id)],
+                        'location_ids': [(4, location.id)],
                         'warehouse_id': warehouse.id,
                         'reason_id': reason.id,
                         'facility_license_id': license.id,

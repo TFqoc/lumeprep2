@@ -13,9 +13,10 @@ class StockPackageWizard(models.TransientModel):
     lot_id = fields.Many2one(comodel_name='stock.production.lot', string='Package', ondelete='cascade',  required=True)
     product_id = fields.Many2one(comodel_name='product.product', related='lot_id.product_id', string='Facility License', ondelete='set null')
     product_uom_id = fields.Many2one(comodel_name='uom.uom', string='Unit of Measure', related='product_id.uom_id')
-    warehouse_id = fields.Many2one(comodel_name='stock.warehouse', string='Inventoried Warehouse', domain=[('license_id', '!=', False)], ondelete='set null')
+    warehouse_id = fields.Many2one(comodel_name='stock.warehouse', string='Inventoried Warehouse', 
+                                   compute='_compute_location_warehouse', ondelete='set null')
     location_id = fields.Many2one(comodel_name='stock.location', string='Warehouse Stock Location', domain=[('usage', 'in', ('internal', 'transit'))], ondelete='set null')
-    license_id = fields.Many2one(comodel_name='metrc.license', related='warehouse_id.license_id', string='Facility License', ondelete='set null')
+    license_id = fields.Many2one(comodel_name='metrc.license', related='location_id.facility_license_id', string='Facility License', ondelete='set null')
     metrc_id = fields.Integer(string='Metrc ID')
     metrc_qty = fields.Float(string='Metrc Quantity', digits='Product Unit of Measure')
     metrc_uom_id = fields.Many2one(comodel_name='uom.uom', related='lot_id.metrc_uom_id')
@@ -31,9 +32,16 @@ class StockPackageWizard(models.TransientModel):
                                      'Otherwise, this includes goods stored in any Stock Location '
                                      'with \'internal\' type.')
     wh_qty_available = fields.Float(string="On-hand quantity", digits='Product Unit of Measure', help='On Hand Quantity for selected warehouse.')
+    qty_available = fields.Float(string="On-hand quantity", digits='Product Unit of Measure', 
+                                 help='On Hand Quantity for selected location.')
     adjustment_required = fields.Boolean(string="Adjsutment Required", compute="_compute_adjustment_required")
 
-    @api.depends('wh_qty_available', 'metrc_qty')
+    @api.depends('location_id')
+    def _compute_location_warehouse(self):
+        for wiz in self:
+            wiz.warehouse_id  = self.location_id and self.location_id.get_warehouse() or False
+
+    @api.depends('qty_available', 'metrc_qty')
     def _compute_adjustment_required(self):
         for wiz in self:
             adjustment_required = False
@@ -50,9 +58,7 @@ class StockPackageWizard(models.TransientModel):
         self.metrc_qty = 0.0
         self.message = False
         if self.warehouse_id:
-            self.location_id = self.warehouse_id.lot_stock_id or False
             product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
-            self.virtual_available = product.virtual_available
             self.wh_qty_available = product.qty_available
 
     @api.onchange('location_id')
@@ -63,17 +69,16 @@ class StockPackageWizard(models.TransientModel):
                 self.warehouse_id = location_warehouse
             elif location_warehouse != self.warehouse_id and location_warehouse:
                 self.warehouse_id = location_warehouse
-
-            if self.product_id and self.warehouse_id:
-                product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
+            if self.product_id and self.location_id:
+                product = self.product_id.with_context(lot_id=self.lot_id.id, location=self.location_id.id)
                 self.virtual_available = product.virtual_available
+                self.qty_available = product.qty_available
 
     def get_package_qty(self):
-        if not self.warehouse_id or not self.warehouse_id.license_id:
-            raise UserError(_('Missing warehouse and/or facility license for the warehouse.'))
-        resp = self.lot_id._fetch_metrc_package(license=self.warehouse_id.license_id)
+        resp = self.lot_id._fetch_metrc_package(license=self.license_id)
         wizard_vals = {'message': False}
-        product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
+        product = self.product_id.with_context(lot_id=self.lot_id.id, location=self.location_id.id)
+        wh_product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
         if resp:
             if 'Quantity' in resp:
                 if (resp['Item']['Name'] == product.metrc_name) or \
@@ -88,7 +93,8 @@ class StockPackageWizard(models.TransientModel):
                         'message': '<p><div><h3>Package Details (license : %s)</h3>'
                                    '</div><br/><ul>%s</ul></p>' % (self.license_id.license_number, pack_detail),
                         'virtual_available': product.virtual_available,
-                        'wh_qty_available': product.qty_available,
+                        'wh_qty_available': wh_product.qty_available,
+                        'qty_available': product.qty_available,
                         'location_id': self.location_id.id if self.location_id else False,
                         'metrc_qty': resp['Quantity'],
                         'metrc_id': resp['Id'],
@@ -101,7 +107,8 @@ class StockPackageWizard(models.TransientModel):
                                    'Can not sync with <b>%s</b>.</h3></div></p>' % (resp['Item']['Name'],
                                                                                     product.metrc_name),
                         'virtual_available': product.virtual_available,
-                        'wh_qty_available': product.qty_available,
+                        'wh_qty_available': wh_product.qty_available,
+                        'qty_available': product.qty_available,
                         'location_id': self.location_id.id if self.location_id else False,
                     })
             else:
@@ -109,7 +116,8 @@ class StockPackageWizard(models.TransientModel):
                     'message': '<p><div><h3>Lot %s was not found in METRC for license: %s </h3>'
                                '</div><br/></p>' % (self.lot_id._get_metrc_name(), self.license_id.license_number),
                     'virtual_available': product.virtual_available,
-                    'wh_qty_available': product.qty_available,
+                    'wh_qty_available': wh_product.qty_available,
+                    'qty_available': product.qty_available,
                     'location_id': self.location_id.id if self.location_id else False,
                 })
         else:
@@ -125,17 +133,17 @@ class StockPackageWizard(models.TransientModel):
 
     def udpate_package_qty(self):
         metrc_account = self.env.user.ensure_metrc_account()
-        if float_compare(self.wh_qty_available, self.metrc_qty, precision_rounding=self.product_uom_id.rounding):
-            self.lot_id._adjust_in_metrc(metrc_account, self.license_id, (self.wh_qty_available - self.metrc_qty), delta=True)
+        if float_compare(self.qty_available, self.metrc_qty, precision_rounding=self.product_uom_id.rounding):
+            self.lot_id._adjust_in_metrc(metrc_account, self.license_id, (self.qty_available - self.metrc_qty), delta=True)
             self.lot_id._update_metrc_id()
         return {'type': 'ir.actions.act_window_close'}
 
     def sync_package_qty(self):
-        resp = self.lot_id._fetch_metrc_package(license=self.warehouse_id.license_id)
-        locations = self.lot_id.sudo().quant_ids.filtered(lambda q: q.location_id.usage == 'internal')
+        resp = self.lot_id._fetch_metrc_package(license=self.license_id)
+        quants = self.lot_id.sudo().quant_ids.filtered(lambda q: q.location_id.usage == 'internal')
         if not resp:
-            raise UserError(_("Lot {} not found in metrc for license: {}".format(self.lot_id._get_metrc_name(), self.warehouse_id.license_id.license_number)))
-        if resp and resp.get('Quantity') and locations:
+            raise UserError(_("Lot {} not found in metrc for license: {}".format(self.lot_id._get_metrc_name(), self.license_id.license_number)))
+        if resp and resp.get('Quantity') and quants:
             self.lot_id.write({
                 'labtest_state': resp['LabTestingState'],
                 'testing_state_date': resp['LabTestingStateDate'],
@@ -145,8 +153,7 @@ class StockPackageWizard(models.TransientModel):
                 'is_production_batch': resp['IsProductionBatch'],
                 'batch_number': resp['ProductionBatchNumber'],
             })
-            quants = self.lot_id.sudo().quant_ids.filtered(lambda q: q.location_id.usage == 'internal')
-            quants = self.env['stock.quant'].sudo().read_group([('location_id.usage', '=', 'internal'), ('id', 'in', quants.ids)], ['location_id', 'quantity'], ['location_id'])
+            location_quants = self.env['stock.quant'].sudo().read_group([('location_id.usage', '=', 'internal'), ('id', 'in', quants.ids)], ['location_id', 'quantity'], ['location_id'])
             adjust_wizard = self.env['warehouse.package.adjustment'].create({
                 'lot_id': self.lot_id.id,
                 'metrc_quantity': self.product_id.from_metrc_qty(resp['Quantity']),
@@ -156,11 +163,11 @@ class StockPackageWizard(models.TransientModel):
                     'location_id': q['location_id'][0],
                     'theoretical_qty': q['quantity'],
                     'product_qty': q['quantity']
-                    }) for q in quants]
+                    }) for q in location_quants]
                 })
             action_data = self.env.ref('metrc_stock.action_open_warehouse_package_adjustment_wizard').read()[0]
             action_data['res_id'] = adjust_wizard.id
             return action_data
-        if not locations:
+        if not quants:
             raise UserError(_("Lot {} not found on any physical location under warehouse: {}".format(self.lot_id._get_metrc_name(), self.warehouse_id.name)))
         return {'type': 'ir.actions.act_window_close'}

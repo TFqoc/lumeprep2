@@ -141,7 +141,7 @@ class MrpProduction(models.Model):
         consumed_quantities = self.get_consumed_ingredients()
         metrc_reported_lines = self.env['stock.move.line']
         ProdctionLot = self.env['stock.production.lot']
-        license = self.picking_type_id._get_warehouse_license()
+        license = self.location_id.facility_license_id
         package_data = []
         for line in move_line_ids.filtered(lambda l: not l.bypass_metrc_reporting):
             # checking for lot is availbale to be assigend or not.

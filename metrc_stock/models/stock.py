@@ -273,7 +273,7 @@ class StockInventory(models.Model):
                 if non_metrc_inv_lines:
                     msg = "Packages not found in METRC for following packages. \nCan not perform package adjustment for them.\n"
                     for inv_line in non_metrc_inv_lines:
-                        license = inv_line.location_id.get_warehouse().license_id.license_number
+                        license = inv_line.location_id.facility_license_id.license_number
                         msg += '- {} [{}], Location: {}[{}]\n'.format(inv_line.prod_lot_id._get_metrc_name(), inv_line.product_id.metrc_name, inv_line.location_id.display_name, license)
                     raise UserError(_(msg))
                 _logger.info("Inventory Adjustment will be done for following lines.")

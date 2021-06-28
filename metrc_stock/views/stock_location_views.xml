@@ -13,6 +13,9 @@
                     <field name="metrc_location_id" options="{'no_create': True}"
                         domain="[('facility_license_id', '=', facility_license_id)]"
                         attrs="{'required': [('facility_license_id', '!=', False)]}"/>
+                    <field name='default_adjust_reason_id' domain="[('license_id', '=', facility_license_id)]" 
+                       attrs="{'required': [('facility_license_id', '!=', False)],
+                               'invisible': [('facility_license_id', '=', False)]}"/>
                 </group>
             </group>
         </field>

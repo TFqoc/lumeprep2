@@ -11,7 +11,7 @@ class SplitLotWizard(models.TransientModel):
 
     lot_id = fields.Many2one('stock.production.lot')
     warehouse_id = fields.Many2one('stock.warehouse')
-    facility_license_id = fields.Many2one(related="warehouse_id.license_id")
+    facility_license_id = fields.Many2one(related="location_id.facility_license_id")
     location_id = fields.Many2one('stock.location')
     lot_qty = fields.Float(string="Location available quantity", compute="_compute_lot_qty", digits='Product Unit of Measure')
     warehouse_lot_qty = fields.Float(string="Warehouse available quantity", compute="_compute_lot_qty", digits='Product Unit of Measure')
