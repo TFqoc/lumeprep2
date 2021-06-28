@@ -206,7 +206,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="object" class="col-12 h-100 w-100 o_button_invisible" name="lpc_add_quantity" onclick="update_data()" invisible="context.get('hide_qty_buttons')"/>
+                            <!-- <button type="object" class="col-12 h-100 w-100 o_button_invisible" name="lpc_add_quantity" onclick="update_data()" invisible="context.get('hide_qty_buttons')"/> -->
                         </div>
                     </t>
                 </templates>
