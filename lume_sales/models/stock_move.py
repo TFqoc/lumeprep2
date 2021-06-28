@@ -14,4 +14,6 @@ class StockMove(models.Model):
 
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         if self.sale_line_id and self.sale_line_id.lot_id:
-            return super(StockMove, self).with_context(force_lot_id=self.sale_line_id.lot_id.id)._update_reserved_quantity(need, available_quantity, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            self.env.context = dict(self.env.context)
+            self.env.context.update({"force_lot_id":self.sale_line_id.lot_id.id})
+            return super(StockMove, self)._update_reserved_quantity(need, available_quantity, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
