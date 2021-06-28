@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class Quant(models.Model):
     _inherit = 'stock.quant'
 
-    is_tiered = fields.Boolean(related='product_id.is_tiered')
+    # is_tiered = fields.Boolean(related='product_id.is_tiered')
 
     # @api.model
     # def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):

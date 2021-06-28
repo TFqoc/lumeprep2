@@ -61,6 +61,29 @@ class SaleOrder(models.Model):
 
     def open_catalog(self):
         self.ensure_one()
+        domain = []
+        if not self.partner_id.can_purchase_medical:
+            domain.append(('thc_type','!=','medical'))
+        if not self.partner_id.is_over_21:
+            domain.append(('thc_type','=','adult'))
+        # Grab the first sale order line that isn't a merch product
+        # show_medical = self.order_type
+        return {
+                'type': 'ir.actions.act_window',
+                'name': 'Product Catalog',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'res_model': 'stock.production.lot',
+                'view_id': self.env.ref('lume_sales.stock_log_kanban_catalog').id,
+                'target': 'current',
+                'res_id': self.id,
+                'context': {'lpc_sale_order_id': self.id, 'type': self.order_type, 'warehouse_id':self.warehouse_id.id,'store_id':self.task.project_id.id,'pricelist_id':self.pricelist_id.id,'partner_id':self.partner_id.id},
+                'domain': domain,
+                # 'search_view_id': (id, name),
+            }
+
+    def open_catalog_product(self):
+        self.ensure_one()
         domain = ["&","&",("type","!=","service"),("sale_ok","=",True),"|",("is_product_variant","=",False),"&",("is_product_variant","=",True),("quantity_at_warehouses","ilike",self.warehouse_id.name)]
         domain += [('type','!=','service'),('sale_ok','=',True)]
         if not self.partner_id.can_purchase_medical:
