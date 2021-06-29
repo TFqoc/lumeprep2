@@ -12,7 +12,7 @@ class StockLot(models.Model):
     thc_type = fields.Selection(related='product_id.thc_type')
     categ_id = fields.Many2one(related='product_id.categ_id')
     effect = fields.Selection(related='product_id.effect')
-    brand = fields.Selection(related='product_id.brand')
+    brand = fields.Char(related='product_id.brand')
 
     price = fields.Float(compute="_compute_price")
     stock_at_store = fields.Float(compute="_compute_stock_at_store")
