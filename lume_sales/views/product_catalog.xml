@@ -178,12 +178,12 @@
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>
                                                 <strong>THC: 
-                                                    <t t-if="record.categ_id.value.includes('Edibles') || record.categ_id.value.includes('Topical')">
+                                                    <!-- <t t-if="record.categ_id.value.includes('Edibles') || record.categ_id.value.includes('Topical')">
                                                         Mg: <field name="thc_mg"/>
                                                     </t>
                                                     <t t-else="">
                                                         <field name="thc_percent"/>%
-                                                    </t>
+                                                    </t> -->
                                                 </strong>
                                             </li>
                                         </ul>
