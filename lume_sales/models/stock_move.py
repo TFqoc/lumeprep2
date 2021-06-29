@@ -6,7 +6,7 @@ class StockMove(models.Model):
 
     def _action_assign(self):
         if self.sale_line_id and self.sale_line_id.lot_id:
-            if len(self) > 1:
+            if len(self) == 1:
                 self.env.context = dict(self.env.context)
                 self.env.context.update({"force_lot_id":self.sale_line_id.lot_id.id})
                 return super(StockMove, self)._action_assign()
