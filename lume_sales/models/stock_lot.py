@@ -83,6 +83,7 @@ class StockLot(models.Model):
                         'product_id': lot.product_id.id,
                         'product_uom_qty': lot.lpc_quantity,
                         'product_uom': lot.product_id.uom_id.id,
+                        'lot_id': lot.id,
                     }
                     if lot.product_id.service_type == 'manual':
                         vals['qty_delivered'] = lot.lpc_quantity
