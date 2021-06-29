@@ -7,12 +7,15 @@ class StockLot(models.Model):
 
     image_128 = fields.Image(related='product_id.image_128')
     image_1920 = fields.Image(related='product_id.image_1920')
-    price = fields.Float(compute="_compute_price")
     currency_id = fields.Many2one(related='product_id.currency_id')
-    stock_at_store = fields.Float(compute="_compute_stock_at_store")
     uom_id = fields.Many2one(related='product_id.uom_id')
     thc_type = fields.Selection(related='product_id.thc_type')
+    categ_id = fields.Many2one(related='product_id.categ_id')
+    effect = fields.Selection(related='product_id.effect')
+    brand = fields.Selection(related='product_id.brand')
 
+    price = fields.Float(compute="_compute_price")
+    stock_at_store = fields.Float(compute="_compute_stock_at_store")
     lpc_quantity = fields.Integer('Product Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
 
     # Temp fields for testing that will be added by Keyur in metrc

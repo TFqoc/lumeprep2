@@ -213,5 +213,21 @@
             </kanban>
         </field>
     </record>
+
+    <!-- Side Searchbar for Lot Catalog -->
+    <record id="category_grouping_search" model="ir.ui.view">
+        <field name="name">Catagory Grouping</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <searchpanel>
+                    <field name="categ_id"/>
+                    <field name="effect"/>
+                    <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
+                </searchpanel>
+            </field>
+        </field>
+    </record>
     </data>
 </odoo>
