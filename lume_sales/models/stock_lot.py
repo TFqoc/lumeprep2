@@ -13,7 +13,7 @@ class StockLot(models.Model):
 
     # Group by fields
     categ_id = fields.Many2one('product.category',compute='_compute_groupby_fields',store=True)
-    effect = fields.Selection(compute='_compute_groupby_fields',store=True)
+    effect = fields.Selection([('unwind','Unwind'),('recover','Recover'),('move','Move'),('dream','Dream'),('focus','Focus'),('center','Center')],compute='_compute_groupby_fields',store=True)
     brand = fields.Char(compute='_compute_groupby_fields',store=True)
 
     price = fields.Float(compute="_compute_price")
