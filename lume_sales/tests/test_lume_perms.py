@@ -4,7 +4,7 @@ from odoo.tests.common import tagged
 
 _logger = logging.getLogger(__name__)
 
-@tagged('lume') 
+@tagged('lume')  
 class TestLumePerms(TestLumeSaleCommon):
     def setUp(self):
         super().setUp()
