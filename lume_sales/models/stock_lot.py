@@ -10,9 +10,11 @@ class StockLot(models.Model):
     currency_id = fields.Many2one(related='product_id.currency_id')
     uom_id = fields.Many2one(related='product_id.uom_id')
     thc_type = fields.Selection(related='product_id.thc_type')
-    categ_id = fields.Many2one(related='product_id.categ_id')
-    effect = fields.Selection(related='product_id.effect')
-    brand = fields.Char(related='product_id.brand')
+
+    # Group by fields
+    categ_id = fields.Many2one('product.category',compute='_compute_groupby_fields',store=True)
+    effect = fields.Selection(compute='_compute_groupby_fields',store=True)
+    brand = fields.Char(compute='_compute_groupby_fields',store=True)
 
     price = fields.Float(compute="_compute_price")
     stock_at_store = fields.Float(compute="_compute_stock_at_store")
@@ -20,6 +22,13 @@ class StockLot(models.Model):
 
     # Temp fields for testing that will be added by Keyur in metrc
     tier = fields.Selection([('test','Test')], default="test")
+
+    @api.depends('product_id.categ_id','product_id.effect','product_id.brand')
+    def _compute_groupby_fields(self):
+        for record in self:
+            record.categ_id = record.product_id.categ_id
+            record.effect = record.product_id.effect
+            record.brand = record.product_id.brand
 
     def _compute_price(self):
         for record in self:
