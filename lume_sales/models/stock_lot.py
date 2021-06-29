@@ -43,10 +43,10 @@ class StockLot(models.Model):
 
             products_qties = SaleOrderLine.read_group(
                 [('id', 'in', sale_order.order_line.ids)],
-                ['product_id', 'product_uom_qty'], ['product_id'])
-            qty_dict = dict([(x['product_id'][0], x['product_uom_qty']) for x in products_qties])
+                ['product_id', 'product_uom_qty','lot_id'], ['product_id'])
+            qty_dict = dict([(x['lot_id'][0], x['product_uom_qty']) for x in products_qties])
             for lot in self:
-                lot.lpc_quantity = qty_dict.get(lot.product_id.id, 0)
+                lot.lpc_quantity = qty_dict.get(lot.id, 0)
         else:
             self.lpc_quantity = False
 
