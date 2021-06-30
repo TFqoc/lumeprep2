@@ -285,13 +285,13 @@ class SaleLine(models.Model):
         order = self.env['sale.order'].browse(vals['order_id'])
         product = self.env['product.product'].browse(vals['product_id'])
         message = "Product %s added by %s" % (product.name, self.env['res.users'].browse(self.env.uid).name)
-        order.message_post(message)
+        order.message_post(body=message)
         return super(SaleLine, self).create(vals)
 
     @api.model
     def unlink(self):
         message = "Product %s removed by %s" % (self.product_id.name, self.env['res.users'].browse(self.env.uid).name)
-        self.order_id.message_post(message)
+        self.order_id.message_post(body=message)
         return super(SaleLine, self).unlink()
         
 
