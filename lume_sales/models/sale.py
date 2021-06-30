@@ -59,14 +59,34 @@ class SaleOrder(models.Model):
             'context': {'default_partner_id': self.partner_id.id,'default_note_ids':notes},
         }
 
+    def process_lot_group(self, group, batch_setting):
+        group = group.sorted(key=lambda l: l.create_date)
+        record = group[0]
+        ids = []
+        if record.with_context(warehouse_id=self.warehouse_id.id).stock_at_store <=  batch_setting and len(group) >= 2:
+            ids.append(group[1].id)
+        ids.append(record.id)
+        return ids
+
     def open_catalog(self):
         self.ensure_one()
         # Do all the logic here, then domain is id in [ids]
         location_id = self.warehouse_id.lot_stock_id
-        lots = self.env['stock.production.lot'].filtered(lambda l: location_id.id in l.quant_ids.location_id.ids)
-
+        lots = self.env['stock.production.lot'].search([]).filtered(lambda l: location_id.id in l.quant_ids.location_id.ids).sorted(key=lambda l: l.product_id.id)
+        group = False
+        ids = []
+        ICPSudo = self.env['ir.config_parameter'].sudo()
+        batch_setting = ICPSudo.get_param('lume.batch_threshold')
+        # This works because we sorted by product earlier
+        for lot in lots:
+            if not group:
+                group = lot
+            elif lot.product.id not in group.product_id.ids:
+                # Process group, then reset
+                ids += self.process_lot_group(group, batch_setting)
+                group = lot
         # End logic
-        domain = [('id','in',lots.ids)]
+        domain = [('id','in',ids)]
         if not self.partner_id.can_purchase_medical:
             domain.append(('thc_type','!=','medical'))
         if not self.partner_id.is_over_21:
