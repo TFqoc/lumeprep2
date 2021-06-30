@@ -174,7 +174,7 @@
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: 
                                                 <t t-esc="record.stock_at_store.raw_value"/>
-                                                <field name="uom_id"/></strong></li>
+                                                <field name="product_uom_id"/></strong></li>
                                             <li><strong>Tier: </strong><field name="tier"></field></li>
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>

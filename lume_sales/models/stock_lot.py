@@ -4,11 +4,12 @@ from odoo.exceptions import ValidationError
 
 class StockLot(models.Model):
     _inherit = 'stock.production.lot'
+    _order = 'create_date'
 
     image_128 = fields.Image(related='product_id.image_128')
     image_1920 = fields.Image(related='product_id.image_1920')
     currency_id = fields.Many2one(related='product_id.currency_id')
-    uom_id = fields.Many2one(related='product_id.uom_id')
+    # uom_id = fields.Many2one(related='product_id.uom_id')
     thc_type = fields.Selection(related='product_id.thc_type')
 
     # Group by fields

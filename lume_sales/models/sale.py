@@ -61,11 +61,17 @@ class SaleOrder(models.Model):
 
     def open_catalog(self):
         self.ensure_one()
-        domain = []
+        # Do all the logic here, then domain is id in [ids]
+        location_id = self.warehouse_id.lot_stock_id
+        lots = self.env['stock.production.lot'].filtered(lambda l: location_id in l.quant_ids.lot_id.ids)
+
+        # End logic
+        domain = [('id','in',lots.ids)]
         if not self.partner_id.can_purchase_medical:
             domain.append(('thc_type','!=','medical'))
         if not self.partner_id.is_over_21:
             domain.append(('thc_type','=','adult'))
+        logger.info("DOMAIN: %s" % domain)
         # Grab the first sale order line that isn't a merch product
         # show_medical = self.order_type
         return {
