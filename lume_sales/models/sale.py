@@ -89,6 +89,8 @@ class SaleOrder(models.Model):
                 # Process group, then reset
                 ids += self.process_lot_group(group, batch_setting)
                 group = lot
+            else:
+                group |= lot
         # Catch the last group that was leftover after the loop
         ids += self.process_lot_group(group, batch_setting)
         # End logic
