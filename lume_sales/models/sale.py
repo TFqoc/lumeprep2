@@ -279,6 +279,18 @@ class SaleLine(models.Model):
             return {
                 'warning': {'title': "Warning", 'message': "You can't set a quantity to a negative number!",}
                 }
+
+    @api.model
+    def create(self, vals):
+        order = self.env['sale.order'].browse(vals['order_id'])
+        product = self.env['product.product'].browse(vals['product_id'])
+        order.message_post("Product %s added by %s" % (product.name, self.env['res.users'].browse(self.env.uid).name))
+        return super(SaleLine, self).create(vals)
+
+    @api.model
+    def unlink(self):
+        self.order_id.message_post("Product %s removed by %s" % (self.product_id.name, self.env['res.users'].browse(self.env.uid).name))
+        return super(SaleLine, self).unlink()
         
 
     # @api.onchange('product_id')
