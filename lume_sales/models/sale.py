@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
         for lot in lots:
             if not group:
                 group = lot
-            elif lot.product.id not in group.product_id.ids:
+            elif lot.product_id.id not in group.product_id.ids:
                 # Process group, then reset
                 ids += self.process_lot_group(group, batch_setting)
                 group = lot
