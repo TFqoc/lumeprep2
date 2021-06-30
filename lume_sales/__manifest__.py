@@ -34,6 +34,7 @@
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
         'wizards/note_wizard.xml',
+        'views/settings.xml',
         'views/assets.xml',
         'views/sale.xml',
         'views/project.xml',

@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+        <!-- Form view bit for Settings page -->
+        <record id="res_config_settings_view_form_lume" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.lume</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="10"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Lume" string="Lume" data-key="lume_sales">
+                        <h2>Lume POS</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="o_setting_left_pane">
+                                <field name="batch_threshold"></field>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!-- Opens up the setttings view at our module -->
+        <record id="action_lume_config_settings" model="ir.actions.act_window">
+            <field name="name">Lume</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_id" ref="res_config_settings_view_form"></field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module':'lume_sales'}</field>
+        </record>
+    </data>
+</odoo>
