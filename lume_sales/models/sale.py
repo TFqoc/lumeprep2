@@ -61,6 +61,8 @@ class SaleOrder(models.Model):
 
     def process_lot_group(self, group, batch_setting):
         group = group.sorted(key=lambda l: l.create_date)
+        logger.info("SORTED GROUP: %s" % group)
+        logger.info("FIRST ITEM: %s" % group[0])
         record = group[0]
         ids = []
         if record.with_context(warehouse_id=self.warehouse_id.id).stock_at_store <=  batch_setting and len(group) >= 2:
