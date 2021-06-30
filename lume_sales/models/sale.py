@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         # Do all the logic here, then domain is id in [ids]
         location_id = self.warehouse_id.lot_stock_id
-        lots = self.env['stock.production.lot'].filtered(lambda l: location_id in l.quant_ids.lot_id.ids)
+        lots = self.env['stock.production.lot'].filtered(lambda l: location_id in l.quant_ids.location_id.ids)
 
         # End logic
         domain = [('id','in',lots.ids)]
