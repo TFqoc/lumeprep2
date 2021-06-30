@@ -87,6 +87,8 @@ class SaleOrder(models.Model):
                 # Process group, then reset
                 ids += self.process_lot_group(group, batch_setting)
                 group = lot
+        # Catch the last group that was leftover after the loop
+        ids += self.process_lot_group(group, batch_setting)
         # End logic
         domain = [('id','in',ids)]
         if not self.partner_id.can_purchase_medical:
