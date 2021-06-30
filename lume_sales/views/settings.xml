@@ -12,6 +12,7 @@
                         <h2>Lume POS</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="o_setting_left_pane">
+                                <label for="batch_threshold" string="Inventory Batch Threshold"/>
                                 <field name="batch_threshold"></field>
                             </div>
                         </div>
