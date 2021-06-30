@@ -6,17 +6,17 @@ class StockMove(models.Model):
 
     def _action_assign(self):
         if self.sale_line_id and self.sale_line_id.lot_id:
-            if len(self) == 1:
-                self.env.context = dict(self.env.context)
-                self.env.context.update({"force_lot_id":self.sale_line_id.lot_id.id})
-                return super(StockMove, self)._action_assign()
-            else:
+            if len(self) > 1:
                 res = []
                 for r in self:
                     r.env.context = dict(r.env.context)
                     r.env.context.update({"force_lot_id":r.sale_line_id.lot_id.id})
                     res.append(super(StockMove, r)._action_assign())
                 return res
+            else:
+                self.env.context = dict(self.env.context)
+                self.env.context.update({"force_lot_id":self.sale_line_id.lot_id.id})
+                return super(StockMove, self)._action_assign()
         else:
             return super(StockMove, self)._action_assign()
 
