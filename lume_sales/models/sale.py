@@ -78,7 +78,7 @@ class SaleOrder(models.Model):
         group = False
         ids = []
         ICPSudo = self.env['ir.config_parameter'].sudo()
-        batch_setting = ICPSudo.get_param('lume.batch_threshold')
+        batch_setting = float(ICPSudo.get_param('lume.batch_threshold'))
         # This works because we sorted by product earlier
         for lot in lots:
             if not group:
