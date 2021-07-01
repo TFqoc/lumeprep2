@@ -260,6 +260,7 @@
 
         <record id="project.menu_main_pm" model="ir.ui.menu">
           <field name="web_icon">lume_sales,static/description/icon.png</field>
+          <field name="name">Lume Store</field>
         </record>
   </data>
 </odoo>
