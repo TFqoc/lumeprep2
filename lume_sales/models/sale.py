@@ -429,8 +429,8 @@ class SaleLine(models.Model):
             # discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
             # discount_flat_total = sum([d.amount for d in discount_flat])
             price = line.price_unit * (1 - discount_total)
-            data = {"price_unit":line.price_unit,"flat_discount":discount_flat_total,"item_count":len(self),"percent_total":discount_total}
-            logger.info("Price Computation: %s" % data)
+            # data = {"price_unit":line.price_unit,"flat_discount":discount_flat_total,"item_count":len(self),"percent_total":discount_total}
+            # logger.info("Price Computation: %s" % data)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
