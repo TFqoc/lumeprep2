@@ -7,7 +7,7 @@ class Discount(models.Model):
     _name = 'lume.discount'
 
     color = fields.Integer(string='Color Index', default=1) # Values are from 1-11
-    amount = fields.Float(required=True)
+    amount = fields.Float(required=True,digits=2)
     discount_type = fields.Selection([('percentage','Percent'),('fixed_amount','Flat Discount')],required=True)
     # line_ids = fields.Many2many('sale.order.line', column1='discount_id',column2='line_id')
 
@@ -15,6 +15,6 @@ class Discount(models.Model):
     def name_get(self):
         res = []
         for record in self:
-            name = "%s%s off" % (self.amount, '%' if self.discount_type == 'percentage' else '')
+            name = "%s%s%s off" % ('$' if self.discount_type == 'fixed_amount' else '',self.amount, '%' if self.discount_type == 'percentage' else '')
             res.append((record.id, name))
         return res
