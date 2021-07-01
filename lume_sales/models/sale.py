@@ -320,6 +320,7 @@ class SaleOrder(models.Model):
                     # self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
                 else:
                     # Removes all current discounts
+                    logger.info("STARTING MY FLOW")
                     for line in self.order_line.sudo():
                         if line.is_reward:
                             line.unlink()
@@ -329,6 +330,7 @@ class SaleOrder(models.Model):
                 order.no_code_promo_program_ids |= program
     
     def apply_program(self, program):
+        logger.info("CALLING APPLY_PROGRAM ON %s" % program)
         if program.reward_type == 'product':
             # Add line item and set it's price to 0.01
             self.write({"order_line":[(0,False,{
