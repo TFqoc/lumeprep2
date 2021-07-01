@@ -36,8 +36,8 @@
           </div>
         </field>
         <field name="image_1920" position="before">
-          <!-- <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False),('medical_id','in',[False,''])]}" /> -->
-          <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False)]}" />
+          <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': ['|'('is_expired_medical', '=', False),('medical_id','in',[False,''])]}" />
+          <!-- <widget name="web_ribbon" title="Medical Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_medical', '=', False)]}" /> -->
           <widget name="web_ribbon" title="Drivers Licence Expired" bg_color="bg-warning" attrs="{'invisible': [('is_expired_dl','=',False)]}" />
           <widget name="web_ribbon" title="Banned" bg_color="bg-danger" attrs="{'invisible': [('is_banned', '=', False)]}" />
         </field>
