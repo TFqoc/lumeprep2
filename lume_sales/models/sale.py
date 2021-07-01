@@ -374,6 +374,13 @@ class SaleOrder(models.Model):
     def _update_existing_reward_lines(self):
         return
 
+    # Override
+    def recompute_coupon_lines(self):
+        for order in self:
+            # order._remove_invalid_reward_lines()
+            order._create_new_no_code_promo_reward_lines()
+            # order._update_existing_reward_lines()
+
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
