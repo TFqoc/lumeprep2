@@ -16,6 +16,7 @@ from pathlib import Path
 from odoo.tools.osutil import tempdir
 from odoo import api, models, fields, registry, _
 from odoo.tools import exception_to_unicode, pycompat
+from odoo.tools.misc import format_datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,23 @@ class IrLogging(models.Model):
 
     account_id = fields.Many2one(comodel_name='metrc.account', string='Metrc Account', index=1, ondelete='set null')
     active = fields.Boolean(string='Active', default=True)
+    
+    @api.model
+    def get_api_status(self):
+        result = {
+            'api_status': 'Unknown',
+            'last_request_timestamp': '',
+            'button_class': 'btn btn-secondary',
+        }
+        log = self.search([('account_id', '!=', False),
+                           ('active', '=', True)], order='create_date desc', limit=1)
+        if log:
+            resp = log.account_id.fetch('get', '/unitsofmeasure/{}/active'.format(log.account_id.api_version), raise_for_error=False)
+            result['api_status'] = 'Online' if resp else 'Offline'
+            result['button_class'] = 'btn btn-success' if resp else 'btn btn-warning'
+            timestamp = 'Last Call: {}'.format(format_datetime(self.env, log.create_date))
+            result['last_request_timestamp'] = timestamp
+        return result
 
     @api.model
     def _cron_archive_metrc_logs(self, batch_size=1000, level=['info', 'error', 'warning'], use_new_cursor=True):
