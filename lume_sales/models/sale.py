@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import math
 import logging
 
 logger = logging.getLogger(__name__)
@@ -300,11 +301,77 @@ class SaleOrder(models.Model):
         # Stacking rules are applied elsewhere
         return False
 
+    # Override
+    def _create_new_no_code_promo_reward_lines(self):
+        '''Apply new programs that are applicable'''
+        self.ensure_one()
+        order = self
+        programs = order._get_applicable_no_code_promo_program()
+        programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
+        for program in programs:
+            # VFE REF in master _get_applicable_no_code_programs already filters programs
+            # why do we need to reapply this bunch of checks in _check_promo_code ????
+            # We should only apply a little part of the checks in _check_promo_code...
+            error_status = program._check_promo_code(order, False)
+            if not error_status.get('error'):
+                if program.promo_applicability == 'on_next_order':
+                    order._create_reward_coupon(program)
+                # elif program.discount_line_product_id.id not in self.order_line.mapped('product_id').ids:
+                    # self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
+                else:
+                    # Removes all current discounts
+                    for line in self.order_line.sudo():
+                        if line.is_reward:
+                            line.unlink()
+                    self.order_line.write({'discount_ids':[(5,0,0)]})
+                    # reapply discounts
+                    self.apply_program(program)
+                order.no_code_promo_program_ids |= program
+    
+    def apply_program(self, program):
+        if program.reward_type == 'product':
+            # Add line item and set it's price to 0.01
+            self.write({"order_line":[(0,False,{
+                'product_id': program.reward_product_id.id,
+                'order_id': self.id,
+                'product_uom_qty': program.reward_product_quantity,
+                'product_uom': program.reward_product_id.uom_id.id,
+                'is_reward': True,
+                'price_unit': 0.01 if program.reward_product_id.thc_type != 'merch' else 0,
+                # 'lot_id': lot.id, # Let Odoo pick whatever lot follows FIFO on this one
+            })]})
+            pass
+        # Only dealing with discounts at this point
+        else:
+            # Find or create discount
+            discount = self.env['lume.discount'].search([('discount_type','=',program.discount_type),('amount','in',[program.discount_percentage,program.discount_fixed_amount])],limit=1)
+            if not discount:
+                discount = self.env['lume.discount'].sudo().create({
+                    'amount': program.discount_percentage if program.discount_type == 'percentage' else program.discount_fixed_amount,
+                    'discount_type': program.discount_type,
+                })
+            if program.discount_apply_on == 'on_order' or program.discount_type == 'fixed_amount': # Fixed amount only applies on the whole order
+                # Apply on all lines
+                for line in self.order_line:
+                    line.discount_ids = [(4,discount.id,0)]
+            elif program.discount_apply_on == 'cheapest_product':
+                # Apply on one line (cheapest)
+                line = self.order_line.sorted(key=lambda l: l.price_subtotal)[0]
+                line.discount_ids = [(4,discount.id,0)]
+            elif program.discount_apply_on == 'specific_products':
+                # Apply on all lines with specified product
+                # (Could be multiple due to different lots of same product)
+                for line in self.order_line:
+                    if line.product_id.id in program.discount_specific_product_ids:
+                        line.discount_ids = [(4,discount.id,0)]
+
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
     order_type = fields.Selection(related="order_id.order_type")
     lot_id = fields.Many2one('stock.production.lot')
+    discount_ids = fields.Many2many('lume.discount', column1='discount_id',column2='line_id')
+    is_reward = fields.Boolean(default=False)
 
     @api.onchange('product_uom_qty')
     def ensure_valid_quantity(self):
@@ -316,17 +383,40 @@ class SaleLine(models.Model):
 
     @api.model
     def create(self, vals):
-        order = self.env['sale.order'].browse(vals['order_id'])
-        product = self.env['product.product'].browse(vals['product_id'])
-        message = "Added %s" % (product.name)
-        order.message_post(body=message)
+        if self.env.uid != 1:
+            order = self.env['sale.order'].browse(vals['order_id'])
+            product = self.env['product.product'].browse(vals['product_id'])
+            message = "Added %s" % (product.name)
+            order.message_post(body=message)
         return super(SaleLine, self).create(vals)
 
     @api.model
     def unlink(self):
-        message = "Removed %s" % (self.product_id.name)
-        self.order_id.message_post(body=message)
+        if self.env.uid != 1:
+            message = "Removed %s" % (self.product_id.name)
+            self.order_id.message_post(body=message)
         return super(SaleLine, self).unlink()
+
+    # Override, no super
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    def _compute_amount(self):
+        """
+        Compute the amounts of the SO line.
+        """
+        for line in self:
+            discounts = line.discount_ids.filtered(lambda l: l.discount_type == 'percentage')
+            discount_total = math.prod([d.amount / 100 for d in discounts])
+            discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
+            discount_flat_total = sum([d.amount for d in discount_flat])
+            price = (line.price_unit - (discount_flat_total / len(self))) * discount_total
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            line.update({
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+            })
+            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
+                line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
         
 
     # @api.onchange('product_id')

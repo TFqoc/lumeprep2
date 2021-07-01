@@ -159,11 +159,9 @@ class CouponProgram(models.Model):
         # Combo[0] is the best one
         index = combos[0][0]
         return possibilities[index]
-        # return_set = False
-        # for program in possibilities[index]:
-        #     if not return_set:
-        #         return_set = program
-        #     else:
-        #         return_set |= program
-        # # Add up single recordsets with |= to make a full recordset to return
-        # return return_set
+
+    @api.model
+    def create(self, vals):
+        # We want to skip over all previous create methods to
+        # avoid creating a product like the vanilla version of coupon does
+        return super(models.Model, self).create(vals)

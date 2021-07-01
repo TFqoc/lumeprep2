@@ -13,3 +13,4 @@ from . import stock_quant
 from . import stock_move
 from . import stock_lot
 from . import settings
+from . import discount

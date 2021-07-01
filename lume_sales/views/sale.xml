@@ -58,6 +58,7 @@
                 </xpath>
                 <xpath expr="//tree/field[@name='tax_id']" position="before">
                     <field name="lot_id"/>
+                    <field name="discount_ids"/>
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
