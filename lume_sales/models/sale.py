@@ -321,10 +321,6 @@ class SaleOrder(models.Model):
                 else:
                     # Removes all current discounts
                     logger.info("STARTING MY FLOW")
-                    for line in self.order_line.sudo():
-                        if line.is_reward:
-                            line.unlink()
-                    self.order_line.write({'discount_ids':[(5,0,0)]})
                     # reapply discounts
                     self.apply_program(program)
                 order.no_code_promo_program_ids |= program
@@ -380,6 +376,11 @@ class SaleOrder(models.Model):
     def recompute_coupon_lines(self):
         for order in self:
             # order._remove_invalid_reward_lines()
+            for line in order.order_line.sudo():
+                if line.is_reward:
+                    line.unlink()
+            order.order_line.write({'discount_ids':[(5,0,0)]})
+            order.write({'no_code_promo_program_ids':[(5,0,0)]})
             order._create_new_no_code_promo_reward_lines()
             # order._update_existing_reward_lines()
 
