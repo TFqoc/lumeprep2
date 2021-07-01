@@ -369,6 +369,10 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, program):
         self.ensure_one()
         return []
+    
+    # Override
+    def _update_existing_reward_lines(self):
+        return
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
