@@ -383,7 +383,7 @@ class SaleLine(models.Model):
 
     @api.model
     def create(self, vals):
-        if self.env.uid != 1:
+        if self.env.uid != 1 and self.order_id:
             order = self.env['sale.order'].browse(vals['order_id'])
             product = self.env['product.product'].browse(vals['product_id'])
             message = "Added %s" % (product.name)
@@ -392,7 +392,7 @@ class SaleLine(models.Model):
 
     @api.model
     def unlink(self):
-        if self.env.uid != 1:
+        if self.env.uid != 1 and self.order_id:
             message = "Removed %s" % (self.product_id.name)
             self.order_id.message_post(body=message)
         return super(SaleLine, self).unlink()
