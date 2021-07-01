@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
     order_type = fields.Selection(selection=[('medical','Medical'),('adult','Adult'),('caregiver','Caregiver'),('none','None'),('merch','Merchandise')],compute="_compute_order_type")
     ordered_qty = fields.Float(compute='_compute_ordered_qty')
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
+    discount_ids = fields.Many2many('lume.discount')
 
     # Fields for the Order History Screen
     pos_terminal_id = fields.Many2one('pos.config')
@@ -417,7 +418,7 @@ class SaleLine(models.Model):
         return super(SaleLine, self).unlink()
 
     # Override, no super
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id','discount_ids')
     def _compute_amount(self):
         """
         Compute the amounts of the SO line.
@@ -425,9 +426,9 @@ class SaleLine(models.Model):
         for line in self:
             discounts = line.discount_ids.filtered(lambda l: l.discount_type == 'percentage')
             discount_total = math.prod([d.amount / 100 for d in discounts])
-            discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
-            discount_flat_total = sum([d.amount for d in discount_flat])
-            price = (line.price_unit - (discount_flat_total / len(self))) * discount_total
+            # discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
+            # discount_flat_total = sum([d.amount for d in discount_flat])
+            price = line.price_unit * (1 - discount_total)
             data = {"price_unit":line.price_unit,"flat_discount":discount_flat_total,"item_count":len(self),"percent_total":discount_total}
             logger.info("Price Computation: %s" % data)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)

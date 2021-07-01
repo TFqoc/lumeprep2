@@ -15,6 +15,10 @@ class Discount(models.Model):
     def name_get(self):
         res = []
         for record in self:
-            name = "%s%s%s off" % ('$' if record.discount_type == 'fixed_amount' else '',record.amount, '%' if record.discount_type == 'percentage' else '')
+            name = ""
+            if record.discount_type == 'fixed_amount': 
+                name = "$%s off" % (record.amount)
+            else:
+                name="%s%% off" % (record.amount)
             res.append((record.id, name))
         return res
