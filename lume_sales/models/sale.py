@@ -364,6 +364,11 @@ class SaleOrder(models.Model):
                 for line in self.order_line:
                     if line.product_id.id in program.discount_specific_product_ids:
                         line.discount_ids = [(4,discount.id,0)]
+    
+    # Override
+    def _get_reward_line_values(self, program):
+        self.ensure_one()
+        return []
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
