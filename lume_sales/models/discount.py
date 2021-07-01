@@ -7,7 +7,7 @@ class Discount(models.Model):
     _name = 'lume.discount'
 
     color = fields.Integer(string='Color Index', default=7) # Values are from 1-11
-    amount = fields.Float(required=True,digits=2)
+    amount = fields.Float(required=True,digits='Product Price')
     discount_type = fields.Selection([('percentage','Percent'),('fixed_amount','Flat Discount')],required=True)
     # line_ids = fields.Many2many('sale.order.line', column1='discount_id',column2='line_id')
 
