@@ -346,7 +346,7 @@ class SaleOrder(models.Model):
             # Find or create discount
             discount = self.env['lume.discount'].search([('discount_type','=',program.discount_type),('amount','in',[program.discount_percentage,program.discount_fixed_amount])],limit=1)
             if not discount:
-                discount = self.env['lume.discount'].sudo().create({
+                discount = self.sudo().env['lume.discount'].create({
                     'amount': program.discount_percentage if program.discount_type == 'percentage' else program.discount_fixed_amount,
                     'discount_type': program.discount_type,
                 })
