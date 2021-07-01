@@ -58,7 +58,7 @@
                 </xpath>
                 <xpath expr="//tree/field[@name='tax_id']" position="before">
                     <field name="lot_id"/>
-                    <field name="discount_ids"/>
+                    <field name="discount_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
