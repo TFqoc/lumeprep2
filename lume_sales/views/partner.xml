@@ -132,6 +132,11 @@
         <field name="phone" position="attributes">
           <attribute name="required">1</attribute>
         </field>
+        <xpath expr="//span[@name='address_name']" position="replace">
+          <span class="o_form_label o_td_label" name="address_name">
+            <b>Address</b>
+          </span>
+        </xpath>
       </field>
     </record>
   </data>

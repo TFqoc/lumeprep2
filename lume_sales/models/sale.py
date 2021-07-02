@@ -37,6 +37,14 @@ class SaleOrder(models.Model):
 
     cancel_reason = fields.Selection([('no_stock','Product not in stock/unavailable'),('no_funds','Insufficient Funds'),('bad_price','Pricing Dissatisfaction'),('merge','Merged Order')])
 
+    # Delivery Address fields
+    street = fields.Char()
+    street2 = fields.Char()
+    zip = fields.Char(change_default=True)
+    city = fields.Char()
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+
     def show_cancel_reason_wizard(self):
         return {
                 'name': 'Cancel Sales Order',
