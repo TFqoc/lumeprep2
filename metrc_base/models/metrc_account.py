@@ -221,7 +221,7 @@ class MetrcAccount(models.Model):
                 if params.get('licenseNumber'):
                     message += ' (facility license used : {})'.format(params['licenseNumber'])
                 message += ' : \n\n'
-                if resp.status_code == 503:
+                if resp.status_code == 503 and raise_for_error:
                     message += KNOWN_ERROR_CODES[resp.status_code]['message']
                     raise UserError(message)
                 if resp.status_code == 400:
