@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="metrc_base.MetrcSystrayMenu">
+        <li class="metrc_api_info">
+            <a>
+                METRC is: <button type="button" t-attf-class="#{button_class} rounded-pill btn_metrc_api_status" data-toggle="tooltip" 
+                                  data-placement="bottom" t-att-title="last_request_timestamp">
+                    <span t-esc="api_status"/>
+                </button>
+            </a>
+        </li>
+    </t>
+</templates>

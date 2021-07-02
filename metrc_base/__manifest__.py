@@ -26,8 +26,12 @@ METRC Base:
         'views/metrc_account_views.xml',
         'views/ir_cron_views.xml',
         'views/product_uom_views.xml',
+        'views/assets.xml',
 
         # data
         'data/metrc_cron_data.xml',
+    ],
+    'qweb': [
+        'static/src/xml/systray.xml',
     ],
 }
