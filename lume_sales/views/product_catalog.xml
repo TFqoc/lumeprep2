@@ -147,6 +147,8 @@
                 <field name="name"/>
                 <field name="thc_percent"/>
                 <field name="thc_mg"/>
+                <!-- <field name="cbd_percent"/>
+                <field name="cbd_mg"/> -->
                 <!-- <field name="tier"/> Eventually Keyur will add this field in metrc --> 
                 <field name="product_id"/>
                 <field name="lpc_quantity"/>
@@ -163,20 +165,22 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
                                             <div>
-                                                <strong><span><t t-esc="record.product_id.value"/> - <t t-esc="record.name.value"/></span></strong>
+                                                <strong><span><t t-esc="record.product_id.value"/> - <t t-esc="record.name.value.substring(record.name.value.length - 4)"/></span></strong>
                                             </div>
                                         </strong>
                                         <div class="o_kanban_tags_section">
                                             <!-- <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/> -->
                                         </div>
                                         <ul>
+                                            <li><strong>Brand: <field name="brand"></field></strong></li>
+                                            <!-- Description goes here -->
+                                            <li><strong><field name="thc_type"/></strong></li>
                                             <li><strong>Price: <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
-                                            <li><strong>On hand: 
+                                            <li><strong>ATS: 
                                                 <t t-esc="record.stock_at_store.raw_value"/>
                                                 <field name="product_uom_id"/></strong></li>
-                                            <li><strong>Tier: </strong><field name="tier"></field></li>
-                                            <li><strong><field name="thc_type"/></strong></li>
+                                            <!-- <li><strong>Tier: </strong><field name="tier"></field></li> -->
                                             <li>
                                                 <t t-if="record.thc_mg.raw_value > 0">
                                                     <strong>THC: <field name="thc_mg"/>mg</strong>
@@ -185,6 +189,14 @@
                                                     <strong>THC: <field name="thc_percent"/>%</strong>
                                                 </t>
                                             </li>
+                                            <!-- <li>
+                                                <t t-if="record.cbd_mg.raw_value > 0">
+                                                    <strong>CBD: <field name="cbd_mg"/>mg</strong>
+                                                </t>
+                                                <t t-elif="record.cbd_percent.raw_value > 0">
+                                                    <strong>CBD: <field name="cbd_percent"/>%</strong>
+                                                </t>
+                                            </li> -->
                                         </ul>
                                     </div>
                                     <!-- CLEAN ME: buttons should be part of the field widget; style should not be inlined -->
