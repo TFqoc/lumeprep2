@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
                 'name': 'Cancel Sales Order',
                 'view_mode': 'form',
                 'res_model': 'sale.order.cancel.reason',
-                'view_id': self.env.ref('sale.sale_order_cancel_reason_view_form').id,
+                'view_id': self.env.ref('lume_sales.sale_order_cancel_reason_view_form').id,
                 'type': 'ir.actions.act_window',
                 'context': {'default_order_id': self.id},
                 'target': 'new'
