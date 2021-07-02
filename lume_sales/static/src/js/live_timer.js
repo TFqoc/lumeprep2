@@ -1,4 +1,4 @@
-console.log("Live Timer has been loaded 3");
+console.log("Live Timer has been loaded 1");
 odoo.define('timer.live_timer', function (require) {
     "use strict";
     
@@ -10,9 +10,10 @@ odoo.define('timer.live_timer', function (require) {
     
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
-            my_options = options || {};
-            this.flash = options.flash || false;
-            this.color_class = options.color_class || '';
+            let my_options = options.attrs || {};
+            my_options = my_options.options || {};
+            this.flash = my_options.flash || false;
+            this.color_class = my_options.color_class || '';
             this.className = `o_field_widget o_readonly_modifier ${this.color_class} ml-auto h5 ml-4 font-weight-bold`;
         },
         /**
@@ -52,11 +53,12 @@ odoo.define('timer.live_timer', function (require) {
                     } else {
                         this.time.addSecond();
                         this.$el.text(this.time.toString());
-                        // TODO update this with real get methods
-                        this.blinking = this.time.convertToSeconds() / 60 >= this.record.data.blink_threshold;
-                        if (this.blinking){
-                            this.$el.toggleClass('timer-normal');
-                            this.$el.toggleClass('timer-flash');
+                        if (this.flash){
+                            this.blinking = this.time.convertToSeconds() / 60 >= this.record.data.blink_threshold;
+                            if (this.blinking){
+                                this.$el.toggleClass('timer-normal');
+                                this.$el.toggleClass('timer-flash');
+                            }
                         }
                     }
                 }, 1000);

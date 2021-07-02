@@ -48,7 +48,7 @@
             </span> -->
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
-            <field name="create_date" widget="live_timer" options="{'color_class':'','flash':false}"/>
+            <field name="create_date" widget="live_timer" options="{'color_class':'','flash':false}" style="float: right;"/>
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top']/div)" position="after">
             <!-- Replace user avatar for customer "partner" avatar -->
