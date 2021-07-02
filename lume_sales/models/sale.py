@@ -35,6 +35,19 @@ class SaleOrder(models.Model):
     threshold2 = fields.Integer(related="task.project_id.so_threshold2")
     threshold3 = fields.Integer(related="task.project_id.so_threshold3")
 
+    cancel_reason = fields.Selection([('no_stock','Product not in stock/unavailable'),('no_funds','Insufficient Funds'),('bad_price','Pricing Dissatisfaction'),('merge','Merged Order')])
+
+    def _show_cancel_reason_wizard(self):
+        return {
+                'name': 'Cancel Sales Order',
+                'view_mode': 'form',
+                'res_model': 'sale.order.cancel.reason',
+                'view_id': self.env.ref('sale.sale_order_cancel_reason_view_form').id,
+                'type': 'ir.actions.act_window',
+                'context': {'default_order_id': self.id},
+                'target': 'new'
+            }
+
     # Override
     def action_cancel(self):
         cancel_warning = self._show_cancel_wizard()
