@@ -67,7 +67,7 @@
                 </xpath>
                 <xpath expr="//header/button[@name='action_cancel']" position="attributes">
                     <attribute name="string">Abandon Cart</attribute>
-                    <attribute name="name">_show_cancel_reason_wizard</attribute>
+                    <attribute name="name">show_cancel_reason_wizard</attribute>
                 </xpath>
                 <xpath expr="(//header/button[@name='action_quotation_send'])[4]" position="attributes">
                     <attribute name="invisible">1</attribute>

@@ -37,7 +37,7 @@ class SaleOrder(models.Model):
 
     cancel_reason = fields.Selection([('no_stock','Product not in stock/unavailable'),('no_funds','Insufficient Funds'),('bad_price','Pricing Dissatisfaction'),('merge','Merged Order')])
 
-    def _show_cancel_reason_wizard(self):
+    def show_cancel_reason_wizard(self):
         return {
                 'name': 'Cancel Sales Order',
                 'view_mode': 'form',
