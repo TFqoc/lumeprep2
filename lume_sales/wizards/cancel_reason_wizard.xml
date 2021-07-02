@@ -11,7 +11,7 @@
                     </p>
                 <footer>
                     <button name="action_ok" string="Confirm" type="object" default_focus="1" class="oe_highlight"/>
-                    <button string="Cancel" class="btn-secondary" type="cancel"/>
+                    <button name="cancel" string="Cancel" class="btn-secondary" type="cancel"/>
                 </footer>
                 </form>
             </field>
