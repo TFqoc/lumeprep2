@@ -32,7 +32,7 @@ class IrLogging(models.Model):
         result = {
             'api_status': 'Unknown',
             'last_request_timestamp': '',
-            'button_class': 'btn btn-secondary',
+            'button_class': 'btn btn-danger',
         }
         log = self.search([('account_id', '!=', False),
                            ('active', '=', True)], order='create_date desc', limit=1)
