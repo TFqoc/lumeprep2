@@ -39,7 +39,7 @@
           <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="inside">
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
             <!-- <br/> -->
-            <field name="timer_start" widget="live_timer"/>
+            <field name="timer_start" widget="live_timer" options="{'color_class':'timer-normal','flash':true}"/>
             <br/>
             <!-- <span>
               <span t-if="record.fulfillment_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
@@ -48,6 +48,7 @@
             </span> -->
             <span class="o_MessagingMenu_icon fa fa-comments" title="comment bubble"></span>
             <field name="message_unread_counter" widget="count_counter"/>
+            <field name="date_create" widget="live_timer" options="{'color_class':'','flash':false}"/>
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top']/div)" position="after">
             <!-- Replace user avatar for customer "partner" avatar -->
