@@ -64,7 +64,7 @@
           <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace"></xpath>
           <!-- Color border -->
           <xpath expr="//templates/t/div" position="attributes">
-            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.fulfillment_type.raw_value == 'curb' ? 'firebrick' : (record.fulfillment_type.raw_value == 'store' ? 'steelblue' : (record.fulfillment_type.raw_value == 'online' ? 'goldenrod' : (record.fulfillment_type.raw_value == 'delivery' ? 'mediumseagreen' : 'black')))}};</attribute>
+            <attribute name="t-attf-style">margin-bottom: 10px; border-width: 5px; border-color: {{record.fulfillment_type.raw_value == 'curb' ? 'goldenrod' : (record.fulfillment_type.raw_value == 'store' ? 'darkorchid' : (record.fulfillment_type.raw_value == 'online' ? 'firebrick' : (record.fulfillment_type.raw_value == 'delivery' ? 'forestgreen' : 'black')))}};</attribute>
           </xpath>
           <xpath expr="//progressbar" position="replace">
             <progressbar field="fulfillment_type" colors="{&quot;store&quot;: &quot;store&quot;, &quot;online&quot;: &quot;online&quot;, &quot;delivery&quot;: &quot;delivery&quot;, &quot;curb&quot;: &quot;curb&quot;}"/>
