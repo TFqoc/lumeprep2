@@ -61,28 +61,17 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
 @tagged('lume')
 class TestLumeSalesOrder(TestLumeOrderCommon):
     def test_rec_buildcart(self):
-        self.order_rec.unlink() #TODO: Make sure this works.
-        self.task_rec.stage_id = self.env.ref('lume_sales.lume_stage_0').id
-        #self.task_rec.sales_order.id = False
-
-        self.assertFalse(
-            self.order_rec
-        )
-
-        self.assertFalse(
-            self.task_rec.sales_order
-        )
-
-        self.assertNotEqual(
-            self.order_rec.stage_id.sequence,
-            1,
-            "Error in Rec_BuildCart: Stage ID Not set correctly."
-        )
-
         uid = self.env.ref('base.user_admin').id
-        record_ids = [self.task_rec.id]
-        active_id = [self.task_rec.id]
-        active_ids = [self.task_rec.id, self.lumestore_one.id]
+        Test_Task = self.Task.create({
+            'name': 'Test',
+            'user_id': uid, #Change to person assigned to that task.
+            'project_id': self.lumestore_one.id,
+            'partner_id': self.customer_rec.id,
+            'stage_id': self.env.ref('lume_sales.lume_stage_0').id
+        })
+        record_ids = [Test_Task.id]
+        active_id = [Test_Task.id]
+        active_ids = [Test_Task.id, self.lumestore_one.id]
 
         uid = self.env.ref('base.user_admin').id
         self.env['project.task'].browse(record_ids).with_context({
@@ -99,36 +88,36 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
         #Validate Task Position.
 
         self.assertEqual(
-            self.task_rec.stage_id.sequence,
+            Test_Task.stage_id.sequence,
             10, 
             "Error in build_cart: Task did not move to the appropriate stage."
             )
 
         self.assertTrue(
-            self.task_rec.sales_order,
+            Test_Task.sales_order,
             "Error in build_cart: Sale Order was not created."
             )
 
         self.assertEqual(
-            self.task_rec.sales_order.task.id,
-            self.task_rec.id,
+            Test_Task.sales_order.task.id,
+            Test_Task.id,
             "Error in build_cart: Task was not tied to Sale Order."
             )
 
         self.assertEqual(
-            self.task_rec.sales_order.warehouse_id.id,
+            Test_Task.sales_order.warehouse_id.id,
             self.lumestore_one.warehouse_id.id,
             "Error in build_cart: Sale Order did not have the correct warehouse."
             )
 
         self.assertEqual(
-            self.task_rec.sales_order.partner_id.id,
+            Test_Task.sales_order.partner_id.id,
             self.customer_rec.id,
             "Error in build_cart: Sale Order did not have the correct customer."
             )
 
         self.assertEqual(
-            self.task_rec.sales_order.user_id.id,
+            Test_Task.sales_order.user_id.id,
             uid,
             "Error in build_cart: Sale Order did not have the correct user id."
             )
