@@ -61,8 +61,9 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
 @tagged('lume')
 class TestLumeSalesOrder(TestLumeOrderCommon):
     def test_rec_buildcart(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
         uid = self.env.ref('base.user_admin').id
-        Test_Task = self.Task.create({
+        Test_Task = Task.create({
             'name': 'Test',
             'user_id': uid, #Change to person assigned to that task.
             'project_id': self.lumestore_one.id,
