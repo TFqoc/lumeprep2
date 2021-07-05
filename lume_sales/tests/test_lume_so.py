@@ -60,6 +60,80 @@ class TestLumeOrderCommon(TestLumeSaleCommon):
 
 @tagged('lume')
 class TestLumeSalesOrder(TestLumeOrderCommon):
+    def test_rec_buildcart(self):
+        self.order_rec.unlink() #TODO: Make sure this works.
+        self.task_rec.stage_id = self.env.ref('lume_sales.lume_stage_0').id
+        #self.task_rec.sales_order.id = False
+
+        self.assertFalse(
+            self.order_rec
+        )
+
+        self.assertFalse(
+            self.task_rec.sales_order
+        )
+
+        self.assertNotEqual(
+            self.order_rec.stage_id.sequence,
+            1,
+            "Error in Rec_BuildCart: Stage ID Not set correctly."
+        )
+
+        uid = self.env.ref('base.user_admin').id
+        record_ids = [self.task_rec.id]
+        active_id = [self.task_rec.id]
+        active_ids = [self.task_rec.id, self.lumestore_one.id]
+
+        uid = self.env.ref('base.user_admin').id
+        self.env['project.task'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'project.project',
+            'allowed_company_ids': [1],
+            'default_project_id': 7,
+            'lang': 'en_US',
+            'pivot_row_groupby': ['user_id'],
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).build_cart()
+
+        #Validate Task Position.
+
+        self.assertEqual(
+            self.task_rec.stage_id.sequence,
+            10, 
+            "Error in build_cart: Task did not move to the appropriate stage."
+            )
+
+        self.assertTrue(
+            self.task_rec.sales_order,
+            "Error in build_cart: Sale Order was not created."
+            )
+
+        self.assertEqual(
+            self.task_rec.sales_order.task.id,
+            self.task_rec.id,
+            "Error in build_cart: Task was not tied to Sale Order."
+            )
+
+        self.assertEqual(
+            self.task_rec.sales_order.warehouse_id.id,
+            self.lumestore_one.warehouse_id.id,
+            "Error in build_cart: Sale Order did not have the correct warehouse."
+            )
+
+        self.assertEqual(
+            self.task_rec.sales_order.partner_id.id,
+            self.customer_rec.id,
+            "Error in build_cart: Sale Order did not have the correct customer."
+            )
+
+        self.assertEqual(
+            self.task_rec.sales_order.user_id.id,
+            uid,
+            "Error in build_cart: Sale Order did not have the correct user id."
+            )
+
+
     def test_rec_add_sales_order_line(self):
         record_ids = [self.order_rec.id]
         uid = self.env.ref('base.user_admin').id
@@ -88,6 +162,8 @@ class TestLumeSalesOrder(TestLumeOrderCommon):
                 'tax_id': [[6, False, []]], 
                 'discount': 0
                 }]]})
+
+        
 
     def test_rec_so_confirm(self):
         uid = self.env.ref('base.user_admin').id
