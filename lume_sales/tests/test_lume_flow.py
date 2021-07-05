@@ -17,20 +17,70 @@ _logger = logging.getLogger(__name__)
 class TestLumeBasicFlows(TestLumeSaleCommon):
 
     def test_flow_rec(self):
+        uid = self.env.ref('base.user_admin').id
         Task = self.env['project.task'].with_context({'tracking_disable': True})
-        Rec_Order = Task.create({
+        Rec_Order_Task = Task.create({
             'name': 'Rec Order',
             'project_id': self.lumestore_one.id
         })
 
-        Rec_Order.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
-        Rec_Order.auto_fill()
+        Rec_Order_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        Rec_Order_Task.auto_fill()
         self.assertEqual(
-            Rec_Order.partner_id.id,
+            Rec_Order_Task.partner_id.id,
             self.customer_rec.id,
             "Error in Rec Flow, Step One of ___: Scan_Text failed to activate the Auto Fill On Change Method"
         )
 
+        self.assertFalse(
+            Rec_Order_Task.scan_text,
+            "Error in Auto_Fill: Scan Text field was not emptied."
+        )
+
+        record_ids = [Rec_Order_Task.partner_id.id]
+        uid = self.env.ref('base.user_admin').id
+        self.env['res.partner'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'check_in_window': True,
+            'fulfillment_type': 'store',
+            'lang': 'en_US',
+            'order_type': 'adult',
+            'partner_id': self.customer_rec.id,
+            'project_id': self.lumestore_one.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).check_in()
+
+        # TODO: Refine how the test finds this task, as this can fail too easily.
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+
+        _logger.error(created_task)
+
+        key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
+        expected_values = {
+            'partner_id': self.customer_rec,
+            'project_id': self.lumestore_one, 
+            'fulfillment_type': 'store',
+            'order_type': False,
+            'user_id': False,
+            'name': self.customer_rec.name
+        }
+
+        self.assertTrue(
+            self.lumestore_one.tasks,
+            "Task was not created upon pressing check in."
+        )
+
+        self.assertTrue(
+            created_task,
+            "Error in Check In: Task was not found (Either the Customer ID was incorrectly ported, or the Task was not created)."
+        )
+        dictionaries = compare_dictionaries(created_task, expected_values, key_list)
+        self.assertTrue(
+            dictionaries[0],
+            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
+        )
+
+    
 
 @tagged('lume') 
 class TestRecLumeFlow(TestLumeSaleCommon):
@@ -53,6 +103,8 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             Test_Task.scan_text,
             "Error in Auto_Fill: Scan Text field was not emptied."
         )
+
+        
 
     def test_barcode_parse(self): 
         """Checking that the barcode parses correctly."""
