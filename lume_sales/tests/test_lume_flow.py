@@ -53,7 +53,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
         # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
 
-        _logger.error(created_task)
+        _logger.error("HEHEHEHJOHN117 %s" % (created_task))
 
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
         expected_values = {
