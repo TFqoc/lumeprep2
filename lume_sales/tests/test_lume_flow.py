@@ -24,7 +24,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
         })
 
         Rec_Order.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
-        
+        Rec_Order.auto_fill()
         self.assertEqual(
             Rec_Order.partner_id.id,
             self.customer_rec.id,
