@@ -13,6 +13,25 @@ _logger = logging.getLogger(__name__)
 #     def test_so_creation(self):
 
 
+@tagged('lume')
+class TestLumeBasicFlows(TestLumeSaleCommon):
+
+    def test_flow_rec(self):
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Rec_Order = Task.create({
+            'name': 'Rec Order',
+            'project_id': self.lumestore_one.id
+        })
+
+        Rec_Order.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        
+        self.assertEqual(
+            Rec_Order.partner_id.id,
+            self.customer_rec.id,
+            "Error in Rec Flow, Step One of ___: Scan_Text failed to activate the Auto Fill On Change Method"
+        )
+
+
 @tagged('lume') 
 class TestRecLumeFlow(TestLumeSaleCommon):
     def test_scan_text(self):
