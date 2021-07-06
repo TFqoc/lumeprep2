@@ -49,7 +49,6 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
-        # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id), ('name', '=', self.customer_rec.name)])
 
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
@@ -154,7 +153,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
 
         self.assertEqual(
             created_task.sales_order.order_type,
-            'adult', #TODO Find correct value that goes here.
+            'adult', 
             "Error in selecting product: Order type was %s instead of %s" % (created_task.order_type, 'adult')
         )
 
@@ -195,7 +194,185 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
             "Pick Ticket was not created."
         )
 
-    
+    def test_flow_med(self):
+        uid = self.env.ref('base.user_admin').id
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Med_Order_Task = Task.create({
+            'name': 'Med Order',
+            'project_id': self.lumestore_one.id
+        })
+
+        Med_Order_Task.scan_text = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
+        Med_Order_Task.auto_fill()
+        self.assertEqual(
+            Med_Order_Task.partner_id.id,
+            self.customer_med.id,
+            "Error in Rec Flow, Step One of ___: Scan_Text failed to activate the Auto Fill On Change Method"
+        )
+
+        self.assertFalse(
+            Med_Order_Task.scan_text,
+            "Error in Auto_Fill: Scan Text field was not emptied."
+        )
+
+        record_ids = [Med_Order_Task.partner_id.id]
+        self.env['res.partner'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'check_in_window': True,
+            'fulfillment_type': 'store',
+            'lang': 'en_US',
+            'order_type': 'adult',
+            'partner_id': self.customer_med.id,
+            'project_id': self.lumestore_one.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).check_in()
+
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_med.id), ('name', '=', self.customer_med.name)])
+
+        key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
+        expected_values = {
+            'partner_id': self.customer_med,
+            'project_id': self.lumestore_one, 
+            'fulfillment_type': 'store',
+            'order_type': False,
+            'user_id': False,
+            'name': self.customer_med.name
+        }
+
+        self.assertTrue(
+            self.lumestore_one.tasks,
+            "Task was not created upon pressing check in."
+        )
+
+        self.assertTrue(
+            created_task,
+            "Error in Check In: Task was not found (Either the Customer ID was incorrectly ported, or the Task was not created)."
+        )
+        dictionaries = compare_dictionaries(created_task, expected_values, key_list)
+        self.assertTrue(
+            dictionaries[0],
+            "List of discrepencies between received values and expected values: %s " % (dictionaries[1:])
+        )
+
+        record_ids = [created_task.id]
+        active_id = [created_task.id]
+        active_ids = [created_task.id, self.lumestore_one.id]
+
+        self.env['project.task'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'project.project',
+            'allowed_company_ids': [1],
+            'default_project_id': 7,
+            'lang': 'en_US',
+            'pivot_row_groupby': ['user_id'],
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).build_cart()
+
+        #Validate Task Position.
+
+        self.assertEqual(
+            created_task.stage_id.sequence,
+            10, 
+            "Error in build_cart: Task did not move to the appropriate stage."
+            )
+
+        self.assertTrue(
+            created_task.sales_order,
+            "Error in build_cart: Sale Order was not created."
+            )
+
+        self.assertEqual(
+            created_task.sales_order.task.id,
+            created_task.id,
+            "Error in build_cart: Task was not tied to Sale Order."
+            )
+
+        self.assertEqual(
+            created_task.sales_order.warehouse_id.id,
+            self.lumestore_one.warehouse_id.id,
+            "Error in build_cart: Sale Order did not have the correct warehouse."
+            )
+
+        self.assertEqual(
+            created_task.sales_order.partner_id.id,
+            self.customer_med.id,
+            "Error in build_cart: Sale Order did not have the correct customer."
+            )
+
+        self.assertEqual(
+            created_task.sales_order.user_id.id,
+            uid,
+            "Error in build_cart: Sale Order did not have the correct user id."
+            )
+
+        record_ids = [self.product_med.product_variant_ids[0].id]
+        active_id = self.lumestore_one.id
+        active_ids = [self.lumestore_one.id]
+
+        self.env['product.product'].browse(record_ids).with_context({
+            'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': 'sale.order',
+            'allowed_company_ids': [1],
+            'type': created_task.sales_order.order_type,
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'lpc_sale_order_id': created_task.sales_order.id,
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).lpc_add_quantity()
+
+        product_ids = [line["product_id"] for line in created_task.sales_order.order_line]
+
+        self.assertTrue(
+            created_task.sales_order.order_line,
+            "Error in Product Catologue: Line was not created."
+        )
+
+        self.assertEqual(
+            created_task.sales_order.order_type,
+            'adult', 
+            "Error in selecting product: Order type was %s instead of %s" % (created_task.order_type, 'adult')
+        )
+
+        self.assertEqual(
+            product_ids[0].id,
+            self.product_med.product_variant_ids[0].id,
+            "Error in Product Category: Incorrect Product Added."
+        )
+
+        self.assertEqual(
+            created_task.sales_order.order_line.product_uom_qty,
+            1.00,
+            "Error in Product Category: Incorrect Quantity Added."
+        )
+
+        record_ids = [created_task.sales_order.id]
+        self.env['sale.order'].browse(record_ids).with_context({
+            'allowed_company_ids': [1],
+            'form_view_initial_mode': 'edit',
+            'lang': 'en_US',
+            'tz': 'Europe/Brussels',
+            'uid': uid}).with_user(uid).action_confirm()
+
+        self.assertEqual(
+            created_task.stage_id.sequence,
+            20,
+            "Error in Confirm Cart: Tile did not move to the proper tile."
+        )
+
+        self.assertEqual(
+            created_task.sales_order.state,
+            'sale',
+            "Error in Confirm Cart: Sales Order was not set to the state of sale."
+        )
+
+        self.assertTrue(
+            created_task.sales_order.picking_ids,
+            "Pick Ticket was not created."
+        )
+
+#Running the tests individually to make sure errors don't occur due to broken test data corrupted throughout the flow test.
 
 @tagged('lume') 
 class TestRecLumeFlow(TestLumeSaleCommon):
@@ -256,7 +433,6 @@ class TestRecLumeFlow(TestLumeSaleCommon):
             'tz': 'Europe/Brussels',
             'uid': uid}).with_user(uid).check_in()
 
-        # TODO: Refine how the test finds this task, as this can fail too easily.
         created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
 
         key_list = ['partner_id', 'project_id', 'fulfillment_type', 'order_type', 'user_id', 'name']
@@ -391,7 +567,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
 
         self.assertEqual(
             Test_Task.sales_order.order_type,
-            'adult', #TODO Find correct value that goes here.
+            'adult',
             "Error in selecting product: Order type was %s instead of %s" % (Test_Task.order_type, 'adult')
         )
 
