@@ -17,8 +17,8 @@
         <field name="vat" position="after">
           <!-- <field name="is_medical" string="Is Medical" invisible="1" /> -->
           <!-- <field name="customer_type" string="Customer Type" /> -->
-          <field name="medical_id" string="MMM ID" widget="formatted_char" />
-          <field name="medical_expiration" string="MM Exp" />
+          <field name="medical_id" string="Medical ID" widget="formatted_char" />
+          <field name="medical_expiration" string="Medical ID Expiration" />
           <field name="date_of_birth" string="DOB" />
           <field name="is_over_21" string="21+" invisible="1" />
           <field name="is_expired_medical" string="Expired Medical" invisible="1" />
@@ -115,9 +115,10 @@
           <field name="caregiver_id" attrs="{'invisible':[('is_caregiver','=',True)],'domain':[('is_caregiver','=',True)]}"></field>
           <field name="caregiver_license" string="Caregiver Medical ID" widget="formatted_char" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}"></field>
           <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}">
-            <tree create="0" delete="0" editable="bottom">
+            <tree create="0" edit="0" delete="0" editable="bottom">
               <field name="name"></field>
-              <field name="phone"></field>
+              <field name="medical_id"></field>
+              <field name="medical_expiration"></field>
             </tree>
           </field>
         </field>
