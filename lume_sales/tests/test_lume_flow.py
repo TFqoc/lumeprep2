@@ -51,7 +51,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
             'uid': uid}).with_user(uid).check_in()
 
         # TODO: Refine how the test finds this task, as this can fail too easily.
-        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id)])
+        created_task = self.env['project.task'].search([('partner_id', '=', self.customer_rec.id), ('name', '=', self.customer_rec.name)])
 
         _logger.error("HEHEHEHJOHN117 %s" % (created_task))
 
