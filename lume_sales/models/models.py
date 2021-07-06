@@ -28,6 +28,11 @@ class Partner(models.Model):
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
+    first_name = fields.Char()
+    middle_name = fields.Char()
+    last_name = fields.Char()
+    full_name = fields.Char(compute="_compute_full_name")
+
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
     caregiver_id = fields.Many2one('res.partner',domain="[('is_caregiver','=',True)]")
@@ -109,6 +114,11 @@ class Partner(models.Model):
         for record in self:
             record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.is_over_18
     
+    @api.depends('first_name','middle_name','last_name')
+    def _compute_full_name(self):
+        for record in self:
+            record.full_name = ' '.join([record.first_name, record.middle_name, record.last_name])
+
     def warn(self):
         self.warnings += 1
 
@@ -166,9 +176,10 @@ class Partner(models.Model):
             res.append((record.id, name))
         return res
 
-    @api.onchange('pref_name')
+    @api.onchange('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         if self.name:
+            # This is to rewrite the name stored as a pair in the db itself
             self.update({'name': self.name + ' '})
             self.update({'name': self.name[:len(self.name)-1]})
 
