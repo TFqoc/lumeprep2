@@ -34,14 +34,14 @@ class ProductTemplate(models.Model):
 
 class Product(models.Model):
     _inherit = 'product.product'
-    _order = 'is_lume desc, brand, name, tier_price desc, list_price, default_code, id'
+    _order = 'is_lume desc, brand, name, list_price, default_code, id'
     
     lpc_quantity = fields.Integer('Material Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
     # effect = fields.Selection(related="product_tmpl_id.effect", store=True)
     quantity_at_warehouses = fields.Char(compute="_compute_qty_at_warehouses",store=True)
     quantity_at_store = fields.Float(compute="_compute_qty_at_store")
-    tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
-    tier_price = fields.Float(compute="_compute_tier")
+    # tier = fields.Selection([('none','None'),('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')], compute="_compute_tier")
+    # tier_price = fields.Float(compute="_compute_tier")
     pricelist_price = fields.Float(compute="_compute_pricelist_price")
     thc = fields.Float()
     # Override
@@ -96,46 +96,46 @@ class Product(models.Model):
         for record in self:
             record.is_product_variant = len(record.product_tmpl_id.product_variant_ids) > 1
 
-    @api.depends_context('store_id')
-    def _compute_tier(self):
-        store_id = self.env.context.get('store_id', False)
-        if (store_id):
-            # Calcualte tier cutoffs for this store, Then loop through records
-            store_id = self.env['project.project'].browse(store_id)
-            # Get all quants regardless of product. (Change as needed when we find out lume's process)
-            quants = self.env['stock.quant'].search([('is_tiered','=',True),('location_id','=',store_id.warehouse_id.lot_stock_id.id)])
-            # Dict of name value pairs
-            tiers = {}
-            # {'name':{'min':0,'max':0,'price':0}}
-            values = set()
-            for q in quants:
-                for attr in q.product_id.product_template_attribute_value_ids:
-                    try:
-                        percent = float(attr.name.split('%')[0])
-                        values.add(percent)
-                    except ValueError as v:
-                        pass
-            if len(values) != 0:
-                values = sorted(values, reverse=True)
-                _logger.info("Values: %s" % values)
-                tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0],'price':store_id.top_tier_price}
-                tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1],'price':store_id.mid_tier_price}
-                tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1],'price':store_id.value_tier_price}
-                tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1],'price':store_id.cut_tier_price}
-            _logger.info("TIERS: %s" % tiers)
-            for record in self:
-                record.tier = 'none'
-                record.tier_price = record.list_price
-                try:
-                    thc = record.product_template_attribute_value_ids.filtered(lambda r: r.attribute_id.name == "THC").name
-                    thc = float(thc.split('%')[0])
-                except AttributeError as v:
-                    pass
-                for key, value in tiers.items():
-                    if thc <= value['max'] and thc >= value['min']:
-                        record.tier = key
-                        record.tier_price = value['price']
-                        break
+    # @api.depends_context('store_id')
+    # def _compute_tier(self):
+    #     store_id = self.env.context.get('store_id', False)
+    #     if (store_id):
+    #         # Calcualte tier cutoffs for this store, Then loop through records
+    #         store_id = self.env['project.project'].browse(store_id)
+    #         # Get all quants regardless of product. (Change as needed when we find out lume's process)
+    #         quants = self.env['stock.quant'].search([('is_tiered','=',True),('location_id','=',store_id.warehouse_id.lot_stock_id.id)])
+    #         # Dict of name value pairs
+    #         tiers = {}
+    #         # {'name':{'min':0,'max':0,'price':0}}
+    #         values = set()
+    #         for q in quants:
+    #             for attr in q.product_id.product_template_attribute_value_ids:
+    #                 try:
+    #                     percent = float(attr.name.split('%')[0])
+    #                     values.add(percent)
+    #                 except ValueError as v:
+    #                     pass
+    #         if len(values) != 0:
+    #             values = sorted(values, reverse=True)
+    #             _logger.info("Values: %s" % values)
+    #             tiers['top'] = {'min': values[get_percent_index(values, store_id.top_tier)], 'max':values[0],'price':store_id.top_tier_price}
+    #             tiers['mid'] = {'min': values[get_percent_index(values, store_id.mid_tier)], 'max':values[get_percent_index(values, store_id.top_tier)+1],'price':store_id.mid_tier_price}
+    #             tiers['value'] = {'min': values[get_percent_index(values, store_id.value_tier)], 'max':values[get_percent_index(values, store_id.mid_tier)+1],'price':store_id.value_tier_price}
+    #             tiers['cut'] = {'min': values[len(values)-1], 'max':values[get_percent_index(values, store_id.value_tier)+1],'price':store_id.cut_tier_price}
+    #         _logger.info("TIERS: %s" % tiers)
+    #         for record in self:
+    #             record.tier = 'none'
+    #             record.tier_price = record.list_price
+    #             try:
+    #                 thc = record.product_template_attribute_value_ids.filtered(lambda r: r.attribute_id.name == "THC").name
+    #                 thc = float(thc.split('%')[0])
+    #             except AttributeError as v:
+    #                 pass
+    #             for key, value in tiers.items():
+    #                 if thc <= value['max'] and thc >= value['min']:
+    #                     record.tier = key
+    #                     record.tier_price = value['price']
+    #                     break
 
 
     @api.depends_context('lpc_sale_order_id')

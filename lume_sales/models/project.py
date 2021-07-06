@@ -379,16 +379,6 @@ class project_inherit(models.Model):
     so_threshold1 = fields.Integer(default='1')
     so_threshold2 = fields.Integer(default='3')
     so_threshold3 = fields.Integer(default='5')
-    
-    top_tier = fields.Float()
-    mid_tier = fields.Float()
-    value_tier = fields.Float()
-    cut_tier = fields.Float()
-
-    top_tier_price = fields.Float()
-    mid_tier_price = fields.Float()
-    value_tier_price = fields.Float()
-    cut_tier_price = fields.Float()
 
     store_pricelist = fields.Many2one('product.pricelist', required=True)
 

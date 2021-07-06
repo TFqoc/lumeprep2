@@ -79,24 +79,6 @@
           <field name="so_threshold2"/>
           <field name="so_threshold3"/>
         </field>
-        <xpath expr="//notebook/page" position="after">
-          <page name="tiers" string="Tier Settings">
-            <group>
-              <group>
-                <field name="top_tier"/>
-                <field name="mid_tier"/>
-                <field name="value_tier"/>
-                <field name="cut_tier"/>
-              </group>
-              <group>
-                <field name="top_tier_price"/>
-                <field name="mid_tier_price"/>
-                <field name="value_tier_price"/>
-                <field name="cut_tier_price"/>
-              </group>
-            </group>
-          </page>
-        </xpath>
       </field>
     </record>
 
