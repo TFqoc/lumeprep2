@@ -449,11 +449,11 @@ class SaleLine(models.Model):
         for line in self:
             discounts = line.discount_ids.filtered(lambda l: l.discount_type == 'percentage')
             discount_total = math.prod([d.amount / 100 for d in discounts])
-            # discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
-            # discount_flat_total = sum([d.amount for d in discount_flat])
-            price = line.price_unit * (1 - discount_total)
-            # data = {"price_unit":line.price_unit,"flat_discount":discount_flat_total,"item_count":len(self),"percent_total":discount_total}
-            # logger.info("Price Computation: %s" % data)
+            discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
+            discount_flat_total = sum([d.amount for d in discount_flat]) / len(line.order_id.order_line)
+            price = (line.price_unit - (discount_flat_total / line.product_uom_qty)) * (1 - discount_total)
+            data = {"price_unit":line.price_unit,"flat_discount":discount_flat_total,"item_count":len(self),"percent_total":discount_total}
+            logger.info("Price Computation: %s" % data)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
