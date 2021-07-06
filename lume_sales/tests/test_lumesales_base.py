@@ -21,7 +21,7 @@ class TestLumeSaleCommon(SavepointCase):
 
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
 
-        cls.user_receptionist = Users.create({
+        cls.user_associate = Users.create({
             'name': 'Pete Zeria',
             'login': 'pzlume',
             'email': 'p.z@example.com',
@@ -30,32 +30,32 @@ class TestLumeSaleCommon(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
         })
 
-        cls.user_luminary = Users.create({
-            'name': 'Justin Case',
-            'login': 'jclume',
-            'email': 'j.c@example.com',
-            'signature': 'Justin Case',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
-        })
+        # cls.user_luminary = Users.create({
+        #     'name': 'Justin Case',
+        #     'login': 'jclume',
+        #     'email': 'j.c@example.com',
+        #     'signature': 'Justin Case',
+        #     'notification_type': 'email',
+        #     'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
+        # })
 
-        cls.user_picking = Users.create({
-            'name': 'Adam Zaple',
-            'login': 'azlume',
-            'email': 'a.z@example.com',
-            'signature': 'Adam Zaple',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
-        })
+        # cls.user_picking = Users.create({
+        #     'name': 'Adam Zaple',
+        #     'login': 'azlume',
+        #     'email': 'a.z@example.com',
+        #     'signature': 'Adam Zaple',
+        #     'notification_type': 'email',
+        #     'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
+        # })
 
-        cls.user_cashier = Users.create({
-            'name': 'Robin Banks',
-            'login': 'rblume',
-            'email': 'r.b@example.com',
-            'signature': 'Robin Banks',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
-        })
+        # cls.user_cashier = Users.create({
+        #     'name': 'Robin Banks',
+        #     'login': 'rblume',
+        #     'email': 'r.b@example.com',
+        #     'signature': 'Robin Banks',
+        #     'notification_type': 'email',
+        #     'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
+        # })
 
         cls.user_manager = Users.create({
             'name': 'Ella Vader',
