@@ -332,7 +332,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
         self.assertEqual(
             created_task.sales_order.order_type,
             'adult', 
-            "Error in selecting product: Order type was %s instead of %s" % (created_task.order_type, 'adult')
+            "Error in selecting product: Order type was %s instead of %s" % (created_task.order_type, 'medical')
         )
 
         self.assertEqual(
