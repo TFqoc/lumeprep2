@@ -142,6 +142,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allow_timesheets': True, #Used to keep track of the time a customer spent at each station.
             'allow_timesheet_timer': True, 
             'privacy_visibility': 'followers',
+            'allowed_user_ids': [cls.user_associate.id, cls.user_manager.id, cls.user_district_manager.id],
             'alias_name': 'project+escanaba',
             'blink_threshold': 5,
             #'partner_id': cls.partner_1.id,
