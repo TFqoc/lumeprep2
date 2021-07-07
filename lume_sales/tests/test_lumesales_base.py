@@ -15,8 +15,8 @@ class TestLumeSaleCommon(SavepointCase):
 
         #Here is where each group of users is created as to test permissions. Each group of permissions must be defined using env.res.
 
-        #user_group_associate = cls.env.res('Permissions Group Goes Here')
-        #user_group_manager = cls.env.res('Permissions Group Goes Here')
+        user_group_associate = cls.env.res('lume_sales.group_lume_associate')
+        user_group_manager = cls.env.res('lume_sales.group_lume_manager')
         #user_group_district_manager = cls.env.res('Permissions Group Goes Here')
 
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
@@ -27,7 +27,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'p.z@example.com',
             'signature': 'Pete Zeria',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
+            'groups_id': [(6, 0, [user_group_associate.id])]
         })
 
         # cls.user_luminary = Users.create({
@@ -63,7 +63,7 @@ class TestLumeSaleCommon(SavepointCase):
             'email': 'e.v@example.com',
             'signature': 'Ella Vader',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('project.group_project_user').id])]
+            'groups_id': [(6, 0, [user_group_manager.id])]
         })
 
         cls.user_district_manager = Users.create({
