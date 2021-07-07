@@ -8,4 +8,5 @@ access_project_lume_associate,project.project.lume.associate,project.model_proje
 access_partner_lume_associate,res.partner.lume.associate,base.model_res_partner,lume_sales.group_lume_associate,1,1,1,0
 access_product_lume_associate,product.product.lume.associate,product.model_product_product,lume_sales.group_lume_associate,1,1,1,0
 access_register_lume_associate,pos.config.lume.associate,point_of_sale.model_pos_config,lume_sales.group_lume_associate,1,0,0,0
-access_sales_order_lume_associate,sales.order.lume.associate,sales.model_sales_order,lume_sales.group_lume_associate,1,1,1,0
+access_sale_order_lume_associate,sale.order.lume.associate,sale.model_sale_order,lume_sales.group_lume_associate,1,1,1,0
+access_sale_order_line_lume_associate,sale.order.line.lume.associate,sale.model_sale_order_line,lume_sales.group_lume_associate,1,1,1,1
