@@ -5,6 +5,6 @@ access_lume_note,access_lume_note,model_lume_note,base.group_user,1,1,1,1
 
 access_project_task_lume_associate,project.task.lume.associate,project.model_project_task,lume_sales.group_lume_associate,1,1,1,0
 access_project_lume_associate,project.project.lume.associate,project.model_project_project,lume_sales.group_lume_associate,1,0,0,0
-access_partner_lume_associate,res.partner.lume.associate,res.model_res_partner,lume_sales.group_lume_associate,1,1,1,0
+access_partner_lume_associate,res.partner.lume.associate,base.model_res_partner,lume_sales.group_lume_associate,1,1,1,0
 access_product_lume_associate,product.product.lume.associate,product.model_product_product,lume_sales.group_lume_associate,1,1,1,0
-access_register_lume_associate,pos.config.lume.associate,pos.model_pos_config,lume_sales.group_lume_associate,1,0,0,0
+access_register_lume_associate,pos.config.lume.associate,point_of_sale.model_pos_config,lume_sales.group_lume_associate,1,0,0,0
