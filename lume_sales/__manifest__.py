@@ -45,6 +45,7 @@
         'views/templates.xml',
         'data/data.xml',
         'data/ir_cron_data.xml',
+        'security/lume_sales_security.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
