@@ -30,6 +30,7 @@
 
     # always loaded
     'data': [
+        'security/lume_sales_security.xml',
         'security/ir.model.access.csv',
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
@@ -45,7 +46,6 @@
         'views/templates.xml',
         'data/data.xml',
         'data/ir_cron_data.xml',
-        'security/lume_sales_security.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
