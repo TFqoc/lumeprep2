@@ -104,6 +104,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allow_timesheets': True,
             'allow_timesheet_timer': True,
             'privacy_visibility': 'followers',
+            'allowed_user_ids': [cls.user_associate.id, cls.user_manager.id, cls.user_district_manager.id],
             'alias_name': 'project+peterson',
             'blink_threshold': 5,
             #'partner_id': cls.partner_1.id,
