@@ -2,5 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_message_wizard,access_message_wizard,model_message_wizard,base.group_user,1,1,1,1
 access_note_wizard,access_note_wizard,model_note_wizard,base.group_user,1,1,1,1
 access_lume_note,access_lume_note,model_lume_note,base.group_user,1,1,1,1
-
+access_project_task_lume_associate,project.task.lume.associate,project.model_project_task,lume_sales.group_lume_associate,1,1,1,0
 
