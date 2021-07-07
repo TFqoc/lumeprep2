@@ -15,8 +15,8 @@ class TestLumeSaleCommon(SavepointCase):
 
         #Here is where each group of users is created as to test permissions. Each group of permissions must be defined using env.res.
 
-        user_group_associate = cls.env.res('lume_sales.group_lume_associate')
-        user_group_manager = cls.env.res('lume_sales.group_lume_manager')
+        user_group_associate = cls.env.ref('lume_sales.group_lume_associate')
+        user_group_manager = cls.env.ref('lume_sales.group_lume_manager')
         #user_group_district_manager = cls.env.res('Permissions Group Goes Here')
 
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
