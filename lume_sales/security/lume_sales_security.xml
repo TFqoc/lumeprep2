@@ -12,9 +12,21 @@
             <field name="category_id" ref="lume_sales.module_category_lume"/>
         </record>
 
-        <record id = "group_lume_manager" model = "res.groups">
+        <record id = "group_lume_store_manager" model = "res.groups">
             <field name="name">Store Manager</field>
             <field name="implied_ids" eval="[(4, ref('lume_sales.group_lume_associate'))]"/>
+            <field name="category_id" ref="lume_sales.module_category_lume"/>
+        </record>
+
+        <record id = "group_lume_area_manager" model = "res.groups">
+            <field name="name">Area Manager</field>
+            <field name="implied_ids" eval="[(4, ref('lume_sales.group_lume_associate'))]"/>
+            <field name="category_id" ref="lume_sales.module_category_lume"/>
+        </record>
+
+        <record id = "group_lume_corporate" model = "res.groups">
+            <field name="name">Corporate User</field>
+            <field name="impled_ids" eval="[(4, ref('lume_sales.group_lume_area_manager'))]"/>
             <field name="category_id" ref="lume_sales.module_category_lume"/>
         </record>
     </data>
