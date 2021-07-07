@@ -3,5 +3,5 @@ access_message_wizard,access_message_wizard,model_message_wizard,base.group_user
 access_note_wizard,access_note_wizard,model_note_wizard,base.group_user,1,1,1,1
 access_lume_note,access_lume_note,model_lume_note,base.group_user,1,1,1,1
 
-access_project_task_type_lume_associate,project.task.type.lume.associate,project.model_project_task_type,group_lume_associate,1,1,1,0
+access_project_task_type_lume_associate,project.task.type.lume.associate,project.model_project_task,group_lume_associate,1,1,1,0
 
