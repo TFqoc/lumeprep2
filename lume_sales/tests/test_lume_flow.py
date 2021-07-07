@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 class TestLumeBasicFlows(TestLumeSaleCommon):
 
     def test_flow_rec(self):
-        uid = self.env.ref('base.user_admin').id
+        uid = self.user_associate.id
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         Rec_Order_Task = Task.create({
             'name': 'Rec Order',
