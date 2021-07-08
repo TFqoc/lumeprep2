@@ -147,7 +147,7 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
         product_ids = [line["product_id"] for line in created_task.sales_order.order_line]
 
         self.assertTrue(
-            created_task.sales_order
+            created_task.sales_order,
             "NO SALE ORDER"
         )
 
