@@ -44,7 +44,7 @@ class CouponProgram(models.Model):
         # Remove old links from programs we are no longer stackable with
         # logger.info("Self: %s" % self.id) # Prints as "NewId_4"
         try:
-            selfid = id_from_string(self.id)
+            selfid = self._origin.id# id_from_string(self.id)
         except ValueError as v:
             # If we get a value error then this is being called at a point when there is
             # undefined behavior, such as during a record's creation
