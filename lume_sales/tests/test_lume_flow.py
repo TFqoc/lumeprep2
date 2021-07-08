@@ -146,10 +146,15 @@ class TestLumeBasicFlows(TestLumeSaleCommon):
 
         product_ids = [line["product_id"] for line in created_task.sales_order.order_line]
 
-        # self.assertTrue(
-        #     created_task.sales_order.order_line,
-        #     "Error in Product Catologue: Line was not created."
-        # )
+        self.assertTrue(
+            created_task.sales_order
+            "NO SALE ORDER"
+        )
+
+        self.assertTrue(
+            created_task.sales_order.order_line,
+            "Error in Product Catologue: Line was not created."
+        )
 
         self.assertEqual(
             created_task.sales_order.order_type,
