@@ -155,7 +155,7 @@ class Tasks(models.Model):
             # 'order_type': self.order_type,
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
-            'caregiver_id': self.caregiver_id.id if self.caregiver_d else False,
+            'caregiver_id': self.caregiver_id.id if self.caregiver_id else False,
         })
         self.change_stage(1)
         # Open up the sale order we just created
