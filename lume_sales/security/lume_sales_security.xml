@@ -29,5 +29,13 @@
             <field name="implied_ids" eval="[(4, ref('lume_sales.group_lume_area_manager'))]"/>
             <field name="category_id" ref="lume_sales.module_category_lume"/>
         </record>
+
+        <!-- Menu Permissions -->
+
+        <record model="ir.ui.menu" id="project">
+            <field name="name">Test</field>
+            <field eval="[(6,0,[ref('lume_sales.group_lume_associate')])]" name="groups_id"/>
+        </record>
+
     </data>
 </odoo>
