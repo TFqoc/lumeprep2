@@ -9,7 +9,7 @@
           <header>
             <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
             <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" />
-            <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not context.get('check_in_window',False) and not context.get('has_caregiver',False)" />
+            <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not (context.get('check_in_window',False) and context.get('has_caregiver',False))" />
           </header>
         </xpath>
         <field name="type" position="after">
@@ -115,7 +115,7 @@
           <field name="is_caregiver" string="Caregiver"></field>
           <field name="caregiver_id" attrs="{'invisible':[('is_caregiver','=',True)],'domain':[('is_caregiver','=',True)]}"></field>
           <field name="caregiver_license" string="Caregiver Medical ID" widget="formatted_char" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}"></field>
-          <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}" widget="many2many" context="{'tree_view_ref':'lume_sales.patient_list_view','has_caregiver':True,'project_id':context.get('project_id'),'fulfillment_type':context.get('fulfillment_type')}">
+          <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}" widget="many2many" context="{'tree_view_ref':'lume_sales.patient_list_view','check_in_window':context.get('check_in_window'),'has_caregiver':True,'project_id':context.get('project_id'),'fulfillment_type':context.get('fulfillment_type')}">
             <tree>
               <field name="name"/>
               <field name="medical_id"/>
