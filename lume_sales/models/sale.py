@@ -244,7 +244,7 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if self.order_type != line.product_id.thc_type and line.product_id.thc_type not in [False, 'merch']:
                 raise ValidationError("You can't confirm a cart with both Medical and Recreational products!")
-            if line.lot_id.qty <= 0:
+            if line.lot_id.product_qty <= 0:
                 raise ValidationError("Cannot Confirm order. There is no more available inventory for %s - %s" % (line.product_id.name, line.lot_id.name))
         ret = super(SaleOrder, self).action_confirm()
         if ret and self.task:
