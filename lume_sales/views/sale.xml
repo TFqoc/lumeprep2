@@ -33,10 +33,10 @@
                 </xpath>
                 <field name="date_order" position="after">
                     <field name="fulfillment_type"/>
-                    <span class="o_form_label o_td_label" name="address_name" attrs="{'invisible': [('order_type', '=', 'delivery')]}">
+                    <span class="o_form_label o_td_label" name="address_name" attrs="{'invisible': [('order_type', '!=', 'delivery')]}">
                         <b>Delivery Address</b>
                     </span>
-                    <div class="o_address_format" attrs="{'invisible': [('order_type', '=', 'delivery')]}">
+                    <div class="o_address_format" attrs="{'invisible': [('order_type', '!=', 'delivery')]}">
                         <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('state', '=', 'done')]}"/>
