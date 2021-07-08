@@ -182,12 +182,12 @@ class Partner(models.Model):
             raise ValidationError("The patient's medical id is invalid!")
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
-        project = self.env['project.project'].browse(ctx.get('project_id'))
+        project = self.env['project.project'].browse(ctx['ctx'].get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': self.id,
             'project_id': project.id,
-            'fulfillment_type': ctx['fulfillment_type'],
+            'fulfillment_type': ctx['ctx']['fulfillment_type'],
             # 'order_type': ctx['order_type'],
             'caregiver_id': self.caregiver_id.id,
             'user_id': False,
