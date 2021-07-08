@@ -450,6 +450,9 @@ class SaleLine(models.Model):
         for line in self:
             discounts = line.discount_ids.filtered(lambda l: l.discount_type == 'percentage')
             discount_total = math.prod([d.amount / 100 for d in discounts])
+            # math.prod will return 1 if list is empty (no discounts apply to this line)
+            if discount_total == 1:
+                discount_total = 0
             discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
             discount_flat_total = sum([d.amount for d in discount_flat]) / len(line.order_id.order_line)
             price = (line.price_unit - (discount_flat_total / line.product_uom_qty)) * (1 - discount_total)
