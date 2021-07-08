@@ -178,7 +178,7 @@ class Partner(models.Model):
             raise ValidationError("This patient has been banned and cannot be checked in!")
         if not self.medical_id:
             raise ValidationError("This patient does not have a valid medical ID!")
-        if not self.medical_expiration or self.medical_expiration < datetime.datetime.now():
+        if not self.medical_expiration or self.medical_expiration < datetime.date.today():
             raise ValidationError("The patient's medical id is invalid!")
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
