@@ -179,7 +179,7 @@ class Partner(models.Model):
         if not self.medical_id:
             raise ValidationError("This patient does not have a valid medical ID!")
         if not self.medical_expiration or self.medical_expiration < datetime.date.today():
-            raise ValidationError("The patient's medical id is invalid!")
+            raise ValidationError("The patient's medical id is expired!")
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
