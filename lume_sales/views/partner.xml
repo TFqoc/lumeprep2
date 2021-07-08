@@ -120,6 +120,7 @@
               <field name="medical_id"/>
               <field name="medical_expiration"/>
               <!-- Can put button here to check in a patient -->
+              <button name="check_in_as_patient" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" />
               <control>
                 <create string="Add Patient"/>
               </control>

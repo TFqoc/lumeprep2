@@ -14,8 +14,8 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     # is_medical = fields.Boolean()
-    medical_id = fields.Char()
-    medical_expiration = fields.Date()
+    medical_id = fields.Char(string="Medical ID")
+    medical_expiration = fields.Date(string="Medical Expiration")
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
     is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
@@ -147,6 +147,47 @@ class Partner(models.Model):
             raise ValidationError("This customer is underage!")
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
+        project = self.env['project.project'].browse(ctx.get('project_id'))
+        # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
+        self.env['project.task'].create({
+            'partner_id': self.id,
+            'project_id': project.id,
+            'fulfillment_type': ctx['fulfillment_type'],
+            # 'order_type': ctx['order_type'],
+            'user_id': False,
+            'name': self.pref_name or self.name,
+        })
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "views":[[False, "kanban"]],
+            "name": 'Tasks',
+            "target": 'main',
+            "res_id": project.id,
+            "domain": [('project_id', '=', project.id)],
+            "context": {'default_project_id': project.id},
+        }
+
+    ###########################################################
+    # Called from a button on the contact form
+    # All validation checks should be done in this method
+    ###########################################################
+    def check_in_as_patient(self):
+        # Validation checks
+        if self.is_banned:
+            raise ValidationError("This patient has been banned and cannot be checked in!")
+        if not self.medical_id:
+            raise ValidationError("This patient does not have a valid medical ID!")
+        if not self.medical_expiration or self.medical_expiration < fields.Datetime.now():
+            raise ValidationError("The patient's medical id is invalid!")
+        # if not self.drivers_license_number:
+        #     raise ValidationError("Invalid drivers licence!")
+        # if self.is_expired_dl:
+        #     raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
+        # if (not self.is_over_21 and not self.medical_id) or (self.medical_id and not self.is_expired_medical and not self.is_over_18):
+        #     raise ValidationError("This customer is underage!")
+        ctx = self.env.context
+        _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
