@@ -208,7 +208,10 @@ class Partner(models.Model):
     def name_get(self):
         res = []
         for record in self:
-            name = record.pref_name or record.name
+            if record.pref_name:
+                name = f"{record.first_name} \"{record.pref_name}\" {record.last_name}"
+            else:
+                name = record.name
             res.append((record.id, name))
         return res
 
