@@ -180,12 +180,6 @@ class Partner(models.Model):
             raise ValidationError("This patient does not have a valid medical ID!")
         if not self.medical_expiration or self.medical_expiration < fields.Datetime.now():
             raise ValidationError("The patient's medical id is invalid!")
-        # if not self.drivers_license_number:
-        #     raise ValidationError("Invalid drivers licence!")
-        # if self.is_expired_dl:
-        #     raise ValidationError("This customer has an expired drivers licence! Please update licence information to allow customer to check in.")
-        # if (not self.is_over_21 and not self.medical_id) or (self.medical_id and not self.is_expired_medical and not self.is_over_18):
-        #     raise ValidationError("This customer is underage!")
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
@@ -195,6 +189,7 @@ class Partner(models.Model):
             'project_id': project.id,
             'fulfillment_type': ctx['fulfillment_type'],
             # 'order_type': ctx['order_type'],
+            'caregiver_id': self.caregiver_id.id,
             'user_id': False,
             'name': self.pref_name or self.name,
         })

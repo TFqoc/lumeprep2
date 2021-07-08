@@ -20,6 +20,7 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
+    caregiver_id = fields.Many2one('res.partner')
     # customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
@@ -154,6 +155,7 @@ class Tasks(models.Model):
             # 'order_type': self.order_type,
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
+            'caregiver_id': self.caregiver_id.id if self.caregiver_d else False,
         })
         self.change_stage(1)
         # Open up the sale order we just created

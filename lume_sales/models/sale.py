@@ -11,6 +11,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     task = fields.Many2one(comodel_name="project.task", readonly=True)
+    caregiver_id = fields.Many2one('res.partner')
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # For product validation
     # None state means they haven't selected any medical or adult products yet
