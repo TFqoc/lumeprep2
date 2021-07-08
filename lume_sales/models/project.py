@@ -141,6 +141,8 @@ class Tasks(models.Model):
     def build_cart(self):
         if not self.project_id.warehouse_id:
             raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
+        if not self.project_id.store_pricelist:
+            raise ValidationError("No store type is set for this store! Please set one before continuing.")
         # Reconcile my order_type with customer's order type
 
         self.sales_order = self.env['sale.order'].create({
