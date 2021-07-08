@@ -9,6 +9,7 @@
           <header>
             <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
             <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" />
+            <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not context.get('has_caregiver',False)" />
           </header>
         </xpath>
         <field name="type" position="after">
@@ -17,8 +18,8 @@
         <field name="vat" position="after">
           <!-- <field name="is_medical" string="Is Medical" invisible="1" /> -->
           <!-- <field name="customer_type" string="Customer Type" /> -->
-          <field name="medical_id" string="Medical ID" widget="formatted_char" />
-          <field name="medical_expiration" string="Medical ID Expiration" />
+          <field name="medical_id" string="Medical ID" widget="formatted_char" required="context.get('has_caregiver')"/>
+          <field name="medical_expiration" string="Medical ID Expiration" required="context.get('has_caregiver')"/>
           <field name="date_of_birth" string="DOB" />
           <field name="is_over_21" string="21+" invisible="1" />
           <field name="is_expired_medical" string="Expired Medical" invisible="1" />
@@ -117,10 +118,10 @@
           <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}" widget="many2many" context="{'tree_view_ref':'lume_sales.patient_list_view','has_caregiver':True}">
             <tree>
               <field name="name"/>
-              <field name="medical_id" required="context.get('has_caregiver')"/>
-              <field name="medical_expiration" required="context.get('has_caregiver')"/>
+              <field name="medical_id"/>
+              <field name="medical_expiration"/>
               <!-- Can put button here to check in a patient -->
-              <button name="check_in_as_patient" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" />
+              <!-- <button name="check_in_as_patient" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" /> -->
               <control>
                 <create string="Add Patient"/>
               </control>
