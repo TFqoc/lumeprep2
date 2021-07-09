@@ -429,7 +429,7 @@ class SaleOrder(models.Model):
             for line in order.order_line:
                 for tax in line.tax_id:
                     res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                    res[tax.tax_group_id]['amount'] += line.price_subtotal
+                    res[tax.tax_group_id]['amount'] += line.price_tax
                     tax_key_add_base = tuple([tax.id])
                     if tax_key_add_base not in done_taxes:
                         amount = line.price_subtotal
