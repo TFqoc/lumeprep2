@@ -205,7 +205,7 @@ class SaleOrder(models.Model):
     def _compute_order_type(self):
         for record in self:
             record.order_type = 'none'
-            if self.caregiver_id:
+            if record.caregiver_id:
                 record.order_type = 'caregiver'
             elif self.order_line:
                 for line in self.order_line:
