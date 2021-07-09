@@ -13,3 +13,5 @@ access_sale_order_line_lume_associate,sale.order.line.lume.associate,sale.model_
 access_analytic_line_lume_associate,analytic.line.lume.associate,account.model_account_analytic_line,lume_sales.group_lume_associate,1,0,1,0
 access_transfer_lume_associate,transfer.lume.associate,stock.model_stock_picking,lume_sales.group_lume_associate,1,0,0,0
 access_stock_move_lume_associate,stock.move.lume.associate,stock.model_stock_move,lume_sales.group_lume_associate,1,0,0,0
+
+access_metrc_patient_id_method_lume-associate,metrc.patient.id.method.lume.associate,metrc.model_patient_id_method,lume_sales.group_lume_associate,1,0,0,0
