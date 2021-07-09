@@ -222,6 +222,7 @@ class Partner(models.Model):
             self.update({'name': self.name + ' '})
             self.update({'name': self.name[:len(self.name)-1]})
     
+    # This method turns out to be redundant
     # @api.onchange('patient_ids')
     # def _change_patients(self):
     #     # If patients are removed, then remove them from target
