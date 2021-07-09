@@ -418,6 +418,43 @@ class SaleOrder(models.Model):
             order._create_new_no_code_promo_reward_lines()
             # order._update_existing_reward_lines()
 
+    # Fields not on so lines:  'order_line.tax_base_amount', 'order_line.tax_line_id',
+    @api.depends('order_line.price_subtotal', 'partner_id', 'currency_id')
+    def _compute_taxes_by_group(self):
+        for order in self:
+            res={}
+            done_taxes = set()
+            lang_env = order.with_context(lang=order.partner_id.lang).env
+            # Populate res
+            for line in order:
+                for tax in line.tax_id:
+                    res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                    res[tax.tax_group_id]['amount'] += line.price_subtotal
+                    tax_key_add_base = tuple([tax.id])
+                    if tax_key_add_base not in done_taxes:
+                        amount = line.price_subtotal
+                        res[tax.tax_group_id]['base'] += amount
+                        # The base should be added ONCE
+                        done_taxes.add(tax_key_add_base)
+
+            # At this point we only want to keep the taxes with a zero amount since they do not
+            # generate a tax line.
+            for line in order:
+                for tax in line.tax_id.flatten_taxes_hierarchy():
+                    if tax.tax_group_id not in res:
+                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                        res[tax.tax_group_id]['base'] += line.price_subtotal
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            order.amount_by_group = [(
+                group.name, amounts['amount'],
+                amounts['base'],
+                formatLang(lang_env, amounts['amount'], currency_obj=order.currency_id),
+                formatLang(lang_env, amounts['base'], currency_obj=order.currency_id),
+                len(res),
+                group.id
+            ) for group, amounts in res]
+        pass
+
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -483,43 +520,6 @@ class SaleLine(models.Model):
             })
             if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
                 line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
-    
-    # Fields not on so lines:  'order_line.tax_base_amount', 'order_line.tax_line_id',
-    @api.depends('order_line.price_subtotal', 'partner_id', 'currency_id')
-    def _compute_taxes_by_group(self):
-        for order in self:
-            res={}
-            done_taxes = set()
-            lang_env = order.with_context(lang=order.partner_id.lang).env
-            # Populate res
-            for line in order:
-                for tax in line.tax_id:
-                    res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                    res[tax.tax_group_id]['amount'] += line.price_subtotal
-                    tax_key_add_base = tuple([tax.id])
-                    if tax_key_add_base not in done_taxes:
-                        amount = line.price_subtotal
-                        res[tax.tax_group_id]['base'] += amount
-                        # The base should be added ONCE
-                        done_taxes.add(tax_key_add_base)
-
-            # At this point we only want to keep the taxes with a zero amount since they do not
-            # generate a tax line.
-            for line in order:
-                for tax in line.tax_id.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += line.price_subtotal
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            order.amount_by_group = [(
-                group.name, amounts['amount'],
-                amounts['base'],
-                formatLang(lang_env, amounts['amount'], currency_obj=order.currency_id),
-                formatLang(lang_env, amounts['base'], currency_obj=order.currency_id),
-                len(res),
-                group.id
-            ) for group, amounts in res]
-        pass
 
     # @api.onchange('product_id')
     # def check_order_line(self):
