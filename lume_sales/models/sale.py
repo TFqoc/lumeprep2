@@ -475,6 +475,7 @@ class SaleLine(models.Model):
     lot_id = fields.Many2one('stock.production.lot')
     discount_ids = fields.Many2many('lume.discount', column1='discount_id',column2='line_id')
     is_reward = fields.Boolean(default=False)
+    product_categ_id = fields.Many2one('product.category',related='product_id.categ_id')
 
     @api.onchange('product_uom_qty')
     def ensure_valid_quantity(self):
