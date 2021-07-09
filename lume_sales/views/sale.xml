@@ -91,11 +91,12 @@
                         <field name="invoice_status" invisible="1"/>
                         <field name="qty_invoiced" invisible="1"/>
                         <field name="product_uom" invisible="1"/>
+                        <field name="price_tax" invisible="1"/>
                         <!-- Visible fields -->
                         <field name="product_categ_id"/>
                         <field name="product_id"/>
                         <field name="lot_id" string="Metrc #"/>
-                        <!-- <field name="thc_type" string="Type"/> -->
+                        <field name="thc_type" string="Type"/>
                         <field name="product_uom_qty" decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom': product_uom,'company_id': parent.company_id}"/>
                         <field name="price_unit" attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                         <field name="discount_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -222,8 +223,16 @@
                                         <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped o_section_and_note_list_view" style="table-layout: fixed;">
                                             <thead>
                                                 <tr>
+                                                    <th data-name="product_categ_id" class="o_product_configurator_cell o_column_sortable" tab-index="-1" style="width: 250px;">
+                                                        Category
+                                                        <span class="o_resize" />
+                                                    </th>
                                                     <th data-name="product_id" class="o_product_configurator_cell o_column_sortable" tab-index="-1" style="width: 250px;">
                                                         Product
+                                                        <span class="o_resize" />
+                                                    </th>
+                                                    <th data-name="thc_type" class="o_product_configurator_cell o_column_sortable" tab-index="-1" style="width: 250px;">
+                                                        Type
                                                         <span class="o_resize" />
                                                     </th>
                                                     <th data-name="product_uom_qty" tabindex="-1" class="o_column_sortable" style="width: 95px;">
@@ -232,6 +241,10 @@
                                                     </th>
                                                     <th data-name="price_unit" tabindex="-1" class="o_column_sortable " aria-sort="ascending" data-original-title="" title="" style="width: 96px;">
                                                         Unit Price
+                                                        <span class="o_resize" />
+                                                    </th>
+                                                    <th data-name="discount_ids" class="o_product_configurator_cell o_column_sortable" tab-index="-1" style="width: 250px;">
+                                                        Discounts
                                                         <span class="o_resize" />
                                                     </th>
                                                     <th data-name="price_subtotal" class="o_monetary_cell o_column_sortable " tabindex="-1" data-original-title="" title="" style="width: 110px;">
@@ -244,7 +257,13 @@
                                                 <t t-foreach="record.order_line.raw_value" t-as="o">
                                                     <tr>
                                                         <td>
+                                                            <t t-esc="o.product_categ_id"/>
+                                                        </td>
+                                                        <td>
                                                             <t t-esc="o.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="o.thc_type"/>
                                                         </td>
                                                         <td>
                                                             <t t-esc="o.product_uom_qty" />
@@ -257,6 +276,9 @@
                                                         <!-- <td>0</td>
                                                         <td>0</td>
                                                         <td>0</td> -->
+                                                        <td>
+                                                            <t t-esc="o.discount_ids"/>
+                                                        </td>
                                                         <td>
                                                             <t t-set="subtotal" t-value="window.parseFloat(o.price_subtotal).toFixed(2)" />
                                                             $
