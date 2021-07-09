@@ -29,6 +29,9 @@ odoo.define('timer.live_timer', function (require) {
          */
         _render: function () {
             this._super.apply(this, arguments);
+            if (!this.flash){
+                this.$el.css("float", "right");
+            }
             this._startTimeCounter();
         },
         /**
