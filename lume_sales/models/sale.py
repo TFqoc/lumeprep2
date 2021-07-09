@@ -439,7 +439,7 @@ class SaleOrder(models.Model):
 
             # At this point we only want to keep the taxes with a zero amount since they do not
             # generate a tax line.
-            for line in order:
+            for line in order.order_line:
                 for tax in line.tax_id.flatten_taxes_hierarchy():
                     if tax.tax_group_id not in res:
                         res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
