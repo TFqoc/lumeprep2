@@ -57,10 +57,28 @@
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='o_kanban_record_top']/div)" position="after">
             <!-- Replace user avatar for customer "partner" avatar -->
-            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
+            <t t-if="record.caregiver_id.raw_value">
+              <img t-att-src="kanban_image('res.partner', 'image_128', record.caregiver_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
+            </t>
+            <t t-else="">
+              <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
+            </t>
             <img t-if="record.order_type.raw_value == 'medical'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32"/>
             <img t-if="record.order_type.raw_value == 'adult'" src="/lume_sales/static/src/image/heart-128.png" alt="heart" width="32" height="32"/>
             <img t-if="record.order_type.raw_value == 'caregiver'" src="/lume_sales/static/src/image/blue_cross_white_blue-128.png" alt="cross" width="32" height="32"/>
+
+            <!-- This Version can be used if they need the icons below the profile picture -->
+            <!-- <span style="display: flex; flex-direction: column; align-items: center;">
+              <t t-if="record.caregiver_id.raw_value">
+                <img t-att-src="kanban_image('res.partner', 'image_128', record.caregiver_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
+              </t>
+              <t t-else="">
+                <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" width="64" height="64" style="border-radius: 50%; margin-left: 6px; position: relative; top:auto; right:auto; display: inline-block;" class="o_m2o_avatar" alt="Customer Photo"/>
+              </t>
+              <img t-if="record.order_type.raw_value == 'medical'" src="/lume_sales/static/src/image/leaf-icon-128.png" alt="leaf" width="32" height="32" style="margin-top: 3px;"/>
+              <img t-if="record.order_type.raw_value == 'adult'" src="/lume_sales/static/src/image/heart-128.png" alt="heart" width="32" height="32" style="margin-top: 3px;"/>
+              <img t-if="record.order_type.raw_value == 'caregiver'" src="/lume_sales/static/src/image/blue_cross_white_blue-128.png" alt="cross" width="32" height="32" style="margin-top: 3px;"/>
+            </span> -->
           </xpath>
           <xpath expr="(/kanban/templates/t/div//div[@class='oe_kanban_bottom_right']/field)" position="replace">
             <!-- Replace user avatar for customer "partner" avatar -->
@@ -74,6 +92,8 @@
           </xpath>
           <xpath expr="//progressbar" position="replace">
             <progressbar field="fulfillment_type" colors="{&quot;store&quot;: &quot;store&quot;, &quot;online&quot;: &quot;online&quot;, &quot;delivery&quot;: &quot;delivery&quot;, &quot;curb&quot;: &quot;curb&quot;}"/>
+          </xpath>
+          <xpath expr="//div[hasclass('oe_kanban_bottom_right')]/field[@name='user_id']" position="replace">
           </xpath>
         </field>
       </record>
