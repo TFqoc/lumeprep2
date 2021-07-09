@@ -29,7 +29,7 @@
           <xpath expr="//div[@class='o_kanban_record_headings']/br" position="replace"/>
           <xpath expr="//div[@class='o_kanban_record_headings']/*[3]" position="replace">
             <span style="font-weight: bold;">
-                <t t-if="record.caregiver_id">
+                <t t-if="record.caregiver_id.raw_value">
                   <field name="caregiver_id"/>
                   <br/>
                 </t>

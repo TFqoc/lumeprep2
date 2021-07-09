@@ -119,9 +119,11 @@ class SaleOrder(models.Model):
         ids += self.process_lot_group(group, batch_setting)
         # End logic
         domain = [('id','in',ids)]
-        if not self.partner_id.can_purchase_medical:
+        if self.caregiver_id:
+            domain.append(('thc_type','!=','adult'))
+        elif not self.partner_id.can_purchase_medical:
             domain.append(('thc_type','!=','medical'))
-        if not self.partner_id.is_over_21:
+        elif not self.partner_id.is_over_21:
             domain.append(('thc_type','!=','adult'))
         logger.info("DOMAIN: %s" % domain)
         # Grab the first sale order line that isn't a merch product
@@ -203,7 +205,9 @@ class SaleOrder(models.Model):
     def _compute_order_type(self):
         for record in self:
             record.order_type = 'none'
-            if self.order_line:
+            if self.caregiver_id:
+                record.order_type = 'caregiver'
+            elif self.order_line:
                 for line in self.order_line:
                     type_order = line.product_id.thc_type
                     if type_order in ['medical','adult']:
