@@ -257,13 +257,17 @@
                                                 <t t-foreach="record.order_line.raw_value" t-as="o">
                                                     <tr>
                                                         <td>
-                                                            <t t-esc="o.product_categ_id"/>
+                                                            <t t-if="o.product_categ_id">
+                                                                <t t-esc="o.product_categ_id.raw_value"/>
+                                                            </t>
                                                         </td>
                                                         <td>
                                                             <t t-esc="o.name" />
                                                         </td>
                                                         <td>
-                                                            <t t-esc="o.thc_type"/>
+                                                            <t t-if="o.thc_type">
+                                                                <t t-esc="o.thc_type.raw_value"/>
+                                                              </t>
                                                         </td>
                                                         <td>
                                                             <t t-esc="o.product_uom_qty" />
