@@ -465,7 +465,7 @@ class SaleOrder(models.Model):
                 len(res),
                 group.id
             ) for group, amounts in res]
-            logger.info("Group info: %s" % order.amount_by_group)
+            logger.info("Tax Group info: %s" % order.amount_by_group)
         pass
 
 class SaleLine(models.Model):

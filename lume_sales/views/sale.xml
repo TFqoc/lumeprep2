@@ -24,13 +24,6 @@
                 <field name="partner_id" position="after">
                     <field name="order_type" readonly="1" invisible="1" />
                 </field>
-                <xpath expr="//tree/field[@name='product_id']" position="replace">
-                    <field name="order_type" invisible="1"></field>
-                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True,'no_create':True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('thc_type','in',['medical','adult','merch'] if order_type == 'none' else [order_type, 'merch']),('type','!=','service')]" widget="product_configurator" />
-                </xpath>
-                <xpath expr="//tree/field[@name='product_uom_qty']" position="attributes">
-                    <attribute name="widget">qty_widget</attribute>
-                </xpath>
                 <field name="date_order" position="after">
                     <field name="fulfillment_type"/>
                     <span class="o_form_label o_td_label" name="address_name" attrs="{'invisible': [('order_type', '!=', 'delivery')]}">
@@ -65,7 +58,14 @@
                     <attribute name="invisible">1</attribute>
                 </field>
                 <xpath expr="//label[@for='pricelist_id']" position="replace"/>
-                <xpath expr="//tree/field[@name='sequence']" position="replace">
+                <!-- <xpath expr="//tree/field[@name='product_id']" position="replace">
+                    <field name="order_type" invisible="1"></field>
+                    <field name="product_id" attrs="{'readonly': [('product_updatable', '=', False)],'required': [('display_type', '=', False)],}" options="{'no_open': True,'no_create':True}" force_save="1" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom':product_uom,'company_id': parent.company_id,'default_lst_price': price_unit,'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id),('thc_type','in',['medical','adult','merch'] if order_type == 'none' else [order_type, 'merch']),('type','!=','service')]" widget="product_configurator" />
+                </xpath>
+                <xpath expr="//tree/field[@name='product_uom_qty']" position="attributes">
+                    <attribute name="widget">qty_widget</attribute>
+                </xpath> -->
+                <!-- <xpath expr="//tree/field[@name='sequence']" position="replace">
                     <field name="sequence" invisible="1"/>
                 </xpath>
                 <xpath expr="//tree/field[@name='product_uom']" position="replace">
@@ -82,7 +82,27 @@
                     <attribute name="create">false</attribute>
                     <attribute name="editable"/>
                     <attribute name="edit">false</attribute>
+                </xpath> -->
+                <!-- Sale Line Updates -->
+                <xpath expr="//tree" position="replace">
+                    <tree create="0" edit="false" editable="">
+                        <!-- Invisible fields -->
+                        <field name="display_type" invisible="1"/>
+                        <field name="invoice_status" invisible="1"/>
+                        <field name="qty_invoiced" invisible="1"/>
+                        <!-- Visible fields -->
+                        <field name="category_id"/>
+                        <field name="product_id"/>
+                        <field name="lot_id" string="Metrc #"/>
+                        <!-- <field name="thc_type" string="Type"/> -->
+                        <field name="product_uom_qty" decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')" context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,'pricelist': parent.pricelist_id,'uom': product_uom,'company_id': parent.company_id}"/>
+                        <field name="price_unit" attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                        <field name="discount_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}" optional="show"/>
+                        <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
+                    </tree>
                 </xpath>
+
                 <xpath expr="(//header/button[@name='action_confirm'])[2]" position="replace">
                 </xpath>
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
@@ -122,6 +142,9 @@
                 <!-- Tax explanation -->
                 <field name="amount_untaxed" position="after">
                     <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
+                </field>
+                <field name="amount_tax" position="attributes">
+                    <attribute name="string">Total Taxes: </attribute>
                 </field>
             </field>
         </record>
