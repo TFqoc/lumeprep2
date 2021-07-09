@@ -429,7 +429,19 @@ class SaleOrder(models.Model):
             for line in order.order_line:
                 for tax in line.tax_id:
                     res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                    res[tax.tax_group_id]['amount'] += line.price_tax
+
+                    data = tax.compute_all(line.price_subtotal,line.currency_id,1)
+                    price_tax = sum(t.get('amount',0.0) for t in data.get('taxes', []))
+
+                    res[tax.tax_group_id]['amount'] += price_tax
+                    
+                    # taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+                    # line.update({
+                    #     'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                    #     'price_total': taxes['total_included'],
+                    #     'price_subtotal': taxes['total_excluded'],
+                    # })
+
                     tax_key_add_base = tuple([tax.id])
                     if tax_key_add_base not in done_taxes:
                         amount = line.price_subtotal
@@ -439,11 +451,11 @@ class SaleOrder(models.Model):
 
             # At this point we only want to keep the taxes with a zero amount since they do not
             # generate a tax line.
-            for line in order.order_line:
-                for tax in line.tax_id.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += line.price_subtotal
+            # for line in order.order_line:
+            #     for tax in line.tax_id.flatten_taxes_hierarchy():
+            #         if tax.tax_group_id not in res:
+            #             res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+            #             res[tax.tax_group_id]['base'] += line.price_subtotal
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             order.amount_by_group = [(
                 group.name, amounts['amount'],
