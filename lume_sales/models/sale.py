@@ -426,7 +426,7 @@ class SaleOrder(models.Model):
             done_taxes = set()
             lang_env = order.with_context(lang=order.partner_id.lang).env
             # Populate res
-            for line in order:
+            for line in order.order_line:
                 for tax in line.tax_id:
                     res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
                     res[tax.tax_group_id]['amount'] += line.price_subtotal
