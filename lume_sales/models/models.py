@@ -222,14 +222,14 @@ class Partner(models.Model):
             self.update({'name': self.name + ' '})
             self.update({'name': self.name[:len(self.name)-1]})
     
-    @api.onchange('patient_ids')
-    def _change_patients(self):
-        # If patients are removed, then remove them from target
-        for r in self._origin.patient_ids - self.patient_ids:
-            r.caregiver_id = False
-        # If patients were added, then add them
-        for r in self.patient_ids - self._origin.patient_ids:
-            r.caregiver_id = self._origin.id
+    # @api.onchange('patient_ids')
+    # def _change_patients(self):
+    #     # If patients are removed, then remove them from target
+    #     for r in self._origin.patient_ids - self.patient_ids:
+    #         r.caregiver_id = False
+    #     # If patients were added, then add them
+    #     for r in self.patient_ids - self._origin.patient_ids:
+    #         r.caregiver_id = self._origin.id
 
     def verify_address(self):
         pass
