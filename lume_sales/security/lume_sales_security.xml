@@ -8,7 +8,7 @@
 
         <record id = "group_lume_associate" model = "res.groups">
             <field name="name">Associate</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('project.group_project_user')), (4, ref('sales_team.group_sale_salesman')), (4, ref('point_of_sale.group_pos_user')), (4, ref('stock.group_stock_user')),]"/>
             <field name="category_id" ref="lume_sales.module_category_lume"/>
         </record>
 
@@ -32,10 +32,10 @@
 
         <!-- Menu Permissions -->
 
-        <record model="ir.ui.menu" id="project">
-            <field name="name">Test</field>
+        <!-- <record model="ir.ui.menu" id="project.project">
+            <field name="name">Project</field>
             <field eval="[(6,0,[ref('lume_sales.group_lume_associate')])]" name="groups_id"/>
-        </record>
+        </record> -->
 
     </data>
 </odoo>
