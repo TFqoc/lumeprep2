@@ -119,6 +119,10 @@
                     <field name="threshold3" invisible="1"/>
                     <field name="timer_start" widget="so_timer" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
                 </field>
+                <!-- Tax explanation -->
+                <field name="amount_untaxed" position="after">
+                    <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
+                </field>
             </field>
         </record>
         <!-- Sales Order History Kanban View -->
