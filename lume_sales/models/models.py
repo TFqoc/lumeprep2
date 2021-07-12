@@ -262,7 +262,7 @@ class User(models.Model):
 
     #Exists as a list of object references for domain creation.
 
-    permitted_stores = fields.Many2many(comodel_name='project.project',computed='_compute_permitted_stores',store= False)
+    permitted_stores = fields.Many2many(comodel_name='project.project',compute='_compute_permitted_stores',store= False)
 
     @api.depends('allowed_internal_user_ids')
     def _compute_permitted_stores(self):
