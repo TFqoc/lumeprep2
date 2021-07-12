@@ -14,8 +14,8 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     # is_medical = fields.Boolean()
-    medical_id = fields.Char()
-    medical_expiration = fields.Date()
+    medical_id = fields.Char(string="Medical ID")
+    medical_expiration = fields.Date(string="Medical Expiration")
     date_of_birth = fields.Date()
     is_over_21 = fields.Boolean(compute='_compute_age', search='_search_is_over_21')
     is_over_18 = fields.Boolean(compute='_compute_age', search='_search_is_over_18')
@@ -27,6 +27,11 @@ class Partner(models.Model):
     pref_name = fields.Char()
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+
+    first_name = fields.Char()
+    middle_name = fields.Char()
+    last_name = fields.Char()
+    full_name = fields.Char(compute="_compute_full_name")
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
@@ -66,7 +71,7 @@ class Partner(models.Model):
             if record.medical_expiration:
                 record.is_expired_medical = record.medical_expiration < datetime.date.today() and record.medical_id   
             else:
-                record.is_expired_medical = False or record.medical_id != False
+                record.is_expired_medical = record.medical_id != False
 
     @api.depends('drivers_license_expiration')
     def _compute_expired_dl(self):
@@ -109,6 +114,11 @@ class Partner(models.Model):
         for record in self:
             record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.is_over_18
     
+    @api.depends('first_name','middle_name','last_name')
+    def _compute_full_name(self):
+        for record in self:
+            record.full_name = ' '.join([record.first_name, record.middle_name, record.last_name])
+
     def warn(self):
         self.warnings += 1
 
@@ -157,6 +167,70 @@ class Partner(models.Model):
             "domain": [('project_id', '=', project.id)],
             "context": {'default_project_id': project.id},
         }
+
+    ###########################################################
+    # Called from a button on the contact form
+    # All validation checks should be done in this method
+    ###########################################################
+    def check_in_as_patient(self):
+        # Validation checks
+        if self.is_banned:
+            raise ValidationError("This patient has been banned and cannot be checked in!")
+        if not self.medical_id:
+            raise ValidationError("This patient does not have a valid medical ID!")
+        if not self.medical_expiration or self.medical_expiration < datetime.date.today():
+            raise ValidationError("The patient's medical id is expired!")
+        ctx = self.env.context
+        _logger.info("CTX: " + str(ctx))
+        project = self.env['project.project'].browse(ctx.get('project_id'))
+        # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
+        self.env['project.task'].create({
+            'partner_id': self.id,
+            'project_id': project.id,
+            'fulfillment_type': ctx['fulfillment_type'],
+            # 'order_type': ctx['order_type'],
+            'caregiver_id': self.caregiver_id.id,
+            'user_id': False,
+            'name': self.pref_name or self.name,
+        })
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "views":[[False, "kanban"]],
+            "name": 'Tasks',
+            "target": 'main',
+            "res_id": project.id,
+            "domain": [('project_id', '=', project.id)],
+            "context": {'default_project_id': project.id},
+        }
+    
+    # Override
+    def name_get(self):
+        res = []
+        for record in self:
+            if record.pref_name:
+                name = f"{record.first_name} \"{record.pref_name}\" {record.last_name}"
+            else:
+                name = record.name
+            res.append((record.id, name))
+        return res
+
+    @api.onchange('pref_name','first_name','middle_name','last_name')
+    def _change_pref_name(self):
+        if self.name:
+            # This is to rewrite the name stored as a pair in the db itself
+            self.update({'name': self.name + ' '})
+            self.update({'name': self.name[:len(self.name)-1]})
+    
+    # This method turns out to be redundant
+    # @api.onchange('patient_ids')
+    # def _change_patients(self):
+    #     # If patients are removed, then remove them from target
+    #     for r in self._origin.patient_ids - self.patient_ids:
+    #         r.caregiver_id = False
+    #     # If patients were added, then add them
+    #     for r in self.patient_ids - self._origin.patient_ids:
+    #         r.caregiver_id = self._origin.id
 
     def verify_address(self):
         pass

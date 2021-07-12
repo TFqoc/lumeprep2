@@ -14,3 +14,6 @@ access_analytic_line_lume_associate,analytic.line.lume.associate,account.model_a
 access_transfer_lume_associate,transfer.lume.associate,stock.model_stock_picking,lume_sales.group_lume_associate,1,0,0,0
 access_stock_move_lume_associate,stock.move.lume.associate,stock.model_stock_move,lume_sales.group_lume_associate,1,0,0,0
 
+access_lume_weekday,access_lume_weekday,model_lume_weekday,base.group_user,1,0,0,0
+access_lume_discount,access_lume_discount,model_lume_discount,base.group_user,1,0,0,0
+access_sale_order_cancel_reason,access_sale_order_cancel_reason,model_sale_order_cancel_reason,base.group_user,1,1,1,1

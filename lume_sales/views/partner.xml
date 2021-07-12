@@ -8,7 +8,8 @@
         <xpath expr="//form//sheet" position="before">
           <header>
             <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
-            <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" />
+            <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False) or context.get('has_caregiver',False)" />
+            <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not (context.get('check_in_window',False) and context.get('has_caregiver',False))" />
           </header>
         </xpath>
         <field name="type" position="after">
@@ -17,8 +18,8 @@
         <field name="vat" position="after">
           <!-- <field name="is_medical" string="Is Medical" invisible="1" /> -->
           <!-- <field name="customer_type" string="Customer Type" /> -->
-          <field name="medical_id" string="MMM ID" widget="formatted_char" />
-          <field name="medical_expiration" string="MM Exp" />
+          <field name="medical_id" string="Medical ID" widget="formatted_char" required="context.get('has_caregiver')"/>
+          <field name="medical_expiration" string="Medical ID Expiration" required="context.get('has_caregiver')"/>
           <field name="date_of_birth" string="DOB" />
           <field name="is_over_21" string="21+" invisible="1" />
           <field name="is_expired_medical" string="Expired Medical" invisible="1" />
@@ -114,10 +115,17 @@
           <field name="is_caregiver" string="Caregiver"></field>
           <field name="caregiver_id" attrs="{'invisible':[('is_caregiver','=',True)],'domain':[('is_caregiver','=',True)]}"></field>
           <field name="caregiver_license" string="Caregiver Medical ID" widget="formatted_char" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}"></field>
-          <field name="patient_ids" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}">
-            <tree create="0" delete="0" editable="bottom">
-              <field name="name"></field>
-              <field name="phone"></field>
+          <field name="patient_ids" domain="[('is_caregiver','=',False)]" attrs="{'invisible':[('is_caregiver','=',False)],'required':[('is_caregiver','=',True)]}" widget="many2many" context="{'tree_view_ref':'lume_sales.patient_list_view','check_in_window':context.get('check_in_window'),'has_caregiver':True,'project_id':context.get('project_id'),'fulfillment_type':context.get('fulfillment_type')}">
+            <tree>
+              <field name="name"/>
+              <field name="medical_id"/>
+              <field name="medical_expiration"/>
+              <!-- <field name="caregiver_id"/> -->
+              <!-- Can put button here to check in a patient -->
+              <!-- <button name="check_in_as_patient" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False)" /> -->
+              <control>
+                <create string="Add Patient"/>
+              </control>
             </tree>
           </field>
         </field>
@@ -132,7 +140,44 @@
         <field name="phone" position="attributes">
           <attribute name="required">1</attribute>
         </field>
+        <xpath expr="//span[@name='address_name']" position="replace">
+          <span class="o_form_label o_td_label" name="address_name">
+            <b>Address</b>
+          </span>
+        </xpath>
       </field>
+    </record>
+
+    <record id="patient_list_view"  model="ir.ui.view">
+      <field name="name">lume_sales.patient</field>
+      <field name="model">res.partner</field>
+      <!-- <field name="inherit_id" ref="base.view_partner_form" /> -->
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="medical_id"/>
+          <field name="medical_expiration"/>
+          <field name="caregiver_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Partner search view -->
+    <record id="lume_partner_search" model="ir.ui.view">
+      <field name="active" eval="True"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//search[1]/field[@name='name']" position="after">
+            <field name="medical_id"/>
+          </xpath>
+        </data>
+      </field>
+      <field name="inherit_id" ref="base.view_res_partner_filter"/>
+      <field name="mode">extension</field>
+      <field name="model">res.partner</field>
+      <field name="name">lume.partner.search</field>
+      <field name="priority">99</field>
+      <field name="type">search</field>
     </record>
   </data>
 </odoo>

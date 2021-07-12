@@ -1,6 +1,6 @@
 <odoo>
     <data>
-    <!-- Material kanban -->
+    <!-- Product Catalog -->
     <record id="product_product_kanban_catalog" model="ir.ui.view">
         <field name="name">product.template.kanban.catalog</field>
         <field name="model">product.product</field>
@@ -13,10 +13,11 @@
                 <field name="uom_id"/>
                 <field name="thc_type"/>
                 <field name="categ_id"/>
-                <field name="quantity_at_warehouses"/>
+                <field name="quantity_at_store"/>
+                <field name="is_tiered"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + ''] == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}" t-attf-data-qty="{{JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']}}">
+                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{record.quantity_at_store.raw_value == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_type.raw_value}}" t-attf-data-qty="{{record.quantity_at_store.raw_value}}">
                             <button class="o_kanban_image" style="z-index: 50;border: none;padding: 0px;background-color: transparent;">
                                 <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </button>
@@ -32,12 +33,13 @@
                                             <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                                         </div>
                                         <ul>
-                                            <li><strong>Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <li><strong>Price: <field t-if="!record.is_tiered.raw_value" name="pricelist_price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
                                             <field name="currency_id" invisible="True"/>
                                             <li><strong>On hand: 
-                                                <t t-esc="JSON.parse(record.quantity_at_warehouses.raw_value)[context.warehouse_id + '']"/>
+                                                <t t-esc="record.quantity_at_store.raw_value"/>
                                                 <!-- <field name="qty_available"/>  -->
                                                 <field name="uom_id"/></strong></li>
+                                            <!-- <li t-if="record.is_tiered.raw_value"><strong>Tier: </strong><field name="tier"></field></li> -->
                                             <li><strong><field name="thc_type"/></strong></li>
                                             <li>
                                                 <strong>THC: 
@@ -133,5 +135,111 @@
         <field name="priority">99</field>
         <field name="type">search</field>
       </record>
+
+      <!-- Stock Lot Catalog -->
+      <record id="stock_log_kanban_catalog" model="ir.ui.view">
+        <field name="name">stock.lot.kanban.catalog</field>
+        <field name="model">stock.production.lot</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <kanban edit="0" create="0" class="o_kanban_mobile o_fsm_material_kanban" js_class="lpc_product_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="thc_percent"/>
+                <field name="thc_mg"/>
+                <!-- <field name="cbd_percent"/>
+                <field name="cbd_mg"/> -->
+                <!-- <field name="tier"/> Eventually Keyur will add this field in metrc --> 
+                <field name="product_id"/>
+                <field name="lpc_quantity"/>
+                <field name="stock_at_store"/>
+                <!-- <field name="is_tiered"/> Will be added by Keyur -->
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{record.stock_at_store.raw_value == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_percent.raw_value}}" t-attf-data-qty="{{record.stock_at_store.raw_value}}">
+                            <button class="o_kanban_image" style="z-index: 50;border: none;padding: 0px;background-color: transparent;">
+                                <img t-att-src="kanban_image('stock.production.lot', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
+                            </button>
+                            <div class="oe_kanban_details p-2 d-flex">
+                                <div class="o_kanban_record_top w-100 " style="justify-content: space-between;">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <div>
+                                                <strong><span><t t-esc="record.product_id.value"/> - <t t-esc="record.name.value.substring(record.name.value.length - 4)"/></span></strong>
+                                            </div>
+                                        </strong>
+                                        <div class="o_kanban_tags_section">
+                                            <!-- <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/> -->
+                                        </div>
+                                        <ul>
+                                            <li><strong>Brand: <field name="brand"></field></strong></li>
+                                            <!-- Description goes here -->
+                                            <li><strong><field name="thc_type"/></strong></li>
+                                            <li><strong>Price: <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"></field></strong></li>
+                                            <field name="currency_id" invisible="True"/>
+                                            <li><strong>ATS: 
+                                                <t t-esc="record.stock_at_store.raw_value"/>
+                                                <field name="product_uom_id"/></strong></li>
+                                            <!-- <li><strong>Tier: </strong><field name="tier"></field></li> -->
+                                            <li>
+                                                <t t-if="record.thc_mg.raw_value > 0">
+                                                    <strong>THC: <field name="thc_mg"/>mg</strong>
+                                                </t>
+                                                <t t-elif="record.thc_percent.raw_value > 0">
+                                                    <strong>THC: <field name="thc_percent"/>%</strong>
+                                                </t>
+                                            </li>
+                                            <!-- <li>
+                                                <t t-if="record.cbd_mg.raw_value > 0">
+                                                    <strong>CBD: <field name="cbd_mg"/>mg</strong>
+                                                </t>
+                                                <t t-elif="record.cbd_percent.raw_value > 0">
+                                                    <strong>CBD: <field name="cbd_percent"/>%</strong>
+                                                </t>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                    <!-- CLEAN ME: buttons should be part of the field widget; style should not be inlined -->
+                                    <div class="h-100 d-flex"
+                                        style="z-index:1;align-items: center;">
+                                        <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_remove_quantity" onclick="update_data()">
+                                            <span style="font-size:1.5rem;">-</span>
+                                        </button>
+                                        <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
+    
+                                        <field name="lpc_quantity" widget="lpcProductQuantity"/>
+    
+                                        <button t-attf-class="btn p-0 o_qty_button {{record.lpc_quantity.raw_value != 0 ? 'btn-primary' : 'btn-light text-muted'}}" 
+                                                invisible="context.get('hide_qty_buttons')" type="object" name="lpc_add_quantity" onclick="update_data()">
+                                        <span style="font-size:1.5rem;">+</span></button>
+                                        <div class="p-0 oe_inline d-inline-block o_qty_button" invisible="not context.get('hide_qty_buttons')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="object" class="col-12 h-100 w-100 o_button_invisible" name="lpc_add_quantity" onclick="update_data()" invisible="context.get('hide_qty_buttons')"/>
+                        </div>
+                    </t>
+                </templates>
+                <button string="Done" special="cancel"/>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Side Searchbar for Lot Catalog -->
+    <record id="category_grouping_search" model="ir.ui.view">
+        <field name="name">Catagory Grouping</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <searchpanel>
+                    <field name="categ_id"/>
+                    <field name="effect"/>
+                    <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
+                </searchpanel>
+            </field>
+        </field>
+    </record>
     </data>
 </odoo>

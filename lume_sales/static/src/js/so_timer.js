@@ -37,7 +37,7 @@ odoo.define('lume_sales.so_timer', function (require) {
          * @private
          */
         _startTimeCounter: async function () {
-            if (this.record.data.timer_start) {
+            if (this.record.data.timer_start && this.record.data.threshold1) {
                 const serverTime = await this._getServerTime();
                 this.time = Timer.createTimer(0, this.record.data.timer_start, serverTime);
                 this.$el.text(this.time.toString());
@@ -61,6 +61,9 @@ odoo.define('lume_sales.so_timer', function (require) {
                 }, 1000);
             } else if (!this.record.data.timer_pause){
                 clearInterval(this.timer);
+            }
+            else{
+                this.$el.text('');
             }
         },
         _getServerTime: function () {

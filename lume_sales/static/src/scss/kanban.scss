@@ -1,14 +1,14 @@
 .bg-curb-full{
-    background-color: firebrick;
-}
-.bg-online-full{
     background-color: goldenrod;
 }
+.bg-online-full{
+    background-color: firebrick;
+}
 .bg-delivery-full{
-    background-color: mediumseagreen;
+    background-color: forestgreen;
 }
 .bg-store-full{
-    background-color: steelblue;
+    background-color: darkorchid;
 }
 
 .o_kanban_view .o_kanban_group {
@@ -17,10 +17,10 @@
     // @include o-kanban-css-filter(danger, theme-color('danger'));
     // @include o-kanban-css-filter(muted, theme-color('dark'));
 
-    @include o-kanban-css-filter(store, steelblue);
-    @include o-kanban-css-filter(online, goldenrod);
-    @include o-kanban-css-filter(delivery, mediumseagreen);
-    @include o-kanban-css-filter(curb, firebrick);
+    @include o-kanban-css-filter(store, darkorchid);
+    @include o-kanban-css-filter(online, firebrick);
+    @include o-kanban-css-filter(delivery, forestgreen);
+    @include o-kanban-css-filter(curb, goldenrod);
 
     // &.o_kanban_group_show {
     //     display: flex;

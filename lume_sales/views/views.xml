@@ -73,6 +73,7 @@
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
           <field name="warehouse_id"/>
+          <field name="store_pricelist"/>
           <field name="blink_threshold"/>
           <field name="so_threshold1"/>
           <field name="so_threshold2"/>
@@ -182,12 +183,23 @@
         <field name="barcode" position="after">
           <field name="brand" string="Brand"/>
           <field name="thc_type" string="Type" required="1" />
-          <field name="thc" string="THC"></field>
+          <!-- <field name="thc" string="THC"></field> -->
           <field name="effect" string="Effect"/>
         </field>
       </field>
     </record>
 
+    <!-- Product Product Additions -->
+    <record id="product_product_easy_inherit" model="ir.ui.view">
+      <field name="name">product.product.form</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+      <field name="arch" type="xml">
+        <field name="barcode" position="after">
+          <field name="thc" string="THC"/>
+        </field>
+      </field>
+    </record>
       <!-- Adds filter domain for Project window -->
       <!-- <record id="project.open_view_project_all" model="ir.actions.act_window">
         <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field>
@@ -226,6 +238,11 @@
           </style> 
           </body>
           </field>
+        </record>
+
+        <record id="project.menu_main_pm" model="ir.ui.menu">
+          <field name="web_icon">lume_sales,static/description/icon.png</field>
+          <field name="name">Lume Store</field>
         </record>
   </data>
 </odoo>

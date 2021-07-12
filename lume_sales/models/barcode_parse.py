@@ -18,7 +18,10 @@ def parse_code(code):
     fname = dlstring[3].capitalize()
     lname = dlstring[2].capitalize()
     mname = dlstring[4].capitalize()
-    data['name'] = "%s %s %s" % (fname, mname, lname)
+    data['full_name'] = " ".join([fname, mname, lname])
+    data['first_name'] = fname
+    data['middle_name'] = mname
+    data['last_name'] = lname
 
     words = dlstring[10].split(' ')
     street = ""
@@ -70,7 +73,10 @@ def parse_MI(code):
     fname = fname.capitalize()
     mname = mname.capitalize()
     lname = dlstring[2].capitalize()
-    data['name'] = "%s %s %s" % (fname, mname, lname)
+    data['full_name'] = " ".join([fname, mname, lname])
+    data['first_name'] = fname
+    data['middle_name'] = mname
+    data['last_name'] = lname
 
     words = dlstring[9].split(' ')
     street = ""

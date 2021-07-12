@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<templates>
+    <t t-name="LumeTaxGroupKanbanTemplate">
+                <t t-foreach="lines" t-as="line">
+                    <tr>
+                        <td style="padding-right: 20px;">
+                            <label class="o_form_label" t-esc="line[0]"/>
+                        </td>
+                        <!-- <td>
+                            <field name="amount_untaxed" widget="monetary" />
+                        </td> -->
+                        <!--  -->
+                        <!-- <td class="o_td_label oe_tax_group_name">
+                            <label class="o_form_label" t-esc="line[0]"/>
+                        </td> -->
+                        <td class="oe_tax_group_editable" t-att-data-tax-group-id="line[6]">
+                            <span class="oe_tax_group_amount_value">
+                                <t t-esc="line[3]"/>
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+    </t>
+</templates>

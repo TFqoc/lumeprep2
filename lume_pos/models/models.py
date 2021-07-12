@@ -123,7 +123,7 @@ class pos_test(models.Model):
                 'user_id':self.env.user.id,
                 'fiscal_position_id':False, #optional
                 'pricelist_id':order.pricelist_id.id, #optional
-                'partner_id':order.partner_id.id,
+                'partner_id': order.caregiver_id.id if order.caregiver_id else order.partner_id.id,
                 'lines':[], #orderline data generated below 
                 'statement_ids':[], # leave blank
                 'state':'Ongoing' if not order.is_delivered else 'Ready',

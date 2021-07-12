@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from .barcode_parse import parse_code
 import logging
+import json
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +20,7 @@ class Tasks(models.Model):
     dummy_field = fields.Char(compute='_compute_dummy_field',store=False)
     scan_text = fields.Char()
     time_at_last_save = fields.Integer(default=0)
+    caregiver_id = fields.Many2one('res.partner')
     # customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
@@ -64,7 +66,10 @@ class Tasks(models.Model):
         else: #create new customer, then create task
             # state = self.env['res.country.state'].browse(data['state_id'])
             new_customer = self.env['res.partner'].create({
-                'name': data['name'],
+                'name': data['full_name'],
+                'first_name': data['first_name'],
+                'middle_name': data['middle_name'],
+                'last_name': data['last_name'],
                 'street': data['street'],
                 'city': data['city'],
                 'state_id': data['state_id'].id,
@@ -137,6 +142,8 @@ class Tasks(models.Model):
     def build_cart(self):
         if not self.project_id.warehouse_id:
             raise ValidationError("No warehouse is set for this store! A warehouse must be set on this store to continue.")
+        if not self.project_id.store_pricelist:
+            raise ValidationError("No store type is set for this store! Please set one before continuing.")
         # Reconcile my order_type with customer's order type
 
         self.sales_order = self.env['sale.order'].create({
@@ -144,10 +151,11 @@ class Tasks(models.Model):
             'task':self.id,
             'date_order': fields.datetime.now(),
             # 'picking_policy':'direct',
-            # 'pricelist_id':'idk',
+            'pricelist_id':self.project_id.store_pricelist.id,
             # 'order_type': self.order_type,
             'warehouse_id':self.project_id.warehouse_id.id,
             'user_id': self.env.uid,
+            'caregiver_id': self.caregiver_id.id if self.caregiver_id else False,
         })
         self.change_stage(1)
         # Open up the sale order we just created
@@ -378,10 +386,55 @@ class project_inherit(models.Model):
     so_threshold1 = fields.Integer(default='1')
     so_threshold2 = fields.Integer(default='3')
     so_threshold3 = fields.Integer(default='5')
-    # store = fields.Many2one(comodel_name='lume.store')
 
-# class ProjectTaskType(models.Model):
-#     _inherit = 'project.task.type'
+    store_pricelist = fields.Many2one('product.pricelist', required=True)
+
+    # Params: data = json string
+    @api.model
+    def ecom_order(self, data):
+        _logger.info("Self: %s, Data: %s", (self, data))
+        # Create task
+        # Activate build cart
+        # Add so lines
+        # Apply promos
+        # Confirm SO
+        # Return cart total (JSON format?)
+        data = json.loads(data)
+        # JSON Data format
+        # {
+        #     "store_id":0,
+        #     "customer_id":0,
+        #     "fulfillment_type":'',
+        #     "order_lines":{
+        #         "product_id":0,
+        #         "product_uom_qty":0,
+        #     }
+        # }
+        customer = self.env['res.partner'].browse(data['customer_id'])
+        task = self.env['project.task'].create({
+            'partner_id': customer.id,
+            'project_id': data['store_id'],
+            'fulfillment_type': data['fulfillment_type'],
+            'user_id': False,
+            'name': customer.pref_name or customer.name,
+        })
+        task.build_cart()
+        
+        line_data = data['order_lines']
+        ids = []
+        for line in line_data:
+            line.update({'order_id': task.sales_order.id})
+            ids.append((0,0,line))
+
+        task.sales_order.order_line = ids
+
+        # TODO Apply promos here
+
+        # Confirm sale order to generate demand
+        task.sales_order.action_confirm()
+
+        # Return total for ecom's benefit
+        return {"order_total":task.sales_order.amount_total}
 
 
 

@@ -20,12 +20,13 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban','sale_coupon'],
+    'depends': ['base','contacts','project','stock','timesheet_grid','sale_management','sale_stock','barcodes','web_one2many_kanban','sale_coupon','account','metrc_stock'],
 
     'qweb': [
         "static/src/xml/lpc_quantity.xml",
         "static/src/xml/qty_template.xml",
         "static/src/xml/quick_create.xml",
+        # "static/src/xml/tax_group_kanban.xml",
     ],
 
     # always loaded
@@ -35,11 +36,13 @@
         'wizards/scan_dl.xml',
         'wizards/message_wizard.xml',
         'wizards/note_wizard.xml',
+        'wizards/cancel_reason_wizard.xml',
+        'views/settings.xml',
         'views/assets.xml',
         'views/sale.xml',
         'views/project.xml',
         'views/product_catalog.xml',
-        # 'views/promo.xml',
+        'views/promo.xml',
         'views/actions.xml',
         'views/partner.xml',
         'views/views.xml',
