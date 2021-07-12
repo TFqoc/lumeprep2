@@ -122,7 +122,7 @@ class Tasks(models.Model):
                 qty = 0
                 for line in record.sales_order.order_line:
                     qty += line.product_uom_qty
-                record.monetary_display = "$%.2f Qty: %s" % (record.sales_order.amount_total, str(qty))
+                record.monetary_display = "$%.2f Qty: %.0f" % (record.sales_order.amount_total, qty)
             else:
                 record.monetary_display = False
 
