@@ -146,7 +146,7 @@
                     <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
                 </field>
                 <field name="amount_tax" position="attributes">
-                    <attribute name="string">Total Taxes: </attribute>
+                    <attribute name="string">Total Taxes</attribute>
                 </field>
             </field>
         </record>
@@ -258,16 +258,14 @@
                                                     <tr>
                                                         <td>
                                                             <t t-if="o.product_categ_id">
-                                                                <t t-esc="o.product_categ_id.raw_value"/>
+                                                                <t t-esc="o.product_categ_id[0]"/>
                                                             </t>
                                                         </td>
                                                         <td>
                                                             <t t-esc="o.name" />
                                                         </td>
                                                         <td>
-                                                            <t t-if="o.thc_type">
-                                                                <t t-esc="o.thc_type.raw_value"/>
-                                                              </t>
+                                                            <t t-esc="o.thc_type"/>
                                                         </td>
                                                         <td>
                                                             <t t-esc="o.product_uom_qty" />
@@ -312,10 +310,13 @@
                                                             <field name="amount_untaxed" widget="monetary" />
                                                         </td>
                                                     </tr>
+                                                    <!-- <tr> -->
+                                                        <field name="amount_by_group" widget="tax_group_kanban" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
+                                                    <!-- </tr> -->
                                                     <tr>
-                                                        <td style="padding-right: 20px;">Tax:</td>
+                                                        <td style="padding-right: 20px;">Total Tax:</td>
                                                         <td>
-                                                            <field name="amount_tax" widget="monetary" />
+                                                            <field name="amount_tax" widget="monetary"/>
                                                         </td>
                                                     </tr>
                                                     <tr>
