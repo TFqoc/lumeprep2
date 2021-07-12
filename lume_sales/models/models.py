@@ -273,6 +273,8 @@ class User(models.Model):
                 if self.env['project.project'].allowed_internal_user_ids[self.id]:
                     record.permitted_stores = [(4, [self.env['project.project'].id])]
                     _logger.error("The code worked!")
+                else:
+                    record.permitted_stores = ''
                 
                 
             
