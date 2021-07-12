@@ -29,7 +29,7 @@ class Product(models.Model):
 
 
 class Lots(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = 'stock.production.lot'
 
     @api.model
     def stock_lookup(self, **kwargs):
