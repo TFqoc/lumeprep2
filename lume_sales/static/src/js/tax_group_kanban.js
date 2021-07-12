@@ -2,6 +2,8 @@
 odoo.define('lume_sales.tax_group_kanban', function (require) {
 "use strict";
 
+var core = require('web.core');
+var QWeb = core.qweb;
 // This returns undefined, but is needed to make sure this module loads after the one we want.
 var TaxGroup = require('account.tax_group');
 // var FieldOne2Many = require('web.relational_fields').FieldOne2Many;

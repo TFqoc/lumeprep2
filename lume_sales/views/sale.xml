@@ -163,6 +163,7 @@
                     <field name="state" />
                     <field name="currency_id" />
                     <field name="order_line" />
+                    <field name="amount_by_group"/>
                     <!-- <field name="activity_state"/>
                         
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/> -->
@@ -258,7 +259,7 @@
                                                     <tr>
                                                         <td>
                                                             <t t-if="o.product_categ_id">
-                                                                <t t-esc="o.product_categ_id[0]"/>
+                                                                <t t-esc="o.product_categ_id[1]"/>
                                                             </t>
                                                         </td>
                                                         <td>
@@ -305,22 +306,33 @@
                                             <table>
                                                 <tbody>
                                                     <tr>
-                                                        <td style="padding-right: 20px;">Untaxed Amount:</td>
+                                                        <td class="text-nowrap" style="padding-right: 20px;">Untaxed Amount:</td>
                                                         <td>
                                                             <field name="amount_untaxed" widget="monetary" />
                                                         </td>
                                                     </tr>
-                                                    <!-- <tr> -->
-                                                        <field name="amount_by_group" widget="tax_group_kanban" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
-                                                    <!-- </tr> -->
+                                                    <t t-if="record.amount_by_group">
+                                                        <t t-foreach="record.amount_by_group.raw_value" t-as="line">
+                                                          <tr>
+                                                            <td class="text-nowrap" style="padding-right: 20px;">
+                                                                <span class="o_form_label" t-esc="line[0]"/>
+                                                            </td>
+                                                            <td class="oe_tax_group_editable" t-att-data-tax-group-id="line[6]">
+                                                                <span class="oe_tax_group_amount_value">
+                                                                    <t t-esc="line[3]"/>
+                                                                </span>
+                                                            </td>
+                                                          </tr>
+                                                        </t>
+                                                    </t>
                                                     <tr>
-                                                        <td style="padding-right: 20px;">Total Tax:</td>
+                                                        <td class="text-nowrap" style="padding-right: 20px;">Total Tax:</td>
                                                         <td>
                                                             <field name="amount_tax" widget="monetary"/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding-right: 20px;">Total:</td>
+                                                        <td class="text-nowrap" style="padding-right: 20px;">Total:</td>
                                                         <td>
                                                             <field name="amount_total" widget="monetary" />
                                                         </td>

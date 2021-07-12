@@ -26,7 +26,7 @@
         "static/src/xml/lpc_quantity.xml",
         "static/src/xml/qty_template.xml",
         "static/src/xml/quick_create.xml",
-        "static/src/xml/tax_group_kanban.xml",
+        # "static/src/xml/tax_group_kanban.xml",
     ],
 
     # always loaded
