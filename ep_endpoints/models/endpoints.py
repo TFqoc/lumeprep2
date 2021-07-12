@@ -4,13 +4,12 @@ import json
 
 def jsonify_records(records, fields=False):
     data = []
+    valid_fields = records.fields_get().keys()
     # Validate fields
     if fields:
-        try:
-            for field in fields:
-                records[field]
-        except:
-            return "{'error': 'Bad field name'}"
+        for field in fields:
+            if field not in valid_fields:
+                return "{'error': 'Bad field name'}"
         if 'id' not in fields:
             fields.append('id')
     for r in records:
