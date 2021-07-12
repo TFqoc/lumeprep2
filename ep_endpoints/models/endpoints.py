@@ -17,7 +17,7 @@ def jsonify_records(records, fields=False):
         record = {}
         for f in filter_fields:
             if f in valid_fields and valid_fields[f]['type'] in ['many2one','many2many','one2many']:
-                record[f] = r[f].id
+                record[f] = r[f].mapped('id')
             else:
                 record[f] = r[f]
         data.append(record)
