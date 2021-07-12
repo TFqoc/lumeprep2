@@ -16,8 +16,11 @@ def jsonify_records(records, fields=False):
         filter_fields = fields or valid_fields
         record = {}
         for f in filter_fields:
-            if f in valid_fields and valid_fields[f]['type'] in ['many2one','many2many','one2many']:
-                record[f] = r[f].mapped('id')
+            if f in valid_fields:
+                if valid_fields[f]['type'] in ['many2one','many2many','one2many']:
+                    record[f] = r[f].mapped('id')
+                elif valid_fields[f]['type'] in ['datetime','date']:
+                    record[f] = r[f].isoformat()
             else:
                 record[f] = r[f]
         data.append(record)
