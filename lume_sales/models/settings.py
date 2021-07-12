@@ -8,7 +8,8 @@ class Settings(models.TransientModel):
     # Save Transient data to parameter table
     def set_values(self):
         res = super(Settings, self).set_values()
-        self.env['ir.config_parameter'].set_param('lume.batch_threshold', self.batch_threshold)
+        config = self.env['ir.config_parameter']
+        config.set_param('lume.batch_threshold', self.batch_threshold)
         return res
 
     # Retrieve parameter data from parameter table on load of this transient model
