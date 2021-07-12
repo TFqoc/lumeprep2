@@ -11,7 +11,6 @@ class NoteWizard(models.TransientModel):
     #@api.multi
     def action_ok(self):
         """ close wizard"""
-        return True
         return {'type': 'ir.actions.act_window_close'}
 
     # def _compute_notes(self):

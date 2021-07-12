@@ -1,4 +1,4 @@
-console.log("Checkbox widget has been loaded 10");
+console.log("Checkbox widget has been loaded 1");
 odoo.define('lume_sales.note_checkbox', function (require) {
     "use strict";
 
@@ -12,13 +12,13 @@ odoo.define('lume_sales.note_checkbox', function (require) {
             this.$el.empty().append(template);
         },
         _setFavorite: function (event) {
-            this._super.apply(this, arguments);
             console.log(this.$el);
             this._rpc({
                 model: this.model,
                 method: 'set_completed',
-                args: [this.record.data.id, this.value]
+                args: [this.record.data.id, !this.value]
             });
+            this._super.apply(this, arguments);
         },
     });
 
