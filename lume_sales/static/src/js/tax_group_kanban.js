@@ -1,9 +1,12 @@
 // console.log("Loaded lame section and note");
 odoo.define('lume_sales.tax_group_kanban', function (require) {
 "use strict";
+
+// This returns undefined, but is needed to make sure this module loads after the one we want.
 var TaxGroup = require('account.tax_group');
 // var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var fieldRegistry = require('web.field_registry');
+TaxGroup = fieldRegistry.get('tax-group-custom-field');
 
 // We create a custom widget because this is the cleanest way to do it:
 var TaxGroupKanban = TaxGroup.extend({
