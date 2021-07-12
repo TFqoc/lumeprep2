@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from lume_sales.models.promo import date_compare
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
