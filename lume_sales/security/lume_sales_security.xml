@@ -46,21 +46,21 @@
             <field name = "name">User can only see sales orders associated to their assigned stores. </field>
             <field name = "model_id" ref = "sale.model_sale_order" />
             <field name = "groups" eval = "[(4, ref('group_lume_associate'))]" />
-            <field name = "domain_force"> [["task.project_id.allowed_internal_user_ids","ilike",uid]] </field>
+            <field name = "domain_force"> [("task.project_id.allowed_internal_user_ids","ilike",uid)] </field>
         </record>
 
         <record id = "store_limited_visibility_pick_order" model = "ir.rule">
             <field name = "name">User can only see sales orders associated to their assigned stores. </field>
             <field name = "model_id" ref = "stock.model_stock_picking" />
             <field name = "groups" eval = "[(4, ref('group_lume_associate'))]" />
-            <field name = "domain_force"> [["sale_id.task.project_id.allowed_internal_user_ids","ilike",uid]] </field>
+            <field name = "domain_force"> [("sale_id.task.project_id.allowed_internal_user_ids","ilike",uid)] </field>
         </record>
 
         <record id = "store_limited_visibility_pos_register" model = "ir.rule">
             <field name = "name">User can only see sales orders associated to their assigned stores. </field>
             <field name = "model_id" ref = "point_of_sale.model_pos_config" />
             <field name = "groups" eval = "[(4, ref('group_lume_associate'))]" />
-            <field name = "domain_force"> [["project_id.allowed_internal_user_ids","ilike",uid]] </field>
+            <field name = "domain_force"> [("project_id.allowed_internal_user_ids","ilike",uid)] </field>
         </record>
 
         <!-- access_patient_id_method_lume_associate,patient.id.method.lume.associate,metrc_retail.model_patient_id_method,lume_sales.group_lume_associate,1,0,0,0 -->
