@@ -13,10 +13,13 @@ def jsonify_records(records, fields=False):
         if 'id' not in fields:
             fields.append('id')
     for r in records:
-        filter_fields = fields or records.fields_get()
+        filter_fields = fields or valid_fields
         record = {}
-        for f, d in filter_fields.items():
-            record[f] = d# r[f]
+        for f in filter_fields:
+            if f in valid_fields and valid_fields[f]['type'] in ['many2one','many2many','one2many']:
+                record[f] = r[f].id
+            else:
+                record[f] = r[f]
         data.append(record)
     return json.dumps(data)
 
