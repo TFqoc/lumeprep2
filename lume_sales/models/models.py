@@ -262,14 +262,14 @@ class User(models.Model):
 
     #Exists as a list of object references for domain creation.
 
-    permited_stores = fields.Many2many(comodel='project.project',computed='_compute_store_ids',store= False)
+    permitted_stores = fields.Many2many(comodel='project.project',computed='_compute_store_ids',store= False)
 
-    @api.depends('allowed_user_ids')
+    @api.depends('allowed_internal_user_ids')
     def _compute_permited_stores(self):
         for record in self:
             for store in self.env['project.project']:
-                if self.env['project.project'].allowed_user_ids[self.id] and not self.permited_stores[store.id]:
-                    record.permited_stores = [(4, [self.env['project.project'].id])]
+                if self.env['project.project'].allowed_internal_user_ids[self.id] and not self.permitted_stores[store.id]:
+                    record.permitted_stores = [(4, [self.env['project.project'].id])]
                     _logger.error("The code worked!")
                 
                 
