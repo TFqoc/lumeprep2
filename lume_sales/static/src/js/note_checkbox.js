@@ -14,6 +14,11 @@ odoo.define('lume_sales.note_checkbox', function (require) {
         _setFavorite: function (event) {
             this._super.apply(this, arguments);
             console.log(this.$el);
+            this._rpc({
+                model: this.model,
+                method: 'set_completed',
+                args: [this.record.data.id, this.value]
+            });
         },
     });
 

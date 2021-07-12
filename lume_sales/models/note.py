@@ -13,3 +13,8 @@ class Note(models.Model):
     source_partner_id = fields.Many2one('res.partner')
     message = fields.Char()
     completed = fields.Boolean()
+
+    @api.model
+    def set_completed(self,id,val):
+        self.env['lume.note'].browse(id).completed = val
+        _logger.info('NOTE: %s', val)
