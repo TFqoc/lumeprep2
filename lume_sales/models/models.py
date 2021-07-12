@@ -264,13 +264,13 @@ class User(models.Model):
 
     permitted_stores = fields.Many2many(comodel_name='project.project',compute='_compute_permitted_stores',store= False)
 
-    @api.depends('allowed_internal_user_ids')
+
     def _compute_permitted_stores(self):
-        for record in self:
+        for record in self:   
             _logger.error("1st loop in progress!")
             for store in self.env['project.project']:
                 _logger.error("2nd loop in progress!")
-                if self.env['project.project'].allowed_internal_user_ids[self.id] and not self.permitted_stores[store.id]:
+                if self.env['project.project'].allowed_internal_user_ids[self.id]:
                     record.permitted_stores = [(4, [self.env['project.project'].id])]
                     _logger.error("The code worked!")
                 
