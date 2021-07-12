@@ -260,7 +260,20 @@ class Partner(models.Model):
 class User(models.Model):
     _inherit='res.users'
 
-    # store = fields.Many2many(comodel_name='lume.store')
+    #Exists as a list of object references for domain creation.
+
+    permited_stores = fields.Many2many(comodel='project.project',computed='_compute_store_ids',store= False)
+
+    @api.depends('allowed_user_ids')
+    def _compute_permited_stores(self):
+        for record in self:
+            for store in self.env['project.project']:
+                if self.env['project.project'].allowed_user_ids[self.id] and not self.permited_stores[store.id]:
+                    record.permited_stores = [(4, [self.env['project.project'].id])]
+                    _logger.error("The code worked!")
+                
+                
+            
 
 ####
 # Allow multiple task timers going at once.
