@@ -45,6 +45,7 @@
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
             <!-- <br/> -->
             <field name="timer_start" widget="live_timer" options="{'color_class':'timer-normal','flash':true}"/>
+            <button name="start_delivery" class="btn btn-secondary" string="Out for Delivery -&gt;"/>
             <br/>
             <!-- <span>
               <span t-if="record.fulfillment_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
