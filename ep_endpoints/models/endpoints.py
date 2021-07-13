@@ -20,7 +20,11 @@ def jsonify_records(records, fields=False):
                 if valid_fields[f]['type'] in ['many2one','many2many','one2many']:
                     record[f] = r[f].mapped('id')
                 elif valid_fields[f]['type'] in ['datetime','date']:
-                    record[f] = r[f].isoformat()
+                    # Handle a false value if date is blank
+                    if r[f]:
+                        record[f] = r[f].isoformat()
+                    else:
+                        record[f] = False
             else:
                 record[f] = r[f]
         data.append(record)
