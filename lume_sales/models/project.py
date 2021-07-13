@@ -24,6 +24,7 @@ class Tasks(models.Model):
     # customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
+    stage_name = fields.Char(related="stage_id.name")
 
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
     order_type = fields.Selection(related="sales_order.order_type")

@@ -17,6 +17,7 @@
             <field name="fulfillment_type"/>
             <field name="blink_threshold"/>
             <field name="caregiver_id"/>
+            <field name="stage_name"/>
           </xpath>
           <!-- Reorganize title of task -->
           <xpath expr="//strong[@class='o_kanban_record_title']" position="replace">
@@ -45,7 +46,7 @@
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
             <!-- <br/> -->
             <field name="timer_start" widget="live_timer" options="{'color_class':'timer-normal','flash':true}"/>
-            <button name="start_delivery" class="btn btn-secondary" string="Out for Delivery -&gt;"/>
+            <button name="start_delivery" class="btn btn-secondary" type="object" attrs="{'invisible':[('stage_name','!=','Order Ready')]}">Out for Delivery-&gt;</button>
             <br/>
             <!-- <span>
               <span t-if="record.fulfillment_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
