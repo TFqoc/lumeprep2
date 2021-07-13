@@ -35,13 +35,14 @@ class Product(models.Model):
     _inherit = 'product.product'
     
     @api.model
-    def ep_hourly_products(self, fields=False):
+    def ep_hourly_products(self, fields=None):
         hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
         data = self.env['product.product'].search([('__last_update','>',hour_ago)])
-        return jsonify_records(data, fields)
+        # return jsonify_records(data, fields)
+        return data.read(fields)
 
     @api.model
-    def ep_nightly_products(self, fields=False):
+    def ep_nightly_products(self, fields=None):
         data = self.env['product.product'].search([('active','=',True)])
         extra_data = self.env['product.product'].search([('active','=',False)])
         lots = self.env['stock.lot'].search([]).product_id
