@@ -272,7 +272,7 @@ class User(models.Model):
             for store in self.env['project.project'].search([]):
                 _logger.error("2nd loop in progress!")
                 if record in store.allowed_internal_user_ids:
-                    record.permitted_stores = [(4, [store.id])]
+                    record.permitted_stores = [(4, store.id, 0)]
                     _logger.error("The code worked!")
                     
                 
