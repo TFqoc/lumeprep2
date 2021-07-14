@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 
-class Settings(models.Model):
+class Settings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     onfleet_api_key = fields.Char(string="API Key")
