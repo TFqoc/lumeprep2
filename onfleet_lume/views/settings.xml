@@ -7,14 +7,12 @@
             <field name="priority" eval="10"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Lume_Onfleet" string="Lume_OnFleet" data-key="onfleet_lume">
-                        <h2>OnFleet</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="o_setting_left_pane">
-                                <label for="onfleet_api_key" string="OnFleet API Key"/>
-                                <field name="onfleet_api_key"></field>
-                            </div>
+                <xpath expr="//h2[@id='lume_pos']/div" position="after">
+                    <h2 id="onfleet">OnFleet</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="o_setting_left_pane">
+                            <label for="onfleet_api_key" string="OnFleet API Key"/>
+                            <field name="onfleet_api_key"></field>
                         </div>
                     </div>
                 </xpath>
