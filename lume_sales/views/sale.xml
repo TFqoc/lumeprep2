@@ -110,12 +110,12 @@
                 <xpath expr="(//header/button[@name='action_confirm'])[1]" position="attributes">
                     <attribute name="attrs">{'invisible': [('state', 'in', ['sale','done','cancel'])]}</attribute>
                 </xpath>
+                <xpath expr="//header/button[@name='action_cancel']" position="before">
+                    <button name="create_return" type="object" class="btn btn-secondary" attrs="{'invisible':[('state', '!=', 'done')]}">Return</button>
+                </xpath>
                 <xpath expr="//header/button[@name='action_cancel']" position="attributes">
                     <attribute name="string">Abandon Cart</attribute>
                     <attribute name="name">show_cancel_reason_wizard</attribute>
-                </xpath>
-                <xpath expr="//header/button[@name='action_cancel']" position="before">
-                    <button name="create_return" type="object" class="btn btn-secondary" attrs="{'invisible':[('state', '!=', 'done')]}">Return</button>
                 </xpath>
                 <xpath expr="(//header/button[@name='action_quotation_send'])[4]" position="attributes">
                     <attribute name="invisible">1</attribute>
