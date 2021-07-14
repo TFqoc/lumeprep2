@@ -404,7 +404,7 @@ class TestRecLumeFlow(TestLumeSaleCommon):
         parsed_barcode = parse_code(barcode)
         key_list = ['full_name', 'first_name', 'middle_name', 'last_name', 'street', 'city', 'zip', 'date_of_birth', 'drivers_license_expiration', 'drivers_license_number']
 
-        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
+        dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list) 
 
 
         self.assertTrue(
