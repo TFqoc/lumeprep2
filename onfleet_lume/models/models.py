@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
             notes = ""
             total_qty = 0
             for line in order.order_line:
-                notes += "%s qty.\n%s\n%s\n" % (line.product_uom_qty, line.product_id.name, line.price_unit,line.lot_id.name)
+                notes += "%s qty.\n%s\n%s\n%s\n" % (line.product_uom_qty, line.product_id.name, line.price_unit,line.lot_id.name)
                 total_qty += line.product_uom_qty
             notes += "Total items: %s\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
