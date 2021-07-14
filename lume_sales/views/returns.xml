@@ -50,7 +50,7 @@
             <field name="model">lume.return</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="0" edit="0">
                     <field name="name"/>
                     <field name="refund_type"/>
                     <field name="issue_type"/>

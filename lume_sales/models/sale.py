@@ -190,8 +190,7 @@ class SaleOrder(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Returns',
-            'view_type': 'list',
-            'view_mode': 'list',
+            'views': [[False, "tree"], [False, "form"]],
             'res_model': 'lume.return',
             # 'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
             'target': 'current',
