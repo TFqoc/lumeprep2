@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
             notes += "Total items: %s\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
             # Sumbit order
-            r = _onfleet.tasks.create(body={
+            r = _onfleet.api.tasks.create(body={
                 "destination": {
                     "address":{
                         "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
