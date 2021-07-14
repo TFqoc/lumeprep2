@@ -68,8 +68,9 @@ class SaleOrder(models.Model):
                 }
                 _logger.info(f"OnFleet Create Task Request: {b}")
                 r = _onfleet.api.tasks.create(body=b)
+                _logger.info(f"Response: {r}")
                 # Check for errors here
-                if len(r['warnings']) > 0:
+                if len(r.get('warnings',[])) > 0:
                     pass
             else:
                 # Do something with failed connection
