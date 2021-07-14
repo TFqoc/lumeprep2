@@ -1,5 +1,8 @@
 from odoo import models, fields, api
 from onfleet import Onfleet
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class OnFleet():
     api_key = ''
@@ -52,18 +55,24 @@ class SaleOrder(models.Model):
             notes += "Total items: %s\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
             # Sumbit order
-            order.check_onfleet_connection()
-            r = _onfleet.api.tasks.create(body={
-                "destination": {
-                    "address":{
-                        "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
-                        "apartment": self.street2 # Used for line 2 of street address
-                    }
-                },
-                "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
-                "notes": notes
-            })
-            # Check for errors here
-            if len(r['warnings']) > 0:
+            if order.check_onfleet_connection():
+                b = {
+                    "destination": {
+                        "address":{
+                            "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
+                            "apartment": self.street2 # Used for line 2 of street address
+                        }
+                    },
+                    "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
+                    "notes": notes
+                }
+                _logger.info(f"OnFleet Create Task Request: {b}")
+                r = _onfleet.api.tasks.create(body=b)
+                # Check for errors here
+                if len(r['warnings']) > 0:
+                    pass
+            else:
+                # Do something with failed connection
+                _logger.info("Connection to OnFleet Failed")
                 pass
         return res
