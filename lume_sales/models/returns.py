@@ -24,6 +24,7 @@ class Return(models.Model):
         res = super().create(vals)
         return res
 
+    @api.depends('return_lines.total_price')
     def _compute_refund_total(self):
         for record in self:
             record.refund_total = sum([line.total_price for line in record.return_lines])
@@ -50,6 +51,7 @@ class ReturnLine(models.Model):
         ('exchange','Exchange')
     ])
 
+    @api.depends('return_qty')
     def _compute_total(self):
         for record in self:
             record.total_price = record.price * record.return_qty

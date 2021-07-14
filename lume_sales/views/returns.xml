@@ -16,13 +16,13 @@
                             </h1>
                         </div>
                         <group name="return_header">
-                            <field name="refund_type"/>
-                            <field name="issue_type"/>
+                            <field name="refund_type" required="1"/>
+                            <field name="issue_type" required="1"/>
                         </group>
                         <notebook>
                             <page string="Return Lines" name="return_lines">
                                 <field name="return_lines" mode="tree">
-                                    <tree>
+                                    <tree edit="1" create="0" editable="bottom">
                                         <field name="product_id" readonly="1"/>
                                         <field name="lot_id" string="Metrc Tag" readonly="1"/>
                                         <field name="original_qty" readonly="1"/>

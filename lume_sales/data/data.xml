@@ -74,7 +74,7 @@
             <field name="name">Lume Return</field>
             <field name="code">lume.return</field>
             <field name="active">TRUE</field>
-            <field name="prefix">RET</field>
+            <field name="prefix">RET/</field>
             <field name="padding">6</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
