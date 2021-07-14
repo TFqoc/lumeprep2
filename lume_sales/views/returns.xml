@@ -44,5 +44,19 @@
                 </form>
             </field>
         </record>
+
+        <record id="returns_tree" model="ir.ui.view">
+            <field name="name">lume.returns.tree</field>
+            <field name="model">lume.return</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="refund_type"/>
+                    <field name="issue_type"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
     </data>
 </odoo>

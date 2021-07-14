@@ -19,7 +19,10 @@
                 <xpath expr="//div[@class='oe_button_box']" position="inside">
                     <button class="oe_stat_button" type="object" name="open_order_history" icon="fa-usd" modifiers="{}" options="{}" attrs="{'invisible': [('partner_sale_order_count', '=', False)]}">
                         <field string="Order History" name="partner_sale_order_count" widget="statinfo" modifiers="{'readonly':true}" id="sale_order_count" />
-                      </button>
+                    </button>
+                    <button class="oe_stat_button" type="object" name="open_returns" icon="fa-usd" modifiers="{}" options="{}" attrs="{'invisible': [('return_count', '=', False)]}">
+                        <field string="Returns" name="return_count" widget="statinfo" modifiers="{'readonly':true}" id="return_count" />
+                    </button>
                 </xpath>
                 <field name="partner_id" position="after">
                     <field name="order_type" readonly="1" invisible="1" />

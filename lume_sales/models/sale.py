@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
     cashier_partner_id = fields.Many2one('res.partner')
     payment_method = fields.Char()
 
+    return_count = fields.Integer(compute="_compute_return_count")
     partner_sale_order_count = fields.Integer(related="partner_id.sale_order_count")
     partner_image = fields.Image(related='partner_id.image_1920',max_width=1920, max_height=1920,store=True)
 
@@ -185,6 +186,21 @@ class SaleOrder(models.Model):
             'domain': ORDER_HISTORY_DOMAIN,
         }
 
+    def open_returns(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Returns',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'res_model': 'lume.return',
+            # 'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
+            'target': 'current',
+            # 'res_id': self.id,
+            # 'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
+            'domain': [('sale_id','=',self.id)],
+        }
+
+
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
@@ -218,6 +234,10 @@ class SaleOrder(models.Model):
                     if type_order in ['medical','adult']:
                         record.order_type = type_order
                         break
+
+    def _compute_return_count(self):
+        for record in self:
+            record.return_count = self.env['lume.return'].search_count([('sale_id','=',record.id)])
     
     @api.onchange('fulfillment_type')
     def change_fulfillment(self):

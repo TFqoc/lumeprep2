@@ -61,3 +61,5 @@ class ReturnLine(models.Model):
         # You can't return more than you originally bought
         if self.return_qty > self.original_qty:
             self.return_qty = self.original_qty
+        elif self.return_qty < 0:
+            self.return_qty = 0
