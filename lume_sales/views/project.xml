@@ -46,7 +46,7 @@
             <!-- <field name="partner_id" widget="res_partner_many2one"/> -->
             <!-- <br/> -->
             <field name="timer_start" widget="live_timer" options="{'color_class':'timer-normal','flash':true}"/>
-            <button name="start_delivery" class="btn btn-secondary" type="object" attrs="{'invisible':[('stage_name','!=','Order Ready'),('fulfillment_type','!=','delivery')]}">Out for Delivery-&gt;</button>
+            <button name="start_delivery" class="btn btn-secondary" type="object" attrs="{'invisible':['|',('stage_name','!=','Order Ready'),('fulfillment_type','!=','delivery')]}">Out for Delivery-&gt;</button>
             <br/>
             <!-- <span>
               <span t-if="record.fulfillment_type.raw_value == 'delivery'" class="fa fa-bus" title="delivery"></span>
