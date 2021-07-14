@@ -57,7 +57,8 @@ class Product(models.Model):
             for record in self:
                 record.pricelist_price = pricelist.get_product_price(record, 1, partner_id)
         else:
-            self.pricelist_price = self.list_price
+            for record in self:
+                record.pricelist_price = record.list_price
         
 
     @api.depends('stock_quant_ids')

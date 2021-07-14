@@ -24,6 +24,7 @@ class Tasks(models.Model):
     # customer_type = fields.Selection(related="partner_id.customer_type")
     blink_threshold = fields.Integer(related="project_id.blink_threshold")
     monetary_display = fields.Char(compute='_compute_monetary_display')
+    stage_name = fields.Char(related="stage_id.name")
 
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
     order_type = fields.Selection(related="sales_order.order_type")
@@ -122,7 +123,7 @@ class Tasks(models.Model):
                 qty = 0
                 for line in record.sales_order.order_line:
                     qty += line.product_uom_qty
-                record.monetary_display = "$%.2f Qty: %s" % (record.sales_order.amount_total, str(qty))
+                record.monetary_display = "$%.2f Qty: %.0f" % (record.sales_order.amount_total, qty)
             else:
                 record.monetary_display = False
 
@@ -176,6 +177,9 @@ class Tasks(models.Model):
         old_name = self.stage_id.name
         self.stage_id = self.stage_id_from_name(stage_name)
         self.capture_time(old_name)
+
+    def start_delivery(self):
+        self.change_stage(4)
 
     # Mail module > models > mail_channel.py Line 758
 
@@ -388,53 +392,6 @@ class project_inherit(models.Model):
     so_threshold3 = fields.Integer(default='5')
 
     store_pricelist = fields.Many2one('product.pricelist', required=True)
-
-    # Params: data = json string
-    @api.model
-    def ecom_order(self, data):
-        _logger.info("Self: %s, Data: %s", (self, data))
-        # Create task
-        # Activate build cart
-        # Add so lines
-        # Apply promos
-        # Confirm SO
-        # Return cart total (JSON format?)
-        data = json.loads(data)
-        # JSON Data format
-        # {
-        #     "store_id":0,
-        #     "customer_id":0,
-        #     "fulfillment_type":'',
-        #     "order_lines":{
-        #         "product_id":0,
-        #         "product_uom_qty":0,
-        #     }
-        # }
-        customer = self.env['res.partner'].browse(data['customer_id'])
-        task = self.env['project.task'].create({
-            'partner_id': customer.id,
-            'project_id': data['store_id'],
-            'fulfillment_type': data['fulfillment_type'],
-            'user_id': False,
-            'name': customer.pref_name or customer.name,
-        })
-        task.build_cart()
-        
-        line_data = data['order_lines']
-        ids = []
-        for line in line_data:
-            line.update({'order_id': task.sales_order.id})
-            ids.append((0,0,line))
-
-        task.sales_order.order_line = ids
-
-        # TODO Apply promos here
-
-        # Confirm sale order to generate demand
-        task.sales_order.action_confirm()
-
-        # Return total for ecom's benefit
-        return {"order_total":task.sales_order.amount_total}
 
 
 

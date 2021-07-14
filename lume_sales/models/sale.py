@@ -275,60 +275,6 @@ class SaleOrder(models.Model):
     # Promotion methods
     ######################
     
-    # # Override NO SUPER
-    # def _get_applicable_programs(self):
-    #     """
-    #     This method is used to return the valid applicable programs on given order.
-    #     """
-    #     self.ensure_one()
-    #     programs = self.env['coupon.program'].with_context(
-    #         no_outdated_coupons=True,
-    #     ).search([
-    #         ('company_id', 'in', [self.company_id.id, False]),
-    #         '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-    #         '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
-    #     ], order="id")._filter_programs_from_common_rules(self)
-    #     # no impact code...
-    #     # should be programs = programs.filtered if we really want to filter...
-    #     # if self.promo_code:
-    #     #     programs._filter_promo_programs_with_code(self)
-    #     return programs
-
-    # # Override NO SUPER
-    # def _get_applicable_no_code_promo_program(self):
-    #     self.ensure_one()
-    #     programs = self.env['coupon.program'].with_context(
-    #         no_outdated_coupons=True,
-    #         applicable_coupon=True,
-    #     ).search([
-    #         ('promo_code_usage', '=', 'no_code_needed'),
-    #         '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-    #         '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
-    #         '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
-    #     ])._filter_programs_from_common_rules(self)
-    #     return programs
-
-    # # Override
-    # def _create_new_no_code_promo_reward_lines(self):
-    #     '''Apply new programs that are applicable'''
-    #     self.ensure_one()
-    #     order = self
-    #     programs = order._get_applicable_no_code_promo_program()
-    #     programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
-    #     for program in programs:
-    #         # VFE REF in master _get_applicable_no_code_programs already filters programs
-    #         # why do we need to reapply this bunch of checks in _check_promo_code ????
-    #         # We should only apply a little part of the checks in _check_promo_code...
-    #         error_status = program._check_promo_code(order, False)
-    #         if not error_status.get('error'):
-    #             if program.promo_applicability == 'on_next_order':
-    #                 order._create_reward_coupon(program)
-    #             elif program.discount_line_product_id.id not in self.order_line.mapped('product_id').ids:
-    #                 self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
-    #             order.no_code_promo_program_ids |= program
-    #         else:
-    #             logger.info("Program Error Message: %s" % error_status.get("error"))
-
     # Override
     def _is_global_discount_already_applied(self):
         # Saying that a global discount is never applied allows us to stack as many as we want.
@@ -418,7 +364,7 @@ class SaleOrder(models.Model):
             order._create_new_no_code_promo_reward_lines()
             # order._update_existing_reward_lines()
 
-    # Fields not on so lines:  'order_line.tax_base_amount', 'order_line.tax_line_id',
+    # Override
     @api.depends('order_line.price_subtotal', 'partner_id', 'currency_id')
     def _compute_taxes_by_group(self):
         for order in self:

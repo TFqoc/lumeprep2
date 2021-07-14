@@ -126,7 +126,7 @@ class pos_test(models.Model):
                 'partner_id': order.caregiver_id.id if order.caregiver_id else order.partner_id.id,
                 'lines':[], #orderline data generated below 
                 'statement_ids':[], # leave blank
-                'state':'Ongoing' if not order.is_delivered else 'Ready',
+                'state':'Delivery' if order.fulfillment_type == 'delivery' else 'Ongoing' if not order.is_delivered else 'Ready',
                 'amount_return':0, # leave at 0
                 'account_move':0, # leaving at 0 for now
                 'id':0, #backend id? leaving at 0 for now
