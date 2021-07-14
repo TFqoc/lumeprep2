@@ -11,7 +11,7 @@ class Return(models.Model):
         ('cash','Cash'),
         ('gift_card','Gift Card')
     ])
-    return_lines = fields.One2many('lume.return.line')
+    return_lines = fields.One2many('lume.return.line',inverse_name='return_id')
     refund_total = fields.Float(compute='_compute_refund_total')
     sale_id = fields.Many2one('sale.order', required=True)
     currency_id = fields.Many2one('res.currency', required=True)
