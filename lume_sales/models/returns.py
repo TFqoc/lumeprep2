@@ -48,7 +48,7 @@ class ReturnLine(models.Model):
         ('dry','Dry'),
         ('overcharge','Overcharge'),
         ('exchange','Exchange')
-    ], required=True)
+    ])
 
     def _compute_total(self):
         for record in self:
