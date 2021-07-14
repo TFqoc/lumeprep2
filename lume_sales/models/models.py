@@ -266,10 +266,11 @@ class User(models.Model):
 
 
     def _compute_permitted_stores(self):
+        current_stores = self.env['project.project'].search([])
         for record in self:
             record.permitted_stores = [(5, 0, 0)]
             _logger.error("1st loop in progress!")
-            for store in self.env['project.project'].search([]):
+            for store in current_stores:
                 _logger.error("2nd loop in progress!")
                 if record.id in store.allowed_internal_user_ids:
                     record.permitted_stores = [(4, [self.env['project.project'].id])]
