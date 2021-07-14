@@ -416,7 +416,7 @@ class SaleOrder(models.Model):
     def create_return(self):
         return_id = self.env['lume.return'].create({
             'sale_id': self.id,
-            'currency_id': self.currency_id,
+            'currency_id': self.currency_id.id,
         })
         return_lines = []
         for line in self.order_line:
