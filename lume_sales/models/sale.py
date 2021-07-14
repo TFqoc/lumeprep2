@@ -412,7 +412,34 @@ class SaleOrder(models.Model):
                 group.id
             ) for group, amounts in res]
             logger.info("Tax Group info: %s" % order.amount_by_group)
-        pass
+
+    def create_return(self):
+        return_id = self.env['lume.return'].create({
+            'sale_id': self.id,
+            'currency_id': self.currency_id,
+        })
+        return_lines = []
+        for line in self.order_line:
+            data = {
+                'return_id':return_id.id,
+                'price': line.price_subtotal / line.product_uom_qty,
+                'product_id': line.product_id.id,
+                'lot_id': line.lot_id.id,
+                'original_qty': line.product_uom_qty
+            }
+            return_lines.append((0,0,data))
+        return_id.return_lines = return_lines
+        # Open return in new action
+        return {
+                'type': 'ir.actions.act_window',
+                'name': 'Return',
+                'views': [[False,'form']],
+                'res_model': 'lume.return',
+                # 'view_id': self.env.ref('lume_sales.TBD').id,
+                'target': 'current',
+                'res_id': return_id.id,
+                # 'context': {},
+            }
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
