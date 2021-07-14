@@ -60,7 +60,7 @@ class SaleOrder(models.Model):
                     "destination": {
                         "address":{
                             "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
-                            "apartment": self.street2 # Used for line 2 of street address
+                            "apartment": self.street2 or ''# Used for line 2 of street address
                         }
                     },
                     "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
