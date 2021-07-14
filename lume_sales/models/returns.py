@@ -1,8 +1,9 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 class Return(models.Model):
     _name = 'lume.return'
 
+    name = fields.Char(string="Reference",readonly=True, required=True,copy=False,default='New')
     refund_type = fields.Selection([
         ('full','Full'),
         ('partial','Partial')
@@ -15,6 +16,13 @@ class Return(models.Model):
     refund_total = fields.Float(compute='_compute_refund_total')
     sale_id = fields.Many2one('sale.order', required=True)
     currency_id = fields.Many2one('res.currency', required=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('lume.return') or _('New')
+        res = super().create(vals)
+        return res
 
     def _compute_refund_total(self):
         for record in self:
