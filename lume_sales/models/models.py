@@ -272,10 +272,6 @@ class User(models.Model):
                 if record in store.allowed_internal_user_ids:
                     record.permitted_stores = [(4, store.id, 0)]
 
-                    
-                
-                
-            
 
 ####
 # Allow multiple task timers going at once.

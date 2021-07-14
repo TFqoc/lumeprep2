@@ -94,6 +94,12 @@ class TestLumeSaleCommon(SavepointCase):
             
         })
 
+        cls.pricelist_a = cls.env['product.pricelist'].create({
+            'name': 'Store Type A',
+            'currency_id': cls.env['res.currency'].search([('name', '=', 'USD')], limit=1).id
+            
+            })
+
         #Creating Stores as above:
 
         Stores = cls.env['project.project'].with_context({'mail_create_nolog': True})
@@ -107,6 +113,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allowed_user_ids': [cls.user_associate.id, cls.user_manager.id, cls.user_district_manager.id],
             'alias_name': 'project+peterson',
             'blink_threshold': 5,
+            'store_pricelist': cls.pricelist_a.id,
             #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
@@ -145,6 +152,7 @@ class TestLumeSaleCommon(SavepointCase):
             'allowed_user_ids': [cls.user_associate.id, cls.user_manager.id, cls.user_district_manager.id],
             'alias_name': 'project+escanaba',
             'blink_threshold': 5,
+            'store_pricelist': cls.pricelist_a.id,
             #'partner_id': cls.partner_1.id,
             'type_ids': [
                 (0, 0, {
@@ -181,6 +189,10 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.customer_rec = Customers.create({
             'name': 'Eve A Love',
+            'full_name': 'Eve A Love', #kept in the code, 
+            'fname': 'Eve',
+            'mname': 'A',
+            'lname': 'Love',
             'is_company': False,
             'company_type': 'person',
             'street': '629 Mad Dog Lane',
@@ -198,6 +210,10 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.customer_med = Customers.create({
             'name': 'Helen N Hywater',
+            'full_name': 'Helen N Hywater',
+            'fname': 'Helen',
+            'mname': 'N',
+            'lname': 'Hywater',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Error Place',
@@ -216,6 +232,10 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.customer_banned = Customers.create({
             'name': 'Bennie F Factor',
+            'full_name': 'Bennie F Factor',
+            'fname': 'Bennie',
+            'mname': 'F',
+            'lname': 'Factor',
             'is_company': False,
             'company_type': 'person',
             'street': '555 Linger Longer Road',
@@ -234,6 +254,10 @@ class TestLumeSaleCommon(SavepointCase):
 
         cls.customer_care = Customers.create({
             'name': 'Dexter Michael Davenport',
+            'full_name': 'Dexter Michael Davenport',
+            'fname': 'Dexter',
+            'mname': 'Michael',
+            'lname': 'Davenport',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Frying Pan Road',
@@ -255,6 +279,10 @@ class TestLumeSaleCommon(SavepointCase):
         state = cls.env['res.country.state'].search([("code","=", "WI")], limit=1)
         cls.customer_pat = Customers.create({
             'name': 'Justin Nick Thyme',
+            'full_name': 'Justin Nick Thyme',
+            'fname': 'Justin',
+            'mname': 'Nick',
+            'lname': 'Thyme',
             'is_company': False,
             'company_type': 'person',
             'street': '404 Electric Avenue',

@@ -229,7 +229,7 @@ class TestBarcodeParse(TestLumeSaleCommon):
         """Checking that the barcode parses correctly."""
         barcode = '@ANSI 636032030102DL00410205ZM03460027DLDCADCBDCDDBA01135000DCSLOVEDCTEVE ADBDDBB01131950DBC2DAYDAUDAG629 MAD DOG LANEDAIDETROITDAJMIDAK482010001  DAQC 333 547 393 957DCFDCGUSADCHDAHDCKDDAN'
         parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'zip', 'drivers_license_expiration', 'date_of_birth', 'drivers_license_number']
+        key_list = ['full_name', 'fname', 'mname', 'lname', 'street', 'city', 'zip', 'drivers_license_expiration', 'date_of_birth', 'drivers_license_number']      
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_rec, key_list)
 
@@ -248,7 +248,7 @@ class TestBarcodeParse(TestLumeSaleCommon):
     def test_wi_barcode_parse(self):
         barcode = '@ANSI 636031080102DL0041W03070017DLDCADDCBNONEDCDNONEDBA05175000DCSTHYMEDACJUSTINDADNICKDBD05052001DBB05171980DBC1DAYHAZDAU072 INDAG404 ELECTRIC AVENUEDAIMADISONDAJWIDAK535900001DAQF672554568631DCFNDCGUSADDENDDFNDDGNDCKNDDAFDDB06182021ZWZWA13255171875'
         parsed_barcode = parse_code(barcode)
-        key_list = ['name', 'street', 'city', 'zip', 'drivers_license_expiration', 'date_of_birth', 'drivers_license_number']
+        key_list = ['full_name', 'fname', 'mname', 'lname', 'street', 'city', 'zip', 'drivers_license_expiration', 'date_of_birth', 'drivers_license_number']
 
         dictionaries = compare_dictionaries(parsed_barcode, self.customer_pat, key_list)
 
