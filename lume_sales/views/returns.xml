@@ -28,7 +28,7 @@
                                         <field name="original_qty" readonly="1"/>
                                         <field name="return_qty"/>
                                         <field name="price" readonly="1"/>
-                                        <field name="reason"/>
+                                        <field name="reason_code"/>
                                         <field name="total_price" readonly="1"/>
                                     </tree>
                                 </field>
