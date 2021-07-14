@@ -26,7 +26,7 @@ class Return(models.Model):
 
     def _compute_refund_total(self):
         for record in self:
-            record.refund_total = sum(record.return_lines.total_price)
+            record.refund_total = sum([line.total_price for line in record.return_lines])
 
 class ReturnLine(models.Model):
     _name = 'lume.return.line'
