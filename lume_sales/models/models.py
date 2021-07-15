@@ -157,6 +157,20 @@ class Partner(models.Model):
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
+        
+        if self.has_online_order:
+            tasks = project.task_ids.filtered(lambda t: t.partner_id.id == self.id)
+            tasks.is_checked_in = True
+            return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "views":[[False, "kanban"],[False,"form"]],
+            "name": 'Tasks',
+            "target": 'main',
+            "res_id": project.id,
+            "domain": [('project_id', '=', project.id)],
+            "context": {'default_project_id': project.id},
+        }
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': self.id,
@@ -169,7 +183,7 @@ class Partner(models.Model):
         return {
             "type":"ir.actions.act_window",
             "res_model":"project.task",
-            "views":[[False, "kanban"]],
+            "views":[[False, "kanban"],[False,"form"]],
             "name": 'Tasks',
             "target": 'main',
             "res_id": project.id,

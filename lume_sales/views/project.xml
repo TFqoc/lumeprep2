@@ -38,12 +38,13 @@
                 <field name="partner_id" widget="link_many2one"/>
             </span>
             <strong><field name="monetary_display"/></strong>
-            <t t-if="record.is_checked_in &amp;&amp; record.fulfillment_type == 'online'">
+            <t t-if="record.is_checked_in == true &amp;&amp; record.fulfillment_type == 'online'">
+              <br/>
               <span class="fa fa-check-square-o" style="color:green;"></span>
             </t>
           </xpath>
           <!-- Delete the else tag from the if we replaced above -->
-          <xpath expr="//div[@class='o_kanban_record_headings']/*[5]" position="replace">
+          <xpath expr="//div[@class='o_kanban_record_headings']/*[6]" position="replace">
             <!-- Empty -->
           </xpath>
           <xpath expr="/kanban/templates/t/div//div[@class='oe_kanban_content']" position="inside">
