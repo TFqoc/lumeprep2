@@ -117,7 +117,7 @@ class Partner(models.Model):
     @api.depends('first_name','middle_name','last_name')
     def _compute_full_name(self):
         for record in self:
-            record.full_name = ' '.join([record.first_name, record.middle_name, record.last_name])
+            record.full_name = ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])
 
     def warn(self):
         self.warnings += 1
@@ -211,7 +211,7 @@ class Partner(models.Model):
             if record.pref_name:
                 name = f"{record.first_name} \"{record.pref_name}\" {record.last_name}"
             else:
-                name = record.name
+                name = record.full_name
             res.append((record.id, name))
         return res
 

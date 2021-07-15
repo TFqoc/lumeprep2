@@ -359,7 +359,7 @@ class SaleOrder(models.Model):
                 # Apply on all lines with specified product
                 # (Could be multiple due to different lots of same product)
                 for line in self.order_line:
-                    if line.product_id.id in program.discount_specific_product_ids:
+                    if line.product_id in program.discount_specific_product_ids:
                         line.discount_ids = [(4,discount.id,0)]
     
     # Override
