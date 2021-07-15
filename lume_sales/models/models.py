@@ -28,10 +28,11 @@ class Partner(models.Model):
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
 
+    name = fields.Char(compute="_change_pref_name",store=True)
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
-    full_name = fields.Char(compute="_compute_full_name")
+    # full_name = fields.Char(compute="_compute_full_name")
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
@@ -114,10 +115,10 @@ class Partner(models.Model):
         for record in self:
             record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.is_over_18
     
-    @api.depends('first_name','middle_name','last_name')
-    def _compute_full_name(self):
-        for record in self:
-            record.full_name = ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])
+    # @api.depends('first_name','middle_name','last_name')
+    # def _compute_full_name(self):
+    #     for record in self:
+    #         record.full_name = ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])
 
     def warn(self):
         self.warnings += 1
@@ -211,15 +212,17 @@ class Partner(models.Model):
             if record.pref_name:
                 name = f"{record.first_name} \"{record.pref_name}\" {record.last_name}"
             else:
-                name = record.full_name
+                name = record.name # record.full_name
             res.append((record.id, name))
         return res
 
     @api.onchange('pref_name','first_name','middle_name','last_name')
+    @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         if self.name:
             # This is to rewrite the name stored as a pair in the db itself
-            self.update({'name': self.full_name})
+            # Update might use full_name
+            self.update({'name': ' '.join([self.first_name or '', self.middle_name or '', self.last_name or ''])})
     
     # This method turns out to be redundant
     # @api.onchange('patient_ids')
