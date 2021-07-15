@@ -27,6 +27,8 @@ class Partner(models.Model):
     pref_name = fields.Char()
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    has_online_order = fields.Boolean(compute='_compute_has_online_order')
+
 
     name = fields.Char(compute="_change_pref_name",store=True)
     first_name = fields.Char()
@@ -114,6 +116,18 @@ class Partner(models.Model):
         for record in self:
             record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.is_over_18
     
+    @api.depends_context('check_in_window','project_id')
+    def _compute_has_online_order(self):
+        check_in = self.env.context.get('check_in_window', False)
+        project_id = self.env.context.get('project_id', False)
+        project_id = self.env['project.project'].browse(project_id)
+        for record in self:
+            if check_in:
+                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id)
+                record.has_online_order = len(tasks) > 0
+            else:
+                record.has_online_order = False
+
     def warn(self):
         self.warnings += 1
 

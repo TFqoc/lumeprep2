@@ -29,6 +29,9 @@ class Tasks(models.Model):
     fulfillment_type = fields.Selection(selection=[('store','In Store'),('delivery','Delivery'),('online','Website'),('curb','Curbside')], default='store')
     order_type = fields.Selection(related="sales_order.order_type")
 
+    # Only used for fulfillment_type = 'online' to check if the customer has checked in the store
+    is_checked_in = fields.Boolean(default=False)
+
     # To save requests on the live timer widget
     time_now = fields.Datetime(compute='_compute_now')
     def _compute_now(self):

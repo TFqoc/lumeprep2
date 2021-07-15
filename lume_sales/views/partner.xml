@@ -11,6 +11,9 @@
             <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False) or context.get('has_caregiver',False)" />
             <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not (context.get('check_in_window',False) and context.get('has_caregiver',False))" />
           </header>
+          <div class="alert alert-info text-center" role="alert" invisible="not context.get('check_in_window',False) or context.get('has_caregiver',False)" attrs="{'invisible':[('has_online_order','=',True)]}">
+            This customer has an online order waiting for them!
+          </div>
         </xpath>
         <field name="type" position="after">
           <field name="pref_name" string="Preferred Name" />
