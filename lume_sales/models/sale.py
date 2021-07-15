@@ -512,7 +512,7 @@ class SaleLine(models.Model):
                 discount_total = 0
             discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
             discount_flat_total = sum([d.amount for d in discount_flat])
-            discout_flat_share = discount_flat_total * ((line.product_uom_qty * line.price_unit) / price_weight)
+            discout_flat_share = discount_flat_total * ((line.product_uom_qty * line.price_unit) / price_weight) if price_weight > 0 else 0
             price = (line.price_unit - (discount_flat_total * discout_flat_share)) * (1 - discount_total)
             if price < line.product_uom_qty * 0.01 and line.product_id.thc_type != 'merch':
                 # Ensure thc products don't go below 1 cent per item

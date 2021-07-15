@@ -219,8 +219,7 @@ class Partner(models.Model):
     def _change_pref_name(self):
         if self.name:
             # This is to rewrite the name stored as a pair in the db itself
-            self.update({'name': self.name + ' '})
-            self.update({'name': self.name[:len(self.name)-1]})
+            self.update({'name': self.full_name})
     
     # This method turns out to be redundant
     # @api.onchange('patient_ids')

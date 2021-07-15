@@ -145,12 +145,14 @@
             <b>Address</b>
           </span>
         </xpath>
-        <field name="name" position="replace">
-          <field name="name" invisible="1"/>
-          <field name="first_name" required="1"/>
-          <field name="middle_name" required="1"/>
-          <field name="last_name" required="1"/>
-        </field>
+        <xpath expr="//div[hasclass('oe_title')]/h1" position="replace">
+          <h1 style="display: flex;">
+            <field name="name" invisible="1"/>
+            <field name="first_name" required="1" class="mr-5"/>
+            <field name="middle_name" required="1" class="mr-5"/>
+            <field name="last_name" required="1" class="mr-5"/>
+          </h1>
+        </xpath>
       </field>
     </record>
 
