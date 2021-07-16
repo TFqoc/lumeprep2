@@ -28,6 +28,7 @@ class ProductTemplate(models.Model):
     vb_discount = fields.Boolean()
     classification = fields.Selection([('hybrid','Hybrid'),('indica','Indica'),('sativa','Sativa')])
     size = fields.Char()
+    sub_category = fields.Char()
 
     @api.depends('brand')
     def _compute_lume(self):

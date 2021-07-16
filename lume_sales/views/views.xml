@@ -189,6 +189,7 @@
           <field name="vb_discount" string="Volume Based Discount"></field>
           <field name="classification"></field>
           <field name="size"></field>
+          <field name="sub_category"/>
         </field>
       </field>
     </record>

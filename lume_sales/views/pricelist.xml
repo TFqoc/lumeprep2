@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="pricelist_lume" model="ir.ui.view">
+            <field name="name">pricelist.lume</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//group/group" position="inside">
+                    <field name="price_tier_top"/>
+                    <field name="price_tier_mid"/>
+                    <field name="price_tier_value"/>
+                    <field name="price_tier_cut"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

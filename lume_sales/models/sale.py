@@ -483,6 +483,9 @@ class SaleLine(models.Model):
         if self.env.uid != 1 and self.order_id:
             order = self.env['sale.order'].browse(vals['order_id'])
             product = self.env['product.product'].browse(vals['product_id'])
+            if product.is_tiered:
+                lot = self.env['stock.production.lot'].browse(vals['lot_id'])
+                vals['price_unit'] = order.pricelist_id.get_tiered_price(lot.tier)
             message = "Added %s" % (product.name)
             order.message_post(body=message)
         return super(SaleLine, self).create(vals)

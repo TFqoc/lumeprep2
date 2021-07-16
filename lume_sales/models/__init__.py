@@ -15,3 +15,4 @@ from . import stock_lot
 from . import settings
 from . import discount
 from . import returns
+from . import pricelist
