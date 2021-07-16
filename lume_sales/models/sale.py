@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
     cashier_partner_id = fields.Many2one('res.partner')
     payment_method = fields.Char()
 
+    return_count = fields.Integer(compute="_compute_return_count")
     partner_sale_order_count = fields.Integer(related="partner_id.sale_order_count")
     partner_image = fields.Image(related='partner_id.image_1920',max_width=1920, max_height=1920,store=True)
 
@@ -185,6 +186,20 @@ class SaleOrder(models.Model):
             'domain': ORDER_HISTORY_DOMAIN,
         }
 
+    def open_returns(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Returns',
+            'views': [[False, "tree"], [False, "form"]],
+            'res_model': 'lume.return',
+            # 'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
+            'target': 'current',
+            # 'res_id': self.id,
+            # 'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
+            'domain': [('sale_id','=',self.id)],
+        }
+
+
     @api.depends('picking_ids.move_ids_without_package.state')
     def _compute_delivered(self):
         for record in self:
@@ -218,6 +233,10 @@ class SaleOrder(models.Model):
                     if type_order in ['medical','adult']:
                         record.order_type = type_order
                         break
+
+    def _compute_return_count(self):
+        for record in self:
+            record.return_count = self.env['lume.return'].search_count([('sale_id','=',record.id)])
     
     @api.onchange('fulfillment_type')
     def change_fulfillment(self):
@@ -340,7 +359,7 @@ class SaleOrder(models.Model):
                 # Apply on all lines with specified product
                 # (Could be multiple due to different lots of same product)
                 for line in self.order_line:
-                    if line.product_id.id in program.discount_specific_product_ids:
+                    if line.product_id in program.discount_specific_product_ids:
                         line.discount_ids = [(4,discount.id,0)]
     
     # Override
@@ -412,7 +431,34 @@ class SaleOrder(models.Model):
                 group.id
             ) for group, amounts in res]
             logger.info("Tax Group info: %s" % order.amount_by_group)
-        pass
+
+    def create_return(self):
+        return_id = self.env['lume.return'].create({
+            'sale_id': self.id,
+            'currency_id': self.currency_id.id,
+        })
+        return_lines = []
+        for line in self.order_line:
+            data = {
+                'return_id':return_id.id,
+                'price': line.price_subtotal / line.product_uom_qty,
+                'product_id': line.product_id.id,
+                'lot_id': line.lot_id.id,
+                'original_qty': line.product_uom_qty
+            }
+            return_lines.append((0,0,data))
+        return_id.return_lines = return_lines
+        # Open return in new action
+        return {
+                'type': 'ir.actions.act_window',
+                'name': 'Return',
+                'views': [[False,'form']],
+                'res_model': 'lume.return',
+                # 'view_id': self.env.ref('lume_sales.TBD').id,
+                'target': 'current',
+                'res_id': return_id.id,
+                # 'context': {},
+            }
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
@@ -466,7 +512,7 @@ class SaleLine(models.Model):
                 discount_total = 0
             discount_flat = line.discount_ids.filtered(lambda l: l.discount_type == 'fixed_amount')
             discount_flat_total = sum([d.amount for d in discount_flat])
-            discout_flat_share = discount_flat_total * ((line.product_uom_qty * line.price_unit) / price_weight)
+            discout_flat_share = discount_flat_total * ((line.product_uom_qty * line.price_unit) / price_weight) if price_weight > 0 else 0
             price = (line.price_unit - (discount_flat_total * discout_flat_share)) * (1 - discount_total)
             if price < line.product_uom_qty * 0.01 and line.product_id.thc_type != 'merch':
                 # Ensure thc products don't go below 1 cent per item

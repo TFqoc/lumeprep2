@@ -7,10 +7,14 @@
       <field name="arch" type="xml">
         <xpath expr="//form//sheet" position="before">
           <header>
+            <field name="has_online_order" invisible="1"/>
             <!-- <button name="%(scan_dl_wizard)d" string="Scan DL" type="action" class="btn-primary"/> -->
             <button name="check_in" string="Check In" type="object" class="btn-primary" invisible="not context.get('check_in_window',False) or context.get('has_caregiver',False)" />
             <button name="check_in_as_patient" string="Check In Patient" type="object" class="btn-primary" invisible="not (context.get('check_in_window',False) and context.get('has_caregiver',False))" />
           </header>
+          <div class="alert alert-info text-center" role="alert" invisible="not context.get('check_in_window',False) or context.get('has_caregiver',False)" attrs="{'invisible':[('has_online_order','!=',True)]}">
+            This customer has an online order waiting for them!
+          </div>
         </xpath>
         <field name="type" position="after">
           <field name="pref_name" string="Preferred Name" />
@@ -144,6 +148,14 @@
           <span class="o_form_label o_td_label" name="address_name">
             <b>Address</b>
           </span>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_title')]/h1" position="replace">
+          <h1 style="display: flex;">
+            <field name="name" invisible="1"/>
+            <field name="first_name" required="1" class="mr-5"/>
+            <field name="middle_name" required="1" class="mr-5"/>
+            <field name="last_name" required="1" class="mr-5"/>
+          </h1>
         </xpath>
       </field>
     </record>

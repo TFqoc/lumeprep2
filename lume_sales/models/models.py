@@ -27,11 +27,13 @@ class Partner(models.Model):
     pref_name = fields.Char()
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
     # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
+    has_online_order = fields.Boolean(compute='_compute_has_online_order')
 
+
+    name = fields.Char(compute="_change_pref_name",store=True)
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
-    full_name = fields.Char(compute="_compute_full_name")
 
     is_caregiver = fields.Boolean()
     caregiver_license = fields.Char()
@@ -114,10 +116,17 @@ class Partner(models.Model):
         for record in self:
             record.can_purchase_medical = not record.is_expired_medical and record.medical_id and record.is_over_18
     
-    @api.depends('first_name','middle_name','last_name')
-    def _compute_full_name(self):
+    @api.depends_context('check_in_window','project_id')
+    def _compute_has_online_order(self):
+        check_in = self.env.context.get('check_in_window', False)
+        project_id = self.env.context.get('project_id', False)
+        project_id = self.env['project.project'].browse(project_id)
         for record in self:
-            record.full_name = ' '.join([record.first_name, record.middle_name, record.last_name])
+            if check_in:
+                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id)
+                record.has_online_order = len(tasks) > 0
+            else:
+                record.has_online_order = False
 
     def warn(self):
         self.warnings += 1
@@ -148,6 +157,20 @@ class Partner(models.Model):
         ctx = self.env.context
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
+        
+        if self.has_online_order:
+            tasks = project.task_ids.filtered(lambda t: t.partner_id.id == self.id)
+            tasks.is_checked_in = True
+            return {
+            "type":"ir.actions.act_window",
+            "res_model":"project.task",
+            "views":[[False, "kanban"],[False,"form"]],
+            "name": 'Tasks',
+            "target": 'main',
+            "res_id": project.id,
+            "domain": [('project_id', '=', project.id)],
+            "context": {'default_project_id': project.id},
+        }
         # stage = project.type_ids.sorted(key=None)[0] # sort by default order (sequence in this case)
         self.env['project.task'].create({
             'partner_id': self.id,
@@ -160,7 +183,7 @@ class Partner(models.Model):
         return {
             "type":"ir.actions.act_window",
             "res_model":"project.task",
-            "views":[[False, "kanban"]],
+            "views":[[False, "kanban"],[False,"form"]],
             "name": 'Tasks',
             "target": 'main',
             "res_id": project.id,
@@ -216,11 +239,11 @@ class Partner(models.Model):
         return res
 
     @api.onchange('pref_name','first_name','middle_name','last_name')
+    @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         if self.name:
             # This is to rewrite the name stored as a pair in the db itself
-            self.update({'name': self.name + ' '})
-            self.update({'name': self.name[:len(self.name)-1]})
+            self.update({'name': ' '.join([self.first_name or '', self.middle_name or '', self.last_name or ''])})
     
     # This method turns out to be redundant
     # @api.onchange('patient_ids')

@@ -1,5 +1,9 @@
+import onfleet
 from odoo import models, fields, api
 from onfleet import Onfleet
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class OnFleet():
     api_key = ''
@@ -27,6 +31,8 @@ def parse_phone(number):
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    onfleet_task_id = fields.Char()
     
     def check_onfleet_connection(self):
         if not _onfleet.connected:
@@ -47,22 +53,31 @@ class SaleOrder(models.Model):
             notes = ""
             total_qty = 0
             for line in order.order_line:
-                notes += "%s qty.\n%s\n%s\n" % (line.product_uom_qty, line.product_id.name, line.price_unit,line.lot_id.name)
+                notes += "%s qty.\n%s\nUnit Price: $%.2f\n%s\n" % (line.product_uom_qty, line.product_id.name, line.price_unit,line.lot_id.name)
                 total_qty += line.product_uom_qty
-            notes += "Total items: %s\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
+            notes += "Total items: %.0f\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
             # Sumbit order
-            r = _onfleet.tasks.create(body={
-                "destination": {
-                    "address":{
-                        "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
-                        "apartment": self.street2 # Used for line 2 of street address
-                    }
-                },
-                "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
-                "notes": notes
-            })
-            # Check for errors here
-            if len(r['warnings']) > 0:
+            if order.check_onfleet_connection():
+                b = {
+                    "destination": {
+                        "address":{
+                            "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
+                            "apartment": self.street2 or ''# Used for line 2 of street address
+                        }
+                    },
+                    "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
+                    "notes": notes
+                }
+                _logger.info(f"OnFleet Create Task Request: {b}")
+                r = _onfleet.api.tasks.create(body=b)
+                _logger.info(f"Response: {r}")
+                # Check for errors here
+                if len(r['destination'].get('warnings',[])) > 0:
+                    pass
+                order.onfleet_task_id = r.get('shortID\d', False)
+            else:
+                # Do something with failed connection
+                _logger.info("Connection to OnFleet Failed")
                 pass
         return res

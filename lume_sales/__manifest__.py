@@ -45,6 +45,7 @@
         'views/promo.xml',
         'views/actions.xml',
         'views/partner.xml',
+        'views/returns.xml',
         'views/views.xml',
         'views/templates.xml',
         'data/data.xml',

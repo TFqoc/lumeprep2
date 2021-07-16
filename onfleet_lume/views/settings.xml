@@ -13,7 +13,7 @@
                         <div class="row mt16 o_settings_container">
                             <div class="o_setting_left_pane">
                                 <label for="onfleet_api_key" string="OnFleet API Key"/>
-                                <field name="onfleet_api_key"></field>
+                                <field name="onfleet_api_key" required="1"></field>
                             </div>
                         </div>
                     </div>
