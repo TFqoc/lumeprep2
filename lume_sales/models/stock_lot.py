@@ -21,8 +21,7 @@ class StockLot(models.Model):
     stock_at_store = fields.Float(compute="_compute_stock_at_store")
     lpc_quantity = fields.Integer('Product Quantity', compute="_compute_lpc_quantity", inverse="_inverse_lpc_quantity")
 
-    # Temp fields for testing that will be added by Keyur in metrc
-    tier = fields.Selection([('test','Test')], default="test")
+    tier = fields.Selection([('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')])
 
     @api.depends('product_id.categ_id','product_id.effect','product_id.brand')
     def _compute_groupby_fields(self):
