@@ -29,13 +29,13 @@ class Customer(models.Model):
             if response.status_code != 200:
                 #if not, then create customer
                 logger.info("SB: Creating customer")
-                name = self.name.split(' ')
+                # name = self.name.split(' ')
                 creation_data = {
                     "pos_user": str(self.id),
                     "pos_type": "lume-odoo",
                     "phone_number": self.phone,
-                    "first_name": name[0],
-                    "last_name": name[1:],
+                    "first_name": self.first_name or '',
+                    "last_name": self.last_name or '',
                     "email": self.email,
                     "address1": self.street,
                     "address2": self.street2,

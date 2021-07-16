@@ -241,9 +241,10 @@ class Partner(models.Model):
     @api.onchange('pref_name','first_name','middle_name','last_name')
     @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
-        if self.name:
-            # This is to rewrite the name stored as a pair in the db itself
-            self.update({'name': ' '.join([self.first_name or '', self.middle_name or '', self.last_name or ''])})
+        for record in self:
+            if record.name:
+                # This is to rewrite the name stored as a pair in the db itself
+                record.update({'name': ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])})
     
     # This method turns out to be redundant
     # @api.onchange('patient_ids')

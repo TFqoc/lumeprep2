@@ -24,8 +24,8 @@ class ProductTemplate(models.Model):
     is_tiered = fields.Boolean()
 
         # Spreadsheet values
-    tiered = fields.Boolean()
-    vs_discount = fields.Boolean()
+    # tiered = fields.Boolean()
+    vb_discount = fields.Boolean()
     classification = fields.Selection([('hybrid','Hybrid'),('indica','Indica'),('sativa','Sativa')])
     size = fields.Char()
 
