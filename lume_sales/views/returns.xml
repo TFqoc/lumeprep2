@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+        <record id="returns_form" model="ir.ui.view">
+            <field name="name">lume.returns.form</field>
+            <field name="model">lume.return</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group name="return_header">
+                            <field name="refund_type" required="1"/>
+                            <field name="issue_type" required="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Return Lines" name="return_lines">
+                                <field name="return_lines" mode="tree">
+                                    <tree edit="1" create="0" editable="bottom">
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="lot_id" string="Metrc Tag" readonly="1"/>
+                                        <field name="original_qty" readonly="1"/>
+                                        <field name="return_qty"/>
+                                        <field name="price" readonly="1"/>
+                                        <field name="reason_code" required="1"/>
+                                        <field name="total_price" readonly="1"/>
+                                    </tree>
+                                </field>
+                                <group name="note_group" col="6" class="mt-2 mt-md-0" modifiers="{}">
+                                    <group class="oe_subtotal_footer oe_right" colspan="2" name="return_total" modifiers="{}">
+                                        <field name="refund_total" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly':true}"/>
+                                    </group>
+                                    <div class="oe_clear" modifiers="{}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="returns_tree" model="ir.ui.view">
+            <field name="name">lume.returns.tree</field>
+            <field name="model">lume.return</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0">
+                    <field name="name"/>
+                    <field name="refund_type"/>
+                    <field name="issue_type"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

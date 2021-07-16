@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_message_wizard,access_message_wizard,model_message_wizard,base.group_user,1,1,1,1
+access_note_wizard,access_note_wizard,model_note_wizard,base.group_user,1,1,1,1
+access_lume_note,access_lume_note,model_lume_note,base.group_user,1,1,1,1
+access_lume_weekday,access_lume_weekday,model_lume_weekday,base.group_user,1,0,0,0
+access_lume_discount,access_lume_discount,model_lume_discount,base.group_user,1,0,0,0
+access_sale_order_cancel_reason,access_sale_order_cancel_reason,model_sale_order_cancel_reason,base.group_user,1,1,1,1
+access_lume_return,access_lume_return,model_lume_return,base.group_user,1,1,1,1
+access_lume_return_line,access_lume_return_line,model_lume_return_line,base.group_user,1,1,1,1

@@ -56,14 +56,14 @@ class MergeLotWizard(models.TransientModel):
             if resp:
                 raise UserError(_("Package {} already exist in metrc. Please use another package tag to produce.".format(resp['Label'])))
             else:
-                if not self.warehouse_id.metrc_manu_type_id:
-                    raise UserError(_("Operation type for split lot is not configured on warehouse {}".format(self.warehouse_id.name)))
+                if not self.warehouse_id.metrc_merge_type_id:
+                    raise UserError(_("Operation type for consolidation is not configured on warehouse {}".format(self.warehouse_id.name)))
                 qty_to_produce = target_line.quantity
                 location = self.location_id.id
                 if self.picking_id.picking_type_code == 'incoming':
                     location = self.location_dest_id.id
                 production_order = self.env['mrp.production'].create({
-                    'picking_type_id': self.warehouse_id.metrc_manu_type_id.id,
+                    'picking_type_id': self.warehouse_id.metrc_merge_type_id.id,
                     'product_id': target_line.product_id.id,
                     'location_src_id': location,
                     'location_dest_id': location,

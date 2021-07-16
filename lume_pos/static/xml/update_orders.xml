@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="templates" xml:space="preserve">
+    <t t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
+        <xpath expr="//HeaderButton" position="after">
+            <UpdateOrders/>
+        </xpath>
+    </t>
+    <t t-name="UpdateOrders" owl="1">
+        <span style="display:none;"></span>
+    </t>
+</templates>

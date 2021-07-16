@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <!-- Form view bit for Settings page -->
+        <record id="res_config_settings_view_form_onfleet_lume" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.onfleet_lume</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="10"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='lume_pos']" position="after">
+                    <div id="onfleet">
+                        <h2>OnFleet</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="o_setting_left_pane">
+                                <label for="onfleet_api_key" string="OnFleet API Key"/>
+                                <field name="onfleet_api_key" required="1"></field>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
