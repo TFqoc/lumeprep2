@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="metrc_transfer_view_tree_inherit_lume_metrc_stock" model="ir.ui.view">
+        <field name="name">metrc.transfer.tree.inherit.lume_metrc_stock</field>
+        <field name="model">metrc.transfer</field>
+        <field name="inherit_id" ref="metrc_stock.view_metrc_transfer_tree"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="tier"/>
+            </field>
+        </field>
+    </record>
+</odoo>
