@@ -23,6 +23,12 @@ class ProductTemplate(models.Model):
     is_lume = fields.Boolean(compute="_compute_lume", store=True)
     is_tiered = fields.Boolean()
 
+        # Spreadsheet values
+    tiered = fields.Boolean()
+    vs_discount = fields.Boolean()
+    classification = fields.Selection([('hybrid','Hybrid'),('indica','Indica'),('sativa','Sativa')])
+    size = fields.Char()
+
     @api.depends('brand')
     def _compute_lume(self):
         for record in self:

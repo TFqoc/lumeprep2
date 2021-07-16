@@ -185,6 +185,10 @@
           <field name="thc_type" string="Type" required="1" />
           <!-- <field name="thc" string="THC"></field> -->
           <field name="effect" string="Effect"/>
+          <field name="tiered"></field>
+          <field name="vs_discount"></field>
+          <field name="classification"></field>
+          <field name="size"></field>
         </field>
       </field>
     </record>
