@@ -38,7 +38,7 @@
                 <field name="partner_id" widget="link_many2one"/>
             </span>
             <strong><field name="monetary_display"/></strong>
-            <t t-if="record.is_checked_in == true &amp;&amp; record.fulfillment_type == 'online'">
+            <t t-if="record.is_checked_in.raw_value == true &amp;&amp; record.fulfillment_type.raw_value == 'online'">
               <br/>
               <span class="fa fa-check-square-o" style="color:green;"></span>
             </t>

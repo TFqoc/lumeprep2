@@ -186,18 +186,18 @@ class SaleOrder(models.Model):
             'domain': ORDER_HISTORY_DOMAIN,
         }
 
-    def open_returns(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Returns',
-            'views': [[False, "tree"], [False, "form"]],
-            'res_model': 'lume.return',
-            # 'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
-            'target': 'current',
-            # 'res_id': self.id,
-            # 'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
-            'domain': [('sale_id','=',self.id)],
-        }
+    # def open_returns(self):
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Returns',
+    #         'views': [[False, "tree"], [False, "form"]],
+    #         'res_model': 'lume.return',
+    #         # 'view_id': self.env.ref('lume_sales.view_sale_order_history_kanban').id,
+    #         'target': 'current',
+    #         # 'res_id': self.id,
+    #         # 'context': {'search_default_partner_id': self.partner_id.id, 'default_partner_id': self.partner_id.id},
+    #         'domain': [('sale_id','=',self.id)],
+    #     }
 
 
     @api.depends('picking_ids.move_ids_without_package.state')
