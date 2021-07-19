@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
                                     index=True, copy=False,
                                     states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
-    customer_type = fields.Selection(related='partner_id.customer_type')
+    customer_type = fields.Selection(selection='_get_customer_types')
 
     patient_license_number = fields.Many2one(comodel_name="metrc.license", string='Patient License',
                                          domain="[('base_type', '=', 'Patient')]",
@@ -35,6 +35,15 @@ class SaleOrder(models.Model):
                                            states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     ext_patient_id_method = fields.Many2one(comodel_name='patient.id.method', string='External Patient ID Method',
                                         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+
+    @api.model
+    def _get_customer_types(self):
+        return [(type.name, type.name) for type in self.env['metrc.customer.types'].search([])]
+    
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        super(SaleOrder, self).onchange_partner_id()
+        self.update({'customer_type': self.partner_id.customer_type})
 
     @api.depends('order_line', 'order_line.product_id', 'order_line.product_id.is_metric_product', 'warehouse_id', 'team_id')
     def _compute_license_required(self):
