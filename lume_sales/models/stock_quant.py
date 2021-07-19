@@ -8,7 +8,7 @@ class StockQuant(models.Model):
     tier = fields.Selection(related="lot_id.tier")
 
     def _compute_tiered(self):
-        for record in self:
+        for record in self.sudo():
             if record.product_id and record.lot_id:
                 record.is_tiered = record.product_id.is_tiered
                 record.tier = record.lot_id.tier
