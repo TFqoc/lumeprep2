@@ -31,7 +31,7 @@ def get_selection_label(self, object, field_name, field_value):
 class PricelistItem(models.Model):
     _inherit = 'product.pricelist.item'
 
-    applied_on = fields.Selection(selection_add=[('2.5_tier','Tier')],ondelete="set default")
+    applied_on = fields.Selection(selection_add=[('2.5_tier','Tier')],ondelete={"2.5_tier":"set default"})
     tier = fields.Selection(selection=[
                             ('top','Top'),
                             ('mid','Mid'),
