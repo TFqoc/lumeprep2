@@ -149,11 +149,11 @@
                 <!-- <field name="thc_mg"/> -->
                 <!-- <field name="cbd_percent"/>
                 <field name="cbd_mg"/> -->
-                <!-- <field name="tier"/> Eventually Keyur will add this field in metrc --> 
+                <field name="tier"/>
                 <field name="product_id"/>
                 <field name="lpc_quantity"/>
                 <field name="stock_at_store"/>
-                <!-- <field name="is_tiered"/> Will be added by Keyur -->
+                <field name="is_tiered"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{record.stock_at_store.raw_value == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_percent || 0}}" t-attf-data-qty="{{record.stock_at_store.raw_value}}">
@@ -180,7 +180,11 @@
                                             <li><strong>ATS: 
                                                 <t t-esc="record.stock_at_store.raw_value"/>
                                                 <field name="product_uom_id"/></strong></li>
-                                            <!-- <li><strong>Tier: </strong><field name="tier"></field></li> -->
+                                            <li>
+                                                <t t-if="record.is_tiered.raw_value == true">
+                                                    <strong>Tier: </strong><field name="tier"></field>
+                                                </t>
+                                            </li>
                                             <li>
                                                 <!-- <t t-if="record.thc_mg.raw_value > 0">
                                                     <strong>THC: <field name="thc_mg"/>mg</strong>

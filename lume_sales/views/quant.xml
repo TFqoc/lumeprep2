@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="location_id" position="after">
                 <field name="is_tiered" invisible="1"/>
-                <field name="tier" attrs="{'invisible':[('is_tiered','=',False)],'required':[('is_tiered','=',True)],'readonly':[('is_tiered','=',False)]}"/>
+                <field name="tier" attrs="{'invisible':[('is_tiered','=',False)],'required':[('is_tiered','=',True)]}"/>
             </field>
         </field>
     </record>
