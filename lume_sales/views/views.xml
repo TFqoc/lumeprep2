@@ -191,9 +191,9 @@
           <field name="size"></field>
           <field name="sub_category"/>
         </field>
-      </field>
-      <field name="uom_po_id" position="after">
-        <field name="is_tiered" widget="boolean_toggle"/>
+        <field name="uom_po_id" position="after">
+          <field name="is_tiered" widget="boolean_toggle"/>
+        </field>
       </field>
     </record>
 
