@@ -47,10 +47,10 @@
                     <span style="margin: 5px;"/>
                     <button name="open_notes" string="Notes" class="btn-primary oe_edit_only" type="object" />
                 </field>
-                <fields name="order_line" position="attributes">
+                <field name="order_line" position="attributes">
                     <attribute name="attrs"></attribute>
                     <attribute name="readonly">1</attribute>
-                </fields>
+                </field>
                 <xpath expr="//control" position="replace"></xpath>
                 <field name="validity_date" position="replace">
                     <field name="validity_date" invisible="1"></field>
