@@ -31,11 +31,16 @@ class StockLot(models.Model):
             record.effect = record.product_id.effect
             record.brand = record.product_id.brand
 
+    @api.depends_context('pricelist_id','partner_id')
     def _compute_price(self):
+        pricelist = self.env['product.pricelist'].browse(self.env.context.get('pricelist_id'))
+        partner = self.env['res.partner'].browse(self.env.context.get('partner_id'))
         for record in self:
             # TODO more logic here for tiers and store type
-            # Will depend on context from catalog, need to add pricelist_id in context
-            record.price = record.product_id.list_price
+            if record.product_id.is_tiered:
+                record.price = pricelist.get_tiered_price(record.tier)
+            else:
+                record.price = pricelist._compute_price_rule([(record.product_id,1,partner)])
 
     @api.depends_context("warehouse_id")
     def _compute_stock_at_store(self):
