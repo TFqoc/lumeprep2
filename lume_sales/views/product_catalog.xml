@@ -145,8 +145,8 @@
             <kanban edit="0" create="0" class="o_kanban_mobile o_fsm_material_kanban" js_class="lpc_product_kanban">
                 <field name="id"/>
                 <field name="name"/>
-                <field name="thc_percent"/>
-                <field name="thc_mg"/>
+                <!-- <field name="thc_percent"/> -->
+                <!-- <field name="thc_mg"/> -->
                 <!-- <field name="cbd_percent"/>
                 <field name="cbd_mg"/> -->
                 <!-- <field name="tier"/> Eventually Keyur will add this field in metrc --> 
@@ -156,7 +156,7 @@
                 <!-- <field name="is_tiered"/> Will be added by Keyur -->
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{record.stock_at_store.raw_value == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_percent.raw_value}}" t-attf-data-qty="{{record.stock_at_store.raw_value}}">
+                        <div t-attf-class="o_kanban_record d-flex o_lpc_industry_product {{record.stock_at_store.raw_value == 0 ? 'catalog_card_hide_0' : 'false_test'}}" style="min-height: 100px;align-items:center;" t-attf-data-type="{{record.thc_percent || 0}}" t-attf-data-qty="{{record.stock_at_store.raw_value}}">
                             <button class="o_kanban_image" style="z-index: 50;border: none;padding: 0px;background-color: transparent;">
                                 <img t-att-src="kanban_image('stock.production.lot', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                             </button>
@@ -182,12 +182,12 @@
                                                 <field name="product_uom_id"/></strong></li>
                                             <!-- <li><strong>Tier: </strong><field name="tier"></field></li> -->
                                             <li>
-                                                <t t-if="record.thc_mg.raw_value > 0">
+                                                <!-- <t t-if="record.thc_mg.raw_value > 0">
                                                     <strong>THC: <field name="thc_mg"/>mg</strong>
                                                 </t>
                                                 <t t-elif="record.thc_percent.raw_value > 0">
                                                     <strong>THC: <field name="thc_percent"/>%</strong>
-                                                </t>
+                                                </t> -->
                                             </li>
                                             <!-- <li>
                                                 <t t-if="record.cbd_mg.raw_value > 0">
