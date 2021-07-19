@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="stock_quant_view_tree_inherit_lume_sales" model="ir.ui.view">
+    <record id="stock_lot_view_tree_inherit_lume_sales" model="ir.ui.view">
         <field name="name">stock.lot.view.tree.inherit.lume.sales</field>
-        <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
         <field name="arch" type="xml">
-            <field name="location_id" position="after">
+            <field name="ref" position="before">
                 <field name="is_tiered" invisible="1"/>
                 <field name="tier" attrs="{'invisible':[('is_tiered','=',False)],'required':[('is_tiered','=',True)],'readonly':False}"/>
             </field>
