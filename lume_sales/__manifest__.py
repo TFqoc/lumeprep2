@@ -43,7 +43,7 @@
         'views/product_catalog.xml',
         'views/promo.xml',
         'views/pricelist.xml',
-        'views/lot.xml',
+        'views/quant.xml',
         'views/actions.xml',
         'views/partner.xml',
         # 'views/returns.xml',
