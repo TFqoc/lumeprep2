@@ -531,6 +531,14 @@ class SaleLine(models.Model):
             if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
                 line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
 
+    # Override
+    def _get_display_price(self, product):
+        logger.info("Called Get Display Price")
+        if self.product_id.is_tiered:
+            return self.order_id.pricelist_id.get_tiered_price(self.lot_id.tier)
+        else:
+            return super()._get_display_price(product)
+
     # @api.onchange('product_id')
     # def check_order_line(self):
     #     if self.product_id and self.order_id.partner_id:

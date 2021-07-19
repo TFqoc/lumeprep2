@@ -33,7 +33,7 @@ class StockLot(models.Model):
     def _compute_price(self):
         for record in self:
             # TODO more logic here for tiers and store type
-            # Might depend on the context
+            # Will depend on context from catalog, need to add pricelist_id in context
             record.price = record.product_id.list_price
 
     @api.depends_context("warehouse_id")
