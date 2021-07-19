@@ -3,7 +3,7 @@
 {
     'name': "Lume: Inventory Customizations",
     'version': '14.0.1',
-    'depends': ['metrc_stock'],
+    'depends': ['metrc_stock', 'lume_sales'],
     'author': 'Odoo Inc',
     'license': 'OEEL-1',
     'mainainer': 'Odoo Inc',
@@ -16,9 +16,11 @@ Lume: Inventory Customizations
 3. Ready to do Inventory adjustment screen.
 4. Store to Store transfers.
 5. Menu renaming and re-arranging under Operations menu.
+3. Tier on metrc transfer. Flowing it to packages received.
     """,
     # data files always loaded at installation
     'data': [
         'views/stock_views.xml',
+        'views/metrc_transfer_views.xml',
     ],
 }
