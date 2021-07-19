@@ -40,7 +40,7 @@ class StockLot(models.Model):
             if record.product_id.is_tiered:
                 record.price = pricelist.get_tiered_price(record.tier)
             else:
-                record.price = pricelist._compute_price_rule([(record.product_id,1,partner)])
+                record.price = pricelist._compute_price_rule([(record.product_id,1,partner)])[record.product_id.id][0]
 
     @api.depends_context("warehouse_id")
     def _compute_stock_at_store(self):
