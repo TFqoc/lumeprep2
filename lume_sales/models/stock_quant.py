@@ -5,7 +5,7 @@ class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
     is_tiered = fields.Boolean(compute="_compute_tiered")
-    tier = fields.Selection(related="lot_id.tier")
+    tier = fields.Selection([('top','Top'),('mid','Mid'),('value','Value'),('cut','Fresh Cut')])
 
     def _compute_tiered(self):
         for record in self.sudo():
