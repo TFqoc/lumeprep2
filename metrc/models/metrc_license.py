@@ -205,17 +205,25 @@ class MetrcLicense(models.Model):
         return super(MetrcLicense, self)._name_search(name=name, args=args, limit=limit, name_get_uid=name_get_uid)
     
     @api.model
-    def get_license(self, license_number, base_type='Internal', raise_for_error=True):
+    def get_license(self, license_number, base_type=False, raise_for_error=True):
         # helper function that finds license based on license number and raise error if 
         # raise_for_error attribute is set to True.
         domain = [
-            ('base_type', '=', base_type),
             ('license_number', '=', license_number)
         ]
+        if base_type:
+            domain = domain + [
+                ('base_type', '=', base_type)
+            ]
+        else:
+            domain = domain + [
+                '|', ('base_type', '=', 'Internal'),
+                ('base_type', '=', 'External'),
+            ]
         license_id = self.search(domain, limit=1)
         if not license_id and raise_for_error:
             raise ValidationError(_("License {} of type {} not found in database."
-                                    "\nPlease create one.".format(license_number, base_type)))
+                                    "\nPlease create one.".format(license_number, base_type or 'Internal/External')))
         return license_id
 
     def unlink(self):
