@@ -334,12 +334,12 @@ class MetrcTransfer(models.Model):
         while pacakges:
             package = pacakges.pop()
             package_vals = self._map_package_reponse(package)
-            product_id = self._map_metrc_product(transfer['RecipientFacilityLicenseNumber'],
-                                                transfer['ShipperFacilityLicenseNumber'],
-                                                package['ProductName'],
-                                                package['ProductCategoryName'],
-                                                package['ReceivedUnitOfMeasureName'])
-            package_vals['product_id'] = product_id and product_id.id or False
+            # product_id = self._map_metrc_product(transfer['RecipientFacilityLicenseNumber'],
+            #                                     transfer['ShipperFacilityLicenseNumber'],
+            #                                     package['ProductName'],
+            #                                     package['ProductCategoryName'],
+            #                                     package['ReceivedUnitOfMeasureName'])
+            # package_vals['product_id'] = product_id and product_id.id or False
             transfer_id = transfer['Id']
             delivery_id = transfer['DeliveryId']
             package_id = package['PackageId']
@@ -785,13 +785,13 @@ class MetrcTransfer(models.Model):
         if not all(metrc_transfers.mapped('move_line_id')):
             raise ValidationError(_("Consolidation for packages which are not received in odoo is not possible.\n"
                                     "Please receive them first."))
-        alias_map = { mt.id: False for mt in metrc_transfers }
-        for mt in metrc_transfers:
-            if not mt.product_id:
-                alias = MetrcAlias.search([
-                    ('alias_name', '=', mt.product_name),
-                    ('license_id.license_number', '=', mt.shipper_facility_license_number)], limit=1)
-                alias_map[mt.id] = alias
+        # alias_map = { mt.id: False for mt in metrc_transfers }
+        # for mt in metrc_transfers:
+        #     if not mt.product_id:
+        #         alias = MetrcAlias.search([
+        #             ('alias_name', '=', mt.product_name),
+        #             ('license_id.license_number', '=', mt.shipper_facility_license_number)], limit=1)
+        #         alias_map[mt.id] = alias
         lot_datas = {prod: [] for prod in transfer_move_lines.mapped('product_id')}
         for lot in transfer_move_lines.mapped('lot_id'):
             if lot.product_id in lot_datas.keys():
@@ -801,7 +801,7 @@ class MetrcTransfer(models.Model):
             qty_available = []
             for lot in lots:
                 prod.flush()
-                prod = prod.with_context(lot_id=lot.id, warehouse=warehouse_id.id)
+                prod = prod.with_context(lot_id=lot.id, location=picking_id.location_dest_id.id)
                 qty_available.append(prod.qty_available)
             new_lot_lines.append({
                 'lot_ids': [(6, 0, [l.id for l in lots])],
@@ -869,53 +869,36 @@ class MetrcTransfer(models.Model):
         MPA = self.env['metrc.product.alias']
         PP = self.env['product.product']
         ML = self.env['metrc.license']
-        source_license = ML.get_license(self[0].src_license)
-        warehouse = self.env['stock.warehouse'].search([
-            ('license_id', '=', source_license.id)
-        ])
-        if not warehouse:
-            raise ValidationError(_("Facility License not configured on any warehouse.\n"
-                                    "Please configure one for {}.".format(source_license.license_number)))
-        partner_license = False
-        manifest = set(self.mapped('manifest_number'))
-        if len(manifest) > 1:
-            raise UserError(_("Can not process more then one manifest at a time."))
-        for transfer in self:
-            if transfer.shipper_facility_license_number and not partner_license:
-                partner_license = ML.get_license(transfer.shipper_facility_license_number, base_type="External")
-            if transfer.product_id:
-                continue
-        if not partner_license:
-            raise ValidationError(_("Shipper Facility License not provided on manifest: {}".format(manifest)))
-        if all([t.product_id for t in self]):
-            try:
-                pick = self.create_transfer(partner_license.partner_id,
-                                            partner_license,
-                                            warehouse.in_type_id,
-                                            warehouse.lot_stock_id)
-                if isinstance(pick, (dict)) and pick.get('type', False) == 'ir.actions.act_window':
-                    return pick
-            except UserError as ue:
-                raise ue
-            except ValidationError as ve:
-                raise ve
-            except Exception as e:
-                raise e
-            manifest_transfers = self.search([('manifest_number', '=', self[0].manifest_number)])
-            processed_transfers = manifest_transfers.filtered(lambda t: t.move_line_id)
-            if len(manifest_transfers) != len(self):
-                (manifest_transfers - self).write({'manifest_status': 'Partial'})
-            (self + processed_transfers).write({'manifest_status': 'Accepted'})
-            return {'type': 'ir.actions.act_window_close'}
-        else:
-            transfers_without_product = self.filtered(lambda t: not t.product_id)
-            action_data = {
-                'type': 'ir.actions.act_window',
-                'name': _('Transfers Require Product'),
-                'res_model': 'metrc.transfer',
-                'view_mode': 'tree',
-                'view_id': self.env.ref('metrc_stock.view_metrc_transfer_without_product_tree').id,
-                'domain': [('id', 'in', transfers_without_product.ids)],
-                'context': {}
-            }
-            return action_data
+        MTRW = self.env['metrc.transfer.receive.wizard']
+        manifests = set(self.mapped('manifest_number'))
+        receiving_license = set(self.mapped('src_license'))
+        # User should process for one receving facility license only.
+        if len(receiving_license) > 1:
+            raise ValidationError(_("Can not process receipts for more then once license at a time."))
+        # Need to check all transfers have products assigned
+        if not all([t.product_id for t in self]):
+            raise ValidationError(_("Please assign products all the transfers being processed."))
+        source_license = ML.get_license(self[0].src_license, base_type='Internal')
+        # before processing transfers check for shipper license is available in odoo or not.
+        for manifest in manifests:
+            manifest_transfers = self.filtered(lambda t: t.manifest_number == manifest)
+            partner_license = False
+            if manifest_transfers[0].shipper_facility_license_number and not partner_license:
+                partner_license = ML.get_license(manifest_transfers[0].shipper_facility_license_number)
+            if not partner_license:
+                raise ValidationError(_("Shipper Facility License not provided on manifest: {}".format(manifest)))
+        transfer_wiz = MTRW.create({
+            'facility_license_id': source_license.id,
+            'transfer_ids': self.ids
+        })
+        transfer_wiz.onchange_operation_type()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Receive Transfers'),
+            'res_model': MTRW._name,
+            'res_id': transfer_wiz.id,
+            'view_mode': 'form',
+            'context': {},
+            'domain': [],
+            'target': 'new'
+        }

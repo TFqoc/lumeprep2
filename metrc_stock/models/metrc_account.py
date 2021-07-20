@@ -36,3 +36,8 @@ class MetrcAccount(models.Model):
 
     def do_import_packages(self):
         self.env['stock.production.lot']._cron_do_import_packages(force_last_sync_date=datetime.datetime.utcnow()-datetime.timedelta(days=30))
+    
+    def do_import_metrc_locations(self):
+        for license in self.env['metrc.meta'].get_internal_licenses():
+            self.env['metrc.location.type']._cron_do_model_import(self, license=license)
+            self.env['metrc.location']._cron_do_model_import(self, license=license)

@@ -24,7 +24,7 @@ class StockPicking(models.Model):
     partner_license_id = fields.Many2one('metrc.license', string='Partner License',
                                 states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
                                 tracking=True)
-    facility_license_id = fields.Many2one(comodel_name='metrc.license', compute='_compute_facility_license',
+    facility_license_id = fields.Many2one(comodel_name='metrc.license',
                                 string='Facility License',
                                 states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     arrival_date = fields.Datetime(string='Estimated Arrival Date',copy=False)
@@ -65,17 +65,6 @@ class StockPicking(models.Model):
     metrc_transfer_count = fields.Integer(compute="_compute_metrc_transfer_count")
     item_count = fields.Integer(string="Items", compute='_compute_metrc_transfer_count')
     processed_qty = fields.Float(string="Processed", compute='_compute_metrc_transfer_count')
-
-    def _compute_facility_license(self):
-        for pick in self:
-            if pick.picking_type_code in ['incoming', 'outgoing']:
-                pick.facility_license_id = pick.picking_type_id.warehouse_id.license_id
-            elif pick._is_in():
-                pick.facility_license_id = pick.location_dest_id.get_warehouse() and pick.location_dest_id.get_warehouse().license_id
-            elif pick._is_out():
-                pick.facility_license_id = pick.location_id.get_warehouse() and pick.location_id.get_warehouse().license_id
-            else:
-                pick.facility_license_id = False
 
     def _check_consolidation(self):
         for picking in self:
@@ -650,6 +639,21 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         #     self._check_move_consume(move_lines_todo)
         return True
     
+    def _get_metrc_transfer_vals(self, move_line_id, metrc_transfer):
+        '''
+        Helper function to generate values to pass from metrc transfer to lot.
+        Can be overrided in any module to be able to add more fields.
+        '''
+        return {
+            'thc_percent': metrc_transfer.thc_percent,
+            'thc_mg': metrc_transfer.thc_mg,
+            'metrc_id': metrc_transfer.package_id,
+            'metrc_qty': metrc_transfer.received_quantity,
+            'expiration_date': metrc_transfer.expiration_date,
+            'harvest_date': metrc_transfer.harvest_date,
+            'metrc_product_name': metrc_transfer.product_name,
+        }
+    
     def _update_metrc_packages(self):
         MT = self.env['metrc.transfer']
         for move_line in self.move_line_ids.filtered(lambda ml: ml.state == 'done'
@@ -658,23 +662,23 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
                                             and not ml.move_id._is_dropshipped_returned()):
             metrc_transfer = MT.search([('move_line_id', '=', move_line.id)])
             if move_line.lot_id and metrc_transfer:
-                move_line.lot_id.write({
-                    'thc_percent': metrc_transfer.thc_percent,
-                    'thc_mg': metrc_transfer.thc_mg,
-                    'expiration_date': metrc_transfer.expiration_date,
-                    'harvest_date': metrc_transfer.harvest_date,
-                    'metrc_product_name': metrc_transfer.product_name,
+                vals = self._get_metrc_transfer_vals(move_line, metrc_transfer)
+                vals.update({
+                    'facility_license_id': self.facility_license_id.id,
                 })
+                move_line.lot_id.write(vals)
 
     def button_validate(self):
-        if self.require_metrc_validation and self.moving_metrc_product:
+        # persisting moving_metrc_product flag because it will change once it is validated.
+        moving_metrc_product = self.moving_metrc_product
+        if self.require_metrc_validation and moving_metrc_product:
             # Reserving available quantities
             self.action_recheck_availability()
             return_val = self.validate_with_metrc()
             if isinstance(return_val, dict):
                 return return_val
         res = super(StockPicking, self).button_validate()
-        if self.moving_metrc_product and self.state == 'done':
+        if moving_metrc_product and self.state == 'done':
             self._update_metrc_packages()
         return res
 

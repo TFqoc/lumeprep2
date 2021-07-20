@@ -50,6 +50,7 @@ class StockProductionLot(models.Model):
     thc_mg = fields.Float(string="THC(mg)")
     thc_percent = fields.Float(string="THC(%)") 
     metrc_product_name = fields.Char(string="Metrc Product")
+    facility_license_id = fields.Many2one(comodel_name='metrc.license', domain=[('base_type', '=', 'Internal')])
 
     def toggle_name_readonly(self):
         for lot in self:
@@ -262,7 +263,8 @@ class StockProductionLot(models.Model):
                     raise UserError(_(msg))
                 license = warehouse and warehouse.license_id or False
                 if license:
-                    lot._create_package_on_metrc(lot._get_metrc_name(), license.license_number, lot.product_id, quantity=lot.product_qty)
+                    lot_location = lot.quant_ids.mapped('location_id').filtered(lambda l: l.usage == 'internal')
+                    lot._create_package_on_metrc(lot._get_metrc_name(), license.license_number, lot.product_id, quantity=lot.product_qty, location=lot_location)
                     lot._update_metrc_id()
                     lot.name_readonly = True
                 else:
@@ -453,13 +455,13 @@ class StockProductionLot(models.Model):
                         <ul><li><a href=# data-oe-model=stock.inventory data-oe-id=%d>%s</a></li></ul></p>""") % (warehouse.name, stock_location.name, inv_adjst.id, inv_adjst.name)
             self.message_post(body=msg, message_type="notification", subtype_xmlid="mail.mt_comment")
 
-    def _create_package_on_metrc(self, lot_name, license, product_id, ingredients=[], quantity=0, raise_for_error=True):
+    def _create_package_on_metrc(self, lot_name, license, product_id, ingredients=[], quantity=0, location=False, raise_for_error=True):
         metrc_account = self.env.user.ensure_metrc_account()
         if metrc_account:
             uri = '/{}/{}/{}'.format('packages', metrc_account.api_version, 'create')
             data = [{
                 'Tag': lot_name,
-                'Location': "n/a",
+                'Location': location.metrc_location_id.name,
                 'Item': product_id.metrc_name,
                 'Quantity': product_id.to_metrc_qty(quantity),
                 'UnitOfMeasure':  product_id.metrc_uom_id.name if product_id.diff_metrc_uom and product_id.metrc_uom_id else product_id.uom_id.name,

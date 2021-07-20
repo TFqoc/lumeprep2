@@ -11,16 +11,10 @@
                 </group>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="customer_type" invisible="1"/>
-                <field name="patient_license_number"
-                       attrs="{'required': [('customer_type', '!=', 'Consumer')],
-                               'invisible': [('customer_type', '=', 'Consumer')]}"/>
-                <field name="caregiver_license_number"
-                       attrs="{'required': [('customer_type', '=', 'Caregiver')],
-                               'invisible': [('customer_type', '!=', 'Caregiver')]}"/>
-                <field name="ext_patient_id_method"
-                       attrs="{'required': [('customer_type', '=', 'ExternalPatient')],
-                               'invisible': [('customer_type', '!=', 'ExternalPatient')]}"/>
+                <field name="customer_type"/>
+                <field name="patient_license_number"/>
+                <field name="caregiver_license_number"/>
+                <field name="ext_patient_id_method"/>
             </xpath>
         </field>
     </record>
