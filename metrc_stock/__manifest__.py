@@ -5,6 +5,7 @@
     'version': '1.0',
     'depends': [
         'stock',
+        'stock_account',
         'fleet',
         'metrc_product',
         'metrc_mrp',
