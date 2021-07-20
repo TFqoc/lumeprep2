@@ -30,7 +30,7 @@ class Partner(models.Model):
     has_online_order = fields.Boolean(compute='_compute_has_online_order')
 
 
-    name = fields.Char(compute="_change_pref_name",insverse="_inverse_name",store=True)
+    name = fields.Char(compute="_change_pref_name",inverse="_inverse_name",store=True)
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
