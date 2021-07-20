@@ -30,7 +30,7 @@ class Partner(models.Model):
     has_online_order = fields.Boolean(compute='_compute_has_online_order')
 
 
-    name = fields.Char(compute="_change_pref_name",store=True)
+    # name = fields.Char(compute="_change_pref_name",store=True)
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
@@ -239,7 +239,7 @@ class Partner(models.Model):
         return res
 
     @api.onchange('pref_name','first_name','middle_name','last_name')
-    @api.depends('pref_name','first_name','middle_name','last_name')
+    # @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         for record in self:
             if record.name:

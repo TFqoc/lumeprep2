@@ -111,8 +111,6 @@ class StockLot(models.Model):
         return self.env['sale.order']
 
     def set_lpc_quantity(self, quantity):
-        if self.env.context.get('type') != self.thc_type and self.thc_type and self.thc_type in ['medical','adult'] and self.env.context.get('type') != 'none':
-            raise ValidationError("You can't add a %s product to a cart with %s products!" % (self.thc_type,self.env.context.get('type')))
         sale_order = self._get_contextual_lpc_sale_order()
         # project user with no sale rights should be able to change material quantities
         if not sale_order or quantity and quantity < 0 or not self.user_has_groups('project.group_project_user'):
@@ -121,6 +119,8 @@ class StockLot(models.Model):
             # if not quantity:
             #     raise ValidationError("Quantity: " + str(quantity))
             return
+        if sale_order.order_type != self.thc_type and self.thc_type and self.thc_type in ['medical','adult'] and sale_order.order_type != 'none':
+            raise ValidationError("You can't add a %s product to a cart with %s products!" % (self.thc_type,sale_order.order_type))
         self = self.sudo()
         # don't add material on confirmed/locked SO to avoid inconsistence with the stock picking
         if sale_order.state == 'done':
