@@ -248,7 +248,27 @@ class Partner(models.Model):
     
     def _inverse_name(self):
         for record in self:
-            record.first_name = record.name
+            if record.name or record.name == '':
+                name = record.name.split(' ')
+                n = len(name)
+                if n == 2:
+                    # Special case so we catch the first/last name format
+                    record.first_name = name[0]
+                    record.last_name = name[1]
+                    continue
+                # This will ignore all potential extra fields if n > 3
+                sub_names = ['first_name','middle_name','last_name']
+                for i in range(0,3):
+                    if i < n:
+                        record[sub_names[i]] = name[i]
+                    else:
+                        record[sub_names[i]] = False
+            else:
+                # Name == False
+                record.first_name = False
+                record.last_name = False
+                record.middle_name = False
+                
     # This method turns out to be redundant
     # @api.onchange('patient_ids')
     # def _change_patients(self):
