@@ -30,7 +30,7 @@ class Partner(models.Model):
     has_online_order = fields.Boolean(compute='_compute_has_online_order')
 
 
-    # name = fields.Char(compute="_change_pref_name",store=True)
+    name = fields.Char(compute="_change_pref_name",insverse="_inverse_name",store=True)
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
@@ -239,13 +239,16 @@ class Partner(models.Model):
         return res
 
     @api.onchange('pref_name','first_name','middle_name','last_name')
-    # @api.depends('pref_name','first_name','middle_name','last_name')
+    @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         for record in self:
             if record.name:
                 # This is to rewrite the name stored as a pair in the db itself
                 record.update({'name': ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])})
     
+    def _inverse_name(self):
+        for record in self:
+            record.first_name = record.name
     # This method turns out to be redundant
     # @api.onchange('patient_ids')
     # def _change_patients(self):
