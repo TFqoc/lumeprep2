@@ -50,6 +50,7 @@ class StockProductionLot(models.Model):
     thc_mg = fields.Float(string="THC(mg)")
     thc_percent = fields.Float(string="THC(%)") 
     metrc_product_name = fields.Char(string="Metrc Product")
+    facility_license_id = fields.Many2one(comodel_name='metrc.license', domain=[('base_type', '=', 'Internal')])
 
     def toggle_name_readonly(self):
         for lot in self:

@@ -7,15 +7,9 @@
             <form>
                 <group>
                     <group>
-                        <field name="warehouse_id" readonly="1" options="{'no_open': True}"/>
-                        <field name="facility_license_id" options="{'no_open': True}"/>
-                        <field name="operation_type_id" domain="[('warehouse_id', '=', warehouse_id)]"/>
-                        <field name="view_location_id" invisible="1"/>
-                        <field name="location_dest_id" domain="[('location_id', '=', view_location_id)]"/>
-                    </group>
-                    <group>
-                        <field name="partner_id"/>
-                        <field name="partner_license_id" domain="[('partner_id', '=', partner_id)]"/>
+                        <field name="facility_license_id" options="{'no_open': True}" readonly="1"/>
+                        <field name="operation_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="location_dest_id" options="{'no_open': True, 'no_create': True}"/>
                     </group>
                 </group>
                 <footer>
