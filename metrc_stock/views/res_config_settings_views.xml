@@ -35,6 +35,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="metrc_cfg_import_metrc_locations">
+                    <div class="o_setting_right_pane">
+                        <button string="Locations" type="action" name="%(metrc_stock.action_open_metrc_locations)s" class="oe_link"/>
+                        <div class="text-muted">
+                            Enable importing Metrc Locations for this users allowed license.
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <div>
+                                    <button string=" Import Locations" type="object" name="do_import_metrc_locations" icon="fa-cloud-download" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>

@@ -227,6 +227,6 @@ for license in env['metrc.meta'].get_internal_licenses():
         <field name="interval_number">1</field>
         <field name="is_metrc">True</field>
         <field name="interval_type">months</field>
-        <field name="numbercall">-1</field>
+        <field name="numbercall">0</field>
     </record>
 </odoo>

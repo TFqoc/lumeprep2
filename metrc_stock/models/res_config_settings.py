@@ -12,3 +12,6 @@ class ResConfigSettings(models.TransientModel):
 
     def do_import_transfer_types(self):
         self.metrc_account_id.do_import_transfer_types()
+    
+    def do_import_metrc_locations(self):
+        self.metrc_account_id.do_import_metrc_locations()
