@@ -19,11 +19,10 @@ class PurchaseOrder(models.Model):
     def _compute_facility_license_id(self):
         self.facility_license_id = self.picking_type_id.warehouse_id.license_id if self.picking_type_id and self.picking_type_id.warehouse_id.license_id else False
 
-    @api.depends('order_line', 'order_line.product_id', 'picking_type_id')
+    @api.depends('order_line', 'order_line.product_id', 'facility_license_id')
     def _compute_license_require(self):
         for po in self:
-            po.license_require = True if any(po.order_line.mapped('product_id.is_metric_product')) and \
-                                 (po.picking_type_id._get_warehouse_license() and po.picking_type_id.warehouse_id.license_id.metrc_type == 'metrc') else False
+            po.license_require = True if any(po.order_line.mapped('product_id.is_metric_product')) and (po.facility_license_id.metrc_type == 'metrc') else False
 
     @api.model
     def _prepare_picking(self):

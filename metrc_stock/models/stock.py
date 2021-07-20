@@ -10,13 +10,6 @@ from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class StockPickingType(models.Model):
-    _inherit = "stock.picking.type"
-
-    def _get_warehouse_license(self):
-        return self.warehouse_id.license_id and self.warehouse_id.license_id.license_number or False
-
-
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
