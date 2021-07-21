@@ -19,6 +19,6 @@ class PointOfSale(models.Model):
     def _get_store_pricelist(self):
         for record in self:
             if record.project_id:
-                record.pricelist_id = record.project_id.store_pricelist or record._default_pricelist()
+                record.pricelist_id = record.project_id.store_pricelist# or record._default_pricelist()
             else:
                 record.pricelist_id = record._default_pricelist()
