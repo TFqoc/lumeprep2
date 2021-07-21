@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 import datetime
 from datetime import timedelta
+import pytz
+utc = pytz.utc
 import math
 import logging
 
@@ -79,6 +81,14 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
+        logger.info("NOW: %s" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        # user = self.env.user
+        # if user.tz:
+        #     # Mark datetime as UTC
+        #     order_date = datetime.datetime.fromtimestamp(order.date_order.timestamp(), tz=utc)
+        #     order_date = order_date.astimezone(pytz.timezone(user.tz))
+        # else:
+        #     order_date = order.date_order
         float_time = time2float(order.date_order)
         data = [{'id':p.id, 'recurring':p.recurring, 'rule weekday':p.recurring_days.day_list() if p.rule_date_from else False, 'order weekday':order.date_order.weekday(), 'cycle':p.recurring_cycle,'start':p.daily_start_time,'end':p.daily_end_time,'now':float_time, 'test':p.is_numbered_day(order.date_order,p.recurring_cycle)} for p in res]
         logger.info("DEBUG: %s" % data)
