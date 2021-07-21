@@ -42,13 +42,11 @@ METRC Stock
         # Wizard Views
         'wizard/split_lot_wizard_views.xml',
         'wizard/merge_lot_wizard_views.xml',
-        'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_package_wizard_views.xml',
         'wizard/stock_transfer_wizard_views.xml',
         'wizard/warehouse_package_adjustment_views.xml',
         'wizard/metrc_package_adjustment_views.xml',
         'wizard/metrc_push_data.xml',
-        'wizard/package_item_change.xml',
         'wizard/receive_metrc_transfer_wizard_views.xml',
 
         # data
