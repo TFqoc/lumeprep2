@@ -123,7 +123,7 @@ class Partner(models.Model):
         project_id = self.env['project.project'].browse(project_id)
         for record in self:
             if check_in:
-                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id and t.fulfillment_type == 'online')
+                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id and t.fulfillment_type == 'online' and not t.stage_id.is_closed)
                 record.has_online_order = len(tasks) > 0
             else:
                 record.has_online_order = False
