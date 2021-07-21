@@ -12,3 +12,6 @@ class CancelWizard(models.TransientModel):
         self.order_id.cancel_reason = self.reason
         self.order_id.action_cancel()
         return {'type': 'ir.actions.act_window_close'}
+
+    def action_cancel(self):
+        return {'type': 'ir.actions.act_window_close'}
