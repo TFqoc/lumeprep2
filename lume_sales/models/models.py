@@ -130,7 +130,8 @@ class Partner(models.Model):
 
     @api.onchange('medical_id')
     def _change_medical(self):
-        self.medical_id = self.medical_id.upper()
+        if self.medical_id:
+            self.medical_id = self.medical_id.upper()
 
     def warn(self):
         self.warnings += 1
