@@ -82,7 +82,7 @@ class CouponProgram(models.Model):
     def _filter_on_validity_dates(self, order):
         res = super(CouponProgram, self)._filter_on_validity_dates(order)
         logger.info("NOW: %s" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        logger.info("ORDER TIME: %s" % order.order_date.strftime("%Y-%m-%d %H:%M:%S"))
+        logger.info("ORDER TIME: %s" % order.date_order.strftime("%Y-%m-%d %H:%M:%S"))
         # user = self.env.user
         # if user.tz:
         #     # Mark datetime as UTC
