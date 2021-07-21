@@ -123,10 +123,14 @@ class Partner(models.Model):
         project_id = self.env['project.project'].browse(project_id)
         for record in self:
             if check_in:
-                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id)
+                tasks = project_id.task_ids.filtered(lambda t: t.partner_id.id == record.id and t.fulfillment_type == 'online')
                 record.has_online_order = len(tasks) > 0
             else:
                 record.has_online_order = False
+
+    @api.onchange('medical_id')
+    def _change_medical(self):
+        self.medical_id = self.medical_id.upper()
 
     def warn(self):
         self.warnings += 1
@@ -238,7 +242,6 @@ class Partner(models.Model):
             res.append((record.id, name))
         return res
 
-    @api.onchange('pref_name','first_name','middle_name','last_name')
     @api.depends('pref_name','first_name','middle_name','last_name')
     def _change_pref_name(self):
         for record in self:
@@ -246,6 +249,11 @@ class Partner(models.Model):
                 # This is to rewrite the name stored as a pair in the db itself
                 record.update({'name': ' '.join([record.first_name or '', record.middle_name or '', record.last_name or ''])})
     
+    @api.onchange('pref_name','first_name','middle_name','last_name')
+    def _change_name(self):
+        self.update({'name': ' '.join([self.first_name or '', self.middle_name or '', self.last_name or ''])})
+
+
     def _inverse_name(self):
         for record in self:
             if record.name or record.name == '':
