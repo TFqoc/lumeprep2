@@ -13,9 +13,9 @@ class StockPackageWizard(models.TransientModel):
     lot_id = fields.Many2one(comodel_name='stock.production.lot', string='Package', ondelete='cascade',  required=True)
     product_id = fields.Many2one(comodel_name='product.product', related='lot_id.product_id', string='Facility License', ondelete='set null')
     product_uom_id = fields.Many2one(comodel_name='uom.uom', string='Unit of Measure', related='product_id.uom_id')
-    warehouse_id = fields.Many2one(comodel_name='stock.warehouse', string='Inventoried Warehouse', domain=[('license_id', '!=', False)], ondelete='set null')
+    warehouse_id = fields.Many2one(comodel_name='stock.warehouse', string='Inventoried Warehouse', ondelete='set null')
     location_id = fields.Many2one(comodel_name='stock.location', string='Warehouse Stock Location', domain=[('usage', 'in', ('internal', 'transit'))], ondelete='set null')
-    license_id = fields.Many2one(comodel_name='metrc.license', related='warehouse_id.license_id', string='Facility License', ondelete='set null')
+    license_id = fields.Many2one(comodel_name='metrc.license', related='lot_id.facility_license_id', string='Facility License', ondelete='set null')
     metrc_id = fields.Integer(string='Metrc ID')
     metrc_qty = fields.Float(string='Metrc Quantity', digits='Product Unit of Measure')
     metrc_uom_id = fields.Many2one(comodel_name='uom.uom', related='lot_id.metrc_uom_id')
@@ -69,8 +69,8 @@ class StockPackageWizard(models.TransientModel):
                 self.virtual_available = product.virtual_available
 
     def get_package_qty(self):
-        if not self.warehouse_id or not self.warehouse_id.license_id:
-            raise UserError(_('Missing warehouse and/or facility license for the warehouse.'))
+        # if not self.warehouse_id or not self.warehouse_id.license_id:
+        #     raise UserError(_('Missing warehouse and/or facility license for the warehouse.'))
         resp = self.lot_id._fetch_metrc_package(license=self.warehouse_id.license_id)
         wizard_vals = {'message': False}
         product = self.product_id.with_context(lot_id=self.lot_id.id, warehouse=self.warehouse_id.id)
