@@ -19,3 +19,15 @@ class StockQuant(models.Model):
     def _change_tier(self):
         if self.lot_id:
             self.lot_id.tier = self.tier
+
+    @api.model
+    def _get_inventory_fields_create(self):
+        res = super()._get_inventory_fields_create()
+        res.append('tier')
+        return res
+
+    @api.model
+    def _get_inventory_fields_write(self):
+        res = super()._get_inventory_fields_write()
+        res.append('tier')
+        return res

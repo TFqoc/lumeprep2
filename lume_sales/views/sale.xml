@@ -7,6 +7,9 @@
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
                 <!-- Custom fields here -->
                 <xpath expr="//sheet/div/button[@name='preview_sale_order']" position="replace">
                 </xpath>

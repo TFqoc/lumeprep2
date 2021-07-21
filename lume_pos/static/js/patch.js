@@ -136,8 +136,8 @@ odoo.define('lume_pos.PatchTest', function(require) {
       _load_orders: function(){},
         initialize: function(attributes){
         var superfun = this.models[10].loaded;
-        this.models[10].loaded = function(self,configs){
-          superfun(self,configs);
+        this.models[10].loaded = function(self,configs,tmp){
+          superfun(self,configs,tmp);
           self.pos_session.store_name = configs[0].store_name;
           self.session.store_name = configs[0].store_name; 
         }
