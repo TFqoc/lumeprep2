@@ -239,7 +239,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <searchpanel>
-                    <field name="categ_id"/>
+                    <field name="categ_id" string="Category"/>
                     <field name="effect"/>
                     <!-- <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/> -->
                 </searchpanel>
