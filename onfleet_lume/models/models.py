@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     onfleet_task_id = fields.Char()
-    onfleet_pending_request = fields.Char()
+    # onfleet_pending_request = fields.Char()
     onfleet_has_pending_request = fields.Char()
     
     def check_onfleet_connection(self):
@@ -78,6 +78,26 @@ class SaleOrder(models.Model):
         else:
             return True
 
+    def generate_onfleet_ticket_request(self):
+        self.ensure_one()
+        # Create notes for order lines
+        notes = ""
+        total_qty = 0
+        for line in self.order_line:
+            notes += "%s qty.\n%s\nUnit Price: $%.2f\n%s\n" % (line.product_uom_qty, line.product_id.name, line.price_unit,line.lot_id.name)
+            total_qty += line.product_uom_qty
+        notes += "Total items: %.0f\n\nSubtotal: $%.2f" % (total_qty, self.amount_untaxed)
+        return {
+                "destination": {
+                    "address":{
+                        "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
+                        "apartment": self.street2 or ''# Used for line 2 of street address
+                    }
+                },
+                "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
+                "notes": notes
+            }
+
     # Override
     def on_fulfillment(self):
         res = super().on_fulfillment()
@@ -90,16 +110,7 @@ class SaleOrder(models.Model):
                 total_qty += line.product_uom_qty
             notes += "Total items: %.0f\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
-            b = {
-                "destination": {
-                    "address":{
-                        "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
-                        "apartment": self.street2 or ''# Used for line 2 of street address
-                    }
-                },
-                "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
-                "notes": notes
-            }
+            b = order.generate_onfleet_ticket_request()
             # Sumbit order
             if order.check_onfleet_connection():
                 try:
@@ -117,15 +128,15 @@ class SaleOrder(models.Model):
             else:
                 # Do something with failed connection
                 _logger.info("Connection to OnFleet Failed")
-                self.onfleet_pending_request = json.dumps(b)
+                # self.onfleet_pending_request = json.dumps(b)
                 self.onfleet_has_pending_request = True
                 pass
         return res
 
     def retry_request(self):
         self.ensure_one()
-        if self.onfleet_has_pending_request and self.onfleet_pending_request:
-            b = json.loads(self.onfleet_pending_request)
+        if self.onfleet_has_pending_request:
+            b = self.generate_onfleet_ticket_request()
             if self.check_onfleet_connection():
                 try:
                     _logger.info(f"OnFleet Create Task Retry Request: {b}")
@@ -136,7 +147,7 @@ class SaleOrder(models.Model):
                         pass
                     self.onfleet_task_id = r.get('shortID\d', False)
                     self.onfleet_has_pending_request = False
-                    self.onfleet_pending_request = ""
+                    # self.onfleet_pending_request = ""
                 except RateLimitError as e:
                     handle_rate_error(e, True)
                 except PermissionError as e:
