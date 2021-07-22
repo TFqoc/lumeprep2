@@ -114,7 +114,6 @@ class SaleOrder(models.Model):
                     handle_rate_error(e)
                 except Exception as e:
                     _logger.warning(e)
-                    raise UserError(e)
             else:
                 # Do something with failed connection
                 _logger.info("Connection to OnFleet Failed")
@@ -147,4 +146,5 @@ class SaleOrder(models.Model):
                     raise UserError(message)
                 except Exception as e:
                     _logger.warning(e)
+                    raise UserError(e)
                     
