@@ -84,6 +84,7 @@ class MetrcTransfer(models.Model):
     # https://api-ca.metrc.com/Documentation/#Transfers.get_transfers_v1_delivery_{id}_packages
     package_id = fields.Integer(string='Package ID')
     package_label = fields.Char(string='Package Label', index=True)
+    package_label_short = fields.Char(string="Package#", compute='_compute_package_label_short')
     package_type = fields.Char(string='Package Type')
     source_harvest_names = fields.Char(string='Source Harvest Names')
     product_name = fields.Char(string='Product Name')
@@ -114,6 +115,10 @@ class MetrcTransfer(models.Model):
     alias_products = fields.Many2many(comodel_name="product.product", 
                                  compute='_compute_alias_products')
     consolidated = fields.Boolean(help="Line already consolidated?")
+
+    def _compute_package_label_short(self):
+        for transfer in self:
+            transfer.package_label_short = transfer.package_label[-6:]
 
     def _compute_alias_products(self):
         for transfer in self:
@@ -862,6 +867,7 @@ class MetrcTransfer(models.Model):
             'context': {},
             'res_id': self.id,
             'domain': [],
+            'flags': {'mode': 'readonly'},
             'target': 'new',
         }
 
