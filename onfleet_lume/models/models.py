@@ -142,6 +142,7 @@ class SaleOrder(models.Model):
                 except PermissionError as e:
                     message = "The OnFleet API Key is invalid!"
                     _logger.error(message)
+                    _onfleet.connected = False
                     raise UserError(message)
                 except Exception as e:
                     _logger.warning(e)
