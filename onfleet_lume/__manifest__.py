@@ -27,6 +27,7 @@
 
     # always loaded
     'data': [
+        'views/views.xml',
         'views/settings.xml',
     ],
     # only loaded in demonstration mode
