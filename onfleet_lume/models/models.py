@@ -1,6 +1,7 @@
-import onfleet
 from odoo import models, fields, api
 from onfleet import Onfleet
+from onfleet import RateLimitError
+import json
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -17,9 +18,19 @@ class OnFleet():
             self.api = Onfleet(api_key=self.api_key)
             self.connected = True
             self.last_error = ''
+        except RateLimitError as e:
+            self.connected = False
+            self.last_error = f"Error: {e}"
+            _logger.error("""Rate Limit Error: To many requests are being made to OnFleet. This means that Odoo + Treez are making more than 20 requests per second.\n
+                Please slow down calls to OnFleet\n
+                Status: %s\n
+                Message: %s\n
+                Request: %s\n
+                """ % (e.message, e.status, e.request))
         except Exception as e:
             self.connected = False
             self.last_error = f"Error: {e}"
+            _logger.warning("Failed to connect to onfleet: %s" % (self.last_error))
         
 
 _onfleet = OnFleet()
@@ -33,6 +44,8 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     onfleet_task_id = fields.Char()
+    onfleet_pending_request = fields.Char()
+    onfleet_has_pending_request = fields.Char()
     
     def check_onfleet_connection(self):
         if not _onfleet.connected:
@@ -57,18 +70,18 @@ class SaleOrder(models.Model):
                 total_qty += line.product_uom_qty
             notes += "Total items: %.0f\n\nSubtotal: $%.2f" % (total_qty, order.amount_untaxed)
 
+            b = {
+                "destination": {
+                    "address":{
+                        "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
+                        "apartment": self.street2 or ''# Used for line 2 of street address
+                    }
+                },
+                "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
+                "notes": notes
+            }
             # Sumbit order
             if order.check_onfleet_connection():
-                b = {
-                    "destination": {
-                        "address":{
-                            "unparsed": "%s, %s, %s" % (self.street,self.zip,'USA'),
-                            "apartment": self.street2 or ''# Used for line 2 of street address
-                        }
-                    },
-                    "recipients": [{"name":self.partner_id.name,"phone":parse_phone(self.partner_id.phone)}],
-                    "notes": notes
-                }
                 _logger.info(f"OnFleet Create Task Request: {b}")
                 r = _onfleet.api.tasks.create(body=b)
                 _logger.info(f"Response: {r}")
@@ -79,5 +92,22 @@ class SaleOrder(models.Model):
             else:
                 # Do something with failed connection
                 _logger.info("Connection to OnFleet Failed")
+                self.onfleet_pending_request = json.dumps(b)
+                self.onfleet_has_pending_request = True
                 pass
         return res
+
+    def retry_request(self):
+        self.ensure_one()
+        if self.onfleet_has_pending_request and self.onfleet_pending_request:
+            b = json.loads(self.onfleet_pending_request)
+            if self.check_onfleet_connection():
+                _logger.info(f"OnFleet Create Task Retry Request: {b}")
+                r = _onfleet.api.tasks.create(body=b)
+                _logger.info(f"Response: {r}")
+                # Check for errors here
+                if len(r['destination'].get('warnings',[])) > 0:
+                    pass
+                self.onfleet_task_id = r.get('shortID\d', False)
+                self.onfleet_has_pending_request = False
+                self.onfleet_pending_request = ""
