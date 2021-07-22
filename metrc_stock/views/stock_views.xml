@@ -24,12 +24,9 @@
             </xpath>
             <xpath expr="//field[@name='prefill_counted_quantity']" position="after">
                 <field name="warehouse_id" invisible="1"/>
-                <field name="facility_license_id" domain="[('base_type', '=', 'Internal')]" 
-                       readonly="1" force_save="1" context="{'default_base_type': 'Internal'}"/>
                 <field name="do_not_adjust" 
                        groups="metrc_base.group_metrc_admin,stock.group_stock_manager"/>
                 <field name="reason_id" options="{'no_create': True}" 
-                       domain="[('license_id', '=', facility_license_id)]" 
                        attrs="{'invisible': [('do_not_adjust', '=', True)]}"/>
                 <field name="reason_note" attrs="{'invisible': [('do_not_adjust', '=', True)]}"/>
             </xpath>
