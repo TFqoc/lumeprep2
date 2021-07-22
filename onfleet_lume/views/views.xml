@@ -8,9 +8,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet/div[hasclass('oe_button_box')]/*" position="before">
                     <field name="onfleet_has_pending_request" invisible="1"/>
-                    <button name="retry_request" type="object" class="oe_stat_button" icon="fa-checkbox icon" attrs="{'invisible': [('onfleet_has_pending_request', '=', False)]}">
+                    <button name="retry_request" type="object" class="oe_stat_button" icon="fa-check-square-o icon" attrs="{'invisible': [('onfleet_has_pending_request', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_text">Resend to OnFleet</span>
+                            <span class="o_stat_text">Resend to</span>
+                            <span class="o_stat_text">OnFleet</span>
                         </div>
                     </button>
                 </xpath>
