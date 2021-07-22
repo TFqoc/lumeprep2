@@ -652,6 +652,7 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
             'expiration_date': metrc_transfer.expiration_date,
             'harvest_date': metrc_transfer.harvest_date,
             'metrc_product_name': metrc_transfer.product_name,
+            'source_package_labels': metrc_transfer.source_package_labels,
         }
     
     def _update_metrc_packages(self):

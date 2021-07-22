@@ -48,9 +48,12 @@ class StockProductionLot(models.Model):
     harvest_date = fields.Date(string="Harvest Date")
     expiration_date = fields.Date(String="Exp. Date")
     thc_mg = fields.Float(string="THC(mg)")
-    thc_percent = fields.Float(string="THC(%)") 
+    thc_percent = fields.Float(string="THC(%)")
+    cbd_mg = fields.Float(string="CBD(mg)")
+    cbd_percent = fields.Float(string="CBD(%)") 
     metrc_product_name = fields.Char(string="Metrc Product")
     facility_license_id = fields.Many2one(comodel_name='metrc.license', domain=[('base_type', '=', 'Internal')])
+    source_package_labels = fields.Text(string='Source packages')
 
     def toggle_name_readonly(self):
         for lot in self:
@@ -478,14 +481,7 @@ class StockProductionLot(models.Model):
             vals['name'] = vals['name'].upper()
         if vals.get('metrc_tag'):
             vals['metrc_tag'] = vals['metrc_tag'].upper()
-        # check lot number on metrc
-        lot = super(StockProductionLot, self).create(vals)
-        license = self.env.context.get('license_number', False)
-        if self.env.context.get('check_package_on_metrc') and license:
-            result = self._is_package_exist_on_metrc(vals['name'], license)
-            if not result:
-                raise UserError(_('Lot number %s is not available on the metrc system, for more details you can check the logs in metrc account') % vals['name'])
-        return lot
+        return super(StockProductionLot, self).create(vals)
 
     def write(self, vals):
         if vals.get('name'):

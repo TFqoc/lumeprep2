@@ -112,6 +112,8 @@ class MetrcTransfer(models.Model):
     expiration_date = fields.Date()
     thc_percent = fields.Float(string="THC(%)")
     thc_mg = fields.Float(string="THC(mg)")
+    cbd_percent = fields.Float(string="CBD(%)")
+    cbd_mg = fields.Float(string="CBD(mg)")
     alias_products = fields.Many2many(comodel_name="product.product", 
                                  compute='_compute_alias_products')
     consolidated = fields.Boolean(help="Line already consolidated?")
@@ -516,12 +518,12 @@ class MetrcTransfer(models.Model):
                 package = package_result.pop()
                 if package.get('PackageLabel') == transfer.package_label and package.get('PackageId') == transfer.package_id:
                     package_vals = self._map_package_reponse(package)                    
-                    product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
-                                                         transfer.shipper_facility_license_number,
-                                                         package['ProductName'],
-                                                         package['ProductCategoryName'],
-                                                         package['ReceivedUnitOfMeasureName'])
-                    package_vals['product_id'] = product_id and product_id.id or False
+                    # product_id = self._map_metrc_product(transfer.recipient_facility_license_number,
+                    #                                      transfer.shipper_facility_license_number,
+                    #                                      package['ProductName'],
+                    #                                      package['ProductCategoryName'],
+                    #                                      package['ReceivedUnitOfMeasureName'])
+                    # package_vals['product_id'] = product_id and product_id.id or False
                     transfer.write(package_vals)
         else:
             if skipped_transfers:

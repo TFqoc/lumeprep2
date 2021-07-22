@@ -39,6 +39,10 @@
                                                      ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="thc_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
                                                 ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="cbd_percent" attrs="{'readonly': ['|', ('is_flower', '=', False),
+                                                     ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="cbd_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
+                                                ('transfer_type', '!=', 'incoming')]}"/>
                     <button name="open_transfer" type="object" icon="fa-external-link"/>
                 </tree>
             </field>
