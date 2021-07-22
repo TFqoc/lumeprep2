@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from onfleet import Onfleet
-from onfleet import RateLimitError
+from onfleet import RateLimitError, PermissionError
+from odoo.exceptions import UserError
 import json
 import logging
 
@@ -16,14 +17,16 @@ class OnFleet():
         self.api_key = key
         try:
             self.api = Onfleet(api_key=self.api_key)
-            auth_test = self.api.auth_test()
-            if auth_test.get('message', '').startswith("Hello"):
-                self.connected = True
-                self.last_error = ''
-            else:
-                self.connected = False
-                self.last_error = "Code: %s\nMessage: %s" % (auth_test.get('code', ''), auth_test.get('message',''))
-                _logger.error(self.last_error)
+            self.connected = True
+            self.last_error = ''
+            # auth_test = self.api.auth_test()
+            # if auth_test.get('message', '').startswith("Hello"):
+            #     self.connected = True
+            #     self.last_error = ''
+            # else:
+            #     self.connected = False
+            #     self.last_error = "Code: %s\nMessage: %s" % (auth_test.get('code', ''), auth_test.get('message',''))
+            #     _logger.error(self.last_error)
         except RateLimitError as e:
             self.connected = False
             self.last_error = f"Error: {e}"
@@ -45,6 +48,17 @@ def parse_phone(number):
     if len(number) != 10:
         return number
     return f"{number[:3]}-{number[3:7]}-{number[7:]}"
+def handle_rate_error(e, show_user=False):
+    message = """Rate Limit Error: To many requests are being made to OnFleet. This means that Odoo + Treez are making more than 20 requests per second.\n
+                Please slow down calls to OnFleet\n
+                Status: %s\n
+                Message: %s\n
+                Request: %s\n
+                """ % (e.message, e.status, e.request)
+    _logger.error(message)
+    if show_user:
+        raise UserError(message)
+    
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -88,13 +102,18 @@ class SaleOrder(models.Model):
             }
             # Sumbit order
             if order.check_onfleet_connection():
-                _logger.info(f"OnFleet Create Task Request: {b}")
-                r = _onfleet.api.tasks.create(body=b)
-                _logger.info(f"Response: {r}")
-                # Check for errors here
-                if len(r['destination'].get('warnings',[])) > 0:
-                    pass
-                order.onfleet_task_id = r.get('shortID\d', False)
+                try:
+                    _logger.info(f"OnFleet Create Task Request: {b}")
+                    r = _onfleet.api.tasks.create(body=b)
+                    _logger.info(f"Response: {r}")
+                    # Check for errors here
+                    if len(r['destination'].get('warnings',[])) > 0:
+                        pass
+                    order.onfleet_task_id = r.get('shortID\d', False)
+                except RateLimitError as e:
+                    handle_rate_error(e)
+                except Exception as e:
+                    _logger.warning(e)
             else:
                 # Do something with failed connection
                 _logger.info("Connection to OnFleet Failed")
@@ -108,12 +127,22 @@ class SaleOrder(models.Model):
         if self.onfleet_has_pending_request and self.onfleet_pending_request:
             b = json.loads(self.onfleet_pending_request)
             if self.check_onfleet_connection():
-                _logger.info(f"OnFleet Create Task Retry Request: {b}")
-                r = _onfleet.api.tasks.create(body=b)
-                _logger.info(f"Response: {r}")
-                # Check for errors here
-                if len(r['destination'].get('warnings',[])) > 0:
-                    pass
-                self.onfleet_task_id = r.get('shortID\d', False)
-                self.onfleet_has_pending_request = False
-                self.onfleet_pending_request = ""
+                try:
+                    _logger.info(f"OnFleet Create Task Retry Request: {b}")
+                    r = _onfleet.api.tasks.create(body=b)
+                    _logger.info(f"Response: {r}")
+                    # Check for errors here
+                    if len(r['destination'].get('warnings',[])) > 0:
+                        pass
+                    self.onfleet_task_id = r.get('shortID\d', False)
+                    self.onfleet_has_pending_request = False
+                    self.onfleet_pending_request = ""
+                except RateLimitError as e:
+                    handle_rate_error(e, True)
+                except PermissionError as e:
+                    message = "The OnFleet API Key is invalid!"
+                    _logger.error(message)
+                    raise UserError(message)
+                except Exception as e:
+                    _logger.warning(e)
+                    
