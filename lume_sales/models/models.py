@@ -139,6 +139,9 @@ class Partner(models.Model):
         if self.warnings < 0:
             self.warnings = 0
 
+    def check_in_for_order(self):
+        return self.with_context(for_online_order=True).check_in()
+
     ###########################################################
     # Called from a button on the contact form
     # All validation checks should be done in this method
