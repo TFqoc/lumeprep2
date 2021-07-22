@@ -13,7 +13,6 @@ ORDER_HISTORY_DOMAIN = [('state', 'not in', ('draft', 'sent'))]
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    # is_medical = fields.Boolean()
     medical_id = fields.Char(string="Medical ID")
     medical_expiration = fields.Date(string="Medical Expiration")
     date_of_birth = fields.Date()
@@ -26,7 +25,6 @@ class Partner(models.Model):
     passport = fields.Char()
     pref_name = fields.Char()
     can_purchase_medical = fields.Boolean(compute="_compute_medical_purchase")
-    # customer_type = fields.Selection([('medical', 'Medical'),('adult','Adult'),('caregiver','Caregiver')], default="medical")
     has_online_order = fields.Boolean(compute='_compute_has_online_order')
 
 
@@ -163,7 +161,7 @@ class Partner(models.Model):
         # _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
         
-        if self.has_online_order:
+        if self.has_online_order and ctx.get('for_online_order',False):
             tasks = project.task_ids.filtered(lambda t: t.partner_id.id == self.id)
             tasks.is_checked_in = True
             return {
@@ -208,6 +206,8 @@ class Partner(models.Model):
             raise ValidationError("This patient does not have a valid medical ID!")
         if not self.medical_expiration or self.medical_expiration < datetime.date.today():
             raise ValidationError("The patient's medical id is expired!")
+        if not self.is_over_18:
+            raise ValidationError("This patient is underage!")
         ctx = self.env.context
         _logger.info("CTX: " + str(ctx))
         project = self.env['project.project'].browse(ctx.get('project_id'))
