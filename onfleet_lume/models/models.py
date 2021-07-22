@@ -16,8 +16,14 @@ class OnFleet():
         self.api_key = key
         try:
             self.api = Onfleet(api_key=self.api_key)
-            self.connected = True
-            self.last_error = ''
+            auth_test = self.api.auth_test()
+            if auth_test.get('message', '').startswith("Hello"):
+                self.connected = True
+                self.last_error = "Code: %s\nMessage: %s" % (auth_test.get('code', ''), auth_test.get('message',''))
+                _logger.error(self.last_error)
+            else:
+                self.connected = False
+                self.last_error = ''
         except RateLimitError as e:
             self.connected = False
             self.last_error = f"Error: {e}"
