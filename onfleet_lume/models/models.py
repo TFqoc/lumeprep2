@@ -65,7 +65,7 @@ class SaleOrder(models.Model):
 
     onfleet_task_id = fields.Char()
     # onfleet_pending_request = fields.Char()
-    onfleet_has_pending_request = fields.Char()
+    onfleet_has_pending_request = fields.Boolean()
     
     def check_onfleet_connection(self):
         if not _onfleet.connected:
