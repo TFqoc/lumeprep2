@@ -45,7 +45,7 @@
                         </group>
                         <group>
                             <group>
-                                <field name="approval" eadonly="1"/>
+                                <field name="approval" readonly="1"/>
                                 <field name="strain" readonly="1"/>
                                 <field name="item_brand" readonly="1"/>
                                 <field name="administration_method" readonly="1"/>
