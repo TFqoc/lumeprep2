@@ -11,13 +11,14 @@
                     <field name="src_license" invisible="1"/>
                     <field name="transfer_type" invisible="1"/>
                     <field name="move_line_id" invisible="1"/>
-                    <field name="product_name" readonly="1"/>
                     <field name="product_category_name" invisible="1"/>
                     <field name="package_label" invisible="1"/>
                     <field name="package_label_short" readonly="1"/>
+                    <button name="open_transfer" type="object" icon="fa-external-link"/>
                     <field name="alias_products" invisible="1"/>
                     <field name="shipment_package_state" invisible="1"/>
                     <field name="manifest_status" invisible="1"/>
+                    <field name="product_name" readonly="1" string="Metrc Product"/>
                     <field name="product_id" string="Odoo Product" 
                            domain="['|', ('id', 'in', alias_products),
                                     ('uom_id.name', '=', received_unit_of_measure_name),
@@ -25,16 +26,17 @@
                            attrs="{'readonly': ['|', ('shipment_package_state', '!=', 'Accepted'),
                                   '|', ('transfer_type', '!=', 'incoming'),
                                   ('manifest_status', '=', 'Accepted')]}"/>
+                    <field name="product_category_name" string="Category" readonly="1"
+                           options="{'no_open': True}"/>
                     <field name="manifest_number" invisible="1"/>
-                    <field name="received_quantity" string="Total Received" readonly="1"/>
-                    <field name="received_unit_of_measure_name" string="Received UOM" readonly="1"/>
+                    <field name="received_quantity" string="Received Qty" readonly="1"/>
+                    <field name="received_unit_of_measure_name" string="UOM" readonly="1"/>
                     <field name="shipper_facility_license_number" string="Shipper License" readonly="1"/>
                     <field name="is_flower" invisible="1"/>
                     <field name="is_edible" invisible="1"/>
                     <field name="harvest_date" attrs="{'readonly': ['|', ('is_flower', '=', False),
                                                         ('transfer_type', '!=', 'incoming')]}"/>
-                    <field name="expiration_date" attrs="{'readonly': ['|', ('is_edible', '=', False),
-                                                        ('transfer_type', '!=', 'incoming')]}"/>
+                    <field name="expiration_date" attrs="{'readonly': [('transfer_type', '!=', 'incoming')]}"/>
                     <field name="thc_percent" attrs="{'readonly': ['|', ('is_flower', '=', False),
                                                      ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="thc_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
@@ -43,7 +45,6 @@
                                                      ('transfer_type', '!=', 'incoming')]}"/>
                     <field name="cbd_mg" attrs="{'readonly': ['|', ('is_edible', '=', False),
                                                 ('transfer_type', '!=', 'incoming')]}"/>
-                    <button name="open_transfer" type="object" icon="fa-external-link"/>
                 </tree>
             </field>
         </record>

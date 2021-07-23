@@ -33,7 +33,7 @@ class MrpProduction(models.Model):
                     'Package': 1A4FF020000025E000000481,
                     'Quantity': 1.0,
                     'UnitOfMeasure': Grams,
-                    }
+                    }   
                 },
                 {
                     'Package': 1A4FF020000025E000000482,
@@ -99,7 +99,7 @@ class MrpProduction(models.Model):
         return result
 
     def button_mark_done(self):
-        if (self.picking_type_id._get_warehouse_license() and self.picking_type_id.warehouse_id.license_id.metrc_type != 'metrc') or not self.picking_type_id._get_warehouse_license():
+        if (not self.split_lot) and (not self.split_lot_multi):
             return super(MrpProduction, self).button_mark_done()
         move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda l: l.product_id.is_metric_product)
         lots_to_check = move_lines.mapped('lot_id')
@@ -108,18 +108,19 @@ class MrpProduction(models.Model):
             return result
         # Inform metrc on new lot being created
         ProdctionLot = self.env['stock.production.lot']
-        license = self.picking_type_id._get_warehouse_license()
         packages_not_exists = []
+        license = False
         for move_line in move_lines:
+            license = move_line.lot_id.facility_license_id
             lot_name = move_line.lot_id._get_metrc_name()
-            result = ProdctionLot._is_package_exist_on_metrc(lot_name, license)
+            result = ProdctionLot._is_package_exist_on_metrc(lot_name, license.license_number)
             if not result:
                 packages_not_exists.append(lot_name)
         if packages_not_exists:
             raise UserError(_('Package {} does not exist in METRC. Can not be used in the production.'.format(','.join(packages_not_exists))))
         res = super(MrpProduction, self).button_mark_done()
         finished_move_lines = self.finished_move_line_ids.filtered(lambda ml: ml.state == 'done' and ml.move_id.has_tracking != 'none' and ml.lot_id and ml.product_id.is_metric_product and ml.qty_done > 0.00)
-        self._report_lots_to_metrc(finished_move_lines)
+        self._report_lots_to_metrc(license, finished_move_lines)
         move_lines.mapped('lot_id')._update_metrc_id()
         return res
 
@@ -130,18 +131,18 @@ class MrpProduction(models.Model):
                                                                    ml.lot_id and ml.product_id.is_metric_product and ml.qty_done > 0.00 and \
                                                                    ml.reported_to_metrc == False and ml.bypass_metrc_reporting == False and \
                                                                    ml.lot_id.metrc_id == 0)
-        self._report_lots_to_metrc(finished_move_lines)
+        license = move_lines[0].lot_id.facility_license_id
+        self._report_lots_to_metrc(license, finished_move_lines)
         move_lines.mapped('lot_id')._update_metrc_id()
 
-    def _report_lots_to_metrc(self, move_line_ids):
-        if not self.location_dest_id.metrc_location_id:
-            raise UserError(_("Metrc Location is not set on {}.\n"
-                              "Please configure one to proceed.".format(self.location_dest_id.name)))
-        metrc_location = self.location_dest_id.metrc_location_id.name
+    def _report_lots_to_metrc(self, facility_license_id, move_line_ids):
+        metrc_location = self.location_dest_id.get_metrc_location(facility_license_id)
+        if not metrc_location:
+            raise UserError(_("Metrc Location is not set on {} for license {}.\n"
+                              "Please configure one to proceed.".format(self.location_dest_id.name, facility_license_id.license_number)))
         consumed_quantities = self.get_consumed_ingredients()
         metrc_reported_lines = self.env['stock.move.line']
         ProdctionLot = self.env['stock.production.lot']
-        license = self.picking_type_id._get_warehouse_license()
         package_data = []
         for line in move_line_ids.filtered(lambda l: not l.bypass_metrc_reporting):
             # checking for lot is availbale to be assigend or not.
@@ -160,7 +161,7 @@ class MrpProduction(models.Model):
                 product_name = line.lot_id.metrc_product_name
             package_data.append({
                 'Tag': lot_name,
-                'Location': metrc_location,
+                'Location': metrc_location.name,
                 'Item': product_name,
                 'Quantity': line.product_id.to_metrc_qty(line.qty_done),
                 'UnitOfMeasure': line.product_id.metrc_uom_id.name if line.product_id.diff_metrc_uom and line.product_id.metrc_uom_id else line.product_id.uom_id.name,
@@ -172,12 +173,13 @@ class MrpProduction(models.Model):
             })
         metrc_account = self.env.user.ensure_metrc_account()
         uri = '/{}/{}/{}'.format('packages', metrc_account.api_version, 'create')
-        params = {'licenseNumber': license}
+        params = {'licenseNumber': facility_license_id.license_number}
         metrc_account.fetch('POST', uri, params=params, data=package_data, raise_for_error=True)
         move_line_ids.mapped('lot_id')._update_metrc_id()
         for line in move_line_ids.filtered(lambda l: not l.bypass_metrc_reporting and l.lot_id.metrc_id > 0):
             line.lot_id.name_readonly = True
             line.reported_to_metrc = True
+            line.lot_id.source_package_labels = ','.join([i['Package'] for i in consumed_quantities.get(line.id, [])])
             metrc_reported_lines |= line
         if metrc_reported_lines:
             metrc_msg = "Following packages are created in <b>METRC</b> using this manufacturing order.<br/><ul>"

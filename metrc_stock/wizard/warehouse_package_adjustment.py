@@ -28,7 +28,7 @@ class WarehousePackageAdjustment(models.TransientModel):
         for line in self.line_ids:
             line.prod_lot_id._adjust_lot(line.product_id.to_metrc_qty(line.product_qty), downstream=True, location_id=line.location_id, warehouse_id=line.location_id.get_warehouse())
         if not float_is_zero(self.metrc_adjust_qty, precision_rounding=self.product_uom_id.rounding):
-            self.lot_id._adjust_in_metrc(metrc_account, self.license_id, self.metrc_adjust_qty, delta=True)
+            self.lot_id._adjust_in_metrc(metrc_account, self.lot_id.facility_license_id, self.metrc_adjust_qty, delta=True)
             self.lot_id._update_metrc_id()
 
 

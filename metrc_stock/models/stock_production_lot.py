@@ -222,12 +222,35 @@ class StockProductionLot(models.Model):
             if resp:
                 lot.metrc_id = resp['Id']
                 lot.metrc_qty = resp['Quantity']
+                lot.metrc_product_name = resp['Item']['Name']
                 lot.labtest_state = resp['LabTestingState']
                 lot.testing_state_date = resp['LabTestingStateDate']
                 lot.is_production_batch = resp['IsProductionBatch']
                 lot.batch_number = resp['ProductionBatchNumber']
             else:
                 _logger.info(_("Package {} not found on metrc for product {}.".format(lot._get_metrc_name(), lot.product_id.metrc_name)))
+    
+    def _get_metrc_field_vals(self, source_lots):
+        values = {
+            'facility_license_id': source_lots[0].facility_license_id.id,
+            'harvest_date': source_lots[0].harvest_date,
+            'expiration_date': source_lots[0].expiration_date,
+        }
+        if self.is_flower:
+            values.update({
+                'thc_mg': sum(source_lots.mappped('thc_mg')),
+                'cbd_mg': sum(source_lots.mappped('cbd_mg'))
+            })
+        if self.is_edible:
+            values.update({
+                'thc_percent': source_lots[0].thc_percent,
+                'cbd_percent': source_lots[0].cbd_percent,
+            })
+        return values
+
+    def _update_metrc_properties(self, source_lots):
+        values = self._get_metrc_field_vals(source_lots)
+        self.write(values)
 
     def _schedule_todo_activity(self, message="Action Required!"):
         self.ensure_one()
@@ -410,8 +433,6 @@ class StockProductionLot(models.Model):
         if not warehouse or not stock_location:
             raise UserError(_('Missing warehouse and location details for inventory adjustment.'))
 
-        if not warehouse.license_id:
-            raise UserError(_("Warehouse {} is not configured with facility license. Please configure one to proceed.". format(warehouse.name)))
         reason = warehouse.default_adjust_reason_id
         if not reason:
             raise UserError(_('Default Package adjustment reason not configured on Warehouse {}.'
@@ -423,9 +444,6 @@ class StockProductionLot(models.Model):
             'product_ids': [(4, self.product_id.id)],
             'warehouse_id': warehouse.id,
             'company_id': company.id,
-            'reason_id': reason.id,
-            'reason_note': 'Lot/Serials inventory adjustment',
-            'facility_license_id': warehouse.license_id.id,
             'downstream': downstream,
         })
         inv_adjst.action_start()
@@ -583,6 +601,7 @@ class StockProductionLot(models.Model):
                 else:
                     write_vals.update({field: source_lot[field]})
         self.write(write_vals)
+    
 
     @api.model
     def _cron_do_import_packages(self, metrc_license=False, force_last_sync_date=False,

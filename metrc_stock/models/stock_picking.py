@@ -647,6 +647,8 @@ validate transfer and will create back order of rest products. (choose Yes(I aut
         return {
             'thc_percent': metrc_transfer.thc_percent,
             'thc_mg': metrc_transfer.thc_mg,
+            'cbd_percent': metrc_transfer.thc_percent,
+            'cbd_mg': metrc_transfer.thc_mg,
             'metrc_id': metrc_transfer.package_id,
             'metrc_qty': metrc_transfer.received_quantity,
             'expiration_date': metrc_transfer.expiration_date,

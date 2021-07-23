@@ -135,7 +135,7 @@ class StockPackageWizard(models.TransientModel):
         locations = self.lot_id.sudo().quant_ids.filtered(lambda q: q.location_id.usage == 'internal')
         if not resp:
             raise UserError(_("Lot {} not found in metrc for license: {}".format(self.lot_id._get_metrc_name(), self.warehouse_id.license_id.license_number)))
-        if resp and resp.get('Quantity') and locations:
+        if resp and resp.get('Quantity') >= 0.00 and locations:
             self.lot_id.write({
                 'labtest_state': resp['LabTestingState'],
                 'testing_state_date': resp['LabTestingStateDate'],
